@@ -4,10 +4,10 @@ interface EmotionalQuoteSectionProps {
 
 export default function EmotionalQuoteSection({ text }: EmotionalQuoteSectionProps) {
   return (
-    <section className="bg-primary px-8 py-16 text-center md:px-12">
+    <section className="bg-secondary px-8 py-16 text-center md:px-16">
       <p
-        className="mx-auto max-w-xs text-lg font-semibold leading-relaxed tracking-wide uppercase text-primary-foreground md:text-xl"
-        style={{ fontFamily: "var(--font-body)" }}
+        className="mx-auto max-w-sm text-xl font-light leading-relaxed tracking-wide uppercase text-foreground md:text-2xl"
+        style={{ fontFamily: "var(--font-cormorant)" }}
       >
         {text}
       </p>

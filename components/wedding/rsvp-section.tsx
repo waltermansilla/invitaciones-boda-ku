@@ -66,21 +66,22 @@ export default function RSVPSection({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("[v0] RSVP submitted:", { guestCount, guests })
     setSubmitted(true)
   }
 
   if (submitted) {
     return (
-      <section className="bg-primary px-6 py-16 text-center">
+      <section className="bg-secondary px-6 py-14 text-center">
         <h2
-          className="mb-4 text-3xl font-semibold text-primary-foreground"
-          style={{ fontFamily: "var(--font-display)" }}
+          className="mb-4 text-3xl font-light tracking-[0.05em] text-foreground"
+          style={{ fontFamily: "var(--font-cormorant)" }}
         >
-          {"Gracias!"}
+          Gracias!
         </h2>
         <p
-          className="text-sm text-primary-foreground/80"
-          style={{ fontFamily: "var(--font-body)" }}
+          className="text-sm text-muted-foreground"
+          style={{ fontFamily: "var(--font-montserrat)" }}
         >
           Tu confirmacion ha sido registrada.
         </p>
@@ -89,17 +90,17 @@ export default function RSVPSection({
   }
 
   return (
-    <section className="bg-primary px-6 py-14">
-      <div className="mx-auto max-w-sm">
+    <section className="bg-secondary px-6 py-14">
+      <div className="mx-auto max-w-md">
         <h2
-          className="mb-1 text-center text-xl font-semibold tracking-wide uppercase text-primary-foreground md:text-2xl"
-          style={{ fontFamily: "var(--font-display)" }}
+          className="mb-2 text-center text-2xl font-light tracking-[0.1em] uppercase text-foreground md:text-3xl"
+          style={{ fontFamily: "var(--font-cormorant)" }}
         >
           {title}
         </h2>
         <p
-          className="mb-8 text-center text-[11px] font-medium tracking-[0.1em] uppercase text-primary-foreground/70"
-          style={{ fontFamily: "var(--font-body)" }}
+          className="mb-8 text-center text-xs font-medium tracking-[0.15em] uppercase text-muted-foreground"
+          style={{ fontFamily: "var(--font-montserrat)" }}
         >
           {deadline}
         </p>
@@ -108,16 +109,16 @@ export default function RSVPSection({
           {/* Guest count */}
           <div>
             <label
-              className="mb-2 block text-[11px] font-medium tracking-wide text-primary-foreground/80"
-              style={{ fontFamily: "var(--font-body)" }}
+              className="mb-2 block text-xs font-medium tracking-wide text-foreground"
+              style={{ fontFamily: "var(--font-montserrat)" }}
             >
               {guestCountLabel}
             </label>
             <select
               value={guestCount}
               onChange={(e) => handleGuestCountChange(Number(e.target.value))}
-              className="w-full rounded-md border-0 bg-card px-4 py-3 text-sm text-foreground shadow-sm"
-              style={{ fontFamily: "var(--font-body)", fontSize: "16px" }}
+              className="w-full border border-border bg-card px-4 py-3 text-sm text-foreground"
+              style={{ fontFamily: "var(--font-montserrat)" }}
             >
               {guestCountOptions.map((n) => (
                 <option key={n} value={n}>
@@ -132,21 +133,21 @@ export default function RSVPSection({
             <Fragment key={index}>
               {guestCount > 1 && (
                 <p
-                  className="mt-1 text-[11px] font-semibold tracking-[0.1em] uppercase text-primary-foreground/80"
-                  style={{ fontFamily: "var(--font-body)" }}
+                  className="mt-2 text-xs font-semibold tracking-[0.1em] uppercase text-muted-foreground"
+                  style={{ fontFamily: "var(--font-montserrat)" }}
                 >
-                  {"Invitado "}{index + 1}
+                  Invitado {index + 1}
                 </p>
               )}
-              <div className="flex flex-col gap-0 overflow-hidden rounded-md bg-card shadow-sm">
+              <div className="flex flex-col gap-4 rounded-sm border border-border bg-card p-4">
                 <input
                   type="text"
                   placeholder={fields.firstName + " *"}
                   required
                   value={guest.firstName}
                   onChange={(e) => updateGuest(index, "firstName", e.target.value)}
-                  className="w-full border-b border-border/40 bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                  style={{ fontFamily: "var(--font-body)", fontSize: "16px" }}
+                  className="w-full border-b border-border bg-transparent px-1 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                  style={{ fontFamily: "var(--font-montserrat)", fontSize: "16px" }}
                 />
                 <input
                   type="text"
@@ -154,20 +155,20 @@ export default function RSVPSection({
                   required
                   value={guest.lastName}
                   onChange={(e) => updateGuest(index, "lastName", e.target.value)}
-                  className="w-full border-b border-border/40 bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                  style={{ fontFamily: "var(--font-body)", fontSize: "16px" }}
+                  className="w-full border-b border-border bg-transparent px-1 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                  style={{ fontFamily: "var(--font-montserrat)", fontSize: "16px" }}
                 />
 
                 {/* Attendance */}
-                <div className="border-b border-border/40 px-4 py-3">
+                <div>
                   <p
-                    className="mb-2 text-[11px] font-medium text-foreground/70"
-                    style={{ fontFamily: "var(--font-body)" }}
+                    className="mb-2 text-xs font-medium text-foreground"
+                    style={{ fontFamily: "var(--font-montserrat)" }}
                   >
                     {fields.attendance}
                   </p>
                   <div className="flex flex-col gap-2">
-                    <label className="flex items-center gap-2 text-sm text-foreground" style={{ fontFamily: "var(--font-body)" }}>
+                    <label className="flex items-center gap-2 text-sm text-foreground" style={{ fontFamily: "var(--font-montserrat)" }}>
                       <input
                         type="radio"
                         name={`attendance-${index}`}
@@ -179,7 +180,7 @@ export default function RSVPSection({
                       />
                       {fields.attendanceYes}
                     </label>
-                    <label className="flex items-center gap-2 text-sm text-foreground" style={{ fontFamily: "var(--font-body)" }}>
+                    <label className="flex items-center gap-2 text-sm text-foreground" style={{ fontFamily: "var(--font-montserrat)" }}>
                       <input
                         type="radio"
                         name={`attendance-${index}`}
@@ -194,18 +195,18 @@ export default function RSVPSection({
                 </div>
 
                 {/* Dietary */}
-                <div className="border-b border-border/40 px-4 py-3">
+                <div>
                   <label
-                    className="mb-2 block text-[11px] font-medium text-foreground/70"
-                    style={{ fontFamily: "var(--font-body)" }}
+                    className="mb-2 block text-xs font-medium text-foreground"
+                    style={{ fontFamily: "var(--font-montserrat)" }}
                   >
                     {fields.dietary}
                   </label>
                   <select
                     value={guest.dietary}
                     onChange={(e) => updateGuest(index, "dietary", e.target.value)}
-                    className="w-full bg-transparent text-sm text-foreground focus:outline-none"
-                    style={{ fontFamily: "var(--font-body)", fontSize: "16px" }}
+                    className="w-full border border-border bg-transparent px-4 py-2 text-sm text-foreground"
+                    style={{ fontFamily: "var(--font-montserrat)" }}
                   >
                     {fields.dietaryOptions.map((opt) => (
                       <option key={opt} value={opt}>
@@ -221,8 +222,8 @@ export default function RSVPSection({
                   placeholder={fields.songRequest}
                   value={guest.songRequest}
                   onChange={(e) => updateGuest(index, "songRequest", e.target.value)}
-                  className="w-full bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                  style={{ fontFamily: "var(--font-body)", fontSize: "16px" }}
+                  className="w-full border-b border-border bg-transparent px-1 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                  style={{ fontFamily: "var(--font-montserrat)", fontSize: "16px" }}
                 />
               </div>
             </Fragment>
@@ -230,8 +231,8 @@ export default function RSVPSection({
 
           <button
             type="submit"
-            className="mt-1 min-h-[48px] w-full rounded-md border border-primary-foreground/30 bg-transparent py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-foreground transition-colors hover:bg-primary-foreground/10"
-            style={{ fontFamily: "var(--font-body)" }}
+            className="mt-2 w-full border border-foreground/30 py-3 text-xs font-medium tracking-[0.2em] uppercase text-foreground transition-colors hover:bg-foreground hover:text-background"
+            style={{ fontFamily: "var(--font-montserrat)" }}
           >
             {fields.submitButton}
           </button>
