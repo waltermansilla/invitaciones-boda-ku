@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "title": "Nuestra Boda - Lucia & Sebastian",
+    "description": "Estamos felices de invitarte a celebrar nuestro amor. Lucia & Sebastian se casan.",
+    "lang": "es",
+    "themeColor": "#6B7F5E"
+  },
+
+  "music": {
+    "enabled": true,
+    "src": "/music/background.mp3",
+    "autoplay": false
+  },
+
+  "sectionsOrder": [
+    "hero",
+    "quote",
+    "eventInfo",
+    "gallery",
+    "itinerary",
+    "photos",
+    "giftCard",
+    "honeymoon",
+    "dressCode",
+    "emotionalQuote",
+    "trivia",
+    "rsvp",
+    "footer"
+  ],
+
+  "hero": {
+    "coupleImage": "/images/couple-hero.jpg",
+    "groomName": "Sebastian",
+    "brideName": "Lucia",
+    "headline": "Nos casamos",
+    "eventDate": "2026-10-10T18:00:00",
+    "countdownLabels": {
+      "days": "Dias",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "seconds": "Segundos"
+    }
+  },
+
+  "quote": {
+    "text": "Al fin sean bienvenidos todos al show de la linda fe sonriente, nos merecemos bellos milagros... y ocurriran.",
+    "author": ""
+  },
+
+  "eventInfo": {
+    "date": {
+      "icon": "calendar",
+      "title": "Cuando?",
+      "value": "10 de Octubre 2026"
+    },
+    "location": {
+      "icon": "map-pin",
+      "title": "Donde?",
+      "value": "Ruta 345 Km 1.9",
+      "mapUrl": "https://maps.google.com",
+      "buttonText": "Como llegar"
+    }
+  },
+
+  "gallery": {
+    "images": [
+      "/images/gallery-1.jpg",
+      "/images/gallery-2.jpg",
+      "/images/gallery-3.jpg"
+    ]
+  },
+
+  "itinerary": {
+    "title": "Itinerario",
+    "events": [
+      { "icon": "heart", "name": "Civil", "time": "18:00 hs" },
+      { "icon": "wine", "name": "Recepcion", "time": "19:00 hs" },
+      { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
+      { "icon": "music", "name": "Fiesta", "time": "23:30 hs" }
+    ]
+  },
+
+  "photos": {
+    "title": "Queremos ver tus fotos",
+    "description": "Pueden subir todas las fotos del gran dia a nuestro album compartido",
+    "buttonText": "Ir al album",
+    "buttonUrl": "https://photos.google.com"
+  },
+
+  "giftCard": {
+    "icon": "gift",
+    "title": "Valor Tarjeta",
+    "description": "Nos llenaria de felicidad poder compartir este dia tan especial con ustedes. A continuacion dejamos los detalles para realizar el pago de su tarjeta.",
+    "buttonText": "Ver valor tarjeta",
+    "buttonUrl": "#",
+    "image": "/images/gift-image.jpg"
+  },
+
+  "honeymoon": {
+    "title": "Luna de Miel",
+    "description": "Si desean hacernos un regalo les agradecemos nos ayuden en nuestra luna de miel.",
+    "buttonText": "Contribuir",
+    "buttonUrl": "#",
+    "image": "/images/honeymoon.jpg"
+  },
+
+  "dressCode": {
+    "title": "Dress Code",
+    "type": "Evento Campestre",
+    "buttonText": "Ver consejos",
+    "buttonUrl": "#"
+  },
+
+  "emotionalQuote": {
+    "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
+  },
+
+  "trivia": {
+    "title": "Cuanto nos conoces?",
+    "subtitle": "Juguemos un poco",
+    "buttonText": "Iniciar Trivia",
+    "buttonUrl": "#"
+  },
+
+  "rsvp": {
+    "title": "Confirma tu asistencia",
+    "deadline": "Antes del 11 de septiembre",
+    "guestCountLabel": "Numero de personas a confirmar",
+    "guestCountOptions": [1, 2, 3, 4, 5],
+    "fields": {
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "attendance": "Confirmas tu asistencia?",
+      "attendanceYes": "Confirmo!",
+      "attendanceNo": "No podre asistir",
+      "dietary": "Algun requerimiento en la alimentacion?",
+      "dietaryOptions": ["Ninguno", "Vegetariano", "Vegano", "Celiaco", "Otro"],
+      "songRequest": "Que cancion no puede faltar?",
+      "submitButton": "Confirmar"
+    }
+  },
+
+  "footer": {
+    "groomName": "Lucia",
+    "brideName": "Sebastian",
+    "separator": "&",
+    "credit": "la tarjeta digital"
+  }
+}
