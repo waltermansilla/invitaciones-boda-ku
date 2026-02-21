@@ -1,5 +1,6 @@
 "use client"
 
+import AnimatedSection from "./animated-section"
 import QuoteSection from "./quote-section"
 import EventInfoSection from "./event-info-section"
 import GallerySection from "./gallery-section"
@@ -27,63 +28,71 @@ interface SectionProps {
     brideName: string
     separator: string
   }
+  bgClass: string
 }
 
-export default function Section({ section, coupleNames }: SectionProps) {
-  const { type, id, data } = section
+/**
+ * Some section types provide their own strong background (quote, trivia, footer)
+ * so we apply the bgClass to the wrapper only for "normal" sections.
+ * For full-bleed colored sections we let the component handle its own styling.
+ */
+const fullBleedTypes = new Set(["quote", "trivia", "footer"])
 
-  switch (type) {
-    case "quote":
-      return (
-        <div id={id}>
+export default function Section({ section, coupleNames, bgClass }: SectionProps) {
+  const { type, id, data } = section
+  const isFullBleed = fullBleedTypes.has(type)
+
+  // For full-bleed sections apply a specific bg:
+  // quote & trivia -> primary bg, footer -> primary bg
+  const wrapperBg = isFullBleed ? "bg-primary" : bgClass
+
+  const renderContent = () => {
+    switch (type) {
+      case "quote":
+        return (
           <QuoteSection
             text={data.text as string}
             author={data.author as string}
           />
-        </div>
-      )
+        )
 
-    case "eventInfo":
-      return (
-        <div id={id}>
+      case "eventInfo":
+        return (
           <EventInfoSection
             date={data.date as { icon: string; title: string; value: string }}
-            location={data.location as { icon: string; title: string; value: string; button: { text: string; url: string; variant: "primary" | "secondary" } }}
+            locations={
+              data.locations as {
+                enabled: boolean
+                title: string
+                address: string
+                button: { text: string; url: string; variant: "primary" | "secondary" }
+              }[]
+            }
           />
-        </div>
-      )
+        )
 
-    case "gallery":
-      return (
-        <div id={id}>
-          <GallerySection images={data.images as string[]} />
-        </div>
-      )
+      case "gallery":
+        return <GallerySection images={data.images as string[]} />
 
-    case "itinerary":
-      return (
-        <div id={id}>
+      case "itinerary":
+        return (
           <ItinerarySection
             title={data.title as string}
             events={data.events as { icon: string; name: string; time: string }[]}
           />
-        </div>
-      )
+        )
 
-    case "photos":
-      return (
-        <div id={id}>
+      case "photos":
+        return (
           <PhotosSection
             title={data.title as string}
             description={data.description as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
           />
-        </div>
-      )
+        )
 
-    case "giftCard":
-      return (
-        <div id={id}>
+      case "giftCard":
+        return (
           <GiftCardSection
             icon={data.icon as string}
             title={data.title as string}
@@ -91,84 +100,78 @@ export default function Section({ section, coupleNames }: SectionProps) {
             image={data.image as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
           />
-        </div>
-      )
+        )
 
-    case "honeymoon":
-      return (
-        <div id={id}>
+      case "honeymoon":
+        return (
           <HoneymoonSection
             title={data.title as string}
             description={data.description as string}
             image={data.image as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
           />
-        </div>
-      )
+        )
 
-    case "dressCode":
-      return (
-        <div id={id}>
+      case "dressCode":
+        return (
           <DressCodeSection
             title={data.title as string}
             subtitle={data.subtitle as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
           />
-        </div>
-      )
+        )
 
-    case "emotionalQuote":
-      return (
-        <div id={id}>
-          <EmotionalQuoteSection text={data.text as string} />
-        </div>
-      )
+      case "emotionalQuote":
+        return <EmotionalQuoteSection text={data.text as string} />
 
-    case "trivia":
-      return (
-        <div id={id}>
+      case "trivia":
+        return (
           <TriviaSection
             title={data.title as string}
             subtitle={data.subtitle as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
           />
-        </div>
-      )
+        )
 
-    case "rsvp":
-      return (
-        <div id={id}>
+      case "rsvp":
+        return (
           <RSVPSection
             title={data.title as string}
             deadline={data.deadline as string}
             guestCountLabel={data.guestCountLabel as string}
             guestCountOptions={data.guestCountOptions as number[]}
-            fields={data.fields as {
-              firstName: string
-              lastName: string
-              attendance: string
-              attendanceYes: string
-              attendanceNo: string
-              dietary: string
-              dietaryOptions: string[]
-              songRequest: string
-              submitButton: string
-            }}
+            fields={
+              data.fields as {
+                firstName: string
+                lastName: string
+                attendance: string
+                attendanceYes: string
+                attendanceNo: string
+                dietary: string
+                dietaryOptions: string[]
+                songRequest: string
+                submitButton: string
+              }
+            }
           />
-        </div>
-      )
+        )
 
-    case "footer":
-      return (
-        <div id={id}>
+      case "footer":
+        return (
           <FooterSection
             credit={data.credit as string}
             coupleNames={coupleNames}
           />
-        </div>
-      )
+        )
 
-    default:
-      return null
+      default:
+        return null
+    }
   }
+
+  return (
+    <AnimatedSection id={id} className={wrapperBg}>
+      {renderContent()}
+    </AnimatedSection>
+  )
 }

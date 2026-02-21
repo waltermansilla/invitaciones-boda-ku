@@ -20,10 +20,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
 
 export default function ItinerarySection({ title, events }: ItinerarySectionProps) {
   return (
-    <section className="flex flex-col items-center border-y border-border px-6 py-14">
+    <section className="flex flex-col items-center px-6 py-16">
       <h2
-        className="mb-10 text-2xl font-light tracking-[0.2em] uppercase text-foreground md:text-3xl"
-        style={{ fontFamily: "var(--font-montserrat)" }}
+        className="mb-12 text-2xl font-light tracking-[0.2em] uppercase text-foreground md:text-3xl"
+        style={{ fontFamily: "var(--font-body)" }}
       >
         {title}
       </h2>
@@ -33,22 +33,21 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
           const Icon = iconMap[event.icon] || Heart
           return (
             <div key={index} className="flex flex-col items-center">
-              {/* Vertical line above (except first) */}
-              {index > 0 && (
-                <div className="h-8 w-px bg-primary/40" />
-              )}
-
+              {index > 0 && <div className="h-8 w-px bg-primary/30" />}
               <div className="flex flex-col items-center gap-2 py-2">
-                <Icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
+                <Icon
+                  className="h-6 w-6 text-primary transition-transform duration-300 hover:scale-110"
+                  strokeWidth={1.5}
+                />
                 <h3
                   className="text-sm font-semibold tracking-[0.15em] uppercase text-foreground"
-                  style={{ fontFamily: "var(--font-montserrat)" }}
+                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   {event.name}
                 </h3>
                 <p
                   className="text-sm font-light text-muted-foreground"
-                  style={{ fontFamily: "var(--font-montserrat)" }}
+                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   {event.time}
                 </p>
