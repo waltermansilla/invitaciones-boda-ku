@@ -12,12 +12,10 @@ export default function WeddingInvitation() {
   const music = config.music
 
   return (
-    <main className="mx-auto min-h-screen max-w-lg bg-background">
-      {/* Hero is always rendered first, outside the dynamic sections array */}
+    <main className="mx-auto min-h-screen max-w-lg">
+      {/* Hero is always rendered first */}
       <HeroSection
         coupleImage={hero.coupleImage}
-        groomName={meta.coupleNames.groomName}
-        brideName={meta.coupleNames.brideName}
         headline={hero.headline}
         eventDate={hero.eventDate}
         countdownLabels={hero.countdownLabels}

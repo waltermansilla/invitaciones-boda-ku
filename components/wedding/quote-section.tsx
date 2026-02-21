@@ -5,9 +5,9 @@ interface QuoteSectionProps {
 
 export default function QuoteSection({ text, author }: QuoteSectionProps) {
   return (
-    <section className="px-8 py-16 text-center md:px-16">
+    <section className="bg-primary px-8 py-14 text-center md:px-12">
       <p
-        className="mx-auto max-w-md text-lg font-medium leading-relaxed tracking-wide uppercase text-primary-foreground md:text-xl"
+        className="mx-auto max-w-sm text-base font-semibold leading-relaxed tracking-wide uppercase text-primary-foreground md:text-lg"
         style={{ fontFamily: "var(--font-body)" }}
       >
         {text}

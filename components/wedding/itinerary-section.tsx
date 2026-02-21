@@ -20,41 +20,44 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
 
 export default function ItinerarySection({ title, events }: ItinerarySectionProps) {
   return (
-    <section className="flex flex-col items-center px-6 py-16">
-      <h2
-        className="mb-12 text-2xl font-light tracking-[0.2em] uppercase text-foreground md:text-3xl"
-        style={{ fontFamily: "var(--font-body)" }}
-      >
-        {title}
-      </h2>
+    <section className="flex flex-col items-center bg-background px-6 py-14">
+      <div className="w-full max-w-xs rounded-sm border border-foreground/15 px-8 py-10">
+        <h2
+          className="mb-10 text-center text-lg font-medium tracking-[0.25em] uppercase text-foreground"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          {title}
+        </h2>
 
-      <div className="flex flex-col items-center gap-0">
-        {events.map((event, index) => {
-          const Icon = iconMap[event.icon] || Heart
-          return (
-            <div key={index} className="flex flex-col items-center">
-              {index > 0 && <div className="h-8 w-px bg-primary/30" />}
-              <div className="flex flex-col items-center gap-2 py-2">
-                <Icon
-                  className="h-6 w-6 text-primary transition-transform duration-300 hover:scale-110"
-                  strokeWidth={1.5}
-                />
-                <h3
-                  className="text-sm font-semibold tracking-[0.15em] uppercase text-foreground"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
-                  {event.name}
-                </h3>
-                <p
-                  className="text-sm font-light text-muted-foreground"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
-                  {event.time}
-                </p>
+        <div className="flex flex-col items-center">
+          {events.map((event, index) => {
+            const Icon = iconMap[event.icon] || Heart
+            return (
+              <div key={index} className="flex flex-col items-center">
+                {/* Connecting line above (except first) */}
+                {index > 0 && <div className="h-6 w-px bg-primary/30" />}
+                <div className="flex flex-col items-center gap-1 py-1">
+                  <Icon
+                    className="h-5 w-5 text-primary"
+                    strokeWidth={1.3}
+                  />
+                  <h3
+                    className="text-xs font-semibold tracking-[0.2em] uppercase text-foreground"
+                    style={{ fontFamily: "var(--font-body)" }}
+                  >
+                    {event.name}
+                  </h3>
+                  <p
+                    className="text-xs font-light text-foreground/60"
+                    style={{ fontFamily: "var(--font-body)" }}
+                  >
+                    {event.time}
+                  </p>
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
     </section>
   )

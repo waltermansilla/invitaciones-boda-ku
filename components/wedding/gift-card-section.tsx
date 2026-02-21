@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Gift } from "lucide-react"
+import { HelpCircle } from "lucide-react"
 import ActionButton from "./action-button"
 
 interface GiftCardSectionProps {
@@ -21,26 +21,26 @@ export default function GiftCardSection({
   button,
 }: GiftCardSectionProps) {
   return (
-    <section className="flex flex-col items-center px-6 py-16 text-center">
-      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-border">
-        <Gift className="h-6 w-6 text-primary transition-transform duration-300 hover:scale-110" strokeWidth={1.5} />
+    <section className="flex flex-col items-center bg-primary px-8 py-14 text-center">
+      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-primary-foreground/30">
+        <HelpCircle className="h-5 w-5 text-primary-foreground" strokeWidth={1.3} />
       </div>
       <h2
-        className="mb-3 text-2xl font-light tracking-[0.1em] uppercase text-foreground md:text-3xl"
+        className="mb-3 text-xl font-semibold tracking-wide uppercase text-primary-foreground md:text-2xl"
         style={{ fontFamily: "var(--font-display)" }}
       >
         {title}
       </h2>
       <p
-        className="mb-6 max-w-sm text-sm font-light leading-relaxed text-muted-foreground"
+        className="mb-6 max-w-sm text-sm font-light leading-relaxed text-primary-foreground/80"
         style={{ fontFamily: "var(--font-body)" }}
       >
         {description}
       </p>
       <div className="mb-8">
-        <ActionButton text={button.text} url={button.url} variant={button.variant} />
+        <ActionButton text={button.text} url={button.url} variant="outline-light" />
       </div>
-      <div className="relative aspect-[4/3] w-full max-w-md overflow-hidden rounded-lg">
+      <div className="relative aspect-[4/3] w-full max-w-md overflow-hidden">
         <Image src={image} alt="Regalo" fill className="object-cover" />
       </div>
     </section>

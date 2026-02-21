@@ -28,23 +28,10 @@ interface SectionProps {
     brideName: string
     separator: string
   }
-  bgClass: string
 }
 
-/**
- * Some section types provide their own strong background (quote, trivia, footer)
- * so we apply the bgClass to the wrapper only for "normal" sections.
- * For full-bleed colored sections we let the component handle its own styling.
- */
-const fullBleedTypes = new Set(["quote", "trivia", "footer"])
-
-export default function Section({ section, coupleNames, bgClass }: SectionProps) {
+export default function Section({ section, coupleNames }: SectionProps) {
   const { type, id, data } = section
-  const isFullBleed = fullBleedTypes.has(type)
-
-  // For full-bleed sections apply a specific bg:
-  // quote & trivia -> primary bg, footer -> primary bg
-  const wrapperBg = isFullBleed ? "bg-primary" : bgClass
 
   const renderContent = () => {
     switch (type) {
@@ -170,7 +157,7 @@ export default function Section({ section, coupleNames, bgClass }: SectionProps)
   }
 
   return (
-    <AnimatedSection id={id} className={wrapperBg}>
+    <AnimatedSection id={id}>
       {renderContent()}
     </AnimatedSection>
   )

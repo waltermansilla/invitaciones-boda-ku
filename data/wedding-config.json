@@ -27,9 +27,7 @@
 
   "hero": {
     "coupleImage": "/images/couple-hero.jpg",
-    "headline": "Nos casamos",
-    "enterButtonText": "Ingresar",
-    "countdownPrefix": "Faltan:",
+    "headline": "Nos casamos!",
     "eventDate": "2026-10-10T18:00:00",
     "countdownLabels": {
       "days": "Dias",
