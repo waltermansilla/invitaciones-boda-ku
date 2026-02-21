@@ -3,7 +3,20 @@
     "title": "Nuestra Boda - Lucia & Sebastian",
     "description": "Estamos felices de invitarte a celebrar nuestro amor. Lucia & Sebastian se casan.",
     "lang": "es",
-    "themeColor": "#6B7F5E"
+    "coupleNames": {
+      "groomName": "Sebastian",
+      "brideName": "Lucia",
+      "separator": "&"
+    }
+  },
+
+  "theme": {
+    "primaryColor": "#6B7F5E",
+    "backgroundColor": "#FAF8F5",
+    "textColor": "#3A3A3A",
+    "accentBackground": "#EDF2E8",
+    "fontPrimary": "Cormorant Garamond",
+    "fontSecondary": "Montserrat"
   },
 
   "music": {
@@ -12,27 +25,9 @@
     "autoplay": false
   },
 
-  "sectionsOrder": [
-    "hero",
-    "quote",
-    "eventInfo",
-    "gallery",
-    "itinerary",
-    "photos",
-    "giftCard",
-    "honeymoon",
-    "dressCode",
-    "emotionalQuote",
-    "trivia",
-    "rsvp",
-    "footer"
-  ],
-
   "hero": {
     "coupleImage": "/images/couple-hero.jpg",
-    "groomName": "Sebastian",
-    "brideName": "Lucia",
-    "headline": "Nos casamos",
+    "headline": "Nos casamos!",
     "eventDate": "2026-10-10T18:00:00",
     "countdownLabels": {
       "days": "Dias",
@@ -42,108 +37,186 @@
     }
   },
 
-  "quote": {
-    "text": "Al fin sean bienvenidos todos al show de la linda fe sonriente, nos merecemos bellos milagros... y ocurriran.",
-    "author": ""
-  },
-
-  "eventInfo": {
-    "date": {
-      "icon": "calendar",
-      "title": "Cuando?",
-      "value": "10 de Octubre 2026"
+  "sections": [
+    {
+      "type": "quote",
+      "id": "quote-welcome",
+      "blocks": ["text", "author"],
+      "data": {
+        "text": "Al fin sean bienvenidos todos al show de la linda fe sonriente, nos merecemos bellos milagros... y ocurriran.",
+        "author": ""
+      }
     },
-    "location": {
-      "icon": "map-pin",
-      "title": "Donde?",
-      "value": "Ruta 345 Km 1.9",
-      "mapUrl": "https://maps.google.com",
-      "buttonText": "Como llegar"
+    {
+      "type": "eventInfo",
+      "id": "event-info",
+      "blocks": ["date", "locations"],
+      "data": {
+        "date": {
+          "icon": "calendar",
+          "title": "Cuando?",
+          "value": "10 de Octubre 2026"
+        },
+        "locations": [
+          {
+            "enabled": true,
+            "title": "Civil",
+            "address": "Registro Civil, Calle 50 N 123",
+            "button": {
+              "text": "Como llegar",
+              "url": "https://maps.google.com",
+              "variant": "secondary"
+            }
+          },
+          {
+            "enabled": true,
+            "title": "Recepcion",
+            "address": "Ruta 345 Km 1.9",
+            "button": {
+              "text": "Como llegar",
+              "url": "https://maps.google.com",
+              "variant": "secondary"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "gallery",
+      "id": "gallery-photos",
+      "blocks": ["slider"],
+      "data": {
+        "images": [
+          "/images/gallery-1.jpg",
+          "/images/gallery-2.jpg",
+          "/images/gallery-3.jpg"
+        ]
+      }
+    },
+    {
+      "type": "itinerary",
+      "id": "itinerary-timeline",
+      "blocks": ["title", "timeline"],
+      "data": {
+        "title": "Itinerario",
+        "events": [
+          { "icon": "heart", "name": "Civil", "time": "18:00 hs" },
+          { "icon": "wine", "name": "Recepcion", "time": "19:00 hs" },
+          { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
+          { "icon": "music", "name": "Fiesta", "time": "23:30 hs" }
+        ]
+      }
+    },
+    {
+      "type": "photos",
+      "id": "shared-photos",
+      "blocks": ["icon", "title", "description", "button"],
+      "data": {
+        "title": "Queremos ver tus fotos",
+        "description": "Pueden subir todas las fotos del gran dia a nuestro album compartido",
+        "button": {
+          "text": "Ir al album",
+          "url": "https://photos.google.com",
+          "variant": "primary"
+        }
+      }
+    },
+    {
+      "type": "giftCard",
+      "id": "gift-card",
+      "blocks": ["icon", "title", "description", "button", "image"],
+      "data": {
+        "icon": "gift",
+        "title": "Valor Tarjeta",
+        "description": "Nos llenaria de felicidad poder compartir este dia tan especial con ustedes. A continuacion dejamos los detalles para realizar el pago de su tarjeta.",
+        "image": "/images/gift-image.jpg",
+        "button": {
+          "text": "Ver valor tarjeta",
+          "url": "#",
+          "variant": "secondary"
+        }
+      }
+    },
+    {
+      "type": "honeymoon",
+      "id": "honeymoon-fund",
+      "blocks": ["image", "icon", "title", "description", "button"],
+      "data": {
+        "title": "Luna de Miel",
+        "description": "Si desean hacernos un regalo les agradecemos nos ayuden en nuestra luna de miel.",
+        "image": "/images/honeymoon.jpg",
+        "button": {
+          "text": "Contribuir",
+          "url": "#",
+          "variant": "primary"
+        }
+      }
+    },
+    {
+      "type": "dressCode",
+      "id": "dress-code",
+      "blocks": ["icon", "title", "subtitle", "button"],
+      "data": {
+        "title": "Dress Code",
+        "subtitle": "Evento Campestre",
+        "button": {
+          "text": "Ver consejos",
+          "url": "#",
+          "variant": "secondary"
+        }
+      }
+    },
+    {
+      "type": "emotionalQuote",
+      "id": "emotional-quote",
+      "blocks": ["text"],
+      "data": {
+        "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
+      }
+    },
+    {
+      "type": "trivia",
+      "id": "trivia-game",
+      "blocks": ["icon", "title", "subtitle", "button"],
+      "data": {
+        "title": "Cuanto nos conoces?",
+        "subtitle": "Juguemos un poco",
+        "button": {
+          "text": "Iniciar Trivia",
+          "url": "#",
+          "variant": "primary"
+        }
+      }
+    },
+    {
+      "type": "rsvp",
+      "id": "rsvp-form",
+      "blocks": ["title", "form"],
+      "data": {
+        "title": "Confirma tu asistencia",
+        "deadline": "Antes del 11 de septiembre",
+        "guestCountLabel": "Numero de personas a confirmar",
+        "guestCountOptions": [1, 2, 3, 4, 5],
+        "fields": {
+          "firstName": "Nombre",
+          "lastName": "Apellido",
+          "attendance": "Confirmas tu asistencia?",
+          "attendanceYes": "Confirmo!",
+          "attendanceNo": "No podre asistir",
+          "dietary": "Algun requerimiento en la alimentacion?",
+          "dietaryOptions": ["Ninguno", "Vegetariano", "Vegano", "Celiaco", "Otro"],
+          "songRequest": "Que cancion no puede faltar?",
+          "submitButton": "Confirmar"
+        }
+      }
+    },
+    {
+      "type": "footer",
+      "id": "footer-credits",
+      "blocks": ["coupleNames", "credit"],
+      "data": {
+        "credit": "la tarjeta digital"
+      }
     }
-  },
-
-  "gallery": {
-    "images": [
-      "/images/gallery-1.jpg",
-      "/images/gallery-2.jpg",
-      "/images/gallery-3.jpg"
-    ]
-  },
-
-  "itinerary": {
-    "title": "Itinerario",
-    "events": [
-      { "icon": "heart", "name": "Civil", "time": "18:00 hs" },
-      { "icon": "wine", "name": "Recepcion", "time": "19:00 hs" },
-      { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
-      { "icon": "music", "name": "Fiesta", "time": "23:30 hs" }
-    ]
-  },
-
-  "photos": {
-    "title": "Queremos ver tus fotos",
-    "description": "Pueden subir todas las fotos del gran dia a nuestro album compartido",
-    "buttonText": "Ir al album",
-    "buttonUrl": "https://photos.google.com"
-  },
-
-  "giftCard": {
-    "icon": "gift",
-    "title": "Valor Tarjeta",
-    "description": "Nos llenaria de felicidad poder compartir este dia tan especial con ustedes. A continuacion dejamos los detalles para realizar el pago de su tarjeta.",
-    "buttonText": "Ver valor tarjeta",
-    "buttonUrl": "#",
-    "image": "/images/gift-image.jpg"
-  },
-
-  "honeymoon": {
-    "title": "Luna de Miel",
-    "description": "Si desean hacernos un regalo les agradecemos nos ayuden en nuestra luna de miel.",
-    "buttonText": "Contribuir",
-    "buttonUrl": "#",
-    "image": "/images/honeymoon.jpg"
-  },
-
-  "dressCode": {
-    "title": "Dress Code",
-    "type": "Evento Campestre",
-    "buttonText": "Ver consejos",
-    "buttonUrl": "#"
-  },
-
-  "emotionalQuote": {
-    "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
-  },
-
-  "trivia": {
-    "title": "Cuanto nos conoces?",
-    "subtitle": "Juguemos un poco",
-    "buttonText": "Iniciar Trivia",
-    "buttonUrl": "#"
-  },
-
-  "rsvp": {
-    "title": "Confirma tu asistencia",
-    "deadline": "Antes del 11 de septiembre",
-    "guestCountLabel": "Numero de personas a confirmar",
-    "guestCountOptions": [1, 2, 3, 4, 5],
-    "fields": {
-      "firstName": "Nombre",
-      "lastName": "Apellido",
-      "attendance": "Confirmas tu asistencia?",
-      "attendanceYes": "Confirmo!",
-      "attendanceNo": "No podre asistir",
-      "dietary": "Algun requerimiento en la alimentacion?",
-      "dietaryOptions": ["Ninguno", "Vegetariano", "Vegano", "Celiaco", "Otro"],
-      "songRequest": "Que cancion no puede faltar?",
-      "submitButton": "Confirmar"
-    }
-  },
-
-  "footer": {
-    "groomName": "Lucia",
-    "brideName": "Sebastian",
-    "separator": "&",
-    "credit": "la tarjeta digital"
-  }
+  ]
 }

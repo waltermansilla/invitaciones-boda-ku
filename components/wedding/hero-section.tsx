@@ -5,8 +5,6 @@ import Image from "next/image"
 
 interface HeroSectionProps {
   coupleImage: string
-  groomName: string
-  brideName: string
   headline: string
   eventDate: string
   countdownLabels: {
@@ -29,72 +27,89 @@ function getTimeRemaining(targetDate: string) {
 
 export default function HeroSection({
   coupleImage,
-  groomName,
-  brideName,
   headline,
   eventDate,
   countdownLabels,
 }: HeroSectionProps) {
-  const [time, setTime] = useState(getTimeRemaining(eventDate))
+  const [time, setTime] = useState<{
+    days: number
+    hours: number
+    minutes: number
+    seconds: number
+  } | null>(null)
 
   useEffect(() => {
+    setTime(getTimeRemaining(eventDate))
     const interval = setInterval(() => {
       setTime(getTimeRemaining(eventDate))
     }, 1000)
     return () => clearInterval(interval)
   }, [eventDate])
 
+  const items = [
+    { value: time?.days ?? 0, label: countdownLabels.days },
+    { value: time?.hours ?? 0, label: countdownLabels.hours },
+    { value: time?.minutes ?? 0, label: countdownLabels.minutes },
+    { value: time?.seconds ?? 0, label: countdownLabels.seconds },
+  ]
+
   return (
-    <section className="flex flex-col items-center px-6 py-12 text-center">
-      <div className="relative mb-8 h-[400px] w-[300px] overflow-hidden rounded-[180px_180px_20px_20px] md:h-[500px] md:w-[360px]">
+    <section className="flex flex-col items-center bg-background">
+      {/* Couple photo - full width */}
+      <div className="relative aspect-[3/4] w-full sm:aspect-[4/5]">
         <Image
           src={coupleImage}
-          alt={`${brideName} & ${groomName}`}
+          alt="Foto de la pareja"
           fill
           className="object-cover"
           priority
         />
       </div>
 
-      <h1
-        className="mb-8 text-4xl font-light tracking-[0.15em] uppercase text-foreground md:text-5xl"
-        style={{ fontFamily: "var(--font-cormorant)" }}
-      >
-        {headline}
-      </h1>
+      {/* Headline */}
+      <div className="flex flex-col items-center px-6 pt-10 pb-10">
+        <h1
+          className="mb-8 text-center text-3xl font-semibold tracking-wide uppercase text-foreground md:text-4xl"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {headline}
+        </h1>
 
-      <div className="flex items-baseline gap-3">
-        {[
-          { value: time.days, label: countdownLabels.days },
-          { value: time.hours, label: countdownLabels.hours },
-          { value: time.minutes, label: countdownLabels.minutes },
-          { value: time.seconds, label: countdownLabels.seconds },
-        ].map((item, i) => (
-          <div key={item.label} className="flex items-baseline gap-3">
-            <div className="flex flex-col items-center">
-              <span
-                className="text-4xl font-light tabular-nums text-foreground md:text-5xl"
-                style={{ fontFamily: "var(--font-cormorant)" }}
-              >
-                {String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")}
-              </span>
-              <span
-                className="mt-1 text-[10px] font-medium tracking-[0.2em] uppercase text-muted-foreground"
-                style={{ fontFamily: "var(--font-montserrat)" }}
-              >
-                {item.label}
-              </span>
+        {/* Countdown */}
+        <div className="flex items-start justify-center gap-2" aria-live="polite">
+          {items.map((item, i) => (
+            <div key={item.label} className="flex items-start gap-2">
+              <div className="flex flex-col items-center">
+                <span
+                  className="text-4xl font-light tabular-nums text-foreground md:text-5xl"
+                  style={{ fontFamily: "var(--font-display)" }}
+                  suppressHydrationWarning
+                >
+                  {time
+                    ? String(item.value).padStart(
+                        item.label === countdownLabels.days ? 1 : 2,
+                        "0"
+                      )
+                    : "--"}
+                </span>
+                <span
+                  className="mt-1 text-[9px] font-medium tracking-[0.15em] uppercase text-muted-foreground"
+                  style={{ fontFamily: "var(--font-body)" }}
+                >
+                  {item.label}
+                </span>
+              </div>
+              {i < 3 && (
+                <span
+                  className="mt-1 text-3xl font-light text-foreground/40 md:text-4xl"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  :
+                </span>
+              )}
             </div>
-            {i < 3 && (
-              <span
-                className="-mt-4 text-2xl font-light text-muted-foreground"
-                style={{ fontFamily: "var(--font-cormorant)" }}
-              >
-                :
-              </span>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   )
