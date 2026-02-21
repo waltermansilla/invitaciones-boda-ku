@@ -1,15 +1,15 @@
 interface FooterSectionProps {
-  groomName: string
-  brideName: string
-  separator: string
   credit: string
+  coupleNames: {
+    groomName: string
+    brideName: string
+    separator: string
+  }
 }
 
 export default function FooterSection({
-  groomName,
-  brideName,
-  separator,
   credit,
+  coupleNames,
 }: FooterSectionProps) {
   return (
     <footer className="bg-primary px-6 py-12 text-center">
@@ -17,7 +17,7 @@ export default function FooterSection({
         className="mb-6 text-3xl font-light tracking-[0.1em] uppercase text-primary-foreground md:text-4xl"
         style={{ fontFamily: "var(--font-cormorant)" }}
       >
-        {groomName} {separator} {brideName}
+        {coupleNames.brideName} {coupleNames.separator} {coupleNames.groomName}
       </h2>
       <p
         className="text-xs font-light italic tracking-wide text-primary-foreground/60"

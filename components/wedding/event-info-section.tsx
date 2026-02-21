@@ -1,4 +1,5 @@
 import { Calendar, MapPin } from "lucide-react"
+import ActionButton from "./action-button"
 
 interface EventInfoSectionProps {
   date: {
@@ -10,8 +11,11 @@ interface EventInfoSectionProps {
     icon: string
     title: string
     value: string
-    mapUrl: string
-    buttonText: string
+    button: {
+      text: string
+      url: string
+      variant: "primary" | "secondary"
+    }
   }
 }
 
@@ -52,15 +56,9 @@ export default function EventInfoSection({ date, location }: EventInfoSectionPro
         >
           {location.value}
         </p>
-        <a
-          href={location.mapUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-2 inline-block border border-foreground/30 px-6 py-2 text-xs font-medium tracking-[0.2em] uppercase text-foreground transition-colors hover:bg-foreground hover:text-background"
-          style={{ fontFamily: "var(--font-montserrat)" }}
-        >
-          {location.buttonText}
-        </a>
+        <div className="mt-2">
+          <ActionButton text={location.button.text} url={location.button.url} variant={location.button.variant} />
+        </div>
       </div>
     </section>
   )

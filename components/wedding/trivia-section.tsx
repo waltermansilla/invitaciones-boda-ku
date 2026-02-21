@@ -3,15 +3,17 @@ import { Sparkles } from "lucide-react"
 interface TriviaSectionProps {
   title: string
   subtitle: string
-  buttonText: string
-  buttonUrl: string
+  button: {
+    text: string
+    url: string
+    variant: "primary" | "secondary"
+  }
 }
 
 export default function TriviaSection({
   title,
   subtitle,
-  buttonText,
-  buttonUrl,
+  button,
 }: TriviaSectionProps) {
   return (
     <section className="bg-primary px-6 py-14 text-center">
@@ -29,13 +31,13 @@ export default function TriviaSection({
         {subtitle}
       </p>
       <a
-        href={buttonUrl}
+        href={button.url}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-block rounded-full bg-primary-foreground px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-primary transition-opacity hover:opacity-90"
         style={{ fontFamily: "var(--font-montserrat)" }}
       >
-        {buttonText}
+        {button.text}
       </a>
     </section>
   )

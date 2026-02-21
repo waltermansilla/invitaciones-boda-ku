@@ -1,20 +1,23 @@
 import Image from "next/image"
 import { Plane } from "lucide-react"
+import ActionButton from "./action-button"
 
 interface HoneymoonSectionProps {
   title: string
   description: string
-  buttonText: string
-  buttonUrl: string
   image: string
+  button: {
+    text: string
+    url: string
+    variant: "primary" | "secondary"
+  }
 }
 
 export default function HoneymoonSection({
   title,
   description,
-  buttonText,
-  buttonUrl,
   image,
+  button,
 }: HoneymoonSectionProps) {
   return (
     <section className="flex flex-col items-center px-6 py-14 text-center">
@@ -39,15 +42,7 @@ export default function HoneymoonSection({
       >
         {description}
       </p>
-      <a
-        href={buttonUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block bg-primary px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-primary-foreground transition-opacity hover:opacity-90"
-        style={{ fontFamily: "var(--font-montserrat)" }}
-      >
-        {buttonText}
-      </a>
+      <ActionButton text={button.text} url={button.url} variant={button.variant} />
     </section>
   )
 }

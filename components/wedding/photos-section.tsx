@@ -1,17 +1,20 @@
 import { Camera } from "lucide-react"
+import ActionButton from "./action-button"
 
 interface PhotosSectionProps {
   title: string
   description: string
-  buttonText: string
-  buttonUrl: string
+  button: {
+    text: string
+    url: string
+    variant: "primary" | "secondary"
+  }
 }
 
 export default function PhotosSection({
   title,
   description,
-  buttonText,
-  buttonUrl,
+  button,
 }: PhotosSectionProps) {
   return (
     <section className="flex flex-col items-center px-6 py-14 text-center">
@@ -28,15 +31,7 @@ export default function PhotosSection({
       >
         {description}
       </p>
-      <a
-        href={buttonUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block bg-primary px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-primary-foreground transition-opacity hover:opacity-90"
-        style={{ fontFamily: "var(--font-montserrat)" }}
-      >
-        {buttonText}
-      </a>
+      <ActionButton text={button.text} url={button.url} variant={button.variant} />
     </section>
   )
 }
