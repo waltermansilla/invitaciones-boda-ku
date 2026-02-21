@@ -6,7 +6,10 @@ import Section from "./section"
 import MusicPlayer from "./music-player"
 
 export default function WeddingInvitation() {
-  const { hero, sections, meta, music } = config
+  const hero = config.hero
+  const sections = config.sections ?? []
+  const meta = config.meta
+  const music = config.music
 
   return (
     <main className="mx-auto min-h-screen max-w-lg bg-background">
