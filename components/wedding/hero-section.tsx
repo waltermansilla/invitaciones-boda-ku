@@ -35,9 +35,10 @@ export default function HeroSection({
   eventDate,
   countdownLabels,
 }: HeroSectionProps) {
-  const [time, setTime] = useState(getTimeRemaining(eventDate))
+  const [time, setTime] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null)
 
   useEffect(() => {
+    setTime(getTimeRemaining(eventDate))
     const interval = setInterval(() => {
       setTime(getTimeRemaining(eventDate))
     }, 1000)
@@ -63,20 +64,21 @@ export default function HeroSection({
         {headline}
       </h1>
 
-      <div className="flex items-baseline gap-3">
+      <div className="flex items-baseline gap-3" aria-live="polite">
         {[
-          { value: time.days, label: countdownLabels.days },
-          { value: time.hours, label: countdownLabels.hours },
-          { value: time.minutes, label: countdownLabels.minutes },
-          { value: time.seconds, label: countdownLabels.seconds },
+          { value: time?.days ?? 0, label: countdownLabels.days },
+          { value: time?.hours ?? 0, label: countdownLabels.hours },
+          { value: time?.minutes ?? 0, label: countdownLabels.minutes },
+          { value: time?.seconds ?? 0, label: countdownLabels.seconds },
         ].map((item, i) => (
           <div key={item.label} className="flex items-baseline gap-3">
             <div className="flex flex-col items-center">
               <span
                 className="text-4xl font-light tabular-nums text-foreground md:text-5xl"
                 style={{ fontFamily: "var(--font-cormorant)" }}
+                suppressHydrationWarning
               >
-                {String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")}
+                {time ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0") : "--"}
               </span>
               <span
                 className="mt-1 text-[10px] font-medium tracking-[0.2em] uppercase text-muted-foreground"
