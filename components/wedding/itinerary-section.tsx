@@ -29,6 +29,7 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
   const activatedRef = useRef<Set<number>>(new Set())
   const rafRef = useRef<number>(0)
 
+  /* Position the track so it starts at center of first icon and ends at center of last */
   const positionTrack = useCallback(() => {
     const container = containerRef.current
     const track = trackRef.current
@@ -38,11 +39,11 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
     const last = iconRefs.current[iconRefs.current.length - 1]
     if (!first || !last) return
 
-    const containerRect = container.getBoundingClientRect()
-    const firstCenter = first.getBoundingClientRect().top - containerRect.top + first.offsetHeight / 2
-    const lastCenter = last.getBoundingClientRect().top - containerRect.top + last.offsetHeight / 2
+    const containerTop = container.getBoundingClientRect().top + window.scrollY
+    const firstCenter = first.getBoundingClientRect().top + window.scrollY + first.offsetHeight / 2
+    const lastCenter = last.getBoundingClientRect().top + window.scrollY + last.offsetHeight / 2
 
-    track.style.top = `${firstCenter}px`
+    track.style.top = `${firstCenter - containerTop}px`
     track.style.height = `${lastCenter - firstCenter}px`
   }, [])
 
@@ -68,6 +69,7 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
         if (isActive) {
           el.classList.add("border-primary", "text-primary")
           el.classList.remove("border-foreground/15", "text-foreground/30")
+
           if (!activatedRef.current.has(i)) {
             activatedRef.current.add(i)
             el.classList.add("animate-icon-touch")
@@ -86,9 +88,9 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
 
   useEffect(() => {
     positionTrack()
-    handleScroll()
     window.addEventListener("scroll", handleScroll, { passive: true })
     window.addEventListener("resize", positionTrack)
+    handleScroll()
     return () => {
       window.removeEventListener("scroll", handleScroll)
       window.removeEventListener("resize", positionTrack)
@@ -102,41 +104,49 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
         {title}
       </h2>
 
-      <div className="mx-auto flex w-fit flex-col gap-24" ref={containerRef}>
-        {/* Track: positioned at center of icons (28px = half of 56px icon) */}
+      <div className="flex justify-center">
+      <div ref={containerRef} className="relative">
+        {/* Timeline track -- positioned dynamically from first to last icon center */}
         <div
           ref={trackRef}
-          className="pointer-events-none absolute bg-foreground/10"
-          style={{ left: "27px", width: "2px" }}
+          className="absolute bg-foreground/10"
+          style={{ left: "28px", width: "2px", transform: "translateX(-50%)" }}
         >
           <div
             ref={fillRef}
-            className="absolute top-0 left-0 w-[2px] bg-primary"
-            style={{ height: "0%", willChange: "height" }}
+            className="absolute top-0 bg-primary"
+            style={{ left: "0px", height: "0%", width: "2px", willChange: "height" }}
           />
         </div>
 
-        {events.map((event, index) => {
-          const Icon = iconMap[event.icon] || Heart
-          return (
-            <div key={index} className="relative flex items-start gap-6">
-              <div
-                ref={(el) => { iconRefs.current[index] = el }}
-                className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-foreground/15 bg-background text-foreground/30 transition-colors duration-500"
-              >
-                <Icon className="h-6 w-6" strokeWidth={1.3} />
+        {/* Events */}
+        <div className="flex flex-col gap-24">
+          {events.map((event, index) => {
+            const Icon = iconMap[event.icon] || Heart
+            return (
+              <div key={index} className="relative flex items-start gap-6">
+                {/* Icon circle on LEFT, sits on the timeline */}
+                <div
+                  ref={(el) => { iconRefs.current[index] = el }}
+                  className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-foreground/15 bg-background text-foreground/30 transition-colors duration-500"
+                >
+                  <Icon className="h-6 w-6" strokeWidth={1.3} />
+                </div>
+
+                {/* Details on RIGHT */}
+                <div className="flex flex-col justify-center pt-2">
+                  <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-foreground md:text-lg">
+                    {event.name}
+                  </h3>
+                  <p className="mt-1 text-sm font-light tracking-wide text-foreground/50 md:text-base">
+                    {event.time}
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col justify-center pt-2">
-                <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-foreground md:text-lg">
-                  {event.name}
-                </h3>
-                <p className="mt-1 text-sm font-light tracking-wide text-foreground/50 md:text-base">
-                  {event.time}
-                </p>
-              </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
+      </div>
       </div>
     </section>
   )
