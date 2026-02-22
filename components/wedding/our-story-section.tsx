@@ -11,9 +11,10 @@ interface Moment {
 interface OurStorySectionProps {
   title: string
   moments: Moment[]
+  aspectRatio?: string
 }
 
-function StoryMoment({ moment, index }: { moment: Moment; index: number }) {
+function StoryMoment({ moment, index, aspectRatio }: { moment: Moment; index: number; aspectRatio: string }) {
   const { ref, isVisible } = useFadeIn(0.15)
   const isEven = index % 2 === 0
 
@@ -29,7 +30,7 @@ function StoryMoment({ moment, index }: { moment: Moment; index: number }) {
       <div className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-0`}>
         {/* Image */}
         <div className="w-full md:w-1/2">
-          <div className="relative aspect-[4/3] w-full overflow-hidden">
+          <div className="relative w-full overflow-hidden" style={{ aspectRatio }}>
             <img
               src={moment.image}
               alt={moment.title}
@@ -55,7 +56,7 @@ function StoryMoment({ moment, index }: { moment: Moment; index: number }) {
   )
 }
 
-export default function OurStorySection({ title, moments }: OurStorySectionProps) {
+export default function OurStorySection({ title, moments, aspectRatio = "4/3" }: OurStorySectionProps) {
   return (
     <section className="bg-background py-14">
       <h2 className="mb-10 text-center text-2xl font-semibold tracking-wide uppercase text-foreground md:text-3xl">
@@ -63,7 +64,7 @@ export default function OurStorySection({ title, moments }: OurStorySectionProps
       </h2>
       <div className="flex flex-col gap-6">
         {moments.map((moment, i) => (
-          <StoryMoment key={moment.title} moment={moment} index={i} />
+          <StoryMoment key={moment.title} moment={moment} index={i} aspectRatio={aspectRatio} />
         ))}
       </div>
     </section>

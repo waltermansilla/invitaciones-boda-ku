@@ -6,9 +6,10 @@ import Image from "next/image"
 
 interface GallerySectionProps {
   images: string[]
+  aspectRatio?: string
 }
 
-export default function GallerySection({ images }: GallerySectionProps) {
+export default function GallerySection({ images, aspectRatio = "3/4" }: GallerySectionProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: "start",
@@ -49,7 +50,7 @@ export default function GallerySection({ images }: GallerySectionProps) {
               className="relative mr-[6px] min-w-0 shrink-0 grow-0"
               style={{ flex: "0 0 100%" }}
             >
-              <div className="relative aspect-[4/3] w-full">
+              <div className="relative w-full" style={{ aspectRatio }}>
                 <Image
                   src={src}
                   alt={`Foto de la pareja ${index + 1}`}

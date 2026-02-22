@@ -81,7 +81,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
         )
 
       case "gallery":
-        return <GallerySection images={data.images as string[]} />
+        return <GallerySection images={data.images as string[]} aspectRatio={data.aspectRatio as string | undefined} />
 
       case "itinerary":
         return (
@@ -172,6 +172,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
           <OurStorySection
             title={data.title as string}
             moments={data.moments as { image: string; title: string; text: string }[]}
+            aspectRatio={data.aspectRatio as string | undefined}
           />
         )
 
@@ -196,6 +197,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
         return (
           <ClosingSection
             image={data.image as string}
+            aspectRatio={data.aspectRatio as string | undefined}
             coupleNames={coupleNames}
           />
         )

@@ -138,11 +138,12 @@
 
     {
       "// --- GALERIA DE FOTOS (slider) ---": "",
-      "_comment": "Slider automatico. Imagenes en /public/images/. Agregar o quitar del array.",
+      "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
       "type": "gallery",
       "id": "gallery-photos",
       "blocks": ["slider"],
       "data": {
+        "aspectRatio": "3/4",
         "images": [
           "/images/gallery-1.jpg",
           "/images/gallery-2.jpg",
@@ -343,11 +344,12 @@
 
     {
       "// --- NUESTRA HISTORIA ---": "",
-      "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/images/), title, text. Se alternan izq/der en desktop. Se pueden agregar/quitar momentos.",
+      "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/images/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
       "type": "ourStory",
       "id": "our-story",
       "blocks": ["title", "moments"],
       "data": {
+        "aspectRatio": "4/3",
         "title": "Nuestra historia",
         "moments": [
           {
@@ -459,11 +461,12 @@
 
     {
       "// --- CIERRE VISUAL ---": "",
-      "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
+      "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/images/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
       "type": "closingImage",
       "id": "closing-image",
       "blocks": ["image", "coupleNames"],
       "data": {
+        "aspectRatio": "3/4",
         "image": "/images/gallery-3.jpg"
       }
     },

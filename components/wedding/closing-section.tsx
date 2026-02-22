@@ -2,6 +2,7 @@ import Image from "next/image"
 
 interface ClosingSectionProps {
   image: string
+  aspectRatio?: string
   coupleNames: {
     groomName: string
     brideName: string
@@ -11,12 +12,13 @@ interface ClosingSectionProps {
 
 export default function ClosingSection({
   image,
+  aspectRatio = "3/4",
   coupleNames,
 }: ClosingSectionProps) {
   return (
     <section className="bg-background">
       {/* Full-width closing image */}
-      <div className="relative aspect-[4/3] w-full">
+      <div className="relative w-full" style={{ aspectRatio }}>
         <Image
           src={image}
           alt="Foto de cierre"
