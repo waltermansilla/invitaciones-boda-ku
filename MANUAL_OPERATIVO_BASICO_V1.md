@@ -48,6 +48,8 @@ Abrir `data/wedding-config.json` y cambiar:
   "primaryColor": "#6B7F5E",
   "backgroundColor": "#FAF8F5",
   "textColor": "#3A3A3A",
+  "lightBgTextColor": "#6B7F5E",
+  "darkBgTextColor": "#FFFFFF",
   "accentBackground": "#EDF2E8",
   "modalTextColor": "#FFFFFF",
   "font": {
@@ -58,9 +60,17 @@ Abrir `data/wedding-config.json` y cambiar:
 ```
 - `primaryColor`: color de las secciones con fondo (verde por defecto).
 - `backgroundColor`: fondo general claro.
+- `lightBgTextColor`: color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Cambiar a cualquier hex (ej: `"#555555"` para gris).
+- `darkBgTextColor`: color de todos los textos en secciones de fondo primario/oscuro. Por defecto blanco.
 - `modalTextColor`: color del texto dentro de los modales.
 - `font.family`: nombre exacto tal como aparece en Google Fonts.
 - `font.weights`: pesos que necesitas, separados por coma.
+
+**Ejemplo rapido:** si queres que el texto en fondo claro sea gris en vez de verde, solo cambias:
+```json
+"lightBgTextColor": "#555555"
+```
+Todo se actualiza junto: titulos, parrafos, iconos, botones, separadores.
 
 ### Paso 4: Configurar hero
 ```json
@@ -134,27 +144,24 @@ Cada seccion tiene un campo `bgColor` que controla su fondo:
 
 | Valor de `bgColor` | Que hace | Texto automatico |
 |---------------------|----------|------------------|
-| `"primary"` | Fondo verde (color primario del tema) | Blanco/claro |
-| `"background"` | Fondo crema (color de fondo general) | Negro/gris oscuro |
+| `"primary"` | Fondo verde (color primario del tema) | Usa `darkBgTextColor` del tema (blanco por defecto) |
+| `"background"` | Fondo crema (color de fondo general) | Usa `lightBgTextColor` del tema (verde primario por defecto) |
 
-**El texto se adapta automaticamente al fondo.** Si pones `"primary"` el texto se vuelve claro, si pones `"background"` se vuelve oscuro.
+**El texto se adapta automaticamente al fondo.** Los colores de texto se controlan globalmente desde el tema:
+- `lightBgTextColor` en el tema -> se aplica a TODAS las secciones con `bgColor: "background"`
+- `darkBgTextColor` en el tema -> se aplica a TODAS las secciones con `bgColor: "primary"`
 
-**Override opcional de texto:** si no te gusta el color automatico, podes agregar `textColor`:
+**Override opcional por seccion:** si UNA seccion necesita un color distinto al global, podes agregar `textColor` solo en esa seccion:
 ```json
 {
   "type": "quote",
   "bgColor": "primary",
-  "textColor": "foreground",
+  "textColor": "#FF0000",
   ...
 }
 ```
 
-Valores de `textColor`:
-- `"primary-foreground"` -- blanco/claro (el que usa el fondo verde)
-- `"foreground"` -- negro/gris oscuro (el que usa el fondo crema)
-- Un codigo hex como `"#FF0000"` -- color personalizado
-
-**Si no pones `textColor`, no hace falta.** Se calcula solo segun el `bgColor`.
+El `textColor` de la seccion tiene prioridad sobre el valor global del tema. Acepta cualquier codigo hex.
 
 ### Campos opcionales (dependen del cliente):
 

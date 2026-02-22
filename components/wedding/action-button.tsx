@@ -14,11 +14,11 @@ export default function ActionButton({ text, url, variant }: ActionButtonProps) 
       variantClasses = "rounded-sm bg-primary text-primary-foreground hover:opacity-90"
       break
     case "outline-light":
-      variantClasses = "rounded-sm border border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/10"
+      variantClasses = "rounded-sm border border-current/40 text-inherit hover:bg-current/10"
       break
     case "secondary":
     default:
-      variantClasses = "rounded-sm border border-foreground/30 text-foreground hover:bg-foreground/5"
+      variantClasses = "rounded-sm border border-current/30 text-inherit hover:bg-current/5"
       break
   }
 

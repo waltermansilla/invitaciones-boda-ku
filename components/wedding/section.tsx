@@ -18,6 +18,7 @@ import FooterSection from "./footer-section"
 import ClosingSection from "./closing-section"
 import OurStorySection from "./our-story-section"
 import TruthsSection from "./truths-section"
+import config from "@/data/wedding-config.json"
 
 export interface SectionConfig {
   type: string
@@ -38,26 +39,26 @@ interface SectionProps {
 }
 
 /**
- * Determines background + text classes based on bgColor from JSON.
- * "primary" -> green bg + light text
- * "background" (default) -> cream bg + dark text
- * Optional textColor override.
+ * Determines background + text color based on bgColor from JSON.
+ * Reads lightBgTextColor and darkBgTextColor from theme for automatic text color.
+ * textColor override takes priority if set on a section.
  */
 function getSectionColors(bgColor?: string, textColor?: string) {
+  const theme = config.theme as Record<string, unknown>
   const bg = bgColor === "primary" ? "bg-primary" : "bg-background"
-  let text: string
-  if (textColor === "primary-foreground") {
-    text = "text-primary-foreground"
-  } else if (textColor === "foreground") {
-    text = "text-foreground"
-  } else if (textColor) {
-    // Custom override: use inline style
-    text = ""
+
+  // Resolve text color: override > auto from theme
+  let resolvedTextColor: string
+  if (textColor) {
+    // Manual override from section-level textColor
+    resolvedTextColor = textColor
+  } else if (bgColor === "primary") {
+    resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF"
   } else {
-    // Auto: derive from bg
-    text = bgColor === "primary" ? "text-primary-foreground" : "text-foreground"
+    resolvedTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
   }
-  return { bg, text, customTextColor: textColor && !["primary-foreground", "foreground"].includes(textColor) ? textColor : undefined }
+
+  return { bg, resolvedTextColor }
 }
 
 export default function Section({ section, coupleNames }: SectionProps) {
@@ -252,8 +253,8 @@ export default function Section({ section, coupleNames }: SectionProps) {
         renderContent()
       ) : (
         <div
-          className={`${colors.bg} ${colors.text}`}
-          style={colors.customTextColor ? { color: colors.customTextColor } : undefined}
+          className={colors.bg}
+          style={{ color: colors.resolvedTextColor }}
         >
           {renderContent()}
         </div>

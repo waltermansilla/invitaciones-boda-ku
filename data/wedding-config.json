@@ -19,11 +19,13 @@
   "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
   "// ==========================================..": "",
 
-  "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts (ej: Josefin Sans, Playfair Display, Lato). font.weights = pesos separados por coma (100=thin, 300=light, 400=regular, 600=semibold, 700=bold).",
+  "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma.",
   "theme": {
     "primaryColor": "#6B7F5E",
     "backgroundColor": "#FAF8F5",
     "textColor": "#3A3A3A",
+    "lightBgTextColor": "#6B7F5E",
+    "darkBgTextColor": "#FFFFFF",
     "accentBackground": "#EDF2E8",
     "modalTextColor": "#FFFFFF",
     "font": {
