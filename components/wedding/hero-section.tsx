@@ -67,7 +67,7 @@ export default function HeroSection({
   ]
 
   return (
-    <section className="flex flex-col items-center bg-background">
+    <section className="flex flex-col items-center" style={{ backgroundColor: "var(--night-bg)" }}>
       {/* Couple photo with names overlaid */}
       <div className="relative aspect-[3/4] w-full sm:aspect-[4/5]">
         <Image
@@ -99,7 +99,7 @@ export default function HeroSection({
       </div>
 
       {/* Headline + Countdown below photo */}
-      <div className="flex flex-col items-center px-6 pt-10 pb-10" style={{ color: textColor }}>
+      <div className="flex flex-col items-center px-6 pt-10 pb-10" style={{ color: "var(--night-text)" }}>
         <h1 className="mb-8 text-center text-3xl font-light tracking-wide uppercase text-inherit md:text-4xl">
           {headline}
         </h1>

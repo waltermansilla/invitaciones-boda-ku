@@ -20,7 +20,7 @@ export default function ClosingSection({
   const textColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
 
   return (
-    <section className="bg-background" style={{ color: textColor }}>
+    <section style={{ backgroundColor: "var(--night-bg)", color: "var(--night-text)" }}>
       {/* Full-width closing image */}
       <div className="relative w-full" style={{ aspectRatio }}>
         <Image

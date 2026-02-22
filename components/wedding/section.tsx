@@ -45,20 +45,25 @@ interface SectionProps {
  */
 function getSectionColors(bgColor?: string, textColor?: string) {
   const theme = config.theme as Record<string, unknown>
-  const bg = bgColor === "primary" ? "bg-primary" : "bg-background"
+  const isPrimary = bgColor === "primary"
 
   // Resolve text color: override > auto from theme
+  // Light-bg sections use the dynamic --night-text CSS var for scroll-based transition
   let resolvedTextColor: string
   if (textColor) {
-    // Manual override from section-level textColor
     resolvedTextColor = textColor
-  } else if (bgColor === "primary") {
+  } else if (isPrimary) {
     resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF"
   } else {
-    resolvedTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
+    resolvedTextColor = "var(--night-text)"
   }
 
-  return { bg, resolvedTextColor }
+  // Primary sections keep their fixed bg; background sections use the dynamic night-interpolated bg
+  const bgStyle: React.CSSProperties = isPrimary
+    ? { backgroundColor: (theme.primaryColor as string) || "#6B7F5E" }
+    : { backgroundColor: "var(--night-bg)" }
+
+  return { bgStyle, resolvedTextColor }
 }
 
 export default function Section({ section, coupleNames }: SectionProps) {
@@ -253,8 +258,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
         renderContent()
       ) : (
         <div
-          className={colors.bg}
-          style={{ color: colors.resolvedTextColor }}
+          style={{ ...colors.bgStyle, color: colors.resolvedTextColor }}
         >
           {renderContent()}
         </div>
