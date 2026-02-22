@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react"
 import { Heart, Wine, UtensilsCrossed, Music, Church, Camera, Cake, Car, GlassWater, PartyPopper, Sparkles, Sun, Moon, Clock, MapPin, Gift, Bus } from "lucide-react"
-import config from "@/data/wedding-config.json"
+import { palette } from "@/lib/theme"
 
 interface ItineraryEvent {
   icon: string
@@ -38,10 +38,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
 
 export default function ItinerarySection({ title, events, sectionBgColor }: ItinerarySectionProps) {
   // Resolve the actual bg color so icons can cover the timeline line
-  const theme = config.theme as Record<string, unknown>
   const iconBg = sectionBgColor === "primary"
-    ? (theme.primaryColor as string) || "#6B7F5E"
-    : (theme.backgroundColor as string) || "#FAF8F5"
+    ? palette.primaryColor
+    : palette.backgroundColor
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)

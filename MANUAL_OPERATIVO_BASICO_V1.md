@@ -42,15 +42,26 @@ Abrir `data/wedding-config.json` y cambiar:
 }
 ```
 
-### Paso 3: Ajustar colores y fuente
+### Paso 3: Elegir modo y ajustar colores
 ```json
 "theme": {
-  "primaryColor": "#6B7F5E",
-  "backgroundColor": "#FAF8F5",
-  "textColor": "#3A3A3A",
-  "lightBgTextColor": "#6B7F5E",
-  "darkBgTextColor": "#FFFFFF",
-  "accentBackground": "#EDF2E8",
+  "mode": "light",
+  "light": {
+    "primaryColor": "#6B7F5E",
+    "backgroundColor": "#FAF8F5",
+    "textColor": "#3A3A3A",
+    "lightBgTextColor": "#6B7F5E",
+    "darkBgTextColor": "#FFFFFF",
+    "accentBackground": "#EDF2E8"
+  },
+  "dark": {
+    "primaryColor": "#8A9E7A",
+    "backgroundColor": "#1A1A1A",
+    "textColor": "#E8E4DF",
+    "lightBgTextColor": "#C4D4B8",
+    "darkBgTextColor": "#FFFFFF",
+    "accentBackground": "#2A3328"
+  },
   "modalTextColor": "#FFFFFF",
   "font": {
     "family": "Josefin Sans",
@@ -58,19 +69,26 @@ Abrir `data/wedding-config.json` y cambiar:
   }
 }
 ```
+
+**Modo light vs dark:**
+- `mode`: poner `"light"` para el estilo clasico claro, o `"dark"` para modo noche oscuro. Es un solo cambio y toda la pagina se adapta.
+- Cada modo tiene su propio bloque de colores (`light` y `dark`). Se pueden personalizar por separado.
+- `modalTextColor` y `font` son compartidos entre ambos modos.
+
+**Colores dentro de cada bloque:**
 - `primaryColor`: color de las secciones con fondo (verde por defecto).
-- `backgroundColor`: fondo general claro.
-- `lightBgTextColor`: color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Cambiar a cualquier hex (ej: `"#555555"` para gris).
-- `darkBgTextColor`: color de todos los textos en secciones de fondo primario/oscuro. Por defecto blanco.
-- `modalTextColor`: color del texto dentro de los modales.
+- `backgroundColor`: fondo general.
+- `lightBgTextColor`: color de TODOS los textos, iconos y botones en secciones de fondo claro/background. Cambiar a cualquier hex.
+- `darkBgTextColor`: color de todos los textos en secciones de fondo primario. Por defecto blanco.
+- `accentBackground`: color de fondo para acentos sutiles.
 - `font.family`: nombre exacto tal como aparece en Google Fonts.
 - `font.weights`: pesos que necesitas, separados por coma.
 
-**Ejemplo rapido:** si queres que el texto en fondo claro sea gris en vez de verde, solo cambias:
+**Para activar modo noche, solo cambiar:**
 ```json
-"lightBgTextColor": "#555555"
+"mode": "dark"
 ```
-Todo se actualiza junto: titulos, parrafos, iconos, botones, separadores.
+Todo se actualiza automaticamente: fondos, textos, iconos, botones, overlay, modales, footer.
 
 ### Paso 4: Configurar hero
 ```json
@@ -239,6 +257,7 @@ Quiero eliminar `dateInfo` -- DESPUES:
 | `aspectRatio` | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"` |
 | `bgColor` | `"primary"`, `"background"` |
 | `textColor` | `"primary-foreground"`, `"foreground"`, o un hex como `"#FF0000"` |
+| `theme.mode` | `"light"` (clasico claro), `"dark"` (modo noche) |
 
 ---
 

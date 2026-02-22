@@ -1,5 +1,7 @@
 "use client"
 
+import { isDarkMode, palette } from "@/lib/theme"
+
 interface SocialLink {
   icon: "instagram" | "whatsapp"
   url: string
@@ -56,7 +58,10 @@ export default function FooterSection({
   socialLinks,
 }: FooterSectionProps) {
   return (
-    <footer className="bg-[#4A5A3F] px-6 py-16 text-center">
+    <footer
+      className="px-6 py-16 text-center"
+      style={{ backgroundColor: isDarkMode ? "#111111" : "#4A5A3F" }}
+    >
       <div className="mb-6 flex items-center justify-center gap-6">
         {socialLinks.map((link) => {
           const Icon = iconMap[link.icon]
@@ -67,7 +72,8 @@ export default function FooterSection({
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center text-[#D4C9A8] transition-opacity hover:opacity-70"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center transition-opacity hover:opacity-70"
+              style={{ color: isDarkMode ? palette.primaryColor : "#D4C9A8" }}
               aria-label={link.icon}
             >
               <Icon />
@@ -75,7 +81,10 @@ export default function FooterSection({
           )
         })}
       </div>
-      <p className="text-xs font-light tracking-[0.15em] uppercase text-[#D4C9A8]/50">
+      <p
+        className="text-xs font-light tracking-[0.15em] uppercase"
+        style={{ color: isDarkMode ? `${palette.primaryColor}60` : "rgba(212,201,168,0.5)" }}
+      >
         {brandName}
       </p>
     </footer>

@@ -1,5 +1,5 @@
 import Image from "next/image"
-import config from "@/data/wedding-config.json"
+import { palette } from "@/lib/theme"
 
 interface ClosingSectionProps {
   image: string
@@ -16,8 +16,7 @@ export default function ClosingSection({
   aspectRatio = "3/4",
   coupleNames,
 }: ClosingSectionProps) {
-  const theme = config.theme as Record<string, unknown>
-  const textColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
+  const textColor = palette.lightBgTextColor
 
   return (
     <section className="bg-background" style={{ color: textColor }}>
