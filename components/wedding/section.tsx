@@ -18,7 +18,7 @@ import FooterSection from "./footer-section"
 import ClosingSection from "./closing-section"
 import OurStorySection from "./our-story-section"
 import TruthsSection from "./truths-section"
-import { palette } from "@/lib/theme"
+import config from "@/data/wedding-config.json"
 
 export interface SectionConfig {
   type: string
@@ -44,15 +44,18 @@ interface SectionProps {
  * textColor override takes priority if set on a section.
  */
 function getSectionColors(bgColor?: string, textColor?: string) {
+  const theme = config.theme as Record<string, unknown>
   const bg = bgColor === "primary" ? "bg-primary" : "bg-background"
 
+  // Resolve text color: override > auto from theme
   let resolvedTextColor: string
   if (textColor) {
+    // Manual override from section-level textColor
     resolvedTextColor = textColor
   } else if (bgColor === "primary") {
-    resolvedTextColor = palette.darkBgTextColor
+    resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF"
   } else {
-    resolvedTextColor = palette.lightBgTextColor
+    resolvedTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
   }
 
   return { bg, resolvedTextColor }

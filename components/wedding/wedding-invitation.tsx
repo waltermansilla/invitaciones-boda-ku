@@ -1,7 +1,6 @@
 "use client"
 
 import config from "@/data/wedding-config.json"
-import { isDarkMode, palette } from "@/lib/theme"
 import ModalProvider from "./modal-provider"
 import HeroOverlay from "./hero-overlay"
 import HeroSection from "./hero-section"
@@ -9,7 +8,6 @@ import Section from "./section"
 import MusicPlayer from "./music-player"
 
 export default function WeddingInvitation() {
-  console.log("[v0] Dark mode:", isDarkMode, "Palette:", palette)
   const hero = config.hero
   const sections = config.sections ?? []
   const meta = config.meta
