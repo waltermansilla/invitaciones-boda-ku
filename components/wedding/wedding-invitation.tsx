@@ -37,6 +37,7 @@ export default function WeddingInvitation() {
           brideName={meta.coupleNames.brideName}
           separator={meta.coupleNames.separator}
           showNamesOnPhoto={(hero as Record<string, unknown>).showNamesOnPhoto as boolean | undefined}
+          countdownPrefix={(hero as Record<string, unknown>).countdownPrefix as string | undefined}
           countdownLabels={hero.countdownLabels}
         />
 

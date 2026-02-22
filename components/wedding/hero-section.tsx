@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import config from "@/data/wedding-config.json"
 
 interface HeroSectionProps {
   coupleImage: string
@@ -11,6 +12,7 @@ interface HeroSectionProps {
   brideName: string
   separator: string
   showNamesOnPhoto?: boolean
+  countdownPrefix?: string
   countdownLabels: {
     days: string
     hours: string
@@ -37,8 +39,11 @@ export default function HeroSection({
   brideName,
   separator,
   showNamesOnPhoto = true,
+  countdownPrefix,
   countdownLabels,
 }: HeroSectionProps) {
+  const theme = config.theme as Record<string, unknown>
+  const textColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
   const [time, setTime] = useState<{
     days: number
     hours: number
@@ -94,10 +99,17 @@ export default function HeroSection({
       </div>
 
       {/* Headline + Countdown below photo */}
-      <div className="flex flex-col items-center px-6 pt-10 pb-10">
-        <h1 className="mb-8 text-center text-3xl font-semibold tracking-wide uppercase text-foreground md:text-4xl">
+      <div className="flex flex-col items-center px-6 pt-10 pb-10" style={{ color: textColor }}>
+        <h1 className="mb-8 text-center text-3xl font-light tracking-wide uppercase text-inherit md:text-4xl">
           {headline}
         </h1>
+
+        {/* Countdown prefix */}
+        {countdownPrefix && (
+          <p className="mb-4 text-[10px] font-medium tracking-[0.2em] uppercase text-inherit/60">
+            {countdownPrefix}
+          </p>
+        )}
 
         {/* Countdown */}
         <div className="flex items-start justify-center gap-2" aria-live="polite">
@@ -105,7 +117,7 @@ export default function HeroSection({
             <div key={item.label} className="flex items-start gap-2">
               <div className="flex flex-col items-center">
                 <span
-                  className="text-4xl font-light tabular-nums text-foreground md:text-5xl"
+                  className="text-4xl font-light tabular-nums text-inherit md:text-5xl"
                   suppressHydrationWarning
                 >
                   {time
@@ -115,12 +127,12 @@ export default function HeroSection({
                       )
                     : "--"}
                 </span>
-                <span className="mt-1 text-[9px] font-medium tracking-[0.15em] uppercase text-muted-foreground">
+                <span className="mt-1 text-[9px] font-medium tracking-[0.15em] uppercase text-inherit/50">
                   {item.label}
                 </span>
               </div>
               {i < 3 && (
-                <span className="mt-1 text-3xl font-light text-foreground/40 md:text-4xl">
+                <span className="mt-1 text-3xl font-light text-inherit/40 md:text-4xl">
                   :
                 </span>
               )}
