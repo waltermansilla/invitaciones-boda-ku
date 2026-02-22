@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useCallback } from "react"
 import { Heart, Wine, UtensilsCrossed, Music } from "lucide-react"
 
 interface ItineraryEvent {
@@ -22,74 +22,89 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
 }
 
 export default function ItinerarySection({ title, events }: ItinerarySectionProps) {
-  const sectionRef = useRef<HTMLElement>(null)
-  const timelineTrackRef = useRef<HTMLDivElement>(null)
-  const [fillHeight, setFillHeight] = useState(0)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const fillRef = useRef<HTMLDivElement>(null)
+  const iconRefs = useRef<(HTMLDivElement | null)[]>([])
+  const rafRef = useRef<number>(0)
 
-  useEffect(() => {
-    const section = sectionRef.current
-    const track = timelineTrackRef.current
-    if (!section || !track) return
+  const handleScroll = useCallback(() => {
+    cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(() => {
+      const track = trackRef.current
+      const fill = fillRef.current
+      if (!track || !fill) return
 
-    const handleScroll = () => {
-      const sectionRect = section.getBoundingClientRect()
       const viewportMid = window.innerHeight / 2
-
-      const trackTop = track.getBoundingClientRect().top
-      const trackHeight = track.offsetHeight
-
-      const progress = (viewportMid - trackTop) / trackHeight
+      const trackRect = track.getBoundingClientRect()
+      const progress = (viewportMid - trackRect.top) / trackRect.height
       const clamped = Math.min(Math.max(progress, 0), 1)
-      setFillHeight(clamped * 100)
-    }
+      fill.style.height = `${clamped * 100}%`
 
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener("scroll", handleScroll)
+      // Update icon borders
+      iconRefs.current.forEach((el) => {
+        if (!el) return
+        const iconRect = el.getBoundingClientRect()
+        const iconMid = iconRect.top + iconRect.height / 2
+        if (iconMid <= viewportMid) {
+          el.classList.add("border-primary", "text-primary")
+          el.classList.remove("border-foreground/15", "text-foreground/30")
+        } else {
+          el.classList.remove("border-primary", "text-primary")
+          el.classList.add("border-foreground/15", "text-foreground/30")
+        }
+      })
+    })
   }, [])
 
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll()
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+      cancelAnimationFrame(rafRef.current)
+    }
+  }, [handleScroll])
+
   return (
-    <section ref={sectionRef} className="flex flex-col items-center bg-background px-6 py-20">
-      <h2 className="mb-14 text-center text-2xl font-semibold tracking-[0.25em] uppercase text-foreground md:text-3xl">
+    <section className="flex flex-col items-center bg-background px-6 py-20">
+      <h2 className="mb-16 text-center text-2xl font-semibold tracking-[0.25em] uppercase text-foreground md:text-3xl">
         {title}
       </h2>
 
-      <div className="relative w-full max-w-sm">
-        {/* Timeline track */}
+      <div className="relative flex w-full max-w-xs flex-col items-center">
+        {/* Timeline vertical track -- centered */}
         <div
-          ref={timelineTrackRef}
-          className="absolute left-5 top-0 bottom-0 w-px bg-foreground/10 md:left-6"
+          ref={trackRef}
+          className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-foreground/10"
         >
-          {/* Filled portion */}
           <div
-            className="absolute top-0 left-0 w-full bg-primary transition-all duration-150 ease-out"
-            style={{ height: `${fillHeight}%` }}
+            ref={fillRef}
+            className="absolute left-0 top-0 w-full bg-primary"
+            style={{ height: "0%", willChange: "height" }}
           />
         </div>
 
         {/* Events */}
-        <div className="flex flex-col gap-12">
+        <div className="flex w-full flex-col gap-20">
           {events.map((event, index) => {
             const Icon = iconMap[event.icon] || Heart
             return (
-              <div key={index} className="relative flex items-start gap-7 pl-0 md:gap-8">
-                {/* Icon dot on the timeline */}
-                <div className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-background md:h-12 md:w-12">
-                  <Icon
-                    className="h-6 w-6 text-primary md:h-7 md:w-7"
-                    strokeWidth={1.2}
-                  />
+              <div key={index} className="flex flex-col items-center">
+                {/* Icon circle ON the timeline */}
+                <div
+                  ref={(el) => { iconRefs.current[index] = el }}
+                  className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 border-foreground/15 bg-background text-foreground/30 transition-colors duration-500"
+                >
+                  <Icon className="h-6 w-6" strokeWidth={1.3} />
                 </div>
 
-                {/* Text */}
-                <div className="flex flex-col justify-center gap-1 pt-1">
-                  <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-foreground md:text-lg">
-                    {event.name}
-                  </h3>
-                  <p className="text-sm font-light tracking-wide text-foreground/50 md:text-base">
-                    {event.time}
-                  </p>
-                </div>
+                {/* Text below icon */}
+                <h3 className="mt-4 text-center text-base font-semibold tracking-[0.15em] uppercase text-foreground md:text-lg">
+                  {event.name}
+                </h3>
+                <p className="mt-1 text-center text-sm font-light tracking-wide text-foreground/50 md:text-base">
+                  {event.time}
+                </p>
               </div>
             )
           })}
