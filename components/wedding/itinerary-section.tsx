@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useCallback } from "react"
-import { Heart, Wine, UtensilsCrossed, Music } from "lucide-react"
+import { Heart, Wine, UtensilsCrossed, Music, Church, Camera, Cake, Car, GlassWater, PartyPopper, Sparkles, Sun, Moon, Clock, MapPin, Gift, Bus } from "lucide-react"
 
 interface ItineraryEvent {
   icon: string
@@ -19,6 +19,19 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
   wine: Wine,
   utensils: UtensilsCrossed,
   music: Music,
+  church: Church,
+  camera: Camera,
+  cake: Cake,
+  car: Car,
+  glass: GlassWater,
+  party: PartyPopper,
+  sparkles: Sparkles,
+  sun: Sun,
+  moon: Moon,
+  clock: Clock,
+  pin: MapPin,
+  gift: Gift,
+  bus: Bus,
 }
 
 export default function ItinerarySection({ title, events }: ItinerarySectionProps) {

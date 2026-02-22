@@ -118,17 +118,21 @@
       }
     },
     {
-      "_comment": "ITINERARIO / LINEA DE TIEMPO: titulo y lista de eventos con icono, nombre y hora. Iconos disponibles: heart, wine, utensils, music. Se pueden agregar mas eventos copiando un objeto del array.",
+      "_comment": "ITINERARIO / LINEA DE TIEMPO: titulo y lista de eventos con icono, nombre y hora. Se pueden agregar, quitar o reordenar los eventos libremente. Cada evento tiene: icon (nombre del icono), name (texto que se muestra) y time (hora). ICONOS DISPONIBLES: heart (corazon), wine (copa de vino), utensils (cubiertos), music (nota musical), church (iglesia), camera (camara), cake (torta), car (auto), glass (vaso de agua), party (fiesta), sparkles (brillos), sun (sol), moon (luna), clock (reloj), pin (ubicacion), gift (regalo), bus (transporte).",
       "type": "itinerary",
       "id": "itinerary-timeline",
       "blocks": ["title", "timeline"],
       "data": {
         "title": "Itinerario",
+        "_comment_events": "Cada objeto es un momento del evento. Agregar o quitar copiando/borrando objetos. icon = nombre del icono (ver lista arriba), name = titulo del momento, time = hora.",
         "events": [
-          { "icon": "heart", "name": "Civil", "time": "18:00 hs" },
+          { "icon": "church", "name": "Ceremonia", "time": "18:00 hs" },
+          { "icon": "camera", "name": "Fotos", "time": "18:45 hs" },
           { "icon": "wine", "name": "Recepcion", "time": "19:00 hs" },
           { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
-          { "icon": "music", "name": "Fiesta", "time": "23:30 hs" }
+          { "icon": "cake", "name": "Torta", "time": "23:00 hs" },
+          { "icon": "music", "name": "Fiesta", "time": "23:30 hs" },
+          { "icon": "bus", "name": "Transporte", "time": "04:00 hs" }
         ]
       }
     },
