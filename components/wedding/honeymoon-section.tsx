@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { Copy, Check } from "lucide-react"
 import { useModal } from "./modal-provider"
 
@@ -28,7 +27,6 @@ function CopyBtn({ value }: { value: string }) {
 interface HoneymoonSectionProps {
   title: string
   description: string
-  image: string
   button: { text: string; url: string; variant: "primary" | "secondary" }
   modal: {
     title: string
@@ -38,7 +36,7 @@ interface HoneymoonSectionProps {
   }
 }
 
-export default function HoneymoonSection({ title, description, image, button, modal }: HoneymoonSectionProps) {
+export default function HoneymoonSection({ title, description, button, modal }: HoneymoonSectionProps) {
   const { openModal } = useModal()
 
   const handleOpen = () => {
@@ -73,11 +71,7 @@ export default function HoneymoonSection({ title, description, image, button, mo
   }
 
   return (
-    <section className="flex flex-col items-center bg-background text-center">
-      <div className="relative aspect-[4/3] w-full">
-        <Image src={image} alt="Luna de miel" fill className="object-cover" />
-      </div>
-      <div className="flex flex-col items-center px-8 py-14">
+    <section className="flex flex-col items-center bg-background px-8 py-14 text-center">
         <h2 className="mb-3 text-2xl font-semibold tracking-wide uppercase text-foreground md:text-3xl">
           {title}
         </h2>
@@ -90,7 +84,6 @@ export default function HoneymoonSection({ title, description, image, button, mo
         >
           {button.text}
         </button>
-      </div>
     </section>
   )
 }

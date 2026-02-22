@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { HelpCircle, Copy, Check } from "lucide-react"
 import { useModal } from "./modal-provider"
 
@@ -29,7 +28,6 @@ interface GiftCardSectionProps {
   icon: string
   title: string
   description: string
-  image: string
   button: { text: string; url: string; variant: "primary" | "secondary" }
   modal: {
     title: string
@@ -39,7 +37,7 @@ interface GiftCardSectionProps {
   }
 }
 
-export default function GiftCardSection({ title, description, image, button, modal }: GiftCardSectionProps) {
+export default function GiftCardSection({ title, description, button, modal }: GiftCardSectionProps) {
   const { openModal } = useModal()
 
   const handleOpen = () => {
@@ -89,17 +87,12 @@ export default function GiftCardSection({ title, description, image, button, mod
       <p className="mb-6 max-w-sm text-sm font-light leading-relaxed text-primary-foreground/80">
         {description}
       </p>
-      <div className="mb-8">
-        <button
-          onClick={handleOpen}
-          className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-primary-foreground/40 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-foreground transition-all duration-200 hover:bg-primary-foreground/10"
-        >
-          {button.text}
-        </button>
-      </div>
-      <div className="relative aspect-[4/3] w-full max-w-md overflow-hidden">
-        <Image src={image} alt="Regalo" fill className="object-cover" />
-      </div>
+      <button
+        onClick={handleOpen}
+        className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-primary-foreground/40 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-foreground transition-all duration-200 hover:bg-primary-foreground/10"
+      >
+        {button.text}
+      </button>
     </section>
   )
 }
