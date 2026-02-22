@@ -21,7 +21,7 @@
 
   "_comment_theme": "mode = 'light' (modo normal) o 'dark' (modo noche). Cambia toda la paleta de la pagina. Los colores del bloque 'light' se usan en modo light, los del bloque 'dark' en modo dark. modalTextColor y font aplican a ambos modos.",
   "theme": {
-    "mode": "light",
+    "mode": "dark",
     "light": {
       "primaryColor": "#6B7F5E",
       "backgroundColor": "#FAF8F5",

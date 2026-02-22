@@ -53,16 +53,24 @@ export default function RootLayout({
         {isDarkMode && (
           <style dangerouslySetInnerHTML={{ __html: `
             :root.dark-mode {
-              --dm-background: ${palette.backgroundColor};
-              --dm-foreground: ${palette.textColor};
-              --dm-primary: ${palette.primaryColor};
-              --dm-card: ${palette.backgroundColor};
-              --dm-secondary: ${palette.accentBackground};
-              --dm-muted: ${palette.accentBackground};
-              --dm-muted-fg: ${palette.textColor}80;
-              --dm-accent: ${palette.primaryColor};
-              --dm-border: ${palette.primaryColor}30;
-              --dm-accent-bg: ${palette.accentBackground};
+              --background: ${palette.backgroundColor};
+              --foreground: ${palette.textColor};
+              --primary: ${palette.primaryColor};
+              --primary-foreground: #FFFFFF;
+              --card: ${palette.backgroundColor};
+              --card-foreground: ${palette.textColor};
+              --popover: ${palette.backgroundColor};
+              --popover-foreground: ${palette.textColor};
+              --secondary: ${palette.accentBackground};
+              --secondary-foreground: ${palette.textColor};
+              --muted: ${palette.accentBackground};
+              --muted-foreground: ${palette.textColor}80;
+              --accent: ${palette.primaryColor};
+              --accent-foreground: #FFFFFF;
+              --border: ${palette.primaryColor}30;
+              --input: ${palette.primaryColor}30;
+              --ring: ${palette.primaryColor};
+              --accent-bg: ${palette.accentBackground};
             }
           `}} />
         )}
