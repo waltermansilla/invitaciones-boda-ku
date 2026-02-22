@@ -2,19 +2,35 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { HelpCircle } from "lucide-react"
-import WeddingModal, { CopyButton } from "./wedding-modal"
+import { HelpCircle, Copy, Check } from "lucide-react"
+import { useModal } from "./modal-provider"
+
+function CopyBtn({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false)
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch { /* noop */ }
+  }
+  return (
+    <button
+      onClick={handleCopy}
+      className="ml-2 inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-sm border border-primary-foreground/20 text-primary-foreground/50 transition-colors hover:text-primary-foreground"
+      aria-label="Copiar"
+    >
+      {copied ? <Check className="h-3 w-3 text-primary-foreground" strokeWidth={2} /> : <Copy className="h-3 w-3" strokeWidth={1.5} />}
+    </button>
+  )
+}
 
 interface GiftCardSectionProps {
   icon: string
   title: string
   description: string
   image: string
-  button: {
-    text: string
-    url: string
-    variant: "primary" | "secondary"
-  }
+  button: { text: string; url: string; variant: "primary" | "secondary" }
   modal: {
     title: string
     suggestedValue: string
@@ -23,39 +39,12 @@ interface GiftCardSectionProps {
   }
 }
 
-export default function GiftCardSection({
-  title,
-  description,
-  image,
-  button,
-  modal,
-}: GiftCardSectionProps) {
-  const [open, setOpen] = useState(false)
+export default function GiftCardSection({ title, description, image, button, modal }: GiftCardSectionProps) {
+  const { openModal } = useModal()
 
-  return (
-    <section className="flex flex-col items-center bg-primary px-8 py-14 text-center">
-      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-primary-foreground/30">
-        <HelpCircle className="h-5 w-5 text-primary-foreground" strokeWidth={1.3} />
-      </div>
-      <h2 className="mb-3 text-xl font-semibold tracking-wide uppercase text-primary-foreground md:text-2xl">
-        {title}
-      </h2>
-      <p className="mb-6 max-w-sm text-sm font-light leading-relaxed text-primary-foreground/80">
-        {description}
-      </p>
-      <div className="mb-8">
-        <button
-          onClick={() => setOpen(true)}
-          className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-primary-foreground/40 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-foreground transition-all duration-200 hover:bg-primary-foreground/10"
-        >
-          {button.text}
-        </button>
-      </div>
-      <div className="relative aspect-[4/3] w-full max-w-md overflow-hidden">
-        <Image src={image} alt="Regalo" fill className="object-cover" />
-      </div>
-
-      <WeddingModal open={open} onClose={() => setOpen(false)}>
+  const handleOpen = () => {
+    openModal(
+      <>
         <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
           {modal.title}
         </h3>
@@ -81,11 +70,36 @@ export default function GiftCardSection({
                   {item.value}
                 </p>
               </div>
-              <CopyButton value={item.value} />
+              <CopyBtn value={item.value} />
             </div>
           ))}
         </div>
-      </WeddingModal>
+      </>
+    )
+  }
+
+  return (
+    <section className="flex flex-col items-center bg-primary px-8 py-14 text-center">
+      <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-primary-foreground/30">
+        <HelpCircle className="h-5 w-5 text-primary-foreground" strokeWidth={1.3} />
+      </div>
+      <h2 className="mb-3 text-xl font-semibold tracking-wide uppercase text-primary-foreground md:text-2xl">
+        {title}
+      </h2>
+      <p className="mb-6 max-w-sm text-sm font-light leading-relaxed text-primary-foreground/80">
+        {description}
+      </p>
+      <div className="mb-8">
+        <button
+          onClick={handleOpen}
+          className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-primary-foreground/40 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-foreground transition-all duration-200 hover:bg-primary-foreground/10"
+        >
+          {button.text}
+        </button>
+      </div>
+      <div className="relative aspect-[4/3] w-full max-w-md overflow-hidden">
+        <Image src={image} alt="Regalo" fill className="object-cover" />
+      </div>
     </section>
   )
 }

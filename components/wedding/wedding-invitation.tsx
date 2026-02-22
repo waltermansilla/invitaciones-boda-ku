@@ -1,6 +1,7 @@
 "use client"
 
 import config from "@/data/wedding-config.json"
+import ModalProvider from "./modal-provider"
 import HeroOverlay from "./hero-overlay"
 import HeroSection from "./hero-section"
 import Section from "./section"
@@ -14,41 +15,43 @@ export default function WeddingInvitation() {
   const overlay = config.overlay
 
   return (
-    <main className="mx-auto min-h-screen max-w-lg">
-      {/* Fullscreen entry overlay */}
-      {overlay.enabled && (
-        <HeroOverlay
+    <ModalProvider>
+      <main className="mx-auto min-h-screen max-w-lg">
+        {/* Fullscreen entry overlay */}
+        {overlay.enabled && (
+          <HeroOverlay
+            groomName={meta.coupleNames.groomName}
+            brideName={meta.coupleNames.brideName}
+            separator={meta.coupleNames.separator}
+            phrase={overlay.phrase}
+            buttonText={overlay.buttonText}
+          />
+        )}
+
+        {/* Hero is always rendered first */}
+        <HeroSection
+          coupleImage={hero.coupleImage}
+          headline={hero.headline}
+          eventDate={hero.eventDate}
           groomName={meta.coupleNames.groomName}
           brideName={meta.coupleNames.brideName}
           separator={meta.coupleNames.separator}
-          phrase={overlay.phrase}
-          buttonText={overlay.buttonText}
+          countdownLabels={hero.countdownLabels}
         />
-      )}
 
-      {/* Hero is always rendered first */}
-      <HeroSection
-        coupleImage={hero.coupleImage}
-        headline={hero.headline}
-        eventDate={hero.eventDate}
-        groomName={meta.coupleNames.groomName}
-        brideName={meta.coupleNames.brideName}
-        separator={meta.coupleNames.separator}
-        countdownLabels={hero.countdownLabels}
-      />
+        {/* Dynamic sections: order controlled by array position in JSON */}
+        {sections.map((section) => (
+          <Section
+            key={section.id}
+            section={section}
+            coupleNames={meta.coupleNames}
+          />
+        ))}
 
-      {/* Dynamic sections: order controlled by array position in JSON */}
-      {sections.map((section) => (
-        <Section
-          key={section.id}
-          section={section}
-          coupleNames={meta.coupleNames}
-        />
-      ))}
-
-      {music.enabled && (
-        <MusicPlayer src={music.src} autoplay={music.autoplay} />
-      )}
-    </main>
+        {music.enabled && (
+          <MusicPlayer src={music.src} autoplay={music.autoplay} />
+        )}
+      </main>
+    </ModalProvider>
   )
 }
