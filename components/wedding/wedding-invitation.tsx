@@ -16,7 +16,7 @@ export default function WeddingInvitation() {
 
   return (
     <ModalProvider>
-      <main className="mx-auto min-h-screen max-w-lg">
+      <main className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl">
         {/* Fullscreen entry overlay */}
         {overlay.enabled && (
           <HeroOverlay

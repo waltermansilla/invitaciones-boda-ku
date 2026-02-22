@@ -38,13 +38,13 @@ export default function HeroOverlay({
       <div className="mb-8 h-px w-12 bg-primary/30" />
 
       {/* Couple names */}
-      <h1 className="text-center text-4xl font-extralight tracking-[0.25em] uppercase text-foreground sm:text-5xl md:text-6xl">
+      <h1 className="text-center text-4xl font-extralight tracking-[0.25em] uppercase text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
         {brideName}
       </h1>
-      <span className="my-3 text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl">
+      <span className="my-3 text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl md:text-4xl">
         {separator}
       </span>
-      <h1 className="text-center text-4xl font-extralight tracking-[0.25em] uppercase text-foreground sm:text-5xl md:text-6xl">
+      <h1 className="text-center text-4xl font-extralight tracking-[0.25em] uppercase text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
         {groomName}
       </h1>
 

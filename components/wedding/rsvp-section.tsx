@@ -84,7 +84,7 @@ export default function RSVPSection({
 
   return (
     <section className="bg-[#5C6E50] px-6 py-14">
-      <div className="mx-auto max-w-sm">
+      <div className="mx-auto max-w-sm md:max-w-md">
         <h2 className="mb-1 text-center text-xl font-semibold tracking-[0.2em] uppercase text-white/90 md:text-2xl">
           {title}
         </h2>

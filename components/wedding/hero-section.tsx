@@ -75,13 +75,13 @@ export default function HeroSection({
 
         {/* Names on the photo */}
         <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-10">
-          <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl">
+          <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl md:text-5xl">
             {brideName}
           </p>
-          <span className="my-1 text-lg font-extralight tracking-[0.3em] text-white/60 sm:text-xl">
+          <span className="my-1 text-lg font-extralight tracking-[0.3em] text-white/60 sm:text-xl md:text-2xl">
             {separator}
           </span>
-          <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl">
+          <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl md:text-5xl">
             {groomName}
           </p>
         </div>
