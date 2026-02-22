@@ -3,6 +3,8 @@
 import AnimatedSection from "./animated-section"
 import QuoteSection from "./quote-section"
 import EventInfoSection from "./event-info-section"
+import DateInfoSection from "./date-info-section"
+import LocationInfoSection from "./location-info-section"
 import GallerySection from "./gallery-section"
 import ItinerarySection from "./itinerary-section"
 import PhotosSection from "./photos-section"
@@ -61,6 +63,23 @@ export default function Section({ section, coupleNames }: SectionProps) {
           />
         )
 
+      case "dateInfo":
+        return (
+          <DateInfoSection
+            title={data.title as string}
+            value={data.value as string}
+          />
+        )
+
+      case "locationInfo":
+        return (
+          <LocationInfoSection
+            title={data.title as string}
+            address={data.address as string}
+            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
+          />
+        )
+
       case "gallery":
         return <GallerySection images={data.images as string[]} />
 
@@ -87,7 +106,6 @@ export default function Section({ section, coupleNames }: SectionProps) {
             icon={data.icon as string}
             title={data.title as string}
             description={data.description as string}
-            image={data.image as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
             modal={data.modal as { title: string; suggestedValue: string; description: string; transferData: { label: string; value: string }[] }}
           />
@@ -98,7 +116,6 @@ export default function Section({ section, coupleNames }: SectionProps) {
           <HoneymoonSection
             title={data.title as string}
             description={data.description as string}
-            image={data.image as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
             modal={data.modal as { title: string; description: string; bankData: { label: string; value: string }[]; thankYouText: string }}
           />

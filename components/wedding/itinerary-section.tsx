@@ -1,3 +1,6 @@
+"use client"
+
+import { useEffect, useRef, useState } from "react"
 import { Heart, Wine, UtensilsCrossed, Music } from "lucide-react"
 
 interface ItineraryEvent {
@@ -19,38 +22,71 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
 }
 
 export default function ItinerarySection({ title, events }: ItinerarySectionProps) {
+  const sectionRef = useRef<HTMLElement>(null)
+  const timelineTrackRef = useRef<HTMLDivElement>(null)
+  const [fillHeight, setFillHeight] = useState(0)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    const track = timelineTrackRef.current
+    if (!section || !track) return
+
+    const handleScroll = () => {
+      const sectionRect = section.getBoundingClientRect()
+      const viewportMid = window.innerHeight / 2
+
+      const trackTop = track.getBoundingClientRect().top
+      const trackHeight = track.offsetHeight
+
+      const progress = (viewportMid - trackTop) / trackHeight
+      const clamped = Math.min(Math.max(progress, 0), 1)
+      setFillHeight(clamped * 100)
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   return (
-    <section className="flex flex-col items-center bg-background px-6 py-14">
-      <div className="w-full max-w-xs rounded-sm border border-foreground/15 px-8 py-10">
-        <h2
-          className="mb-10 text-center text-lg font-medium tracking-[0.25em] uppercase text-foreground"
+    <section ref={sectionRef} className="flex flex-col items-center bg-background px-6 py-20">
+      <h2 className="mb-14 text-center text-2xl font-semibold tracking-[0.25em] uppercase text-foreground md:text-3xl">
+        {title}
+      </h2>
 
+      <div className="relative w-full max-w-sm">
+        {/* Timeline track */}
+        <div
+          ref={timelineTrackRef}
+          className="absolute left-5 top-0 bottom-0 w-px bg-foreground/10 md:left-6"
         >
-          {title}
-        </h2>
+          {/* Filled portion */}
+          <div
+            className="absolute top-0 left-0 w-full bg-primary transition-all duration-150 ease-out"
+            style={{ height: `${fillHeight}%` }}
+          />
+        </div>
 
-        <div className="flex flex-col items-center">
+        {/* Events */}
+        <div className="flex flex-col gap-12">
           {events.map((event, index) => {
             const Icon = iconMap[event.icon] || Heart
             return (
-              <div key={index} className="flex flex-col items-center">
-                {/* Connecting line above (except first) */}
-                {index > 0 && <div className="h-6 w-px bg-primary/30" />}
-                <div className="flex flex-col items-center gap-1 py-1">
+              <div key={index} className="relative flex items-start gap-7 pl-0 md:gap-8">
+                {/* Icon dot on the timeline */}
+                <div className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-background md:h-12 md:w-12">
                   <Icon
-                    className="h-5 w-5 text-primary"
-                    strokeWidth={1.3}
+                    className="h-6 w-6 text-primary md:h-7 md:w-7"
+                    strokeWidth={1.2}
                   />
-                  <h3
-                    className="text-xs font-semibold tracking-[0.2em] uppercase text-foreground"
-          
-                  >
+                </div>
+
+                {/* Text */}
+                <div className="flex flex-col justify-center gap-1 pt-1">
+                  <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-foreground md:text-lg">
                     {event.name}
                   </h3>
-                  <p
-                    className="text-xs font-light text-foreground/60"
-          
-                  >
+                  <p className="text-sm font-light tracking-wide text-foreground/50 md:text-base">
                     {event.time}
                   </p>
                 </div>

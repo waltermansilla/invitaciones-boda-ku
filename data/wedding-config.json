@@ -65,39 +65,43 @@
       }
     },
     {
-      "_comment": "FECHA Y UBICACIONES: la fecha se muestra arriba y las ubicaciones abajo. Cada ubicacion tiene un boton con URL a Google Maps. Poner enabled en false para ocultar una ubicacion sin borrarla. Se pueden agregar mas ubicaciones copiando un objeto del array locations.",
-      "type": "eventInfo",
-      "id": "event-info",
-      "blocks": ["date", "locations"],
+      "_comment": "FECHA DEL EVENTO: seccion independiente con icono de calendario, titulo y fecha. Se puede mover libremente en el orden de secciones.",
+      "type": "dateInfo",
+      "id": "date-info",
+      "blocks": ["title", "value"],
       "data": {
-        "date": {
-          "icon": "calendar",
-          "title": "Cuando?",
-          "value": "10 de Octubre 2026"
-        },
-        "_comment_locations": "Array de ubicaciones. Cada una tiene: enabled (true/false), title, address, y button con text, url (Google Maps) y variant (secondary, primary, outline-light).",
-        "locations": [
-          {
-            "enabled": true,
-            "title": "Civil",
-            "address": "Registro Civil, Calle 50 N 123",
-            "button": {
-              "text": "Como llegar",
-              "url": "https://maps.google.com",
-              "variant": "secondary"
-            }
-          },
-          {
-            "enabled": true,
-            "title": "Recepcion",
-            "address": "Ruta 345 Km 1.9",
-            "button": {
-              "text": "Como llegar",
-              "url": "https://maps.google.com",
-              "variant": "secondary"
-            }
-          }
-        ]
+        "title": "Cuando?",
+        "value": "10 de Octubre 2026"
+      }
+    },
+    {
+      "_comment": "UBICACION CIVIL: seccion independiente con icono de pin, titulo, direccion y boton a Google Maps. Se puede mover, duplicar o eliminar.",
+      "type": "locationInfo",
+      "id": "location-civil",
+      "blocks": ["title", "address", "button"],
+      "data": {
+        "title": "Civil",
+        "address": "Registro Civil, Calle 50 N 123",
+        "button": {
+          "text": "Como llegar",
+          "url": "https://maps.google.com",
+          "variant": "secondary"
+        }
+      }
+    },
+    {
+      "_comment": "UBICACION RECEPCION: seccion independiente con icono de pin, titulo, direccion y boton a Google Maps. Se puede mover, duplicar o eliminar.",
+      "type": "locationInfo",
+      "id": "location-recepcion",
+      "blocks": ["title", "address", "button"],
+      "data": {
+        "title": "Recepcion",
+        "address": "Ruta 345 Km 1.9",
+        "button": {
+          "text": "Como llegar",
+          "url": "https://maps.google.com",
+          "variant": "secondary"
+        }
       }
     },
     {
