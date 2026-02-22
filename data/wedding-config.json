@@ -277,6 +277,27 @@
             "optionB": "Un parque",
             "correctOption": "A",
             "revealText": "Fue un bar chiquito en el centro. Llegamos nerviosos y nos fuimos hablando de todo."
+          },
+          {
+            "question": "Quien cocina mejor en casa?",
+            "optionA": "Lucia",
+            "optionB": "Sebastian",
+            "correctOption": "A",
+            "revealText": "Lucia. Sebastian una vez quemo agua hirviendo. No pregunten como, pero paso."
+          },
+          {
+            "question": "Que serie vieron juntos tres veces seguidas?",
+            "optionA": "Friends",
+            "optionB": "The Office",
+            "correctOption": "B",
+            "revealText": "The Office. Ya se saben los dialogos de memoria y siguen riendose como si fuera la primera vez."
+          },
+          {
+            "question": "Quien maneja en los viajes largos?",
+            "optionA": "Lucia",
+            "optionB": "Sebastian",
+            "correctOption": "B",
+            "revealText": "Sebastian maneja y Lucia va de DJ, copiloto y encargada de snacks. Un equipo imbatible."
           }
         ]
       }
