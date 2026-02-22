@@ -51,17 +51,20 @@ export default function HoneymoonSection({
       </div>
 
       <WeddingModal open={open} onClose={() => setOpen(false)}>
-        <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-foreground">
+        <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
           {modal.title}
         </h3>
+        <p className="mb-5 text-sm font-light leading-relaxed text-primary-foreground/80">
+          {modal.description}
+        </p>
         <div className="mb-5 space-y-3">
           {modal.bankData.map((item) => (
-            <div key={item.label} className="flex items-center justify-between rounded-sm border border-border px-4 py-3">
+            <div key={item.label} className="flex items-center justify-between rounded-sm border border-primary-foreground/15 px-4 py-3">
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-foreground/50">
+                <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-primary-foreground/50">
                   {item.label}
                 </p>
-                <p className="mt-0.5 truncate text-sm font-light text-foreground">
+                <p className="mt-0.5 truncate text-sm font-light text-primary-foreground">
                   {item.value}
                 </p>
               </div>
@@ -69,10 +72,7 @@ export default function HoneymoonSection({
             </div>
           ))}
         </div>
-        <p className="mb-4 text-sm font-light leading-relaxed text-foreground/70">
-          {modal.description}
-        </p>
-        <p className="text-xs font-light italic text-foreground/50">
+        <p className="text-xs font-light italic text-primary-foreground/60">
           {modal.thankYouText}
         </p>
       </WeddingModal>

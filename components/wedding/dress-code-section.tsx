@@ -41,16 +41,16 @@ export default function DressCodeSection({
       </button>
 
       <WeddingModal open={open} onClose={() => setOpen(false)}>
-        <h3 className="mb-6 text-lg font-semibold tracking-wide uppercase text-foreground">
+        <h3 className="mb-6 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
           {modal.title}
         </h3>
         <div className="space-y-5">
           {modal.sections.map((section) => (
             <div key={section.heading} className="text-left">
-              <h4 className="mb-2 text-xs font-medium tracking-[0.15em] uppercase text-primary">
+              <h4 className="mb-2 text-xs font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
                 {section.heading}
               </h4>
-              <p className="text-sm font-light leading-relaxed text-foreground/70">
+              <p className="text-sm font-light leading-relaxed text-primary-foreground/85">
                 {section.text}
               </p>
             </div>

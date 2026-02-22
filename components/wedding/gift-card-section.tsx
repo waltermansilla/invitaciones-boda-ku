@@ -56,28 +56,28 @@ export default function GiftCardSection({
       </div>
 
       <WeddingModal open={open} onClose={() => setOpen(false)}>
-        <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-foreground">
+        <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
           {modal.title}
         </h3>
-        <div className="mb-5 rounded-sm bg-secondary px-5 py-4 text-center">
-          <p className="text-[10px] font-medium tracking-[0.15em] uppercase text-foreground/50">
+        <div className="mb-5 rounded-sm bg-primary-foreground/10 px-5 py-4 text-center">
+          <p className="text-[10px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
             Valor sugerido
           </p>
-          <p className="mt-1 text-2xl font-light text-foreground">
+          <p className="mt-1 text-2xl font-light text-primary-foreground">
             {modal.suggestedValue}
           </p>
         </div>
-        <p className="mb-6 text-sm font-light leading-relaxed text-foreground/70">
+        <p className="mb-6 text-sm font-light leading-relaxed text-primary-foreground/80">
           {modal.description}
         </p>
         <div className="space-y-3">
           {modal.transferData.map((item) => (
-            <div key={item.label} className="flex items-center justify-between rounded-sm border border-border px-4 py-3">
+            <div key={item.label} className="flex items-center justify-between rounded-sm border border-primary-foreground/15 px-4 py-3">
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-foreground/50">
+                <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-primary-foreground/50">
                   {item.label}
                 </p>
-                <p className="mt-0.5 truncate text-sm font-light text-foreground">
+                <p className="mt-0.5 truncate text-sm font-light text-primary-foreground">
                   {item.value}
                 </p>
               </div>
