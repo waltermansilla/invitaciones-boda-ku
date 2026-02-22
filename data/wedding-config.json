@@ -58,10 +58,11 @@
   "// SECCION 5: HERO / PORTADA                ": "",
   "// ==========================================.....": "",
 
-  "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/.",
+  "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNamesOnPhoto = true muestra los nombres sobre la foto, false los oculta.",
   "hero": {
     "coupleImage": "/images/couple-hero.jpg",
     "headline": "Nos casamos!",
+    "showNamesOnPhoto": true,
     "eventDate": "2026-10-10T18:00:00",
     "countdownLabels": {
       "days": "Dias",

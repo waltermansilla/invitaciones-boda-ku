@@ -67,6 +67,7 @@ Abrir `data/wedding-config.json` y cambiar:
 "hero": {
   "coupleImage": "/images/couple-hero.jpg",
   "headline": "Nos casamos!",
+  "showNamesOnPhoto": true,
   "eventDate": "2026-10-10T18:00:00",
   "countdownLabels": {
     "days": "Dias",
@@ -78,6 +79,7 @@ Abrir `data/wedding-config.json` y cambiar:
 ```
 - `eventDate`: formato obligatorio `AAAA-MM-DDTHH:MM:SS`. Controla la cuenta regresiva.
 - `coupleImage`: ruta a la foto. Colocarla en `/public/images/`.
+- `showNamesOnPhoto`: `true` muestra los nombres de la pareja sobre la foto de portada, `false` los oculta (los nombres siguen apareciendo en el overlay de bienvenida y en la seccion de cierre).
 
 ### Paso 5: Activar o quitar secciones
 Revisar el array `sections` y decidir cuales quedan. Ver seccion 3 de este manual.
