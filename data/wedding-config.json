@@ -12,13 +12,16 @@
     }
   },
 
-  "_comment_theme": "COLORES Y TIPOGRAFIA: primaryColor = verde de las secciones con fondo, backgroundColor = fondo crema general, textColor = color del texto, font = tipografia unica de toda la web.",
+  "_comment_theme": "COLORES Y TIPOGRAFIA: primaryColor = verde de las secciones con fondo, backgroundColor = fondo crema general, textColor = color del texto. font.family = nombre exacto de Google Fonts (ej: 'Josefin Sans', 'Playfair Display', 'Lato', 'Raleway'). font.weights = pesos disponibles separados por coma (100=thin, 300=light, 400=regular, 600=semibold, 700=bold).",
   "theme": {
     "primaryColor": "#6B7F5E",
     "backgroundColor": "#FAF8F5",
     "textColor": "#3A3A3A",
     "accentBackground": "#EDF2E8",
-    "font": "Josefin Sans"
+    "font": {
+      "family": "Josefin Sans",
+      "weights": "100,200,300,400,500,600,700"
+    }
   },
 
   "_comment_overlay": "PANTALLA DE BIENVENIDA: se muestra al entrar con los nombres, una frase y un boton. Poner enabled en false para desactivarla.",

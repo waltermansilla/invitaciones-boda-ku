@@ -41,8 +41,8 @@
 }
 
 @theme inline {
-  --font-sans: 'Josefin Sans', system-ui, sans-serif;
-  --font-serif: 'Josefin Sans', system-ui, sans-serif;
+  --font-sans: inherit;
+  --font-serif: inherit;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -85,8 +85,8 @@
 
 @layer base {
   :root {
-    --font-display: 'Josefin Sans', system-ui, sans-serif;
-    --font-body: 'Josefin Sans', system-ui, sans-serif;
+    --font-display: inherit;
+    --font-body: inherit;
   }
   * {
     @apply border-border outline-ring/50;
