@@ -185,8 +185,8 @@ export default function Section({ section, coupleNames }: SectionProps) {
       case "footer":
         return (
           <FooterSection
-            credit={data.credit as string}
-            coupleNames={coupleNames}
+            brandName={data.brandName as string}
+            socialLinks={data.socialLinks as { icon: "instagram" | "whatsapp"; url: string }[]}
           />
         )
 

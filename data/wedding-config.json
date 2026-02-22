@@ -377,12 +377,22 @@
       }
     },
     {
-      "_comment": "FOOTER / PIE DE PAGINA (fondo verde oscuro): muestra los nombres de la pareja (tomados de meta.coupleNames) y un texto de creditos.",
+      "_comment": "FOOTER / PIE DE PAGINA (fondo verde oscuro): muestra iconos de redes sociales y el nombre de la marca. brandName = nombre que aparece abajo. socialLinks = array de redes. Cada red tiene: icon ('instagram' o 'whatsapp'), url (enlace completo). Se pueden agregar, quitar o reordenar.",
       "type": "footer",
       "id": "footer-credits",
-      "blocks": ["coupleNames", "credit"],
+      "blocks": ["socialLinks", "brandName"],
       "data": {
-        "credit": "la tarjeta digital"
+        "brandName": "walter invitaciones",
+        "socialLinks": [
+          {
+            "icon": "instagram",
+            "url": "#"
+          },
+          {
+            "icon": "whatsapp",
+            "url": "https://wa.me/3456023759"
+          }
+        ]
       }
     }
   ]
