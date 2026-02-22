@@ -29,7 +29,7 @@ export default function EventInfoSection({ date, locations }: EventInfoSectionPr
       {/* Date */}
       <div className="flex flex-col items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-sm border border-current/20">
-          <Calendar className="h-5 w-5 animate-icon-pulse text-inherit/60" strokeWidth={1.2} />
+          <Calendar className="h-5 w-5 text-inherit/60" strokeWidth={1.2} />
         </div>
         <h2
           className="text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl"
@@ -48,7 +48,7 @@ export default function EventInfoSection({ date, locations }: EventInfoSectionPr
       {/* Locations */}
       {enabledLocations.map((location, index) => (
         <div key={index} className="flex flex-col items-center gap-3">
-          <MapPin className="h-5 w-5 animate-icon-pulse text-inherit/60" strokeWidth={1.2} />
+          <MapPin className="h-5 w-5 text-inherit/60" strokeWidth={1.2} />
           <h2
             className="text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl"
     

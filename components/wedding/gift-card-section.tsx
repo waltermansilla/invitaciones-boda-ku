@@ -78,7 +78,7 @@ export default function GiftCardSection({ title, description, button, modal }: G
 
   return (
     <section className="flex flex-col items-center px-8 py-14 text-center">
-      <HelpCircle className="mb-5 h-9 w-9 animate-icon-pulse text-inherit/70" strokeWidth={1} />
+      <HelpCircle className="mb-5 h-9 w-9 text-inherit/70" strokeWidth={1} />
       <h2 className="mb-3 text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl">
         {title}
       </h2>
