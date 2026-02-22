@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react"
 import { Heart, Wine, UtensilsCrossed, Music, Church, Camera, Cake, Car, GlassWater, PartyPopper, Sparkles, Sun, Moon, Clock, MapPin, Gift, Bus } from "lucide-react"
+import config from "@/data/wedding-config.json"
 
 interface ItineraryEvent {
   icon: string
@@ -12,6 +13,7 @@ interface ItineraryEvent {
 interface ItinerarySectionProps {
   title: string
   events: ItineraryEvent[]
+  sectionBgColor?: string
 }
 
 const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
@@ -34,7 +36,12 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
   bus: Bus,
 }
 
-export default function ItinerarySection({ title, events }: ItinerarySectionProps) {
+export default function ItinerarySection({ title, events, sectionBgColor }: ItinerarySectionProps) {
+  // Resolve the actual bg color so icons can cover the timeline line
+  const theme = config.theme as Record<string, unknown>
+  const iconBg = sectionBgColor === "primary"
+    ? (theme.primaryColor as string) || "#6B7F5E"
+    : (theme.backgroundColor as string) || "#FAF8F5"
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
@@ -141,7 +148,8 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
                 {/* Icon circle on LEFT, sits on the timeline */}
                 <div
                   ref={(el) => { iconRefs.current[index] = el }}
-                  className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-current/15 bg-inherit text-inherit/30 transition-colors duration-500"
+                  className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-current/15 text-inherit/30 transition-colors duration-500"
+                  style={{ backgroundColor: iconBg }}
                 >
                   <Icon className="h-6 w-6" strokeWidth={1.3} />
                 </div>

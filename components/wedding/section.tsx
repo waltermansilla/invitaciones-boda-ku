@@ -114,6 +114,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
           <ItinerarySection
             title={data.title as string}
             events={data.events as { icon: string; name: string; time: string }[]}
+            sectionBgColor={bgColor}
           />
         )
 
