@@ -42,11 +42,11 @@ export default function GallerySection({ images }: GallerySectionProps) {
   return (
     <section className="w-full">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex" style={{ gap: "6px" }}>
+        <div className="flex">
           {images.map((src, index) => (
             <div
               key={index}
-              className="relative min-w-0 shrink-0 grow-0"
+              className="relative min-w-0 shrink-0 grow-0 pl-[6px]"
               style={{ flex: "0 0 100%" }}
             >
               <div className="relative aspect-[4/3] w-full">
