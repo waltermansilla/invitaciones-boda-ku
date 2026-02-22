@@ -6,6 +6,7 @@ import HeroOverlay from "./hero-overlay"
 import HeroSection from "./hero-section"
 import Section from "./section"
 import MusicPlayer from "./music-player"
+import ScrollBlurOverlay from "./scroll-blur-overlay"
 
 export default function WeddingInvitation() {
   const hero = config.hero
@@ -13,9 +14,12 @@ export default function WeddingInvitation() {
   const meta = config.meta
   const music = config.music
   const overlay = config.overlay
+  const animations = (config as Record<string, unknown>).animations as { enabled?: boolean; topBlur?: boolean } | undefined
+  const showBlur = animations?.enabled !== false && animations?.topBlur !== false
 
   return (
     <ModalProvider>
+      {showBlur && <ScrollBlurOverlay />}
       <main className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl">
         {/* Fullscreen entry overlay */}
         {overlay.enabled && (

@@ -91,6 +91,22 @@ Todo se actualiza junto: titulos, parrafos, iconos, botones, separadores.
 - `coupleImage`: ruta a la foto. Colocarla en `/public/images/`.
 - `showNamesOnPhoto`: `true` muestra los nombres de la pareja sobre la foto de portada, `false` los oculta (los nombres siguen apareciendo en el overlay de bienvenida y en la seccion de cierre).
 
+### Paso 4B: Configurar animaciones
+```json
+"animations": {
+  "enabled": true,
+  "topBlur": true,
+  "staggerChildren": true,
+  "iconPulse": true
+}
+```
+- `enabled`: master switch. En `false` desactiva TODAS las animaciones (la pagina queda estatica).
+- `topBlur`: difuminado blanco semitransparente en la parte superior al hacer scroll. Da sensacion de profundidad.
+- `staggerChildren`: los elementos dentro de cada seccion (titulo, texto, boton) aparecen uno por uno con delay al entrar en pantalla.
+- `iconPulse`: pulso sutil en los iconos (calendario, ubicacion, etc.) cuando aparecen.
+
+Cada propiedad es independiente. Se puede desactivar una sin afectar las demas.
+
 ### Paso 5: Activar o quitar secciones
 Revisar el array `sections` y decidir cuales quedan. Ver seccion 3 de este manual.
 
@@ -239,6 +255,10 @@ Quiero eliminar `dateInfo` -- DESPUES:
 | `aspectRatio` | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"` |
 | `bgColor` | `"primary"`, `"background"` |
 | `textColor` | `"primary-foreground"`, `"foreground"`, o un hex como `"#FF0000"` |
+| `animations.enabled` | `true`, `false` |
+| `animations.topBlur` | `true`, `false` |
+| `animations.staggerChildren` | `true`, `false` |
+| `animations.iconPulse` | `true`, `false` |
 
 ---
 

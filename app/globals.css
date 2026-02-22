@@ -170,3 +170,42 @@
 .animate-icon-touch {
   animation: iconTouch 0.45s ease-out;
 }
+
+/* Staggered children animation */
+.stagger-children > * > section > *,
+.stagger-children > * > * > h2,
+.stagger-children > * > * > p,
+.stagger-children > * > * > button,
+.stagger-children > * > * > div > h2,
+.stagger-children > * > * > div > p {
+  animation: staggerFadeIn 0.5s ease-out both;
+}
+
+.stagger-children > * > section > *:nth-child(1) { animation-delay: 0s; }
+.stagger-children > * > section > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger-children > * > section > *:nth-child(3) { animation-delay: 0.16s; }
+.stagger-children > * > section > *:nth-child(4) { animation-delay: 0.24s; }
+.stagger-children > * > section > *:nth-child(5) { animation-delay: 0.32s; }
+.stagger-children > * > section > *:nth-child(6) { animation-delay: 0.4s; }
+
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Icon pulse animation on enter */
+@keyframes iconPulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-icon-pulse {
+  animation: iconPulse 0.6s ease-out;
+}

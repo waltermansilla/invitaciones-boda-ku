@@ -34,6 +34,18 @@
     }
   },
 
+  "// ==========================================~": "",
+  "// SECCION 2B: ANIMACIONES Y EFECTOS        ": "",
+  "// ==========================================~~": "",
+
+  "_comment_animations": "Controla los efectos visuales de la pagina. Poner enabled en false desactiva TODAS las animaciones. topBlur = difuminado blanco en la parte superior al hacer scroll. staggerChildren = los elementos dentro de cada seccion aparecen uno por uno en vez de todos juntos. iconPulse = pulso sutil en iconos al entrar en pantalla.",
+  "animations": {
+    "enabled": true,
+    "topBlur": true,
+    "staggerChildren": true,
+    "iconPulse": true
+  },
+
   "// ==========================================;": "",
   "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
   "// ==========================================...": "",
