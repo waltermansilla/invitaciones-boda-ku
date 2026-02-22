@@ -13,6 +13,7 @@ import EmotionalQuoteSection from "./emotional-quote-section"
 import TriviaSection from "./trivia-section"
 import RSVPSection from "./rsvp-section"
 import FooterSection from "./footer-section"
+import ClosingSection from "./closing-section"
 
 export interface SectionConfig {
   type: string
@@ -140,6 +141,14 @@ export default function Section({ section, coupleNames }: SectionProps) {
                 submitButton: string
               }
             }
+          />
+        )
+
+      case "closingImage":
+        return (
+          <ClosingSection
+            image={data.image as string}
+            coupleNames={coupleNames}
           />
         )
 

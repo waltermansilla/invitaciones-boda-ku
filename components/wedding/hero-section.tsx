@@ -7,6 +7,9 @@ interface HeroSectionProps {
   coupleImage: string
   headline: string
   eventDate: string
+  groomName: string
+  brideName: string
+  separator: string
   countdownLabels: {
     days: string
     hours: string
@@ -29,6 +32,9 @@ export default function HeroSection({
   coupleImage,
   headline,
   eventDate,
+  groomName,
+  brideName,
+  separator,
   countdownLabels,
 }: HeroSectionProps) {
   const [time, setTime] = useState<{
@@ -55,7 +61,7 @@ export default function HeroSection({
 
   return (
     <section className="flex flex-col items-center bg-background">
-      {/* Couple photo - full width */}
+      {/* Couple photo with names overlaid */}
       <div className="relative aspect-[3/4] w-full sm:aspect-[4/5]">
         <Image
           src={coupleImage}
@@ -64,13 +70,26 @@ export default function HeroSection({
           className="object-cover"
           priority
         />
+        {/* Subtle gradient overlay for text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+
+        {/* Names on the photo */}
+        <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-10">
+          <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl">
+            {brideName}
+          </p>
+          <span className="my-1 text-lg font-extralight tracking-[0.3em] text-white/60 sm:text-xl">
+            {separator}
+          </span>
+          <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl">
+            {groomName}
+          </p>
+        </div>
       </div>
 
-      {/* Headline */}
+      {/* Headline + Countdown below photo */}
       <div className="flex flex-col items-center px-6 pt-10 pb-10">
-        <h1
-          className="mb-8 text-center text-3xl font-semibold tracking-wide uppercase text-foreground md:text-4xl"
-        >
+        <h1 className="mb-8 text-center text-3xl font-semibold tracking-wide uppercase text-foreground md:text-4xl">
           {headline}
         </h1>
 
@@ -90,16 +109,12 @@ export default function HeroSection({
                       )
                     : "--"}
                 </span>
-                <span
-                  className="mt-1 text-[9px] font-medium tracking-[0.15em] uppercase text-muted-foreground"
-                >
+                <span className="mt-1 text-[9px] font-medium tracking-[0.15em] uppercase text-muted-foreground">
                   {item.label}
                 </span>
               </div>
               {i < 3 && (
-                <span
-                  className="mt-1 text-3xl font-light text-foreground/40 md:text-4xl"
-                >
+                <span className="mt-1 text-3xl font-light text-foreground/40 md:text-4xl">
                   :
                 </span>
               )}

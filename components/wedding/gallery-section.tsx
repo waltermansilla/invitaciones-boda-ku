@@ -1,3 +1,7 @@
+"use client"
+
+import { useEffect, useCallback, useState } from "react"
+import useEmblaCarousel from "embla-carousel-react"
 import Image from "next/image"
 
 interface GallerySectionProps {
@@ -5,20 +9,75 @@ interface GallerySectionProps {
 }
 
 export default function GallerySection({ images }: GallerySectionProps) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: "center",
+    skipSnaps: false,
+  })
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return
+    setActiveIndex(emblaApi.selectedScrollSnap())
+  }, [emblaApi])
+
+  useEffect(() => {
+    if (!emblaApi) return
+    emblaApi.on("select", onSelect)
+    onSelect()
+
+    // Auto-scroll every 3 seconds
+    const interval = setInterval(() => {
+      emblaApi.scrollNext()
+    }, 3000)
+
+    return () => {
+      clearInterval(interval)
+      emblaApi.off("select", onSelect)
+    }
+  }, [emblaApi, onSelect])
+
   if (!images || images.length === 0) return null
 
   return (
-    <section className="flex flex-col gap-0">
-      {images.map((src, index) => (
-        <div key={index} className="relative aspect-[4/3] w-full">
-          <Image
-            src={src}
-            alt={`Foto de la pareja ${index + 1}`}
-            fill
-            className="object-cover"
-          />
+    <section className="w-full">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {images.map((src, index) => (
+            <div
+              key={index}
+              className="relative min-w-0 shrink-0 grow-0 basis-full"
+            >
+              <div className="relative aspect-[4/3] w-full">
+                <Image
+                  src={src}
+                  alt={`Foto de la pareja ${index + 1}`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+
+      {/* Minimal dot indicators */}
+      {images.length > 1 && (
+        <div className="flex items-center justify-center gap-2 py-5 bg-background">
+          {images.map((_, index) => (
+            <button
+              key={index}
+              aria-label={`Ir a foto ${index + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-500 ${
+                index === activeIndex
+                  ? "w-6 bg-primary"
+                  : "w-1.5 bg-primary/25"
+              }`}
+              onClick={() => emblaApi?.scrollTo(index)}
+            />
+          ))}
+        </div>
+      )}
     </section>
   )
 }

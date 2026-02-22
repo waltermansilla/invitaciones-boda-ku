@@ -31,6 +31,9 @@ export default function WeddingInvitation() {
         coupleImage={hero.coupleImage}
         headline={hero.headline}
         eventDate={hero.eventDate}
+        groomName={meta.coupleNames.groomName}
+        brideName={meta.coupleNames.brideName}
+        separator={meta.coupleNames.separator}
         countdownLabels={hero.countdownLabels}
       />
 

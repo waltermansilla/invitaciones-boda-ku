@@ -240,6 +240,15 @@
       }
     },
     {
+      "_comment": "CIERRE VISUAL: imagen destacada con los nombres debajo. Funciona como cierre emocional antes del footer. La imagen va en /public/images/.",
+      "type": "closingImage",
+      "id": "closing-image",
+      "blocks": ["image", "coupleNames"],
+      "data": {
+        "image": "/images/gallery-3.jpg"
+      }
+    },
+    {
       "_comment": "FOOTER / PIE DE PAGINA (fondo verde oscuro): muestra los nombres de la pareja (tomados de meta.coupleNames) y un texto de creditos.",
       "type": "footer",
       "id": "footer-credits",
