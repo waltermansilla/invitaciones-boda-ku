@@ -1,8 +1,10 @@
 {
+  "_comment_meta": "DATOS GENERALES DEL SITIO: titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja.",
   "meta": {
     "title": "Nuestra Boda - Lucia & Sebastian",
     "description": "Estamos felices de invitarte a celebrar nuestro amor. Lucia & Sebastian se casan.",
     "lang": "es",
+    "_comment_coupleNames": "Nombres de la pareja. Se usan en el overlay, footer y donde se muestren los nombres.",
     "coupleNames": {
       "groomName": "Sebastian",
       "brideName": "Lucia",
@@ -10,6 +12,7 @@
     }
   },
 
+  "_comment_theme": "COLORES Y TIPOGRAFIA: primaryColor = verde de las secciones con fondo, backgroundColor = fondo crema general, textColor = color del texto, font = tipografia unica de toda la web.",
   "theme": {
     "primaryColor": "#6B7F5E",
     "backgroundColor": "#FAF8F5",
@@ -18,22 +21,26 @@
     "font": "Josefin Sans"
   },
 
+  "_comment_overlay": "PANTALLA DE BIENVENIDA: se muestra al entrar con los nombres, una frase y un boton. Poner enabled en false para desactivarla.",
   "overlay": {
     "enabled": true,
     "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
     "buttonText": "Ingresar"
   },
 
+  "_comment_music": "MUSICA DE FONDO: colocar el archivo MP3 en /public/music/ y poner la ruta en src. Poner enabled en false para desactivar.",
   "music": {
     "enabled": true,
     "src": "/music/background.mp3",
     "autoplay": false
   },
 
+  "_comment_hero": "SECCION PRINCIPAL: foto de pareja, titulo grande y cuenta regresiva. La fecha eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). La imagen va en /public/images/.",
   "hero": {
     "coupleImage": "/images/couple-hero.jpg",
     "headline": "Nos casamos!",
     "eventDate": "2026-10-10T18:00:00",
+    "_comment_countdownLabels": "Etiquetas debajo de cada numero de la cuenta regresiva.",
     "countdownLabels": {
       "days": "Dias",
       "hours": "Horas",
@@ -42,8 +49,10 @@
     }
   },
 
+  "_comment_sections": "SECCIONES DE LA INVITACION: el orden de los objetos en este array define el orden visual en la pagina. Para reordenar, mover los objetos. Para ocultar una seccion, eliminarla del array. Para duplicar, copiar el objeto y cambiar el id.",
   "sections": [
     {
+      "_comment": "FRASE DE BIENVENIDA (fondo verde): texto de cita y autor opcional. Si no hay autor, dejar vacio.",
       "type": "quote",
       "id": "quote-welcome",
       "blocks": ["text", "author"],
@@ -53,6 +62,7 @@
       }
     },
     {
+      "_comment": "FECHA Y UBICACIONES: la fecha se muestra arriba y las ubicaciones abajo. Cada ubicacion tiene un boton con URL a Google Maps. Poner enabled en false para ocultar una ubicacion sin borrarla. Se pueden agregar mas ubicaciones copiando un objeto del array locations.",
       "type": "eventInfo",
       "id": "event-info",
       "blocks": ["date", "locations"],
@@ -62,6 +72,7 @@
           "title": "Cuando?",
           "value": "10 de Octubre 2026"
         },
+        "_comment_locations": "Array de ubicaciones. Cada una tiene: enabled (true/false), title, address, y button con text, url (Google Maps) y variant (secondary, primary, outline-light).",
         "locations": [
           {
             "enabled": true,
@@ -87,6 +98,7 @@
       }
     },
     {
+      "_comment": "GALERIA DE FOTOS: array de rutas de imagenes. Las fotos se muestran apiladas a ancho completo. Colocar las imagenes en /public/images/. Se pueden agregar o quitar fotos editando el array.",
       "type": "gallery",
       "id": "gallery-photos",
       "blocks": ["slider"],
@@ -99,6 +111,7 @@
       }
     },
     {
+      "_comment": "ITINERARIO / LINEA DE TIEMPO: titulo y lista de eventos con icono, nombre y hora. Iconos disponibles: heart, wine, utensils, music. Se pueden agregar mas eventos copiando un objeto del array.",
       "type": "itinerary",
       "id": "itinerary-timeline",
       "blocks": ["title", "timeline"],
@@ -113,6 +126,7 @@
       }
     },
     {
+      "_comment": "SUBIR FOTOS: invita a los invitados a subir fotos al album compartido. El boton lleva a la URL del album (ej: Google Photos). Variantes de boton: primary (verde relleno), secondary (borde gris), outline-light (borde blanco para fondos verdes).",
       "type": "photos",
       "id": "shared-photos",
       "blocks": ["icon", "title", "description", "button"],
@@ -127,6 +141,7 @@
       }
     },
     {
+      "_comment": "VALOR TARJETA (fondo verde): seccion para informar el valor de la tarjeta/entrada. Tiene icono, titulo, descripcion, boton y una imagen decorativa debajo.",
       "type": "giftCard",
       "id": "gift-card",
       "blocks": ["icon", "title", "description", "button", "image"],
@@ -143,6 +158,7 @@
       }
     },
     {
+      "_comment": "LUNA DE MIEL: seccion para contribuir al viaje. Tiene imagen arriba, titulo, descripcion y boton. La imagen va en /public/images/.",
       "type": "honeymoon",
       "id": "honeymoon-fund",
       "blocks": ["image", "icon", "title", "description", "button"],
@@ -158,6 +174,7 @@
       }
     },
     {
+      "_comment": "DRESS CODE: codigo de vestimenta. Titulo, subtitulo con el tipo de evento y boton con consejos.",
       "type": "dressCode",
       "id": "dress-code",
       "blocks": ["icon", "title", "subtitle", "button"],
@@ -172,6 +189,7 @@
       }
     },
     {
+      "_comment": "FRASE EMOTIVA (fondo verde): una frase romantica centrada sobre fondo verde. Solo tiene el campo text.",
       "type": "emotionalQuote",
       "id": "emotional-quote",
       "blocks": ["text"],
@@ -180,6 +198,7 @@
       }
     },
     {
+      "_comment": "TRIVIA / JUEGO: seccion para un juego de preguntas. Titulo, subtitulo y boton que lleva a la URL del juego.",
       "type": "trivia",
       "id": "trivia-game",
       "blocks": ["icon", "title", "subtitle", "button"],
@@ -194,6 +213,7 @@
       }
     },
     {
+      "_comment": "FORMULARIO RSVP (fondo verde): formulario de confirmacion de asistencia. Se configura el titulo, deadline, opciones de cantidad de invitados y todos los labels de los campos. dietaryOptions es un array de opciones para el select de alimentacion.",
       "type": "rsvp",
       "id": "rsvp-form",
       "blocks": ["title", "form"],
@@ -202,6 +222,7 @@
         "deadline": "Antes del 11 de septiembre",
         "guestCountLabel": "Numero de personas a confirmar",
         "guestCountOptions": [1, 2, 3, 4, 5],
+        "_comment_fields": "Labels de cada campo del formulario. attendanceYes/No son las opciones del radio de asistencia. dietaryOptions es el array de opciones del select de alimentacion.",
         "fields": {
           "firstName": "Nombre",
           "lastName": "Apellido",
@@ -216,6 +237,7 @@
       }
     },
     {
+      "_comment": "FOOTER / PIE DE PAGINA (fondo verde oscuro): muestra los nombres de la pareja (tomados de meta.coupleNames) y un texto de creditos.",
       "type": "footer",
       "id": "footer-credits",
       "blocks": ["coupleNames", "credit"],
