@@ -250,17 +250,53 @@
       }
     },
     {
-      "_comment": "TRIVIA / JUEGO: seccion para un juego de preguntas. Titulo, subtitulo y boton que lleva a la URL del juego.",
+      "_comment": "TRIVIA / JUEGO: al presionar el boton se abre un modal con preguntas de opcion multiple, una por vez. modal.questions = array de preguntas. Cada pregunta tiene: question (texto), options (array de opciones, pueden ser 2, 3 o 4), correctIndex (indice de la opcion correcta empezando desde 0), explanation (frase que aparece al responder). modal.finishTitle = titulo final. modal.finishText = mensaje final. Se pueden agregar, quitar o reordenar preguntas.",
       "type": "trivia",
       "id": "trivia-game",
-      "blocks": ["icon", "title", "subtitle", "button"],
+      "blocks": ["title", "subtitle", "button", "modal"],
       "data": {
         "title": "Cuanto nos conoces?",
         "subtitle": "Juguemos un poco",
         "button": {
           "text": "Iniciar Trivia",
-          "url": "#",
           "variant": "primary"
+        },
+        "_comment_modal": "questions = array de preguntas. options = array de respuestas posibles. correctIndex = posicion de la respuesta correcta (0 = primera, 1 = segunda, etc). explanation = frase que se muestra al elegir. finishTitle y finishText = pantalla de cierre.",
+        "modal": {
+          "finishTitle": "Eso es todo!",
+          "finishText": "Gracias por jugar. Nos vemos en la fiesta para seguir descubriendo cosas sobre nosotros.",
+          "questions": [
+            {
+              "question": "Donde se conocieron Lucia y Sebastian?",
+              "options": ["En la facultad", "En una fiesta", "Por amigos en comun", "En una app"],
+              "correctIndex": 2,
+              "explanation": "Fue por amigos en comun. Los presentaron en un asado y no pararon de hablar en toda la noche."
+            },
+            {
+              "question": "Cual fue su primer viaje juntos?",
+              "options": ["Mar del Plata", "Bariloche", "Uruguay", "Cordoba"],
+              "correctIndex": 3,
+              "explanation": "Cordoba. Se fueron un finde largo sin mucho plan y volvieron con mil fotos y anecdotas."
+            },
+            {
+              "question": "Que cancion los identifica como pareja?",
+              "options": ["Perfect - Ed Sheeran", "Flaca - Calamaro", "Tu - Shakira", "Yellow - Coldplay"],
+              "correctIndex": 0,
+              "explanation": "Perfect de Ed Sheeran. La escucharon en su primera cita y desde ese dia es su cancion."
+            },
+            {
+              "question": "Que hacen un domingo tipico juntos?",
+              "options": ["Van al cine", "Cocinan algo rico", "Duermen hasta las 3", "Salen a caminar"],
+              "correctIndex": 1,
+              "explanation": "Cocinan algo rico. Les encanta probar recetas nuevas y siempre termina siendo pizza casera."
+            },
+            {
+              "question": "Quien propuso la fecha de la boda?",
+              "options": ["Lucia", "Sebastian", "Las madres", "Lo tiraron a cara o cruz"],
+              "correctIndex": 0,
+              "explanation": "Lucia. Eligio octubre porque siempre dijo que se queria casar con flores de primavera."
+            }
+          ]
         }
       }
     },

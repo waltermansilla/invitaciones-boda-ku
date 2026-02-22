@@ -139,7 +139,8 @@ export default function Section({ section, coupleNames }: SectionProps) {
           <TriviaSection
             title={data.title as string}
             subtitle={data.subtitle as string}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
+            button={data.button as { text: string; variant: "primary" | "secondary" }}
+            modal={data.modal as { questions: { question: string; options: string[]; correctIndex: number; explanation: string }[]; finishTitle: string; finishText: string }}
           />
         )
 
