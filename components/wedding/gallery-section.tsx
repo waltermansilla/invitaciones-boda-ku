@@ -46,7 +46,7 @@ export default function GallerySection({ images }: GallerySectionProps) {
           {images.map((src, index) => (
             <div
               key={index}
-              className="relative min-w-0 shrink-0 grow-0 pl-[6px]"
+              className="relative mr-[6px] min-w-0 shrink-0 grow-0"
               style={{ flex: "0 0 100%" }}
             >
               <div className="relative aspect-[4/3] w-full">
