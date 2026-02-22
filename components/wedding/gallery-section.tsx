@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useCallback, useState } from "react"
+import { useEffect, useCallback, useState, useRef } from "react"
 import useEmblaCarousel from "embla-carousel-react"
 import Image from "next/image"
 
@@ -16,6 +16,7 @@ export default function GallerySection({ images }: GallerySectionProps) {
     slidesToScroll: 1,
   })
   const [activeIndex, setActiveIndex] = useState(0)
+  const slidesRef = useRef<HTMLDivElement>(null)
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return
@@ -23,8 +24,25 @@ export default function GallerySection({ images }: GallerySectionProps) {
   }, [emblaApi])
 
   useEffect(() => {
-    if (!emblaApi) return
+    if (!emblaApi || !slidesRef.current) return
+
+    const slides = slidesRef.current.querySelectorAll<HTMLDivElement>("[data-slide]")
+
+    const showGap = () => {
+      slides.forEach((s) => {
+        s.style.marginLeft = "6px"
+      })
+    }
+
+    const hideGap = () => {
+      slides.forEach((s) => {
+        s.style.marginLeft = "0px"
+      })
+    }
+
     emblaApi.on("select", onSelect)
+    emblaApi.on("scroll", showGap)
+    emblaApi.on("settle", hideGap)
     onSelect()
 
     const interval = setInterval(() => {
@@ -34,6 +52,8 @@ export default function GallerySection({ images }: GallerySectionProps) {
     return () => {
       clearInterval(interval)
       emblaApi.off("select", onSelect)
+      emblaApi.off("scroll", showGap)
+      emblaApi.off("settle", hideGap)
     }
   }, [emblaApi, onSelect])
 
@@ -42,12 +62,13 @@ export default function GallerySection({ images }: GallerySectionProps) {
   return (
     <section className="w-full">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
+        <div className="flex" ref={slidesRef}>
           {images.map((src, index) => (
             <div
               key={index}
-              className="relative ml-[6px] min-w-0 shrink-0 grow-0"
-              style={{ flex: "0 0 100%" }}
+              data-slide
+              className="relative min-w-0 shrink-0 grow-0"
+              style={{ flex: "0 0 100%", marginLeft: "0px", transition: "margin-left 0.3s ease" }}
             >
               <div className="relative aspect-[4/3] w-full">
                 <Image
