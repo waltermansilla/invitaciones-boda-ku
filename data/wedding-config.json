@@ -1,10 +1,13 @@
 {
-  "_comment_meta": "DATOS GENERALES DEL SITIO: titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja.",
+  "// ==========================================": "",
+  "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+  "// ==========================================.": "",
+
+  "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
   "meta": {
     "title": "Nuestra Boda - Lucia & Sebastian",
     "description": "Estamos felices de invitarte a celebrar nuestro amor. Lucia & Sebastian se casan.",
     "lang": "es",
-    "_comment_coupleNames": "Nombres de la pareja. Se usan en el overlay, footer y donde se muestren los nombres.",
     "coupleNames": {
       "groomName": "Sebastian",
       "brideName": "Lucia",
@@ -12,7 +15,11 @@
     }
   },
 
-  "_comment_theme": "COLORES Y TIPOGRAFIA: primaryColor = verde de las secciones con fondo, backgroundColor = fondo crema general, textColor = color del texto, modalTextColor = color del texto dentro de los modales (por defecto blanco). font.family = nombre exacto de Google Fonts. font.weights = pesos disponibles separados por coma (100=thin, 300=light, 400=regular, 600=semibold, 700=bold).",
+  "// ==========================================,": "",
+  "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+  "// ==========================================..": "",
+
+  "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts (ej: Josefin Sans, Playfair Display, Lato). font.weights = pesos separados por coma (100=thin, 300=light, 400=regular, 600=semibold, 700=bold).",
   "theme": {
     "primaryColor": "#6B7F5E",
     "backgroundColor": "#FAF8F5",
@@ -25,26 +32,37 @@
     }
   },
 
-  "_comment_overlay": "PANTALLA DE BIENVENIDA: se muestra al entrar con los nombres, una frase y un boton. Poner enabled en false para desactivarla.",
+  "// ==========================================;": "",
+  "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+  "// ==========================================...": "",
+
+  "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
   "overlay": {
     "enabled": true,
     "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
     "buttonText": "Ingresar"
   },
 
-  "_comment_music": "MUSICA DE FONDO: colocar el archivo MP3 en /public/music/ y poner la ruta en src. Poner enabled en false para desactivar.",
+  "// ==========================================:": "",
+  "// SECCION 4: MUSICA DE FONDO               ": "",
+  "// ==========================================....": "",
+
+  "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
   "music": {
     "enabled": true,
     "src": "/music/background.mp3",
     "autoplay": false
   },
 
-  "_comment_hero": "SECCION PRINCIPAL: foto de pareja, titulo grande y cuenta regresiva. La fecha eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). La imagen va en /public/images/.",
+  "// ==========================================-": "",
+  "// SECCION 5: HERO / PORTADA                ": "",
+  "// ==========================================.....": "",
+
+  "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/.",
   "hero": {
     "coupleImage": "/images/couple-hero.jpg",
     "headline": "Nos casamos!",
     "eventDate": "2026-10-10T18:00:00",
-    "_comment_countdownLabels": "Etiquetas debajo de cada numero de la cuenta regresiva.",
     "countdownLabels": {
       "days": "Dias",
       "hours": "Horas",
@@ -53,10 +71,16 @@
     }
   },
 
-  "_comment_sections": "SECCIONES DE LA INVITACION: el orden de los objetos en este array define el orden visual en la pagina. Para reordenar, mover los objetos. Para ocultar una seccion, eliminarla del array. Para duplicar, copiar el objeto y cambiar el id.",
+  "// ==========================================+": "",
+  "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+  "// ==========================================......": "",
+
+  "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
   "sections": [
+
     {
-      "_comment": "FRASE DE BIENVENIDA (fondo verde): texto de cita y autor opcional. Si no hay autor, dejar vacio.",
+      "// --- FRASE DE BIENVENIDA ---": "",
+      "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
       "type": "quote",
       "id": "quote-welcome",
       "blocks": ["text", "author"],
@@ -65,8 +89,10 @@
         "author": ""
       }
     },
+
     {
-      "_comment": "FECHA DEL EVENTO: seccion independiente con icono de calendario, titulo y fecha. Se puede mover libremente en el orden de secciones.",
+      "// --- FECHA DEL EVENTO ---": "",
+      "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
       "type": "dateInfo",
       "id": "date-info",
       "blocks": ["title", "value"],
@@ -75,8 +101,10 @@
         "value": "10 de Octubre 2026"
       }
     },
+
     {
-      "_comment": "UBICACION CIVIL: seccion independiente con icono de pin, titulo, direccion y boton a Google Maps. Se puede mover, duplicar o eliminar.",
+      "// --- UBICACION: CIVIL ---": "",
+      "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
       "type": "locationInfo",
       "id": "location-civil",
       "blocks": ["title", "address", "button"],
@@ -90,8 +118,10 @@
         }
       }
     },
+
     {
-      "_comment": "UBICACION RECEPCION: seccion independiente con icono de pin, titulo, direccion y boton a Google Maps. Se puede mover, duplicar o eliminar.",
+      "// --- UBICACION: RECEPCION ---": "",
+      "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
       "type": "locationInfo",
       "id": "location-recepcion",
       "blocks": ["title", "address", "button"],
@@ -105,8 +135,10 @@
         }
       }
     },
+
     {
-      "_comment": "GALERIA DE FOTOS: array de rutas de imagenes. Las fotos se muestran apiladas a ancho completo. Colocar las imagenes en /public/images/. Se pueden agregar o quitar fotos editando el array.",
+      "// --- GALERIA DE FOTOS (slider) ---": "",
+      "_comment": "Slider automatico. Imagenes en /public/images/. Agregar o quitar del array.",
       "type": "gallery",
       "id": "gallery-photos",
       "blocks": ["slider"],
@@ -118,14 +150,15 @@
         ]
       }
     },
+
     {
-      "_comment": "ITINERARIO / LINEA DE TIEMPO: titulo y lista de eventos con icono, nombre y hora. Se pueden agregar, quitar o reordenar los eventos libremente. Cada evento tiene: icon (nombre del icono), name (texto que se muestra) y time (hora). ICONOS DISPONIBLES: heart (corazon), wine (copa de vino), utensils (cubiertos), music (nota musical), church (iglesia), camera (camara), cake (torta), car (auto), glass (vaso de agua), party (fiesta), sparkles (brillos), sun (sol), moon (luna), clock (reloj), pin (ubicacion), gift (regalo), bus (transporte).",
+      "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
+      "_comment": "Cada evento tiene icon, name y time. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus. Agregar/quitar/reordenar libremente.",
       "type": "itinerary",
       "id": "itinerary-timeline",
       "blocks": ["title", "timeline"],
       "data": {
         "title": "Itinerario",
-        "_comment_events": "Cada objeto es un momento del evento. Agregar o quitar copiando/borrando objetos. icon = nombre del icono (ver lista arriba), name = titulo del momento, time = hora.",
         "events": [
           { "icon": "church", "name": "Ceremonia", "time": "18:00 hs" },
           { "icon": "camera", "name": "Fotos", "time": "18:45 hs" },
@@ -137,8 +170,10 @@
         ]
       }
     },
+
     {
-      "_comment": "SUBIR FOTOS: invita a los invitados a subir fotos al album compartido. El boton lleva a la URL del album (ej: Google Photos). Variantes de boton: primary (verde relleno), secondary (borde gris), outline-light (borde blanco para fondos verdes).",
+      "// --- SUBIR FOTOS ---": "",
+      "_comment": "Invita a subir fotos al album compartido. button.url = link al album (Google Photos, etc).",
       "type": "photos",
       "id": "shared-photos",
       "blocks": ["icon", "title", "description", "button"],
@@ -152,22 +187,22 @@
         }
       }
     },
+
     {
-      "_comment": "VALOR TARJETA (fondo verde): seccion para informar el valor de la tarjeta/entrada. El boton abre un modal con los datos de transferencia. modal.suggestedValue = monto sugerido. modal.transferData = array de objetos {label, value} con los datos bancarios (se pueden agregar o quitar). Cada dato tiene boton de copiar.",
+      "// --- VALOR TARJETA (con modal) ---": "",
+      "_comment": "Fondo verde. El boton abre un modal con datos de transferencia. modal.suggestedValue = monto sugerido. modal.transferData = array {label, value} copiables.",
       "type": "giftCard",
       "id": "gift-card",
-      "blocks": ["icon", "title", "description", "button", "image", "modal"],
+      "blocks": ["icon", "title", "description", "button", "modal"],
       "data": {
         "icon": "gift",
         "title": "Valor Tarjeta",
         "description": "Nos llenaria de felicidad poder compartir este dia tan especial con ustedes. A continuacion dejamos los detalles para realizar el pago de su tarjeta.",
-        "image": "/images/gift-image.jpg",
         "button": {
           "text": "Ver valor tarjeta",
           "url": "#",
           "variant": "secondary"
         },
-        "_comment_modal": "Contenido del modal que se abre al presionar el boton. suggestedValue = precio sugerido. transferData = datos bancarios, cada uno con label y value (copiable).",
         "modal": {
           "title": "Informacion de la tarjeta",
           "suggestedValue": "$25.000",
@@ -181,21 +216,21 @@
         }
       }
     },
+
     {
-      "_comment": "LUNA DE MIEL: seccion para contribuir al viaje. El boton abre un modal con los datos bancarios para la transferencia. modal.bankData = array de objetos {label, value} con alias, CBU, titular, etc (copiables). modal.thankYouText = frase de agradecimiento al final del modal.",
+      "// --- LUNA DE MIEL (con modal) ---": "",
+      "_comment": "El boton abre modal con datos bancarios. modal.bankData = array {label, value} copiables. modal.thankYouText = frase de agradecimiento.",
       "type": "honeymoon",
       "id": "honeymoon-fund",
-      "blocks": ["image", "icon", "title", "description", "button", "modal"],
+      "blocks": ["title", "description", "button", "modal"],
       "data": {
         "title": "Luna de Miel",
         "description": "Si desean hacernos un regalo les agradecemos nos ayuden en nuestra luna de miel.",
-        "image": "/images/honeymoon.jpg",
         "button": {
           "text": "Contribuir",
           "url": "#",
           "variant": "primary"
         },
-        "_comment_modal": "Contenido del modal. bankData = datos de cuenta bancaria (copiables). description = texto explicativo. thankYouText = frase de cierre.",
         "modal": {
           "title": "Datos para contribuir",
           "description": "Pueden transferir el monto que deseen. Cualquier contribucion nos ayuda un monton a cumplir nuestro sueno.",
@@ -208,11 +243,13 @@
         }
       }
     },
+
     {
-      "_comment": "DRESS CODE: codigo de vestimenta. El boton abre un modal con consejos. modal.sections = array de bloques {heading, text}. Se pueden agregar o quitar bloques (ej: agregar uno para ninos, otro para accesorios, etc).",
+      "// --- DRESS CODE (con modal) ---": "",
+      "_comment": "El boton abre modal con consejos. modal.sections = array {heading, text}. Agregar/quitar bloques libremente.",
       "type": "dressCode",
       "id": "dress-code",
-      "blocks": ["icon", "title", "subtitle", "button", "modal"],
+      "blocks": ["title", "subtitle", "button", "modal"],
       "data": {
         "title": "Dress Code",
         "subtitle": "Evento Campestre",
@@ -221,13 +258,12 @@
           "url": "#",
           "variant": "secondary"
         },
-        "_comment_modal": "Contenido del modal. Cada objeto en sections tiene heading (titulo del bloque) y text (descripcion). Se pueden agregar, quitar o reordenar libremente.",
         "modal": {
           "title": "Consejos para la celebracion",
           "sections": [
             {
               "heading": "Hombres",
-              "text": "Pantalon de vestir o chino, camisa clara (puede ser sin corbata), zapatos o mocasines. Evitar zapatillas deportivas y bermudas. El evento es al aire libre, asi que priorizá comodidad con elegancia."
+              "text": "Pantalon de vestir o chino, camisa clara (puede ser sin corbata), zapatos o mocasines. Evitar zapatillas deportivas y bermudas. El evento es al aire libre, asi que prioriza comodidad con elegancia."
             },
             {
               "heading": "Mujeres",
@@ -241,8 +277,10 @@
         }
       }
     },
+
     {
-      "_comment": "FRASE EMOTIVA (fondo verde): una frase romantica centrada sobre fondo verde. Solo tiene el campo text.",
+      "// --- FRASE EMOTIVA ---": "",
+      "_comment": "Fondo verde. Solo texto centrado.",
       "type": "emotionalQuote",
       "id": "emotional-quote",
       "blocks": ["text"],
@@ -250,8 +288,10 @@
         "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
       }
     },
+
     {
-      "_comment": "TRIVIA / JUEGO: al presionar el boton se abre un modal con preguntas de opcion multiple, una por vez. modal.questions = array de preguntas. Cada pregunta tiene: question (texto), options (array de opciones, pueden ser 2, 3 o 4), correctIndex (indice de la opcion correcta empezando desde 0), explanation (frase que aparece al responder). modal.finishTitle = titulo final. modal.finishText = mensaje final. Se pueden agregar, quitar o reordenar preguntas.",
+      "// --- TRIVIA / JUEGO (con modal) ---": "",
+      "_comment": "Al presionar el boton se abre modal con preguntas. Cada pregunta: question, options (2-4), correctIndex (0=primera), explanation. finishTitle y finishText = pantalla final. Agregar/quitar/reordenar preguntas libremente.",
       "type": "trivia",
       "id": "trivia-game",
       "blocks": ["title", "subtitle", "button", "modal"],
@@ -262,7 +302,6 @@
           "text": "Iniciar Trivia",
           "variant": "primary"
         },
-        "_comment_modal": "questions = array de preguntas. options = array de respuestas posibles. correctIndex = posicion de la respuesta correcta (0 = primera, 1 = segunda, etc). explanation = frase que se muestra al elegir. finishTitle y finishText = pantalla de cierre.",
         "modal": {
           "finishTitle": "Eso es todo!",
           "finishText": "Gracias por jugar. Nos vemos en la fiesta para seguir descubriendo cosas sobre nosotros.",
@@ -301,8 +340,10 @@
         }
       }
     },
+
     {
-      "_comment": "NUESTRA HISTORIA: 3 momentos clave de la pareja. Cada momento tiene imagen (en /public/images/), titulo y texto breve. En desktop se alterna imagen-texto izquierda-derecha. En mobile se apila verticalmente. Cada bloque aparece con animacion suave al hacer scroll.",
+      "// --- NUESTRA HISTORIA ---": "",
+      "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/images/), title, text. Se alternan izq/der en desktop. Se pueden agregar/quitar momentos.",
       "type": "ourStory",
       "id": "our-story",
       "blocks": ["title", "moments"],
@@ -327,8 +368,10 @@
         ]
       }
     },
+
     {
-      "_comment": "PEQUENAS VERDADES (fondo verde): 4 preguntas de a una por vez, con 2 opciones cada una. Al elegir se revela la respuesta correcta con una frase. Sin puntaje. correctOption = 'A' o 'B'. finishText = mensaje final tras la ultima pregunta.",
+      "// --- PEQUENAS VERDADES ---": "",
+      "_comment": "Fondo verde. Preguntas de a una, 2 opciones (A o B). correctOption = 'A' o 'B'. revealText = frase al responder. finishText = mensaje final. Sin puntaje. Agregar/quitar preguntas libremente.",
       "type": "truths",
       "id": "truths-game",
       "blocks": ["title", "questions"],
@@ -388,8 +431,10 @@
         ]
       }
     },
+
     {
-      "_comment": "FORMULARIO RSVP (fondo verde): formulario de confirmacion de asistencia. Se configura el titulo, deadline, opciones de cantidad de invitados y todos los labels de los campos. dietaryOptions es un array de opciones para el select de alimentacion.",
+      "// --- FORMULARIO RSVP ---": "",
+      "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
       "type": "rsvp",
       "id": "rsvp-form",
       "blocks": ["title", "form"],
@@ -398,7 +443,6 @@
         "deadline": "Antes del 11 de septiembre",
         "guestCountLabel": "Numero de personas a confirmar",
         "guestCountOptions": [1, 2, 3, 4, 5],
-        "_comment_fields": "Labels de cada campo del formulario. attendanceYes/No son las opciones del radio de asistencia. dietaryOptions es el array de opciones del select de alimentacion.",
         "fields": {
           "firstName": "Nombre",
           "lastName": "Apellido",
@@ -412,8 +456,10 @@
         }
       }
     },
+
     {
-      "_comment": "CIERRE VISUAL: imagen destacada con los nombres debajo. Funciona como cierre emocional antes del footer. La imagen va en /public/images/.",
+      "// --- CIERRE VISUAL ---": "",
+      "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
       "type": "closingImage",
       "id": "closing-image",
       "blocks": ["image", "coupleNames"],
@@ -421,8 +467,10 @@
         "image": "/images/gallery-3.jpg"
       }
     },
+
     {
-      "_comment": "FOOTER / PIE DE PAGINA (fondo verde oscuro): muestra iconos de redes sociales y el nombre de la marca. brandName = nombre que aparece abajo. socialLinks = array de redes. Cada red tiene: icon ('instagram' o 'whatsapp'), url (enlace completo). Se pueden agregar, quitar o reordenar.",
+      "// --- FOOTER / PIE DE PAGINA ---": "",
+      "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
       "type": "footer",
       "id": "footer-credits",
       "blocks": ["socialLinks", "brandName"],

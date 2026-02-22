@@ -78,7 +78,7 @@ export default function ModalProvider({ children }: { children: React.ReactNode 
       }}
     >
       <div
-        className={`relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-sm bg-primary p-8 ${
+        className={`relative w-full max-w-sm rounded-sm bg-primary px-7 py-8 ${
           closing ? "animate-modal-content-out" : "animate-modal-content-in"
         }`}
         style={{ color: (config.theme as Record<string, unknown>).modalTextColor as string || "#FFFFFF" }}
