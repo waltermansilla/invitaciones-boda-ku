@@ -216,6 +216,72 @@
       }
     },
     {
+      "_comment": "NUESTRA HISTORIA: 3 momentos clave de la pareja. Cada momento tiene imagen (en /public/images/), titulo y texto breve. En desktop se alterna imagen-texto izquierda-derecha. En mobile se apila verticalmente. Cada bloque aparece con animacion suave al hacer scroll.",
+      "type": "ourStory",
+      "id": "our-story",
+      "blocks": ["title", "moments"],
+      "data": {
+        "title": "Nuestra historia",
+        "moments": [
+          {
+            "image": "/images/story-met.jpg",
+            "title": "Nos conocimos",
+            "text": "Fue en una tarde cualquiera, sin planes ni expectativas. Una conversacion que no queriamos que terminara y un cafe que se enfrio sin que nos dieramos cuenta."
+          },
+          {
+            "image": "/images/story-chose.jpg",
+            "title": "Nos elegimos",
+            "text": "Con el tiempo entendimos que lo nuestro no era casualidad. Nos elegimos cada dia, en lo simple y en lo dificil, construyendo algo que vale la pena cuidar."
+          },
+          {
+            "image": "/images/story-engaged.jpg",
+            "title": "Decidimos casarnos",
+            "text": "No hubo un gran discurso ni un momento perfecto. Solo la certeza de que queremos caminar juntos lo que venga. Y aca estamos, invitandolos a celebrarlo."
+          }
+        ]
+      }
+    },
+    {
+      "_comment": "PEQUENAS VERDADES (fondo verde): 4 preguntas de a una por vez, con 2 opciones cada una. Al elegir se revela la respuesta correcta con una frase. Sin puntaje. correctOption = 'A' o 'B'. finishText = mensaje final tras la ultima pregunta.",
+      "type": "truths",
+      "id": "truths-game",
+      "blocks": ["title", "questions"],
+      "data": {
+        "title": "Pequenas verdades sobre nosotros",
+        "finishText": "Gracias por jugar. Ahora ya saben un poco mas sobre nosotros. Nos vemos en la fiesta.",
+        "questions": [
+          {
+            "question": "Quien dijo 'te quiero' primero?",
+            "optionA": "Lucia",
+            "optionB": "Sebastian",
+            "correctOption": "A",
+            "revealText": "Lucia no pudo aguantar mas y se le escapo en un viaje en auto. Sebastian freno en el semaforo y sonrio."
+          },
+          {
+            "question": "Cual es nuestra comida favorita para pedir un viernes?",
+            "optionA": "Sushi",
+            "optionB": "Pizza",
+            "correctOption": "B",
+            "revealText": "Pizza. Siempre pizza. Con muzza extra y sin discusion."
+          },
+          {
+            "question": "Quien tarda mas en arreglarse?",
+            "optionA": "Lucia",
+            "optionB": "Sebastian",
+            "correctOption": "B",
+            "revealText": "Sebastian. Lo que no se sabe es que se prueba tres outfits antes de salir y despues elige el primero."
+          },
+          {
+            "question": "Donde fue nuestra primera cita?",
+            "optionA": "Un bar",
+            "optionB": "Un parque",
+            "correctOption": "A",
+            "revealText": "Fue un bar chiquito en el centro. Llegamos nerviosos y nos fuimos hablando de todo."
+          }
+        ]
+      }
+    },
+    {
       "_comment": "FORMULARIO RSVP (fondo verde): formulario de confirmacion de asistencia. Se configura el titulo, deadline, opciones de cantidad de invitados y todos los labels de los campos. dietaryOptions es un array de opciones para el select de alimentacion.",
       "type": "rsvp",
       "id": "rsvp-form",

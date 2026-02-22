@@ -14,6 +14,8 @@ import TriviaSection from "./trivia-section"
 import RSVPSection from "./rsvp-section"
 import FooterSection from "./footer-section"
 import ClosingSection from "./closing-section"
+import OurStorySection from "./our-story-section"
+import TruthsSection from "./truths-section"
 
 export interface SectionConfig {
   type: string
@@ -141,6 +143,31 @@ export default function Section({ section, coupleNames }: SectionProps) {
                 submitButton: string
               }
             }
+          />
+        )
+
+      case "ourStory":
+        return (
+          <OurStorySection
+            title={data.title as string}
+            moments={data.moments as { image: string; title: string; text: string }[]}
+          />
+        )
+
+      case "truths":
+        return (
+          <TruthsSection
+            title={data.title as string}
+            questions={
+              data.questions as {
+                question: string
+                optionA: string
+                optionB: string
+                correctOption: "A" | "B"
+                revealText: string
+              }[]
+            }
+            finishText={data.finishText as string}
           />
         )
 
