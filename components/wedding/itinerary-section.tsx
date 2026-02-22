@@ -112,8 +112,8 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
   }, [handleScroll, positionTrack])
 
   return (
-    <section className="bg-background px-6 py-20">
-      <h2 className="mb-16 text-center text-2xl font-semibold tracking-[0.25em] uppercase text-foreground md:text-3xl">
+    <section className="px-6 py-20">
+      <h2 className="mb-16 text-center text-2xl font-semibold tracking-[0.25em] uppercase text-inherit md:text-3xl">
         {title}
       </h2>
 
@@ -122,7 +122,7 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
         {/* Timeline track -- positioned dynamically from first to last icon center */}
         <div
           ref={trackRef}
-          className="absolute bg-foreground/10"
+          className="absolute bg-current/10"
           style={{ left: "28px", width: "2px", transform: "translateX(-50%)" }}
         >
           <div
@@ -141,17 +141,17 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
                 {/* Icon circle on LEFT, sits on the timeline */}
                 <div
                   ref={(el) => { iconRefs.current[index] = el }}
-                  className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-foreground/15 bg-background text-foreground/30 transition-colors duration-500"
+                  className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-current/15 bg-inherit text-inherit/30 transition-colors duration-500"
                 >
                   <Icon className="h-6 w-6" strokeWidth={1.3} />
                 </div>
 
                 {/* Details on RIGHT */}
                 <div className="flex flex-col justify-center pt-2">
-                  <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-foreground md:text-lg">
+                  <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-inherit md:text-lg">
                     {event.name}
                   </h3>
-                  <p className="mt-1 text-sm font-light tracking-wide text-foreground/50 md:text-base">
+                  <p className="mt-1 text-sm font-light tracking-wide text-inherit/50 md:text-base">
                     {event.time}
                   </p>
                 </div>

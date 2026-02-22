@@ -161,16 +161,16 @@ export default function TriviaSection({
   }, [openModal, closeModal, modal])
 
   return (
-    <section className="flex flex-col items-center bg-background px-6 py-14 text-center">
-      <h2 className="mb-2 text-2xl font-semibold tracking-[0.15em] text-foreground md:text-3xl">
+    <section className="flex flex-col items-center px-6 py-14 text-center">
+      <h2 className="mb-2 text-2xl font-semibold tracking-[0.15em] text-inherit md:text-3xl">
         {title}
       </h2>
-      <p className="mb-6 text-sm font-light tracking-wide text-foreground/60">
+      <p className="mb-6 text-sm font-light tracking-wide text-inherit/60">
         {subtitle}
       </p>
       <button
         onClick={handleOpen}
-        className="inline-flex min-h-[48px] items-center rounded-full bg-primary px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-primary-foreground transition-opacity hover:opacity-90"
+        className="inline-flex min-h-[48px] items-center rounded-full border border-current/40 px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-inherit transition-opacity hover:bg-current/10"
       >
         {button.text}
       </button>

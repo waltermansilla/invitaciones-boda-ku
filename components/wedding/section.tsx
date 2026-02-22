@@ -24,6 +24,8 @@ export interface SectionConfig {
   id: string
   blocks: string[]
   data: Record<string, unknown>
+  bgColor?: string
+  textColor?: string
 }
 
 interface SectionProps {
@@ -35,8 +37,32 @@ interface SectionProps {
   }
 }
 
+/**
+ * Determines background + text classes based on bgColor from JSON.
+ * "primary" -> green bg + light text
+ * "background" (default) -> cream bg + dark text
+ * Optional textColor override.
+ */
+function getSectionColors(bgColor?: string, textColor?: string) {
+  const bg = bgColor === "primary" ? "bg-primary" : "bg-background"
+  let text: string
+  if (textColor === "primary-foreground") {
+    text = "text-primary-foreground"
+  } else if (textColor === "foreground") {
+    text = "text-foreground"
+  } else if (textColor) {
+    // Custom override: use inline style
+    text = ""
+  } else {
+    // Auto: derive from bg
+    text = bgColor === "primary" ? "text-primary-foreground" : "text-foreground"
+  }
+  return { bg, text, customTextColor: textColor && !["primary-foreground", "foreground"].includes(textColor) ? textColor : undefined }
+}
+
 export default function Section({ section, coupleNames }: SectionProps) {
-  const { type, id, data } = section
+  const { type, id, data, bgColor, textColor } = section
+  const colors = getSectionColors(bgColor, textColor)
 
   const renderContent = () => {
     switch (type) {
@@ -215,9 +241,22 @@ export default function Section({ section, coupleNames }: SectionProps) {
     }
   }
 
+  // Sections that manage their own bg (gallery, closingImage, footer) skip the wrapper
+  const selfStyledTypes = ["gallery", "closingImage", "footer"]
+  const skipWrapper = selfStyledTypes.includes(type)
+
   return (
     <AnimatedSection id={id}>
-      {renderContent()}
+      {skipWrapper ? (
+        renderContent()
+      ) : (
+        <div
+          className={`${colors.bg} ${colors.text}`}
+          style={colors.customTextColor ? { color: colors.customTextColor } : undefined}
+        >
+          {renderContent()}
+        </div>
+      )}
     </AnimatedSection>
   )
 }

@@ -119,6 +119,43 @@ Ver seccion 7 de este manual.
 | `rsvp > data.deadline` | Sections | Fecha limite de confirmacion |
 | `footer > data.socialLinks` | Sections | URLs de redes sociales |
 
+### Color de fondo y texto por seccion:
+
+Cada seccion tiene un campo `bgColor` que controla su fondo:
+```json
+{
+  "type": "quote",
+  "id": "quote-welcome",
+  "bgColor": "primary",
+  "blocks": ["text", "author"],
+  "data": { ... }
+}
+```
+
+| Valor de `bgColor` | Que hace | Texto automatico |
+|---------------------|----------|------------------|
+| `"primary"` | Fondo verde (color primario del tema) | Blanco/claro |
+| `"background"` | Fondo crema (color de fondo general) | Negro/gris oscuro |
+
+**El texto se adapta automaticamente al fondo.** Si pones `"primary"` el texto se vuelve claro, si pones `"background"` se vuelve oscuro.
+
+**Override opcional de texto:** si no te gusta el color automatico, podes agregar `textColor`:
+```json
+{
+  "type": "quote",
+  "bgColor": "primary",
+  "textColor": "foreground",
+  ...
+}
+```
+
+Valores de `textColor`:
+- `"primary-foreground"` -- blanco/claro (el que usa el fondo verde)
+- `"foreground"` -- negro/gris oscuro (el que usa el fondo crema)
+- Un codigo hex como `"#FF0000"` -- color personalizado
+
+**Si no pones `textColor`, no hace falta.** Se calcula solo segun el `bgColor`.
+
 ### Campos opcionales (dependen del cliente):
 
 | Campo | Que hace |
@@ -193,6 +230,8 @@ Quiero eliminar `dateInfo` -- DESPUES:
 | `socialLinks icon` | `"instagram"`, `"whatsapp"` |
 | `itinerary icon` | `heart`, `wine`, `utensils`, `music`, `church`, `camera`, `cake`, `car`, `glass`, `party`, `sparkles`, `sun`, `moon`, `clock`, `pin`, `gift`, `bus` |
 | `aspectRatio` | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"` |
+| `bgColor` | `"primary"`, `"background"` |
+| `textColor` | `"primary-foreground"`, `"foreground"`, o un hex como `"#FF0000"` |
 
 ---
 

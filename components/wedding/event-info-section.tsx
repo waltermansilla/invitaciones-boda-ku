@@ -25,20 +25,20 @@ export default function EventInfoSection({ date, locations }: EventInfoSectionPr
   const enabledLocations = locations.filter((loc) => loc.enabled)
 
   return (
-    <section className="flex flex-col items-center gap-10 bg-background px-6 py-14 text-center">
+    <section className="flex flex-col items-center gap-10 px-6 py-14 text-center">
       {/* Date */}
       <div className="flex flex-col items-center gap-3">
-        <div className="flex h-12 w-12 items-center justify-center rounded-sm border border-foreground/20">
-          <Calendar className="h-5 w-5 text-foreground/60" strokeWidth={1.2} />
+        <div className="flex h-12 w-12 items-center justify-center rounded-sm border border-current/20">
+          <Calendar className="h-5 w-5 text-inherit/60" strokeWidth={1.2} />
         </div>
         <h2
-          className="text-xl font-semibold tracking-wide uppercase text-foreground md:text-2xl"
+          className="text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl"
   
         >
           {date.title}
         </h2>
         <p
-          className="text-sm font-medium tracking-[0.1em] uppercase text-foreground/70"
+          className="text-sm font-medium tracking-[0.1em] uppercase text-inherit/70"
   
         >
           {date.value}
@@ -48,15 +48,15 @@ export default function EventInfoSection({ date, locations }: EventInfoSectionPr
       {/* Locations */}
       {enabledLocations.map((location, index) => (
         <div key={index} className="flex flex-col items-center gap-3">
-          <MapPin className="h-5 w-5 text-foreground/60" strokeWidth={1.2} />
+          <MapPin className="h-5 w-5 text-inherit/60" strokeWidth={1.2} />
           <h2
-            className="text-xl font-semibold tracking-wide uppercase text-foreground md:text-2xl"
+            className="text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl"
     
           >
             {location.title}
           </h2>
           <p
-            className="text-sm font-medium tracking-[0.1em] uppercase text-foreground/70"
+            className="text-sm font-medium tracking-[0.1em] uppercase text-inherit/70"
     
           >
             {location.address}

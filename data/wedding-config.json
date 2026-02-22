@@ -76,7 +76,7 @@
   "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
   "// ==========================================......": "",
 
-  "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
+  "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
   "sections": [
 
     {
@@ -84,6 +84,7 @@
       "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
       "type": "quote",
       "id": "quote-welcome",
+      "bgColor": "primary",
       "blocks": ["text", "author"],
       "data": {
         "text": "Al fin sean bienvenidos todos al show de la linda fe sonriente, nos merecemos bellos milagros... y ocurriran.",
@@ -96,6 +97,7 @@
       "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
       "type": "dateInfo",
       "id": "date-info",
+      "bgColor": "background",
       "blocks": ["title", "value"],
       "data": {
         "title": "Cuando?",
@@ -108,6 +110,7 @@
       "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
       "type": "locationInfo",
       "id": "location-civil",
+      "bgColor": "background",
       "blocks": ["title", "address", "button"],
       "data": {
         "title": "Civil",
@@ -125,6 +128,7 @@
       "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
       "type": "locationInfo",
       "id": "location-recepcion",
+      "bgColor": "background",
       "blocks": ["title", "address", "button"],
       "data": {
         "title": "Recepcion",
@@ -158,6 +162,7 @@
       "_comment": "Cada evento tiene icon, name y time. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus. Agregar/quitar/reordenar libremente.",
       "type": "itinerary",
       "id": "itinerary-timeline",
+      "bgColor": "background",
       "blocks": ["title", "timeline"],
       "data": {
         "title": "Itinerario",
@@ -178,6 +183,7 @@
       "_comment": "Invita a subir fotos al album compartido. button.url = link al album (Google Photos, etc).",
       "type": "photos",
       "id": "shared-photos",
+      "bgColor": "background",
       "blocks": ["icon", "title", "description", "button"],
       "data": {
         "title": "Queremos ver tus fotos",
@@ -195,6 +201,7 @@
       "_comment": "Fondo verde. El boton abre un modal con datos de transferencia. modal.suggestedValue = monto sugerido. modal.transferData = array {label, value} copiables.",
       "type": "giftCard",
       "id": "gift-card",
+      "bgColor": "primary",
       "blocks": ["icon", "title", "description", "button", "modal"],
       "data": {
         "icon": "gift",
@@ -224,6 +231,7 @@
       "_comment": "El boton abre modal con datos bancarios. modal.bankData = array {label, value} copiables. modal.thankYouText = frase de agradecimiento.",
       "type": "honeymoon",
       "id": "honeymoon-fund",
+      "bgColor": "background",
       "blocks": ["title", "description", "button", "modal"],
       "data": {
         "title": "Luna de Miel",
@@ -251,6 +259,7 @@
       "_comment": "El boton abre modal con consejos. modal.sections = array {heading, text}. Agregar/quitar bloques libremente.",
       "type": "dressCode",
       "id": "dress-code",
+      "bgColor": "background",
       "blocks": ["title", "subtitle", "button", "modal"],
       "data": {
         "title": "Dress Code",
@@ -285,6 +294,7 @@
       "_comment": "Fondo verde. Solo texto centrado.",
       "type": "emotionalQuote",
       "id": "emotional-quote",
+      "bgColor": "primary",
       "blocks": ["text"],
       "data": {
         "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
@@ -296,6 +306,7 @@
       "_comment": "Al presionar el boton se abre modal con preguntas. Cada pregunta: question, options (2-4), correctIndex (0=primera), explanation. finishTitle y finishText = pantalla final. Agregar/quitar/reordenar preguntas libremente.",
       "type": "trivia",
       "id": "trivia-game",
+      "bgColor": "background",
       "blocks": ["title", "subtitle", "button", "modal"],
       "data": {
         "title": "Cuanto nos conoces?",
@@ -348,6 +359,7 @@
       "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/images/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
       "type": "ourStory",
       "id": "our-story",
+      "bgColor": "background",
       "blocks": ["title", "moments"],
       "data": {
         "aspectRatio": "4/3",
@@ -377,6 +389,7 @@
       "_comment": "Fondo verde. Preguntas de a una, 2 opciones (A o B). correctOption = 'A' o 'B'. revealText = frase al responder. finishText = mensaje final. Sin puntaje. Agregar/quitar preguntas libremente.",
       "type": "truths",
       "id": "truths-game",
+      "bgColor": "primary",
       "blocks": ["title", "questions"],
       "data": {
         "title": "Pequenas verdades sobre nosotros",
@@ -440,6 +453,7 @@
       "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
       "type": "rsvp",
       "id": "rsvp-form",
+      "bgColor": "primary",
       "blocks": ["title", "form"],
       "data": {
         "title": "Confirma tu asistencia",

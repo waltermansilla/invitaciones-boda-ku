@@ -71,16 +71,16 @@ export default function HoneymoonSection({ title, description, button, modal }: 
   }
 
   return (
-    <section className="flex flex-col items-center bg-background px-8 py-14 text-center">
-        <h2 className="mb-3 text-2xl font-semibold tracking-wide uppercase text-foreground md:text-3xl">
+    <section className="flex flex-col items-center px-8 py-14 text-center">
+        <h2 className="mb-3 text-2xl font-semibold tracking-wide uppercase text-inherit md:text-3xl">
           {title}
         </h2>
-        <p className="mb-6 max-w-sm text-sm font-light leading-relaxed text-foreground/70">
+        <p className="mb-6 max-w-sm text-sm font-light leading-relaxed text-inherit/70">
           {description}
         </p>
         <button
           onClick={handleOpen}
-          className="inline-flex min-h-[48px] items-center justify-center rounded-sm bg-primary px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-foreground transition-all duration-200 hover:opacity-90"
+          className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-current/40 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:bg-current/10"
         >
           {button.text}
         </button>

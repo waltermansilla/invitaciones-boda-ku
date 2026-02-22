@@ -38,16 +38,16 @@ export default function DressCodeSection({ title, subtitle, button, modal }: Dre
   }
 
   return (
-    <section className="flex flex-col items-center bg-background px-6 py-14 text-center">
-      <h2 className="mb-2 text-2xl font-semibold tracking-wide uppercase text-foreground md:text-3xl">
+    <section className="flex flex-col items-center px-6 py-14 text-center">
+      <h2 className="mb-2 text-2xl font-semibold tracking-wide uppercase text-inherit md:text-3xl">
         {title}
       </h2>
-      <p className="mb-5 text-sm font-medium tracking-[0.1em] uppercase text-foreground/60">
+      <p className="mb-5 text-sm font-medium tracking-[0.1em] uppercase text-inherit/60">
         {subtitle}
       </p>
       <button
         onClick={handleOpen}
-        className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-foreground/30 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-foreground transition-all duration-200 hover:bg-foreground/5"
+        className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-current/30 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:bg-current/5"
       >
         {button.text}
       </button>

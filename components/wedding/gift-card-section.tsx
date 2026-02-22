@@ -77,17 +77,17 @@ export default function GiftCardSection({ title, description, button, modal }: G
   }
 
   return (
-    <section className="flex flex-col items-center bg-primary px-8 py-14 text-center">
-      <HelpCircle className="mb-5 h-9 w-9 text-primary-foreground/70" strokeWidth={1} />
-      <h2 className="mb-3 text-xl font-semibold tracking-wide uppercase text-primary-foreground md:text-2xl">
+    <section className="flex flex-col items-center px-8 py-14 text-center">
+      <HelpCircle className="mb-5 h-9 w-9 text-inherit/70" strokeWidth={1} />
+      <h2 className="mb-3 text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl">
         {title}
       </h2>
-      <p className="mb-6 max-w-sm text-sm font-light leading-relaxed text-primary-foreground/80">
+      <p className="mb-6 max-w-sm text-sm font-light leading-relaxed text-inherit/80">
         {description}
       </p>
       <button
         onClick={handleOpen}
-        className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-primary-foreground/40 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-primary-foreground transition-all duration-200 hover:bg-primary-foreground/10"
+        className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-current/40 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:bg-current/10"
       >
         {button.text}
       </button>
