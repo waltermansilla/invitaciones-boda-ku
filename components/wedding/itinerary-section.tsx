@@ -22,10 +22,30 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
 }
 
 export default function ItinerarySection({ title, events }: ItinerarySectionProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
   const iconRefs = useRef<(HTMLDivElement | null)[]>([])
+  const activatedRef = useRef<Set<number>>(new Set())
   const rafRef = useRef<number>(0)
+
+  /* Position the track so it starts at center of first icon and ends at center of last */
+  const positionTrack = useCallback(() => {
+    const container = containerRef.current
+    const track = trackRef.current
+    if (!container || !track || iconRefs.current.length < 2) return
+
+    const first = iconRefs.current[0]
+    const last = iconRefs.current[iconRefs.current.length - 1]
+    if (!first || !last) return
+
+    const containerTop = container.getBoundingClientRect().top + window.scrollY
+    const firstCenter = first.getBoundingClientRect().top + window.scrollY + first.offsetHeight / 2
+    const lastCenter = last.getBoundingClientRect().top + window.scrollY + last.offsetHeight / 2
+
+    track.style.top = `${firstCenter - containerTop}px`
+    track.style.height = `${lastCenter - firstCenter}px`
+  }, [])
 
   const handleScroll = useCallback(() => {
     cancelAnimationFrame(rafRef.current)
@@ -40,30 +60,43 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
       const clamped = Math.min(Math.max(progress, 0), 1)
       fill.style.height = `${clamped * 100}%`
 
-      // Update icon borders
-      iconRefs.current.forEach((el) => {
+      iconRefs.current.forEach((el, i) => {
         if (!el) return
         const iconRect = el.getBoundingClientRect()
         const iconMid = iconRect.top + iconRect.height / 2
-        if (iconMid <= viewportMid) {
+        const isActive = iconMid <= viewportMid
+
+        if (isActive) {
           el.classList.add("border-primary", "text-primary")
           el.classList.remove("border-foreground/15", "text-foreground/30")
+
+          if (!activatedRef.current.has(i)) {
+            activatedRef.current.add(i)
+            el.classList.add("animate-icon-touch")
+            el.addEventListener("animationend", () => {
+              el.classList.remove("animate-icon-touch")
+            }, { once: true })
+          }
         } else {
           el.classList.remove("border-primary", "text-primary")
           el.classList.add("border-foreground/15", "text-foreground/30")
+          activatedRef.current.delete(i)
         }
       })
     })
   }, [])
 
   useEffect(() => {
+    positionTrack()
     window.addEventListener("scroll", handleScroll, { passive: true })
+    window.addEventListener("resize", positionTrack)
     handleScroll()
     return () => {
       window.removeEventListener("scroll", handleScroll)
+      window.removeEventListener("resize", positionTrack)
       cancelAnimationFrame(rafRef.current)
     }
-  }, [handleScroll])
+  }, [handleScroll, positionTrack])
 
   return (
     <section className="flex flex-col items-center bg-background px-6 py-20">
@@ -71,40 +104,43 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
         {title}
       </h2>
 
-      <div className="relative flex w-full max-w-xs flex-col items-center">
-        {/* Timeline vertical track -- centered */}
+      <div ref={containerRef} className="relative w-full max-w-sm">
+        {/* Timeline track -- positioned dynamically from first to last icon center */}
         <div
           ref={trackRef}
-          className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 bg-foreground/10"
+          className="absolute bg-foreground/10"
+          style={{ left: "28px", width: "2px", transform: "translateX(-50%)" }}
         >
           <div
             ref={fillRef}
-            className="absolute left-0 top-0 w-full bg-primary"
-            style={{ height: "0%", willChange: "height" }}
+            className="absolute top-0 bg-primary"
+            style={{ left: "-0.5px", height: "0%", width: "3px", willChange: "height" }}
           />
         </div>
 
         {/* Events */}
-        <div className="flex w-full flex-col gap-20">
+        <div className="flex flex-col gap-24">
           {events.map((event, index) => {
             const Icon = iconMap[event.icon] || Heart
             return (
-              <div key={index} className="flex flex-col items-center">
-                {/* Icon circle ON the timeline */}
+              <div key={index} className="relative flex items-start gap-6">
+                {/* Icon circle on LEFT, sits on the timeline */}
                 <div
                   ref={(el) => { iconRefs.current[index] = el }}
-                  className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border-2 border-foreground/15 bg-background text-foreground/30 transition-colors duration-500"
+                  className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-foreground/15 bg-background text-foreground/30 transition-colors duration-500"
                 >
                   <Icon className="h-6 w-6" strokeWidth={1.3} />
                 </div>
 
-                {/* Text below icon */}
-                <h3 className="mt-4 text-center text-base font-semibold tracking-[0.15em] uppercase text-foreground md:text-lg">
-                  {event.name}
-                </h3>
-                <p className="mt-1 text-center text-sm font-light tracking-wide text-foreground/50 md:text-base">
-                  {event.time}
-                </p>
+                {/* Details on RIGHT */}
+                <div className="flex flex-col justify-center pt-2">
+                  <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-foreground md:text-lg">
+                    {event.name}
+                  </h3>
+                  <p className="mt-1 text-sm font-light tracking-wide text-foreground/50 md:text-base">
+                    {event.time}
+                  </p>
+                </div>
               </div>
             )
           })}
