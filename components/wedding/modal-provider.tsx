@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useCallback, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
 import { X } from "lucide-react"
+import config from "@/data/wedding-config.json"
 
 type ModalContent = React.ReactNode | null
 
@@ -80,6 +81,7 @@ export default function ModalProvider({ children }: { children: React.ReactNode 
         className={`relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-sm bg-primary p-8 ${
           closing ? "animate-modal-content-out" : "animate-modal-content-in"
         }`}
+        style={{ color: (config.theme as Record<string, unknown>).modalTextColor as string || "#FFFFFF" }}
       >
         <button
           onClick={closeModal}

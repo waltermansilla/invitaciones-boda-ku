@@ -60,18 +60,18 @@ function TriviaGame({
   if (finished) {
     return (
       <div className="flex flex-col items-center pt-4 text-center">
-        <p className="mb-2 text-4xl font-light text-white/90">
+        <p className="mb-3 text-5xl font-light opacity-90">
           {score}/{questions.length}
         </p>
-        <h3 className="mb-3 text-lg font-semibold tracking-wide text-white/90">
+        <h3 className="mb-3 text-xl font-semibold tracking-wide opacity-90">
           {finishTitle}
         </h3>
-        <p className="mb-6 text-sm leading-relaxed tracking-wide text-white/65">
+        <p className="mb-8 text-base leading-relaxed tracking-wide opacity-65">
           {finishText}
         </p>
         <button
           onClick={onClose}
-          className="min-h-[48px] rounded-sm border border-white/25 px-8 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-white/90 transition-colors hover:bg-white/10"
+          className="min-h-[48px] rounded-sm border border-current/25 px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase opacity-90 transition-opacity hover:opacity-100"
         >
           Cerrar
         </button>
@@ -82,32 +82,32 @@ function TriviaGame({
   return (
     <div className="flex flex-col pt-4">
       {/* Progress */}
-      <p className="mb-1 text-center text-[11px] tracking-[0.15em] uppercase text-white/50">
+      <p className="mb-2 text-center text-xs tracking-[0.15em] uppercase opacity-50">
         {current + 1} / {questions.length}
       </p>
-      <div className="mb-6 h-[2px] w-full bg-white/10">
+      <div className="mb-8 h-[2px] w-full bg-current/10">
         <div
-          className="h-full bg-white/40 transition-all duration-500"
+          className="h-full bg-current/40 transition-all duration-500"
           style={{ width: `${((current + 1) / questions.length) * 100}%` }}
         />
       </div>
 
       {/* Question */}
-      <h3 className="mb-6 text-center text-base font-semibold leading-relaxed tracking-wide text-white/90">
+      <h3 className="mb-8 text-center text-lg font-semibold leading-relaxed tracking-wide opacity-90">
         {q.question}
       </h3>
 
       {/* Options */}
       <div className="flex flex-col gap-3">
         {q.options.map((opt, idx) => {
-          let optStyle = "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
+          let optStyle = "border-current/20 opacity-80 hover:opacity-100"
           if (selected !== null) {
             if (idx === q.correctIndex) {
-              optStyle = "border-emerald-400/50 bg-emerald-400/15 text-white/90"
+              optStyle = "border-emerald-300/60 bg-emerald-300/15 opacity-95"
             } else if (idx === selected && idx !== q.correctIndex) {
-              optStyle = "border-red-400/40 bg-red-400/10 text-white/60"
+              optStyle = "border-red-300/50 bg-red-300/10 opacity-60"
             } else {
-              optStyle = "border-white/10 bg-white/5 text-white/40"
+              optStyle = "border-current/10 opacity-40"
             }
           }
           return (
@@ -115,7 +115,7 @@ function TriviaGame({
               key={idx}
               onClick={() => handleSelect(idx)}
               disabled={selected !== null}
-              className={`rounded-md border px-4 py-3 text-left text-sm tracking-wide transition-all duration-300 ${optStyle}`}
+              className={`rounded-md border px-5 py-3.5 text-left text-base tracking-wide transition-all duration-300 ${optStyle}`}
             >
               {opt}
             </button>
@@ -125,13 +125,13 @@ function TriviaGame({
 
       {/* Explanation + next */}
       {selected !== null && (
-        <div className="mt-5 flex flex-col items-center gap-4">
-          <p className="text-center text-sm leading-relaxed tracking-wide text-white/60 italic">
+        <div className="mt-6 flex flex-col items-center gap-5">
+          <p className="text-center text-sm leading-relaxed tracking-wide opacity-60 italic">
             {q.explanation}
           </p>
           <button
             onClick={handleNext}
-            className="min-h-[48px] rounded-sm border border-white/25 px-8 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-white/90 transition-colors hover:bg-white/10"
+            className="min-h-[48px] rounded-sm border border-current/25 px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase opacity-90 transition-opacity hover:opacity-100"
           >
             {current + 1 >= questions.length ? "Ver resultado" : "Siguiente"}
           </button>

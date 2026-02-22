@@ -11,8 +11,9 @@ interface GallerySectionProps {
 export default function GallerySection({ images }: GallerySectionProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: "center",
+    align: "start",
     skipSnaps: false,
+    slidesToScroll: 1,
   })
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -26,7 +27,6 @@ export default function GallerySection({ images }: GallerySectionProps) {
     emblaApi.on("select", onSelect)
     onSelect()
 
-    // Auto-scroll every 3 seconds
     const interval = setInterval(() => {
       emblaApi.scrollNext()
     }, 3000)
@@ -42,11 +42,12 @@ export default function GallerySection({ images }: GallerySectionProps) {
   return (
     <section className="w-full">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-3">
+        <div className="flex" style={{ gap: "6px" }}>
           {images.map((src, index) => (
             <div
               key={index}
-              className="relative min-w-0 shrink-0 grow-0 basis-[95%]"
+              className="relative min-w-0 shrink-0 grow-0"
+              style={{ flex: "0 0 100%" }}
             >
               <div className="relative aspect-[4/3] w-full">
                 <Image
@@ -61,9 +62,8 @@ export default function GallerySection({ images }: GallerySectionProps) {
         </div>
       </div>
 
-      {/* Minimal dot indicators */}
       {images.length > 1 && (
-        <div className="flex items-center justify-center gap-2 py-5 bg-background">
+        <div className="flex items-center justify-center gap-2 bg-background py-5">
           {images.map((_, index) => (
             <button
               key={index}
