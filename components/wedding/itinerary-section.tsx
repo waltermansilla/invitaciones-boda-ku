@@ -99,12 +99,13 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
   }, [handleScroll, positionTrack])
 
   return (
-    <section className="flex flex-col items-center bg-background px-6 py-20">
+    <section className="bg-background px-6 py-20">
       <h2 className="mb-16 text-center text-2xl font-semibold tracking-[0.25em] uppercase text-foreground md:text-3xl">
         {title}
       </h2>
 
-      <div ref={containerRef} className="relative w-full max-w-sm">
+      <div className="flex justify-center">
+      <div ref={containerRef} className="relative">
         {/* Timeline track -- positioned dynamically from first to last icon center */}
         <div
           ref={trackRef}
@@ -114,7 +115,7 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
           <div
             ref={fillRef}
             className="absolute top-0 bg-primary"
-            style={{ left: "-0.5px", height: "0%", width: "3px", willChange: "height" }}
+            style={{ left: "0px", height: "0%", width: "2px", willChange: "height" }}
           />
         </div>
 
@@ -145,6 +146,7 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
             )
           })}
         </div>
+      </div>
       </div>
     </section>
   )
