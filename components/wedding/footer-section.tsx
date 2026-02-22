@@ -56,7 +56,7 @@ export default function FooterSection({
   socialLinks,
 }: FooterSectionProps) {
   return (
-    <footer className="bg-[#4A5A3F] px-6 py-14 text-center">
+    <footer className="bg-[#4A5A3F] px-6 py-16 text-center">
       <div className="mb-6 flex items-center justify-center gap-6">
         {socialLinks.map((link) => {
           const Icon = iconMap[link.icon]
