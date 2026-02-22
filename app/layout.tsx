@@ -1,18 +1,12 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, Montserrat } from 'next/font/google'
+import { Josefin_Sans } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const cormorant = Cormorant_Garamond({
+const josefin = Josefin_Sans({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-cormorant',
-})
-
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-montserrat',
+  weight: ['100', '200', '300', '400', '500', '600', '700'],
+  variable: '--font-josefin',
 })
 
 export const viewport: Viewport = {
@@ -52,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="bg-background">
-      <body className={`${cormorant.variable} ${montserrat.variable} font-sans antialiased`}>
+      <body className={`${josefin.variable} font-sans antialiased`}>
         {children}
         <Analytics />
       </body>

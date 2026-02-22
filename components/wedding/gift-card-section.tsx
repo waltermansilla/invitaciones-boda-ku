@@ -27,13 +27,11 @@ export default function GiftCardSection({
       </div>
       <h2
         className="mb-3 text-xl font-semibold tracking-wide uppercase text-primary-foreground md:text-2xl"
-        style={{ fontFamily: "var(--font-display)" }}
       >
         {title}
       </h2>
       <p
         className="mb-6 max-w-sm text-sm font-light leading-relaxed text-primary-foreground/80"
-        style={{ fontFamily: "var(--font-body)" }}
       >
         {description}
       </p>

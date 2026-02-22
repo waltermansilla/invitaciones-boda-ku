@@ -26,13 +26,11 @@ export default function HoneymoonSection({
       <div className="flex flex-col items-center px-8 py-14">
         <h2
           className="mb-3 text-2xl font-semibold tracking-wide uppercase text-foreground md:text-3xl"
-          style={{ fontFamily: "var(--font-display)" }}
         >
           {title}
         </h2>
         <p
           className="mb-6 max-w-sm text-sm font-light leading-relaxed text-foreground/70"
-          style={{ fontFamily: "var(--font-body)" }}
         >
           {description}
         </p>

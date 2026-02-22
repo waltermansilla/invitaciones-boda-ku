@@ -33,13 +33,13 @@ export default function EventInfoSection({ date, locations }: EventInfoSectionPr
         </div>
         <h2
           className="text-xl font-semibold tracking-wide uppercase text-foreground md:text-2xl"
-          style={{ fontFamily: "var(--font-display)" }}
+  
         >
           {date.title}
         </h2>
         <p
           className="text-sm font-medium tracking-[0.1em] uppercase text-foreground/70"
-          style={{ fontFamily: "var(--font-body)" }}
+  
         >
           {date.value}
         </p>
@@ -51,13 +51,13 @@ export default function EventInfoSection({ date, locations }: EventInfoSectionPr
           <MapPin className="h-5 w-5 text-foreground/60" strokeWidth={1.2} />
           <h2
             className="text-xl font-semibold tracking-wide uppercase text-foreground md:text-2xl"
-            style={{ fontFamily: "var(--font-display)" }}
+    
           >
             {location.title}
           </h2>
           <p
             className="text-sm font-medium tracking-[0.1em] uppercase text-foreground/70"
-            style={{ fontFamily: "var(--font-body)" }}
+    
           >
             {location.address}
           </p>

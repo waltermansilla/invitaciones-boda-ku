@@ -28,7 +28,6 @@ export default function ActionButton({ text, url, variant }: ActionButtonProps) 
       target="_blank"
       rel="noopener noreferrer"
       className={`${base} ${variantClasses}`}
-      style={{ fontFamily: "var(--font-body)" }}
     >
       {text}
     </a>

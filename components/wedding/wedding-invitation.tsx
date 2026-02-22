@@ -1,6 +1,7 @@
 "use client"
 
 import config from "@/data/wedding-config.json"
+import HeroOverlay from "./hero-overlay"
 import HeroSection from "./hero-section"
 import Section from "./section"
 import MusicPlayer from "./music-player"
@@ -10,9 +11,21 @@ export default function WeddingInvitation() {
   const sections = config.sections ?? []
   const meta = config.meta
   const music = config.music
+  const overlay = config.overlay
 
   return (
     <main className="mx-auto min-h-screen max-w-lg">
+      {/* Fullscreen entry overlay */}
+      {overlay.enabled && (
+        <HeroOverlay
+          groomName={meta.coupleNames.groomName}
+          brideName={meta.coupleNames.brideName}
+          separator={meta.coupleNames.separator}
+          phrase={overlay.phrase}
+          buttonText={overlay.buttonText}
+        />
+      )}
+
       {/* Hero is always rendered first */}
       <HeroSection
         coupleImage={hero.coupleImage}

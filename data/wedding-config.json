@@ -15,8 +15,13 @@
     "backgroundColor": "#FAF8F5",
     "textColor": "#3A3A3A",
     "accentBackground": "#EDF2E8",
-    "fontPrimary": "Cormorant Garamond",
-    "fontSecondary": "Montserrat"
+    "font": "Josefin Sans"
+  },
+
+  "overlay": {
+    "enabled": true,
+    "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
+    "buttonText": "Ingresar"
   },
 
   "music": {

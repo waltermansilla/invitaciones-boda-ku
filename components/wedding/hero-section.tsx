@@ -70,7 +70,6 @@ export default function HeroSection({
       <div className="flex flex-col items-center px-6 pt-10 pb-10">
         <h1
           className="mb-8 text-center text-3xl font-semibold tracking-wide uppercase text-foreground md:text-4xl"
-          style={{ fontFamily: "var(--font-display)" }}
         >
           {headline}
         </h1>
@@ -82,7 +81,6 @@ export default function HeroSection({
               <div className="flex flex-col items-center">
                 <span
                   className="text-4xl font-light tabular-nums text-foreground md:text-5xl"
-                  style={{ fontFamily: "var(--font-display)" }}
                   suppressHydrationWarning
                 >
                   {time
@@ -94,7 +92,6 @@ export default function HeroSection({
                 </span>
                 <span
                   className="mt-1 text-[9px] font-medium tracking-[0.15em] uppercase text-muted-foreground"
-                  style={{ fontFamily: "var(--font-body)" }}
                 >
                   {item.label}
                 </span>
@@ -102,7 +99,6 @@ export default function HeroSection({
               {i < 3 && (
                 <span
                   className="mt-1 text-3xl font-light text-foreground/40 md:text-4xl"
-                  style={{ fontFamily: "var(--font-display)" }}
                 >
                   :
                 </span>

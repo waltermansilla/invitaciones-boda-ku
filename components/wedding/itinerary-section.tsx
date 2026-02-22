@@ -24,7 +24,7 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
       <div className="w-full max-w-xs rounded-sm border border-foreground/15 px-8 py-10">
         <h2
           className="mb-10 text-center text-lg font-medium tracking-[0.25em] uppercase text-foreground"
-          style={{ fontFamily: "var(--font-body)" }}
+
         >
           {title}
         </h2>
@@ -43,13 +43,13 @@ export default function ItinerarySection({ title, events }: ItinerarySectionProp
                   />
                   <h3
                     className="text-xs font-semibold tracking-[0.2em] uppercase text-foreground"
-                    style={{ fontFamily: "var(--font-body)" }}
+          
                   >
                     {event.name}
                   </h3>
                   <p
                     className="text-xs font-light text-foreground/60"
-                    style={{ fontFamily: "var(--font-body)" }}
+          
                   >
                     {event.time}
                   </p>
