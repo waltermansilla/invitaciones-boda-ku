@@ -89,6 +89,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
             description={data.description as string}
             image={data.image as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
+            modal={data.modal as { title: string; suggestedValue: string; description: string; transferData: { label: string; value: string }[] }}
           />
         )
 
@@ -99,6 +100,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
             description={data.description as string}
             image={data.image as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
+            modal={data.modal as { title: string; description: string; bankData: { label: string; value: string }[]; thankYouText: string }}
           />
         )
 
@@ -108,6 +110,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
             title={data.title as string}
             subtitle={data.subtitle as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
+            modal={data.modal as { title: string; sections: { heading: string; text: string }[] }}
           />
         )
 

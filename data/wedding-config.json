@@ -144,10 +144,10 @@
       }
     },
     {
-      "_comment": "VALOR TARJETA (fondo verde): seccion para informar el valor de la tarjeta/entrada. Tiene icono, titulo, descripcion, boton y una imagen decorativa debajo.",
+      "_comment": "VALOR TARJETA (fondo verde): seccion para informar el valor de la tarjeta/entrada. El boton abre un modal con los datos de transferencia. modal.suggestedValue = monto sugerido. modal.transferData = array de objetos {label, value} con los datos bancarios (se pueden agregar o quitar). Cada dato tiene boton de copiar.",
       "type": "giftCard",
       "id": "gift-card",
-      "blocks": ["icon", "title", "description", "button", "image"],
+      "blocks": ["icon", "title", "description", "button", "image", "modal"],
       "data": {
         "icon": "gift",
         "title": "Valor Tarjeta",
@@ -157,14 +157,26 @@
           "text": "Ver valor tarjeta",
           "url": "#",
           "variant": "secondary"
+        },
+        "_comment_modal": "Contenido del modal que se abre al presionar el boton. suggestedValue = precio sugerido. transferData = datos bancarios, cada uno con label y value (copiable).",
+        "modal": {
+          "title": "Informacion de la tarjeta",
+          "suggestedValue": "$25.000",
+          "description": "El valor de la tarjeta es una contribucion que nos ayuda a cubrir parte de los gastos de la celebracion. Muchas gracias por acompanarnos.",
+          "transferData": [
+            { "label": "Alias", "value": "LUCIA.SEBASTIAN.BODA" },
+            { "label": "CBU", "value": "0000003100075436000012" },
+            { "label": "Titular", "value": "Lucia Fernandez" },
+            { "label": "Banco", "value": "Banco Nacion" }
+          ]
         }
       }
     },
     {
-      "_comment": "LUNA DE MIEL: seccion para contribuir al viaje. Tiene imagen arriba, titulo, descripcion y boton. La imagen va en /public/images/.",
+      "_comment": "LUNA DE MIEL: seccion para contribuir al viaje. El boton abre un modal con los datos bancarios para la transferencia. modal.bankData = array de objetos {label, value} con alias, CBU, titular, etc (copiables). modal.thankYouText = frase de agradecimiento al final del modal.",
       "type": "honeymoon",
       "id": "honeymoon-fund",
-      "blocks": ["image", "icon", "title", "description", "button"],
+      "blocks": ["image", "icon", "title", "description", "button", "modal"],
       "data": {
         "title": "Luna de Miel",
         "description": "Si desean hacernos un regalo les agradecemos nos ayuden en nuestra luna de miel.",
@@ -173,14 +185,25 @@
           "text": "Contribuir",
           "url": "#",
           "variant": "primary"
+        },
+        "_comment_modal": "Contenido del modal. bankData = datos de cuenta bancaria (copiables). description = texto explicativo. thankYouText = frase de cierre.",
+        "modal": {
+          "title": "Datos para contribuir",
+          "description": "Pueden transferir el monto que deseen. Cualquier contribucion nos ayuda un monton a cumplir nuestro sueno.",
+          "bankData": [
+            { "label": "Alias", "value": "LUCIA.SEBASTIAN.LUNA" },
+            { "label": "CBU", "value": "0000003100075436000012" },
+            { "label": "Titular", "value": "Lucia Fernandez" }
+          ],
+          "thankYouText": "Gracias de corazon por ayudarnos a hacer este viaje realidad."
         }
       }
     },
     {
-      "_comment": "DRESS CODE: codigo de vestimenta. Titulo, subtitulo con el tipo de evento y boton con consejos.",
+      "_comment": "DRESS CODE: codigo de vestimenta. El boton abre un modal con consejos. modal.sections = array de bloques {heading, text}. Se pueden agregar o quitar bloques (ej: agregar uno para ninos, otro para accesorios, etc).",
       "type": "dressCode",
       "id": "dress-code",
-      "blocks": ["icon", "title", "subtitle", "button"],
+      "blocks": ["icon", "title", "subtitle", "button", "modal"],
       "data": {
         "title": "Dress Code",
         "subtitle": "Evento Campestre",
@@ -188,6 +211,24 @@
           "text": "Ver consejos",
           "url": "#",
           "variant": "secondary"
+        },
+        "_comment_modal": "Contenido del modal. Cada objeto en sections tiene heading (titulo del bloque) y text (descripcion). Se pueden agregar, quitar o reordenar libremente.",
+        "modal": {
+          "title": "Consejos para la celebracion",
+          "sections": [
+            {
+              "heading": "Hombres",
+              "text": "Pantalon de vestir o chino, camisa clara (puede ser sin corbata), zapatos o mocasines. Evitar zapatillas deportivas y bermudas. El evento es al aire libre, asi que priorizá comodidad con elegancia."
+            },
+            {
+              "heading": "Mujeres",
+              "text": "Vestido midi o largo, sandalias o zapatos comodos (el terreno es cesped). Evitar blanco y colores muy claros para no coincidir con la novia. Se sugieren tonos pasteles, tierra o colores vivos."
+            },
+            {
+              "heading": "General",
+              "text": "El evento es campestre y al atardecer. Llevar un abrigo liviano por si refresca a la noche. Evitar tacones muy altos por el terreno irregular."
+            }
+          ]
         }
       }
     },
