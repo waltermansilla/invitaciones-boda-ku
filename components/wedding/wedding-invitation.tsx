@@ -6,7 +6,6 @@ import HeroOverlay from "./hero-overlay"
 import HeroSection from "./hero-section"
 import Section from "./section"
 import MusicPlayer from "./music-player"
-import ScrollNightMode from "./scroll-night-mode"
 
 export default function WeddingInvitation() {
   const hero = config.hero
@@ -14,25 +13,10 @@ export default function WeddingInvitation() {
   const meta = config.meta
   const music = config.music
   const overlay = config.overlay
-  const theme = config.theme as Record<string, unknown>
 
   return (
     <ModalProvider>
-      <ScrollNightMode
-        lightColor={(theme.backgroundColor as string) || "#FAF8F5"}
-        darkColor={(theme.nightColor as string) || "#2C3527"}
-        lightTextColor={(theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"}
-        darkTextColor={(theme.nightTextColor as string) || "#D4C9A8"}
-        intensity={typeof theme.nightIntensity === "number" ? (theme.nightIntensity as number) : 0.85}
-      />
-      <main
-        className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl"
-        style={{
-          "--scroll-progress": "0",
-          "--night-bg": (theme.backgroundColor as string) || "#FAF8F5",
-          "--night-text": (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E",
-        } as React.CSSProperties}
-      >
+      <main className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl">
         {/* Fullscreen entry overlay */}
         {overlay.enabled && (
           <HeroOverlay
