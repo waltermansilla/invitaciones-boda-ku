@@ -48,6 +48,20 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href={fontUrl} rel="stylesheet" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          :root {
+            --primary: ${config.theme.primaryColor};
+            --background: ${config.theme.backgroundColor};
+            --foreground: ${config.theme.textColor};
+            --accent-bg: ${config.theme.accentBackground};
+            --ring: ${config.theme.primaryColor};
+            --accent: ${config.theme.primaryColor};
+            --chart-1: ${config.theme.primaryColor};
+            --sidebar-primary: ${config.theme.primaryColor};
+            --sidebar: ${config.theme.backgroundColor};
+            --sidebar-foreground: ${config.theme.textColor};
+          }
+        `}} />
       </head>
       <body
         className="font-sans antialiased"
