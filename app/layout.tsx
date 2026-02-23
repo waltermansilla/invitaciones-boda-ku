@@ -51,15 +51,36 @@ export default function RootLayout({
         <style dangerouslySetInnerHTML={{ __html: `
           :root {
             --primary: ${config.theme.primaryColor};
+            --primary-foreground: #FFFFFF;
             --background: ${config.theme.backgroundColor};
             --foreground: ${config.theme.textColor};
-            --accent-bg: ${config.theme.accentBackground};
-            --ring: ${config.theme.primaryColor};
+            --card: ${config.theme.backgroundColor};
+            --card-foreground: ${config.theme.textColor};
+            --popover: ${config.theme.backgroundColor};
+            --popover-foreground: ${config.theme.textColor};
+            --secondary: ${config.theme.accentBackground};
+            --secondary-foreground: ${config.theme.textColor};
+            --muted: ${config.theme.accentBackground};
+            --muted-foreground: ${config.theme.textColor}99;
             --accent: ${config.theme.primaryColor};
+            --accent-foreground: #FFFFFF;
+            --accent-bg: ${config.theme.accentBackground};
+            --border: ${config.theme.primaryColor}25;
+            --input: ${config.theme.primaryColor}25;
+            --ring: ${config.theme.primaryColor};
             --chart-1: ${config.theme.primaryColor};
-            --sidebar-primary: ${config.theme.primaryColor};
+            --chart-2: ${config.theme.primaryColor}CC;
+            --chart-3: ${config.theme.primaryColor}99;
+            --chart-4: ${config.theme.primaryColor}66;
+            --chart-5: ${config.theme.textColor}33;
             --sidebar: ${config.theme.backgroundColor};
             --sidebar-foreground: ${config.theme.textColor};
+            --sidebar-primary: ${config.theme.primaryColor};
+            --sidebar-primary-foreground: #FFFFFF;
+            --sidebar-accent: ${config.theme.accentBackground};
+            --sidebar-accent-foreground: ${config.theme.textColor};
+            --sidebar-border: ${config.theme.primaryColor}25;
+            --sidebar-ring: ${config.theme.primaryColor};
           }
         `}} />
       </head>
