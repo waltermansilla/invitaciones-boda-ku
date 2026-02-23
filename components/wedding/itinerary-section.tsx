@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react"
 import { Heart, Wine, UtensilsCrossed, Music, Church, Camera, Cake, Car, GlassWater, PartyPopper, Sparkles, Sun, Moon, Clock, MapPin, Gift, Bus } from "lucide-react"
-import config from "@/data/wedding-config.json"
+import config from "@/data/anto-walter-config.json"
 
 interface ItineraryEvent {
   icon: string
