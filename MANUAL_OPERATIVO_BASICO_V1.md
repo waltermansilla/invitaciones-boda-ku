@@ -25,13 +25,10 @@ El sistema de invitaciones funciona de la siguiente manera:
 Seguir este orden para cada nuevo cliente:
 
 ### Paso 1: Duplicar el proyecto base
-
 Copiar la carpeta completa del proyecto. Renombrar si es necesario.
 
 ### Paso 2: Editar datos generales (meta)
-
 Abrir `data/wedding-config.json` y cambiar:
-
 ```json
 "meta": {
   "title": "Nuestra Boda - Ana & Martin",
@@ -46,7 +43,6 @@ Abrir `data/wedding-config.json` y cambiar:
 ```
 
 ### Paso 3: Ajustar colores y fuente
-
 ```json
 "theme": {
   "primaryColor": "#6B7F5E",
@@ -62,7 +58,6 @@ Abrir `data/wedding-config.json` y cambiar:
   }
 }
 ```
-
 - `primaryColor`: color de las secciones con fondo (verde por defecto).
 - `backgroundColor`: fondo general claro.
 - `lightBgTextColor`: color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Cambiar a cualquier hex (ej: `"#555555"` para gris).
@@ -72,15 +67,12 @@ Abrir `data/wedding-config.json` y cambiar:
 - `font.weights`: pesos que necesitas, separados por coma.
 
 **Ejemplo rapido:** si queres que el texto en fondo claro sea gris en vez de verde, solo cambias:
-
 ```json
 "lightBgTextColor": "#555555"
 ```
-
 Todo se actualiza junto: titulos, parrafos, iconos, botones, separadores.
 
 ### Paso 4: Configurar hero
-
 ```json
 "hero": {
   "coupleImage": "/images/couple-hero.jpg",
@@ -95,33 +87,26 @@ Todo se actualiza junto: titulos, parrafos, iconos, botones, separadores.
   }
 }
 ```
-
 - `eventDate`: formato obligatorio `AAAA-MM-DDTHH:MM:SS`. Controla la cuenta regresiva.
 - `coupleImage`: ruta a la foto. Colocarla en `/public/images/`.
 - `showNamesOnPhoto`: `true` muestra los nombres de la pareja sobre la foto de portada, `false` los oculta (los nombres siguen apareciendo en el overlay de bienvenida y en la seccion de cierre).
 
 ### Paso 5: Activar o quitar secciones
-
 Revisar el array `sections` y decidir cuales quedan. Ver seccion 3 de este manual.
 
 ### Paso 6: Ajustar textos de cada seccion
-
 Cambiar frases, descripciones, preguntas de trivia, datos bancarios, etc.
 
 ### Paso 7: Revisar ubicaciones y links
-
 Verificar que los `url` de Google Maps, WhatsApp e Instagram sean correctos.
 
 ### Paso 8: Reemplazar fotos
-
 Colocar fotos reales en `/public/images/` con los mismos nombres o actualizar las rutas en el JSON.
 
 ### Paso 9: Probar en mobile
-
 La invitacion esta pensada para celular. Siempre revisar en un telefono real o con el inspector del navegador.
 
 ### Paso 10: Checklist final
-
 Ver seccion 7 de este manual.
 
 ---
@@ -130,24 +115,23 @@ Ver seccion 7 de este manual.
 
 ### Campos que se cambian en TODOS los clientes:
 
-| Campo                                | Ubicacion | Que es                                |
-| ------------------------------------ | --------- | ------------------------------------- |
-| `meta.title`                         | Raiz      | Titulo de la pestana del navegador    |
-| `meta.coupleNames`                   | Raiz      | Nombres de la pareja                  |
-| `hero.coupleImage`                   | Raiz      | Foto principal                        |
-| `hero.eventDate`                     | Raiz      | Fecha del evento (controla countdown) |
-| `dateInfo > data.value`              | Sections  | Fecha en texto ("10 de Octubre 2026") |
-| `locationInfo > data.address`        | Sections  | Direcciones de los lugares            |
-| `locationInfo > data.button.url`     | Sections  | Links a Google Maps                   |
-| `giftCard > data.modal.transferData` | Sections  | Datos bancarios de la tarjeta         |
-| `honeymoon > data.modal.bankData`    | Sections  | Datos bancarios luna de miel          |
-| `rsvp > data.deadline`               | Sections  | Fecha limite de confirmacion          |
-| `footer > data.socialLinks`          | Sections  | URLs de redes sociales                |
+| Campo | Ubicacion | Que es |
+|-------|-----------|--------|
+| `meta.title` | Raiz | Titulo de la pestana del navegador |
+| `meta.coupleNames` | Raiz | Nombres de la pareja |
+| `hero.coupleImage` | Raiz | Foto principal |
+| `hero.eventDate` | Raiz | Fecha del evento (controla countdown) |
+| `dateInfo > data.value` | Sections | Fecha en texto ("10 de Octubre 2026") |
+| `locationInfo > data.address` | Sections | Direcciones de los lugares |
+| `locationInfo > data.button.url` | Sections | Links a Google Maps |
+| `giftCard > data.modal.transferData` | Sections | Datos bancarios de la tarjeta |
+| `honeymoon > data.modal.bankData` | Sections | Datos bancarios luna de miel |
+| `rsvp > data.deadline` | Sections | Fecha limite de confirmacion |
+| `footer > data.socialLinks` | Sections | URLs de redes sociales |
 
 ### Color de fondo y texto por seccion:
 
 Cada seccion tiene un campo `bgColor` que controla su fondo:
-
 ```json
 {
   "type": "quote",
@@ -158,18 +142,16 @@ Cada seccion tiene un campo `bgColor` que controla su fondo:
 }
 ```
 
-| Valor de `bgColor` | Que hace                              | Texto automatico                                             |
-| ------------------ | ------------------------------------- | ------------------------------------------------------------ |
-| `"primary"`        | Fondo verde (color primario del tema) | Usa `darkBgTextColor` del tema (blanco por defecto)          |
-| `"background"`     | Fondo crema (color de fondo general)  | Usa `lightBgTextColor` del tema (verde primario por defecto) |
+| Valor de `bgColor` | Que hace | Texto automatico |
+|---------------------|----------|------------------|
+| `"primary"` | Fondo verde (color primario del tema) | Usa `darkBgTextColor` del tema (blanco por defecto) |
+| `"background"` | Fondo crema (color de fondo general) | Usa `lightBgTextColor` del tema (verde primario por defecto) |
 
 **El texto se adapta automaticamente al fondo.** Los colores de texto se controlan globalmente desde el tema:
-
 - `lightBgTextColor` en el tema -> se aplica a TODAS las secciones con `bgColor: "background"`
 - `darkBgTextColor` en el tema -> se aplica a TODAS las secciones con `bgColor: "primary"`
 
 **Override opcional por seccion:** si UNA seccion necesita un color distinto al global, podes agregar `textColor` solo en esa seccion:
-
 ```json
 {
   "type": "quote",
@@ -183,16 +165,16 @@ El `textColor` de la seccion tiene prioridad sobre el valor global del tema. Ace
 
 ### Campos opcionales (dependen del cliente):
 
-| Campo                             | Que hace                                   |
-| --------------------------------- | ------------------------------------------ |
-| `overlay.enabled`                 | Activa/desactiva la pantalla de bienvenida |
-| `music.enabled`                   | Activa/desactiva la musica                 |
-| `gallery > data.images`           | Agregar/quitar fotos del slider            |
-| `trivia > data.modal.questions`   | Agregar/quitar preguntas                   |
-| `truths > data.questions`         | Agregar/quitar preguntas                   |
-| `ourStory > data.moments`         | Agregar/quitar momentos                    |
-| `itinerary > data.events`         | Agregar/quitar momentos del itinerario     |
-| `dressCode > data.modal.sections` | Agregar/quitar bloques de consejos         |
+| Campo | Que hace |
+|-------|----------|
+| `overlay.enabled` | Activa/desactiva la pantalla de bienvenida |
+| `music.enabled` | Activa/desactiva la musica |
+| `gallery > data.images` | Agregar/quitar fotos del slider |
+| `trivia > data.modal.questions` | Agregar/quitar preguntas |
+| `truths > data.questions` | Agregar/quitar preguntas |
+| `ourStory > data.moments` | Agregar/quitar momentos |
+| `itinerary > data.events` | Agregar/quitar momentos del itinerario |
+| `dressCode > data.modal.sections` | Agregar/quitar bloques de consejos |
 
 ### Secciones que se pueden eliminar sin romper nada:
 
@@ -214,7 +196,6 @@ Cualquier seccion se puede eliminar del array `sections` sin afectar al resto. L
 4. Verificar que no quede una coma antes del `]` de cierre del array.
 
 Ejemplo -- ANTES:
-
 ```json
 "sections": [
   { "type": "quote", ... },
@@ -224,7 +205,6 @@ Ejemplo -- ANTES:
 ```
 
 Quiero eliminar `dateInfo` -- DESPUES:
-
 ```json
 "sections": [
   { "type": "quote", ... },
@@ -244,28 +224,27 @@ Quiero eliminar `dateInfo` -- DESPUES:
 - **IDs de secciones** a menos que dupliques una seccion (en ese caso el nuevo ID debe ser unico).
 - **La estructura de los arrays**. Si un campo espera un array `[]`, no convertirlo en un objeto `{}` ni en un string.
 - **Valores de `type`**. Los valores validos son:
-    - `quote`, `dateInfo`, `locationInfo`, `gallery`, `itinerary`, `photos`, `giftCard`, `honeymoon`, `dressCode`, `emotionalQuote`, `trivia`, `ourStory`, `truths`, `rsvp`, `closingImage`, `footer`
+  - `quote`, `dateInfo`, `locationInfo`, `gallery`, `itinerary`, `photos`, `giftCard`, `honeymoon`, `dressCode`, `emotionalQuote`, `trivia`, `ourStory`, `truths`, `rsvp`, `closingImage`, `footer`
 - **Archivos fuera del JSON** salvo que sea estrictamente necesario (ver seccion 6).
 
 ### Valores especiales que no se deben alterar:
 
-| Campo                  | Valores validos                                                                                                                                     |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `button.variant`       | `"primary"`, `"secondary"`                                                                                                                          |
-| `trivia correctIndex`  | Numero del 0 al 3 (0 = primera opcion)                                                                                                              |
-| `truths correctOption` | `"A"` o `"B"`                                                                                                                                       |
-| `socialLinks icon`     | `"instagram"`, `"whatsapp"`                                                                                                                         |
-| `itinerary icon`       | `heart`, `wine`, `utensils`, `music`, `church`, `camera`, `cake`, `car`, `glass`, `party`, `sparkles`, `sun`, `moon`, `clock`, `pin`, `gift`, `bus` |
-| `aspectRatio`          | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"`                                                                                                                 |
-| `bgColor`              | `"primary"`, `"background"`                                                                                                                         |
-| `textColor`            | `"primary-foreground"`, `"foreground"`, o un hex como `"#FF0000"`                                                                                   |
+| Campo | Valores validos |
+|-------|----------------|
+| `button.variant` | `"primary"`, `"secondary"` |
+| `trivia correctIndex` | Numero del 0 al 3 (0 = primera opcion) |
+| `truths correctOption` | `"A"` o `"B"` |
+| `socialLinks icon` | `"instagram"`, `"whatsapp"` |
+| `itinerary icon` | `heart`, `wine`, `utensils`, `music`, `church`, `camera`, `cake`, `car`, `glass`, `party`, `sparkles`, `sun`, `moon`, `clock`, `pin`, `gift`, `bus` |
+| `aspectRatio` | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"` |
+| `bgColor` | `"primary"`, `"background"` |
+| `textColor` | `"primary-foreground"`, `"foreground"`, o un hex como `"#FF0000"` |
 
 ---
 
 ## 5. ERRORES COMUNES
 
 ### Coma final antes de cierre
-
 ```json
 // MAL - coma despues del ultimo elemento
 "images": [
@@ -281,7 +260,6 @@ Quiero eliminar `dateInfo` -- DESPUES:
 ```
 
 ### Comillas mal cerradas
-
 ```json
 // MAL
 "title": "Nos casamos!
@@ -291,7 +269,6 @@ Quiero eliminar `dateInfo` -- DESPUES:
 ```
 
 ### Fecha mal formateada
-
 ```json
 // MAL - el countdown no va a funcionar
 "eventDate": "10 de Octubre 2026"
@@ -301,7 +278,6 @@ Quiero eliminar `dateInfo` -- DESPUES:
 ```
 
 ### Array mal cerrado
-
 ```json
 // MAL - falta cerrar el array
 "options": ["Vegetariano", "Vegano"
@@ -311,7 +287,6 @@ Quiero eliminar `dateInfo` -- DESPUES:
 ```
 
 ### Links incompletos
-
 ```json
 // MAL - falta https://
 "url": "wa.me/3456023759"
@@ -321,7 +296,6 @@ Quiero eliminar `dateInfo` -- DESPUES:
 ```
 
 ### Ruta de imagen incorrecta
-
 ```json
 // MAL - la carpeta public no se incluye en la ruta
 "image": "/public/images/foto.jpg"
@@ -336,15 +310,15 @@ Quiero eliminar `dateInfo` -- DESPUES:
 
 En el 95% de los casos solo se toca el JSON. Pero si necesitas algo mas especifico:
 
-| Que quiero cambiar                   | Que archivo tocar                                                  |
-| ------------------------------------ | ------------------------------------------------------------------ |
-| Fuente tipografica                   | Solo el JSON (`theme.font.family` y `theme.font.weights`)          |
-| Colores generales                    | Solo el JSON (`theme.primaryColor`, `theme.backgroundColor`, etc.) |
-| Color de texto en modales            | Solo el JSON (`theme.modalTextColor`)                              |
-| Layout general de la pagina          | `app/layout.tsx` (raramente necesario)                             |
-| Estilos globales CSS                 | `app/globals.css` (solo si necesitas animaciones nuevas)           |
-| Agregar una nueva seccion tipo       | `components/wedding/section.tsx` (requiere conocimiento de React)  |
-| Agregar un nuevo icono al itinerario | `components/wedding/itinerary-section.tsx` (agregar al `iconMap`)  |
+| Que quiero cambiar | Que archivo tocar |
+|--------------------|-------------------|
+| Fuente tipografica | Solo el JSON (`theme.font.family` y `theme.font.weights`) |
+| Colores generales | Solo el JSON (`theme.primaryColor`, `theme.backgroundColor`, etc.) |
+| Color de texto en modales | Solo el JSON (`theme.modalTextColor`) |
+| Layout general de la pagina | `app/layout.tsx` (raramente necesario) |
+| Estilos globales CSS | `app/globals.css` (solo si necesitas animaciones nuevas) |
+| Agregar una nueva seccion tipo | `components/wedding/section.tsx` (requiere conocimiento de React) |
+| Agregar un nuevo icono al itinerario | `components/wedding/itinerary-section.tsx` (agregar al `iconMap`) |
 
 **Regla general:** si el cambio se puede hacer desde el JSON, hacelo desde el JSON. Solo tocar codigo si no hay otra opcion.
 
@@ -355,7 +329,6 @@ En el 95% de los casos solo se toca el JSON. Pero si necesitas algo mas especifi
 Recorrer esta lista antes de enviar al cliente:
 
 ### Datos basicos
-
 - [ ] Nombres correctos en `meta.coupleNames`
 - [ ] Titulo de pestana correcto en `meta.title`
 - [ ] Fecha correcta en `hero.eventDate` (formato ISO)
@@ -363,7 +336,6 @@ Recorrer esta lista antes de enviar al cliente:
 - [ ] Cuenta regresiva funcionando (verificar en la pagina)
 
 ### Fotos
-
 - [ ] Foto del hero reemplazada (`hero.coupleImage`)
 - [ ] Fotos de la galeria reemplazadas
 - [ ] Fotos de "Nuestra historia" reemplazadas (si aplica)
@@ -371,7 +343,6 @@ Recorrer esta lista antes de enviar al cliente:
 - [ ] Todas las imagenes estan en `/public/images/`
 
 ### Links y datos
-
 - [ ] Links de Google Maps funcionan (abrir y verificar)
 - [ ] Datos bancarios correctos (alias, CBU, titular)
 - [ ] Valor de tarjeta correcto
@@ -379,7 +350,6 @@ Recorrer esta lista antes de enviar al cliente:
 - [ ] URL de Instagram correcta
 
 ### Contenido
-
 - [ ] Frases y textos personalizados para el cliente
 - [ ] Preguntas de trivia adaptadas (si aplica)
 - [ ] Preguntas de "verdades" adaptadas (si aplica)
@@ -388,13 +358,11 @@ Recorrer esta lista antes de enviar al cliente:
 - [ ] Deadline del RSVP correcto
 
 ### Secciones
-
 - [ ] No hay secciones vacias o con datos de ejemplo
 - [ ] El orden de secciones tiene sentido narrativo
 - [ ] Secciones innecesarias eliminadas
 
 ### Funcional
-
 - [ ] Responsive OK (probar en celular real)
 - [ ] Musica funciona (si esta activada)
 - [ ] Overlay de bienvenida funciona (si esta activado)
