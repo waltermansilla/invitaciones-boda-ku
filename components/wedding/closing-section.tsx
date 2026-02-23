@@ -1,5 +1,5 @@
 import Image from "next/image"
-import config from "@/data/anto-walter-config.json"
+import config from "@/lib/config"
 
 interface ClosingSectionProps {
   image: string

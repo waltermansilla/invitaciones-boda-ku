@@ -18,7 +18,7 @@ import FooterSection from "./footer-section"
 import ClosingSection from "./closing-section"
 import OurStorySection from "./our-story-section"
 import TruthsSection from "./truths-section"
-import config from "@/data/anto-walter-config.json"
+import config from "@/lib/config"
 
 export interface SectionConfig {
   type: string

@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useCallback, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
 import { X } from "lucide-react"
-import config from "@/data/anto-walter-config.json"
+import config from "@/lib/config"
 
 type ModalContent = React.ReactNode | null
 
