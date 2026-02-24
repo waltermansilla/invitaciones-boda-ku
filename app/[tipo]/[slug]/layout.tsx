@@ -20,39 +20,39 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link href={fontUrl} rel="stylesheet" />
       <style dangerouslySetInnerHTML={{ __html: `
-        html {
-          --font-sans: '${fontFamily}', '${fontFamily} Fallback';
-          --primary: ${theme.primaryColor};
-          --primary-foreground: #FFFFFF;
-          --background: ${theme.backgroundColor};
-          --foreground: ${theme.textColor};
-          --card: ${theme.backgroundColor};
-          --card-foreground: ${theme.textColor};
-          --popover: ${theme.backgroundColor};
-          --popover-foreground: ${theme.textColor};
-          --secondary: ${theme.accentBackground};
-          --secondary-foreground: ${theme.textColor};
-          --muted: ${theme.accentBackground};
-          --muted-foreground: ${theme.textColor}99;
-          --accent: ${theme.primaryColor};
-          --accent-foreground: #FFFFFF;
-          --accent-bg: ${theme.accentBackground};
-          --border: ${theme.primaryColor}25;
-          --input: ${theme.primaryColor}25;
-          --ring: ${theme.primaryColor};
-          --chart-1: ${theme.primaryColor};
-          --chart-2: ${theme.primaryColor}CC;
-          --chart-3: ${theme.primaryColor}99;
-          --chart-4: ${theme.primaryColor}66;
-          --chart-5: ${theme.textColor}33;
-          --sidebar: ${theme.backgroundColor};
-          --sidebar-foreground: ${theme.textColor};
-          --sidebar-primary: ${theme.primaryColor};
-          --sidebar-primary-foreground: #FFFFFF;
-          --sidebar-accent: ${theme.accentBackground};
-          --sidebar-accent-foreground: ${theme.textColor};
-          --sidebar-border: ${theme.primaryColor}25;
-          --sidebar-ring: ${theme.primaryColor};
+        :root, html, body {
+          --font-sans: '${fontFamily}', '${fontFamily} Fallback' !important;
+          --primary: ${theme.primaryColor} !important;
+          --primary-foreground: #FFFFFF !important;
+          --background: ${theme.backgroundColor} !important;
+          --foreground: ${theme.textColor} !important;
+          --card: ${theme.backgroundColor} !important;
+          --card-foreground: ${theme.textColor} !important;
+          --popover: ${theme.backgroundColor} !important;
+          --popover-foreground: ${theme.textColor} !important;
+          --secondary: ${theme.accentBackground} !important;
+          --secondary-foreground: ${theme.textColor} !important;
+          --muted: ${theme.accentBackground} !important;
+          --muted-foreground: ${theme.textColor}99 !important;
+          --accent: ${theme.primaryColor} !important;
+          --accent-foreground: #FFFFFF !important;
+          --accent-bg: ${theme.accentBackground} !important;
+          --border: ${theme.primaryColor}25 !important;
+          --input: ${theme.primaryColor}25 !important;
+          --ring: ${theme.primaryColor} !important;
+          --chart-1: ${theme.primaryColor} !important;
+          --chart-2: ${theme.primaryColor}CC !important;
+          --chart-3: ${theme.primaryColor}99 !important;
+          --chart-4: ${theme.primaryColor}66 !important;
+          --chart-5: ${theme.textColor}33 !important;
+          --sidebar: ${theme.backgroundColor} !important;
+          --sidebar-foreground: ${theme.textColor} !important;
+          --sidebar-primary: ${theme.primaryColor} !important;
+          --sidebar-primary-foreground: #FFFFFF !important;
+          --sidebar-accent: ${theme.accentBackground} !important;
+          --sidebar-accent-foreground: ${theme.textColor} !important;
+          --sidebar-border: ${theme.primaryColor}25 !important;
+          --sidebar-ring: ${theme.primaryColor} !important;
         }
       `}} />
       {children}

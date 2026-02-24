@@ -150,9 +150,9 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
         {title}
       </h2>
 
-      {/* Outer flex to center the timeline block horizontally */}
-      <div className="mx-auto flex w-fit flex-col items-center">
-        <div ref={containerRef} className="relative">
+      {/* Outer wrapper to center the timeline block horizontally */}
+      <div className="flex justify-center">
+        <div ref={containerRef} className="relative inline-block">
           {/* Timeline track */}
           <div
             ref={trackRef}
@@ -177,12 +177,12 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
                 <div key={index}>
                   {/* Day separator -- only when the date changes */}
                   {showDateSeparator && (
-                    <div className="mb-10 flex items-center gap-3">
-                      <div className="h-px w-6 bg-current/15" />
+                    <div className="mb-10 flex items-center justify-center gap-3 pl-[56px]">
+                      <div className="h-px w-8 bg-current/15" />
                       <span className="whitespace-nowrap text-[10px] font-medium tracking-[0.2em] uppercase text-inherit/40">
                         {event.date}
                       </span>
-                      <div className="h-px w-6 bg-current/15" />
+                      <div className="h-px w-8 bg-current/15" />
                     </div>
                   )}
 
