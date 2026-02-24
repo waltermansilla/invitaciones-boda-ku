@@ -18,6 +18,10 @@ import FooterSection from "./footer-section"
 import ClosingSection from "./closing-section"
 import OurStorySection from "./our-story-section"
 import TruthsSection from "./truths-section"
+import PresentationSection from "./presentation-section"
+import ParentsSection from "./parents-section"
+import PlaylistSection from "./playlist-section"
+import SpecialMessageSection from "./special-message-section"
 import { useConfig } from "@/lib/config-context"
 
 export interface SectionConfig {
@@ -211,6 +215,43 @@ export default function Section({ section, coupleNames }: SectionProps) {
           />
         )
 
+      case "presentation":
+        return (
+          <PresentationSection
+            image={data.image as string}
+            name={data.name as string}
+            description={data.description as string}
+            aspectRatio={data.aspectRatio as string | undefined}
+          />
+        )
+
+      case "parents":
+        return (
+          <ParentsSection
+            title={data.title as string}
+            subtitle={data.subtitle as string | undefined}
+            parents={data.parents as { name: string; role: string }[]}
+          />
+        )
+
+      case "playlist":
+        return (
+          <PlaylistSection
+            title={data.title as string}
+            description={data.description as string}
+            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
+          />
+        )
+
+      case "specialMessage":
+        return (
+          <SpecialMessageSection
+            title={data.title as string}
+            text={data.text as string}
+            signature={data.signature as string | undefined}
+          />
+        )
+
       case "closingImage":
         return (
           <ClosingSection
@@ -234,7 +275,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
   }
 
   // Sections that manage their own bg (gallery, closingImage, footer) skip the wrapper
-  const selfStyledTypes = ["gallery", "closingImage", "footer"]
+  const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
   const skipWrapper = selfStyledTypes.includes(type)
 
   return (

@@ -6,5 +6,5 @@ import { redirect } from "next/navigation"
  * For now it redirects to anto-walter as the first client.
  */
 export default function Page() {
-  redirect("/boda/anto-walter")
+  redirect("/xv/valentina")
 }

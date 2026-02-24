@@ -13,10 +13,10 @@ export interface ClientConfig {
     primaryColor: string
     backgroundColor: string
     textColor: string
-    lightBgTextColor: string
-    darkBgTextColor: string
+    lightBgTextColor?: string
+    darkBgTextColor?: string
     accentBackground: string
-    modalTextColor: string
+    modalTextColor?: string
     font: {
       family: string
       weights: string
