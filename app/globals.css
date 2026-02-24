@@ -3,42 +3,46 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Defaults - se sobreescriben por el style inyectado en cada ruta de cliente */
+/* 
+  Defaults neutros -- se sobreescriben por el <style> inyectado en cada ruta de cliente.
+  Estos valores SOLO se usan en la pagina raiz (/) y como fallback si un cliente
+  no define un campo. No poner colores de ningun cliente aca.
+*/
 :root {
-  --background: #FAF8F5;
-  --foreground: #3A3A3A;
+  --background: #FAFAFA;
+  --foreground: #1A1A1A;
   --card: #FFFFFF;
-  --card-foreground: #3A3A3A;
+  --card-foreground: #1A1A1A;
   --popover: #FFFFFF;
-  --popover-foreground: #3A3A3A;
-  --primary: #6B7F5E;
+  --popover-foreground: #1A1A1A;
+  --primary: #555555;
   --primary-foreground: #FFFFFF;
-  --secondary: #F0EDE8;
-  --secondary-foreground: #3A3A3A;
-  --muted: #F0EDE8;
-  --muted-foreground: #7A7A7A;
-  --accent: #8A9E7A;
+  --secondary: #F0F0F0;
+  --secondary-foreground: #1A1A1A;
+  --muted: #F0F0F0;
+  --muted-foreground: #888888;
+  --accent: #555555;
   --accent-foreground: #FFFFFF;
   --destructive: #B44040;
   --destructive-foreground: #FFFFFF;
-  --border: #DDD8D0;
-  --input: #DDD8D0;
-  --ring: #6B7F5E;
-  --chart-1: #6B7F5E;
-  --chart-2: #8A9E7A;
-  --chart-3: #A3B896;
-  --chart-4: #C4D4B8;
-  --chart-5: #DDD8D0;
-  --accent-bg: #EDF2E8;
+  --border: #E0E0E0;
+  --input: #E0E0E0;
+  --ring: #555555;
+  --chart-1: #555555;
+  --chart-2: #777777;
+  --chart-3: #999999;
+  --chart-4: #BBBBBB;
+  --chart-5: #DDDDDD;
+  --accent-bg: #F5F5F5;
   --radius: 0.375rem;
-  --sidebar: #FAF8F5;
-  --sidebar-foreground: #3A3A3A;
-  --sidebar-primary: #6B7F5E;
+  --sidebar: #FAFAFA;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #555555;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F0EDE8;
-  --sidebar-accent-foreground: #3A3A3A;
-  --sidebar-border: #DDD8D0;
-  --sidebar-ring: #6B7F5E;
+  --sidebar-accent: #F0F0F0;
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: #E0E0E0;
+  --sidebar-ring: #555555;
 }
 
 @theme inline {

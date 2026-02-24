@@ -1,0 +1,432 @@
+{
+    "// ==========================================": "",
+    "// JSON DE REFERENCIA - TODAS LAS SECCIONES ": "",
+    "// ==========================================.": "",
+    "//": "",
+    "// Este archivo NO se usa en la app. Es solo de referencia.",
+    "// Contiene TODAS las secciones y opciones posibles.",
+    "// Para crear un nuevo cliente: copiar este archivo a",
+    "// data/clientes/[tipo]/[slug].json y borrar lo que no necesites.",
+    "//..": "",
+
+    "meta": {
+        "title": "Titulo del evento - Nombre",
+        "description": "Descripcion SEO del evento.",
+        "lang": "es",
+        "quinceaneraName": "(solo XV) Nombre de la quinceanera",
+        "coupleNames": {
+            "groomName": "(boda) Nombre del novio / (XV) dejar vacio",
+            "brideName": "(boda) Nombre de la novia / (XV) Nombre de la quinceanera",
+            "separator": "(boda) & / (XV) dejar vacio"
+        }
+    },
+
+    "theme": {
+        "primaryColor": "#C4788A",
+        "backgroundColor": "#FFF9F7",
+        "textColor": "#3A3A3A",
+        "lightBgTextColor": "#C4788A",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#FDF0EE",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+
+    "overlay": {
+        "enabled": true,
+        "phrase": "Frase de bienvenida al ingresar",
+        "buttonText": "Ingresar"
+    },
+
+    "music": {
+        "enabled": true,
+        "src": "/music/background.mp3",
+        "autoplay": false
+    },
+
+    "hero": {
+        "coupleImage": "/clientes/[tipo]/[slug]/hero.jpg",
+        "headline": "Titulo grande (ej: Nos casamos! / Mis 15!)",
+        "showNamesOnPhoto": true,
+        "countdownPrefix": "Faltan",
+        "eventDate": "2027-01-01T21:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        }
+    },
+
+    "_comment_sections": "El orden de los objetos define el orden visual. bgColor = 'primary' (color principal) o 'background' (fondo claro). Si no se pone bgColor, se usa 'background' por defecto.",
+
+    "sections": [
+
+        {
+            "_comment": "QUOTE: Frase de bienvenida. author = opcional.",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Frase emotiva de apertura",
+                "author": ""
+            }
+        },
+
+        {
+            "_comment": "PRESENTATION (XV): Foto + nombre + descripcion de la quinceanera.",
+            "type": "presentation",
+            "id": "presentation",
+            "blocks": ["image", "name", "description"],
+            "data": {
+                "image": "/clientes/xv/[slug]/portrait.jpg",
+                "name": "Valentina",
+                "description": "Texto de presentacion personal.",
+                "aspectRatio": "3/4"
+            }
+        },
+
+        {
+            "_comment": "PARENTS (XV): Nombre de los padres.",
+            "type": "parents",
+            "id": "parents",
+            "bgColor": "primary",
+            "blocks": ["title", "parents"],
+            "data": {
+                "title": "Mis Padres",
+                "subtitle": "Texto opcional debajo del titulo",
+                "parents": [
+                    { "name": "Nombre Mama", "role": "Mama" },
+                    { "name": "Nombre Papa", "role": "Papa" }
+                ]
+            }
+        },
+
+        {
+            "_comment": "DATE INFO: Fecha del evento.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "Cuando?",
+                "value": "17 de Febrero 2027"
+            }
+        },
+
+        {
+            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. Duplicar para varias ubicaciones (cambiar el id).",
+            "type": "locationInfo",
+            "id": "location-1",
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Ceremonia",
+                "address": "Direccion completa",
+                "button": {
+                    "text": "Como llegar",
+                    "url": "https://maps.google.com",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "_comment": "GALLERY: Slider de fotos. aspectRatio = '4/3', '3/4', '1/1', '16/9'.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/[tipo]/[slug]/galeria-1.jpg",
+                    "/clientes/[tipo]/[slug]/galeria-2.jpg",
+                    "/clientes/[tipo]/[slug]/galeria-3.jpg"
+                ]
+            }
+        },
+
+        {
+            "_comment": "ITINERARY: Linea de tiempo. Opcionales por evento: date (separador de dia), button (con text, url, variant). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia",
+                        "time": "18:00 hs",
+                        "date": "Sabado 17/02",
+                        "button": {
+                            "text": "Como llegar",
+                            "url": "https://maps.google.com",
+                            "variant": "secondary"
+                        }
+                    },
+                    { "icon": "camera", "name": "Fotos", "time": "19:00 hs" },
+                    { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
+                    { "icon": "cake", "name": "Torta", "time": "23:00 hs" },
+                    { "icon": "music", "name": "Fiesta", "time": "00:00 hs" }
+                ]
+            }
+        },
+
+        {
+            "_comment": "DRESS CODE: Con modal de consejos.",
+            "type": "dressCode",
+            "id": "dress-code",
+            "bgColor": "background",
+            "blocks": ["title", "subtitle", "button", "modal"],
+            "data": {
+                "title": "Vestimenta",
+                "subtitle": "Elegante Sport",
+                "button": {
+                    "text": "Ver consejos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Consejos de vestimenta",
+                    "sections": [
+                        { "heading": "Hombres", "text": "Descripcion para hombres." },
+                        { "heading": "Mujeres", "text": "Descripcion para mujeres." },
+                        { "heading": "General", "text": "Descripcion general." }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "PHOTOS: Subir fotos al album compartido.",
+            "type": "photos",
+            "id": "shared-photos",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "title": "Subi tus fotos",
+                "description": "Texto invitando a subir fotos.",
+                "button": {
+                    "text": "Ir al album",
+                    "url": "https://photos.google.com",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "_comment": "OUR STORY (boda): Momentos de la pareja con fotos.",
+            "type": "ourStory",
+            "id": "our-story",
+            "bgColor": "background",
+            "blocks": ["title", "moments"],
+            "data": {
+                "aspectRatio": "3/4",
+                "title": "Nuestra historia",
+                "moments": [
+                    {
+                        "image": "/clientes/boda/[slug]/momento-1.jpg",
+                        "title": "Titulo del momento",
+                        "text": "Descripcion del momento."
+                    }
+                ]
+            }
+        },
+
+        {
+            "_comment": "TRUTHS: Juego A o B. correctOption = 'A' o 'B'.",
+            "type": "truths",
+            "id": "truths-game",
+            "bgColor": "primary",
+            "blocks": ["title", "questions"],
+            "data": {
+                "title": "Pequenas verdades",
+                "finishText": "Texto al terminar el juego.",
+                "questions": [
+                    {
+                        "question": "Pregunta?",
+                        "optionA": "Opcion A",
+                        "optionB": "Opcion B",
+                        "correctOption": "A",
+                        "revealText": "Explicacion de la respuesta."
+                    }
+                ]
+            }
+        },
+
+        {
+            "_comment": "GIFT CARD: Datos de transferencia en modal.",
+            "type": "giftCard",
+            "id": "gift-card",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Valor Tarjeta",
+                "description": "Texto invitando a contribuir.",
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "suggestedValue": "$20.000",
+                    "description": "Texto explicando el valor.",
+                    "transferData": [
+                        { "label": "Alias", "value": "MI.ALIAS" },
+                        { "label": "CBU", "value": "0000000000000000000000" },
+                        { "label": "Titular", "value": "Nombre Completo" },
+                        { "label": "Banco", "value": "Nombre del Banco" }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON (boda): Datos para contribuir a la luna de miel. Misma estructura que giftCard.",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "plane",
+                "title": "Luna de miel",
+                "description": "Si queres ayudarnos con nuestra luna de miel...",
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos para la luna de miel",
+                    "suggestedValue": "",
+                    "description": "Cualquier aporte nos ayuda a cumplir nuestro sueno.",
+                    "transferData": [
+                        { "label": "Alias", "value": "LUNA.DE.MIEL" },
+                        { "label": "CBU", "value": "0000000000000000000000" }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "EMOTIONAL QUOTE: Frase emotiva centrada.",
+            "type": "emotionalQuote",
+            "id": "emotional-quote",
+            "bgColor": "primary",
+            "blocks": ["text"],
+            "data": {
+                "text": "Frase emotiva para generar clima."
+            }
+        },
+
+        {
+            "_comment": "TRIVIA: Juego de preguntas con opciones multiples en modal.",
+            "type": "trivia",
+            "id": "trivia-game",
+            "blocks": ["title", "subtitle", "button", "modal"],
+            "data": {
+                "title": "Cuanto me conoces?",
+                "subtitle": "Jugamos?",
+                "button": { "text": "Iniciar Trivia", "variant": "primary" },
+                "modal": {
+                    "finishTitle": "Eso es todo!",
+                    "finishText": "Gracias por jugar.",
+                    "questions": [
+                        {
+                            "question": "Pregunta?",
+                            "options": ["Opcion 1", "Opcion 2", "Opcion 3", "Opcion 4"],
+                            "correctIndex": 0,
+                            "explanation": "Explicacion de la respuesta."
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "PLAYLIST (XV): Link a playlist de Spotify.",
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "blocks": ["title", "description", "button"],
+            "data": {
+                "title": "Arma la playlist",
+                "description": "Agrega tus canciones a la playlist de la fiesta.",
+                "button": {
+                    "text": "Ir a la playlist",
+                    "url": "https://open.spotify.com",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "_comment": "RSVP: Formulario de confirmacion.",
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "primary",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirma tu asistencia",
+                "deadline": "Antes del 1 de septiembre",
+                "guestCountLabel": "Numero de personas",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "Confirmas tu asistencia?",
+                    "attendanceYes": "Confirmo!",
+                    "attendanceNo": "No podre asistir",
+                    "dietary": "Requerimiento alimentario?",
+                    "dietaryOptions": ["Ninguno", "Vegetariano", "Vegano", "Celiaco", "Otro"],
+                    "songRequest": "Que cancion no puede faltar?",
+                    "submitButton": "Confirmar"
+                }
+            }
+        },
+
+        {
+            "_comment": "SPECIAL MESSAGE (XV): Mensaje personal con firma.",
+            "type": "specialMessage",
+            "id": "special-message",
+            "blocks": ["title", "text"],
+            "data": {
+                "title": "Gracias por estar",
+                "text": "Mensaje personal de la quinceanera.",
+                "signature": "Firma (ej: Valu)"
+            }
+        },
+
+        {
+            "_comment": "CLOSING IMAGE: Imagen de cierre con nombres.",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/[tipo]/[slug]/cierre.jpg"
+            }
+        },
+
+        {
+            "_comment": "FOOTER: Pie de pagina con redes y marca.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    { "icon": "instagram", "url": "https://instagram.com/tu_marca" },
+                    { "icon": "whatsapp", "url": "https://wa.me/1234567890" }
+                ]
+            }
+        }
+    ]
+}
