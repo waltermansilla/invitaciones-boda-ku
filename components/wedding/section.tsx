@@ -55,7 +55,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
   } else if (bgColor === "primary") {
     resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF"
   } else {
-    resolvedTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
+    resolvedTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#555555"
   }
   const colors = { bg, resolvedTextColor }
 
