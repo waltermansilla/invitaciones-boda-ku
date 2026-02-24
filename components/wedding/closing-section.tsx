@@ -1,5 +1,5 @@
 import Image from "next/image"
-import config from "@/lib/config"
+import { useConfig } from "@/lib/config-context"
 
 interface ClosingSectionProps {
   image: string
@@ -16,6 +16,7 @@ export default function ClosingSection({
   aspectRatio = "3/4",
   coupleNames,
 }: ClosingSectionProps) {
+  const config = useConfig()
   const theme = config.theme as Record<string, unknown>
   const textColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
 

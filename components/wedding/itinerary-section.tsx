@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react"
 import { Heart, Wine, UtensilsCrossed, Music, Church, Camera, Cake, Car, GlassWater, PartyPopper, Sparkles, Sun, Moon, Clock, MapPin, Gift, Bus } from "lucide-react"
-import config from "@/lib/config"
+import { useConfig } from "@/lib/config-context"
 
 interface ItineraryEvent {
   icon: string
@@ -38,6 +38,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
 
 export default function ItinerarySection({ title, events, sectionBgColor }: ItinerarySectionProps) {
   // Resolve the actual bg color so icons can cover the timeline line
+  const config = useConfig()
   const theme = config.theme as Record<string, unknown>
   const iconBg = sectionBgColor === "primary"
     ? (theme.primaryColor as string) || "#6B7F5E"

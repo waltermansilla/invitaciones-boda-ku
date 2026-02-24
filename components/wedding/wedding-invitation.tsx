@@ -1,6 +1,6 @@
 "use client";
 
-import config from "@/lib/config";
+import { useConfig } from "@/lib/config-context";
 import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
 import HeroSection from "./hero-section";
@@ -8,6 +8,7 @@ import Section from "./section";
 import MusicPlayer from "./music-player";
 
 export default function WeddingInvitation() {
+    const config = useConfig();
     const hero = config.hero;
     const sections = config.sections ?? [];
     const meta = config.meta;
