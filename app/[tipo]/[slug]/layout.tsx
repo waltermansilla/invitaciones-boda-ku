@@ -63,9 +63,9 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link href={fontUrl} rel="stylesheet" />
-      {/* Paint html+body with the client's primary so nothing else peeks through */}
+      {/* Paint html+body with the client's background so nothing else peeks through */}
       <style dangerouslySetInnerHTML={{ __html: `
-        html, body { background-color: ${theme.primaryColor} !important; }
+        html, body { background-color: ${theme.backgroundColor} !important; }
       `}} />
       <div
         style={cssVars as React.CSSProperties}
