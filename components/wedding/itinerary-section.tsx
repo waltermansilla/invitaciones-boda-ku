@@ -177,12 +177,12 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
                 <div key={index}>
                   {/* Day separator -- only when the date changes */}
                   {showDateSeparator && (
-                    <div className="mb-10 flex items-center gap-3" style={{ paddingLeft: "56px" }}>
-                      <div className="h-px flex-1 bg-current/15" />
-                      <span className="whitespace-nowrap text-xs font-medium tracking-[0.15em] uppercase text-inherit/50">
+                    <div className="mb-10 flex items-center gap-3">
+                      <div className="h-px w-6 bg-current/15" />
+                      <span className="whitespace-nowrap text-[10px] font-medium tracking-[0.2em] uppercase text-inherit/40">
                         {event.date}
                       </span>
-                      <div className="h-px flex-1 bg-current/15" />
+                      <div className="h-px w-6 bg-current/15" />
                     </div>
                   )}
 
@@ -211,7 +211,7 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
                           href={event.button.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`mt-3 inline-flex min-h-[40px] w-fit items-center justify-center px-5 py-2 text-[10px] font-medium tracking-[0.2em] uppercase transition-all duration-200 rounded-sm ${
+                          className={`mt-2 inline-flex min-h-[32px] w-fit items-center justify-center rounded-sm px-3 py-1 text-[9px] font-medium tracking-[0.15em] uppercase transition-all duration-200 ${
                             event.button.variant === "primary"
                               ? "bg-primary text-primary-foreground hover:opacity-90"
                               : "border border-current/30 text-inherit hover:bg-current/5"
