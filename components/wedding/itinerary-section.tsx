@@ -150,8 +150,8 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
         {title}
       </h2>
 
-      {/* Outer flex to center the timeline block */}
-      <div className="flex justify-center">
+      {/* Outer flex to center the timeline block horizontally */}
+      <div className="mx-auto flex w-fit flex-col items-center">
         <div ref={containerRef} className="relative">
           {/* Timeline track */}
           <div

@@ -24,7 +24,7 @@ export default function Page() {
             href={`/${tipo}/${slug}`}
             className="flex min-h-[44px] items-center justify-between rounded-md border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
           >
-            <span className="capitalize">{slug.replace(/-/g, " ")}</span>
+            <span className="capitalize">{slug.replace(/-/g, " & ")}</span>
             <span className="rounded bg-muted px-2 py-0.5 text-xs uppercase text-muted-foreground">
               {tipo}
             </span>

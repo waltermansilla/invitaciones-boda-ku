@@ -87,6 +87,7 @@
       "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
       "type": "quote",
       "id": "quote-welcome",
+      "bgColor": "primary",
       "blocks": ["text", "author"],
       "data": {
         "text": "Hoy comienza un nuevo capitulo en mi vida y quiero vivirlo con las personas que mas quiero",
@@ -113,6 +114,7 @@
       "_comment": "Seccion con los nombres de los padres de la quinceanera. title = titulo. parents = array de padres con nombre y role.",
       "type": "parents",
       "id": "parents",
+      "bgColor": "primary",
       "blocks": ["title", "parents"],
       "data": {
         "title": "Mis Padres",
@@ -263,6 +265,7 @@
       "_comment": "Fondo rosa. El boton abre un modal con datos de transferencia. modal.suggestedValue = monto sugerido. modal.transferData = array {label, value} copiables.",
       "type": "giftCard",
       "id": "gift-card",
+      "bgColor": "primary",
       "blocks": ["icon", "title", "description", "button", "modal"],
       "data": {
         "icon": "gift",
@@ -292,6 +295,7 @@
       "_comment": "Fondo rosa. Solo texto centrado.",
       "type": "emotionalQuote",
       "id": "emotional-quote",
+      "bgColor": "primary",
       "blocks": ["text"],
       "data": {
         "text": "No es solo una fiesta. Es el inicio de todo lo que quiero ser."
@@ -428,6 +432,7 @@
       "_comment": "Fondo rosa. Formulario de confirmacion. Todos los labels, opciones y textos son editables.",
       "type": "rsvp",
       "id": "rsvp-form",
+      "bgColor": "primary",
       "blocks": ["title", "form"],
       "data": {
         "title": "Confirma tu asistencia",
