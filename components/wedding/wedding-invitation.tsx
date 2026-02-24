@@ -1,6 +1,6 @@
 "use client";
 
-import config from "@/data/anto-walter-config.json";
+import config from "@/lib/config";
 import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
 import HeroSection from "./hero-section";

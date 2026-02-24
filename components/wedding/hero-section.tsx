@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import config from "@/data/wedding-config.json"
+import config from "@/lib/config"
 
 interface HeroSectionProps {
   coupleImage: string

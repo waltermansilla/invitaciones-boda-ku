@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
-import config from '@/data/wedding-config.json'
+import config from '@/lib/config'
 import './globals.css'
 
 const fontFamily = config.theme.font.family
