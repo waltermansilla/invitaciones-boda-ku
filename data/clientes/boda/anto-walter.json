@@ -179,7 +179,7 @@
 
         {
             "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
-            "_comment": "Cada evento tiene icon, name y time. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus. Agregar/quitar/reordenar libremente.",
+            "_comment": "Cada evento tiene icon, name, time. Opcionales: date (subtitulo de dia, aparece como separador visual), button (con text, url y variant). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
@@ -188,29 +188,36 @@
                 "title": "Itinerario",
                 "events": [
                     {
-                        "icon": "pin",
+                        "icon": "civil",
                         "name": "Civil",
-                        "time": "Viernes 16/02 11:00 hs"
+                        "time": "11:00 hs",
+                        "date": "Viernes 16/02",
+                        "button": {
+                            "text": "Como llegar",
+                            "url": "https://maps.app.goo.gl/DwZ8MsxfGpoga9y96?g_st=ic",
+                            "variant": "secondary"
+                        }
                     },
                     {
-                        "icon": "church",
+                        "icon": "podium",
                         "name": "Discurso de boda",
-                        "time": "Sábado 17/02 17:00 hs"
+                        "time": "17:00 hs",
+                        "date": "Sabado 17/02"
                     },
                     {
-                        "icon": "sparkles",
-                        "name": "Recepcion (traé tu mate)",
+                        "icon": "mate",
+                        "name": "Recepcion (trae tu mate)",
                         "time": "18:45 hs"
                     },
                     { "icon": "camera", "name": "Fotos", "time": "19:30 hs" },
                     { "icon": "utensils", "name": "Cena", "time": "22:00 hs" },
                     {
-                        "icon": "wine",
+                        "icon": "mesaDulce",
                         "name": "Mesa dulce",
                         "time": "23:30 hs"
                     },
-                    { "icon": "wine", "name": "Torta", "time": "01:00 hs" },
-                    { "icon": "clock", "name": "Fin", "time": "02:00 hs" }
+                    { "icon": "tortaCasamiento", "name": "Torta", "time": "01:00 hs" },
+                    { "icon": "fin", "name": "Fin de fiesta", "time": "02:00 hs" }
                 ]
             }
         },

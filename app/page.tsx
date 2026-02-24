@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { getAllClientParams } from "@/lib/get-client-config"
 
 /**
@@ -20,7 +19,7 @@ export default function Page() {
 
       <div className="flex w-full max-w-sm flex-col gap-3">
         {clients.map(({ tipo, slug }) => (
-          <Link
+          <a
             key={`${tipo}/${slug}`}
             href={`/${tipo}/${slug}`}
             className="flex min-h-[44px] items-center justify-between rounded-md border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
@@ -29,7 +28,7 @@ export default function Page() {
             <span className="rounded bg-muted px-2 py-0.5 text-xs uppercase text-muted-foreground">
               {tipo}
             </span>
-          </Link>
+          </a>
         ))}
 
         {clients.length === 0 && (

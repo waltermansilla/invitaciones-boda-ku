@@ -191,12 +191,83 @@ Solo cambiar la URL. No hay que modificar ningun archivo ni reiniciar el servido
 | `trivia correctIndex`  | Numero del 0 al 3 (0 = primera opcion)                                                                                                              |
 | `truths correctOption` | `"A"` o `"B"`                                                                                                                                       |
 | `socialLinks icon`     | `"instagram"`, `"whatsapp"`                                                                                                                         |
-| `itinerary icon`       | `heart`, `wine`, `utensils`, `music`, `church`, `camera`, `cake`, `car`, `glass`, `party`, `sparkles`, `sun`, `moon`, `clock`, `pin`, `gift`, `bus` |
+| `itinerary icon`       | Ver tabla completa de iconos abajo |
 | `aspectRatio`          | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"`                                                                                                                 |
 
 ---
 
-## 7. ERRORES COMUNES
+## 7. ITINERARIO - OPCIONES AVANZADAS
+
+### Campos de cada evento del itinerario
+
+| Campo    | Obligatorio | Que hace                                                       |
+| -------- | ----------- | -------------------------------------------------------------- |
+| `icon`   | Si          | Icono del evento (ver tabla abajo)                             |
+| `name`   | Si          | Nombre del evento ("Civil", "Cena", etc.)                      |
+| `time`   | Si          | Hora del evento                                                |
+| `date`   | No          | Fecha/dia ("Viernes 16/02"). Si cambia respecto al anterior, se muestra un separador visual |
+| `button` | No          | Boton debajo de la hora. Tiene `text`, `url` y `variant`       |
+
+### Ejemplo con fecha y boton
+
+```json
+{
+  "icon": "civil",
+  "name": "Civil",
+  "time": "11:00 hs",
+  "date": "Viernes 16/02",
+  "button": {
+    "text": "Como llegar",
+    "url": "https://maps.app.goo.gl/...",
+    "variant": "secondary"
+  }
+}
+```
+
+### Ejemplo sin fecha ni boton (basico)
+
+```json
+{ "icon": "camera", "name": "Fotos", "time": "19:30 hs" }
+```
+
+### Separador de dias
+
+Si dos eventos tienen distinto `date`, se muestra automaticamente una linea sutil con el nombre del dia entre ambos. No hace falta hacer nada extra.
+
+### Tabla completa de iconos
+
+| Nombre en JSON     | Que representa                |
+| ------------------ | ----------------------------- |
+| `heart`            | Corazon                       |
+| `wine`             | Copa de vino                  |
+| `utensils`         | Cubiertos / Cena              |
+| `music`            | Musica                        |
+| `church`           | Iglesia / Ceremonia religiosa |
+| `camera`           | Camara / Fotos                |
+| `cake`             | Torta                         |
+| `car`              | Auto / Traslado               |
+| `glass`            | Vaso de agua / Brindis        |
+| `party`            | Fiesta / Celebracion          |
+| `sparkles`         | Destellos / Recepcion         |
+| `sun`              | Sol / Dia                     |
+| `moon`             | Luna / Noche                  |
+| `clock`            | Reloj / Horario               |
+| `pin`              | Ubicacion                     |
+| `gift`             | Regalo                        |
+| `bus`              | Colectivo / Transporte        |
+| `podium`           | Discursante en atril          |
+| `book`             | Libro                         |
+| `salon`            | Salon de conferencias         |
+| `civil`            | Civil / Anillos               |
+| `mate`             | Mate                          |
+| `fin`              | Fin / Bandera                 |
+| `sidra`            | Sidra (copa)                  |
+| `mesaDulce`        | Mesa dulce                    |
+| `tortaCasamiento`  | Torta de casamiento           |
+
+---
+
+## 8. ERRORES COMUNES
 
 | Error                     | Ejemplo MAL                            | Ejemplo BIEN                           |
 | ------------------------- | -------------------------------------- | -------------------------------------- |
@@ -208,7 +279,7 @@ Solo cambiar la URL. No hay que modificar ningun archivo ni reiniciar el servido
 
 ---
 
-## 8. CHECKLIST FINAL
+## 9. CHECKLIST FINAL
 
 ### Datos
 - [ ] Nombres correctos en `meta.coupleNames`
@@ -240,7 +311,7 @@ Solo cambiar la URL. No hay que modificar ningun archivo ni reiniciar el servido
 
 ---
 
-## 9. QUE NO TOCAR
+## 10. QUE NO TOCAR
 
 - **Nombres de propiedades** (`type`, `id`, `blocks`, `data`, etc.)
 - **Valores de `type`** -- usar solo los listados en la seccion 4
