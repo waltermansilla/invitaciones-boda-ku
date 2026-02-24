@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Defaults - se sobreescriben por el style inyectado en cada ruta de cliente */
 :root {
   --background: #FAF8F5;
   --foreground: #3A3A3A;
