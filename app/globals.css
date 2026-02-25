@@ -9,40 +9,40 @@
   no define un campo. No poner colores de ningun cliente aca.
 */
 :root {
-  --background: #FAF8F5;
-  --foreground: #3A3A3A;
+  --background: #FAFAFA;
+  --foreground: #1A1A1A;
   --card: #FFFFFF;
-  --card-foreground: #3A3A3A;
+  --card-foreground: #1A1A1A;
   --popover: #FFFFFF;
-  --popover-foreground: #3A3A3A;
-  --primary: #9A8A7A;
+  --popover-foreground: #1A1A1A;
+  --primary: #555555;
   --primary-foreground: #FFFFFF;
-  --secondary: #F0EDE8;
-  --secondary-foreground: #3A3A3A;
-  --muted: #F0EDE8;
-  --muted-foreground: #7A7A7A;
-  --accent: #9A8A7A;
+  --secondary: #F0F0F0;
+  --secondary-foreground: #1A1A1A;
+  --muted: #F0F0F0;
+  --muted-foreground: #888888;
+  --accent: #555555;
   --accent-foreground: #FFFFFF;
   --destructive: #B44040;
   --destructive-foreground: #FFFFFF;
-  --border: #DDD8D0;
-  --input: #DDD8D0;
-  --ring: #9A8A7A;
-  --chart-1: #9A8A7A;
-  --chart-2: #B0A494;
-  --chart-3: #C4BAB0;
-  --chart-4: #DDD8D0;
-  --chart-5: #F0EDE8;
-  --accent-bg: #F0EDE8;
+  --border: #E0E0E0;
+  --input: #E0E0E0;
+  --ring: #555555;
+  --chart-1: #555555;
+  --chart-2: #777777;
+  --chart-3: #999999;
+  --chart-4: #BBBBBB;
+  --chart-5: #DDDDDD;
+  --accent-bg: #F5F5F5;
   --radius: 0.375rem;
-  --sidebar: #FAF8F5;
-  --sidebar-foreground: #3A3A3A;
-  --sidebar-primary: #9A8A7A;
+  --sidebar: #FAFAFA;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #555555;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F0EDE8;
-  --sidebar-accent-foreground: #3A3A3A;
-  --sidebar-border: #DDD8D0;
-  --sidebar-ring: #9A8A7A;
+  --sidebar-accent: #F0F0F0;
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: #E0E0E0;
+  --sidebar-ring: #555555;
 }
 
 @theme inline {
