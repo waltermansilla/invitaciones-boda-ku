@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { HelpCircle, Copy, Check } from "lucide-react"
 import { useModal } from "./modal-provider"
+import { useIsMuestra } from "@/lib/config-context"
 
 function CopyBtn({ value }: { value: string }) {
   const [copied, setCopied] = useState(false)
@@ -39,8 +40,13 @@ interface GiftCardSectionProps {
 
 export default function GiftCardSection({ title, description, button, modal }: GiftCardSectionProps) {
   const { openModal } = useModal()
+  const isMuestra = useIsMuestra()
 
   const handleOpen = () => {
+    if (isMuestra) {
+      alert("Los datos bancarios no estan disponibles en la version de muestra.")
+      return
+    }
     openModal(
       <>
         <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">

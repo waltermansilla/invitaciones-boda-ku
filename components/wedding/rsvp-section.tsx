@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, Fragment } from "react"
+import { useIsMuestra } from "@/lib/config-context"
 
 interface RSVPSectionProps {
   title: string
@@ -35,6 +36,7 @@ export default function RSVPSection({
   guestCountOptions,
   fields,
 }: RSVPSectionProps) {
+  const isMuestra = useIsMuestra()
   const [guestCount, setGuestCount] = useState(1)
   const [guests, setGuests] = useState<GuestForm[]>([
     { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "" },
@@ -66,6 +68,10 @@ export default function RSVPSection({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (isMuestra) {
+      alert("El formulario esta deshabilitado en la version de muestra.")
+      return
+    }
     setSubmitted(true)
   }
 

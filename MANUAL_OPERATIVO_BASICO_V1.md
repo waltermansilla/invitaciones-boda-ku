@@ -93,19 +93,24 @@ Listo. No hay que tocar ningun otro archivo.
 
 ## 3. COMO VER UN CLIENTE EN LA PREVIEW
 
-### En la vista previa de v0 o en produccion:
-Ir directamente a la URL del cliente:
-- `/boda/anto-walter` -- muestra la invitacion de Anto & Walter
-- `/xv/valentina` -- muestra la invitacion de Valentina
+### Version real (para el cliente):
+- `/boda/anto-walter` -- todos los links activos
+- `/xv/valentina` -- todos los links activos
+- Solo se accede escribiendo la URL directa. No esta enlazada desde ningun boton.
+
+### Version muestra (para portfolio):
+- `/m/boda/anto-walter` -- links sensibles deshabilitados
+- `/m/xv/valentina` -- links sensibles deshabilitados
+- La pagina raiz (`/`) enlaza a estas versiones.
 
 ### En tu Mac (local):
 ```bash
 npm run dev
 ```
 Abrir en el navegador:
-- `http://localhost:3000/boda/anto-walter`
-- `http://localhost:3000/xv/valentina`
-- `http://localhost:3000` -- muestra un listado de todos los clientes con links directos
+- `http://localhost:3000/boda/anto-walter` -- version real
+- `http://localhost:3000/m/boda/anto-walter` -- version muestra
+- `http://localhost:3000` -- listado con links a versiones muestra
 
 ### Para cambiar entre clientes:
 Solo cambiar la URL. No hay que modificar ningun archivo ni reiniciar el servidor.
@@ -267,7 +272,54 @@ Si dos eventos tienen distinto `date`, se muestra automaticamente una linea suti
 
 ---
 
-## 8. ERRORES COMUNES
+## 8. MODO MUESTRA (PORTFOLIO)
+
+### Que es
+
+Cada invitacion tiene dos versiones:
+- **Version real**: `/boda/anto-walter` -- para el cliente real, con todos los links activos.
+- **Version muestra**: `/m/boda/anto-walter` -- para tu portfolio, con links sensibles deshabilitados.
+
+Ambas usan **el mismo JSON** y **el mismo layout**. No se duplica nada.
+
+### Que se desactiva en modo muestra
+
+| Componente                  | Comportamiento en muestra                                   |
+| --------------------------- | ----------------------------------------------------------- |
+| Botones de accion (Maps, etc.)| Visibles pero deshabilitados. Muestran alerta al tocar.   |
+| Formulario RSVP             | Se puede llenar pero no enviar. Muestra alerta.            |
+| Modal de datos bancarios    | No se abre. Muestra alerta.                                |
+| Modal de luna de miel       | No se abre. Muestra alerta.                                |
+| Links de WhatsApp/Instagram | Visibles pero deshabilitados. Muestran alerta.             |
+| Botones del itinerario      | Visibles pero deshabilitados. Muestran alerta.             |
+
+### Como funciona tecnicamente
+
+La ruta `/m/[tipo]/[slug]` pasa `isMuestra={true}` al `ConfigProvider`. Cada componente sensible usa el hook `useIsMuestra()` para decidir si bloquea la accion.
+
+### Pagina raiz
+
+La pagina raiz (`/`) lista todos los clientes con links a la version **muestra** (`/m/...`). La version real **nunca** se enlaza publicamente -- solo se accede escribiendo la URL directa.
+
+### Flujo de trabajo recomendado
+
+1. Crear el JSON del cliente en `data/clientes/[tipo]/[slug].json`
+2. Agregar las imagenes en `public/clientes/[tipo]/[slug]/`
+3. Probar la version real: `tudominio.com/boda/nombre`
+4. Verificar la version muestra: `tudominio.com/m/boda/nombre`
+5. Entregar al cliente la URL real
+6. Publicar en portfolio solo la URL `/m/...`
+
+### Reglas importantes
+
+- **Nunca desactivar la version real.** Queda activa de por vida.
+- **Nunca duplicar el JSON.** Ambas versiones usan el mismo archivo.
+- **Nunca enlazar la version real en el portfolio.** Solo la version `/m/...`.
+- **No usar campo `isActive`.** No existe y no debe existir.
+
+---
+
+## 9. ERRORES COMUNES
 
 | Error                     | Ejemplo MAL                            | Ejemplo BIEN                           |
 | ------------------------- | -------------------------------------- | -------------------------------------- |
@@ -279,7 +331,7 @@ Si dos eventos tienen distinto `date`, se muestra automaticamente una linea suti
 
 ---
 
-## 9. CHECKLIST FINAL
+## 10. CHECKLIST FINAL
 
 ### Datos
 - [ ] Nombres correctos en `meta.coupleNames`
@@ -311,7 +363,7 @@ Si dos eventos tienen distinto `date`, se muestra automaticamente una linea suti
 
 ---
 
-## 10. QUE NO TOCAR
+## 11. QUE NO TOCAR
 
 - **Nombres de propiedades** (`type`, `id`, `blocks`, `data`, etc.)
 - **Valores de `type`** -- usar solo los listados en la seccion 4

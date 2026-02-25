@@ -21,7 +21,7 @@ export default function Page() {
         {clients.map(({ tipo, slug }) => (
           <a
             key={`${tipo}/${slug}`}
-            href={`/${tipo}/${slug}`}
+            href={`/m/${tipo}/${slug}`}
             className="flex min-h-[44px] items-center justify-between rounded-md border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-muted"
           >
             <span className="capitalize">{slug.replace(/-/g, " & ")}</span>
