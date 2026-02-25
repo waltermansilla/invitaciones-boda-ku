@@ -1,7 +1,28 @@
 # MANUAL OPERATIVO - SISTEMA MULTI-EVENTO
 
-> Guia interna para crear y administrar invitaciones digitales (bodas, XV, etc.).
+> Guia interna completa para crear, administrar y escalar invitaciones digitales.
 > Ultima actualizacion: Febrero 2026.
+
+---
+
+## INDICE
+
+1. Como funciona el sistema
+2. Estructura del proyecto
+3. Como trabajar en tu Mac local
+4. Como crear un nuevo cliente (paso a paso)
+5. Diferencia entre boda y XV
+6. Editar colores y fuente (theme)
+7. Modo muestra (portfolio)
+8. Landing comercial (pagina raiz)
+9. Footer global (marca)
+10. Botones CTA de la landing
+11. Como agregar una muestra nueva a la landing
+12. Valores especiales y opciones avanzadas
+13. Errores comunes
+14. Checklist final
+15. Que no tocar
+16. Resumen rapido
 
 ---
 
@@ -14,90 +35,83 @@ Un solo proyecto sirve para **todos los clientes y tipos de evento** (bodas, XV,
 - La URL se genera automaticamente: `data/clientes/boda/anto-walter.json` -> `tudominio.com/boda/anto-walter`
 - Cada cliente tiene **dos versiones automaticas**: la real (`/boda/slug`) y la muestra (`/m/boda/slug`).
 - **No se toca codigo para crear un nuevo cliente.** Solo se agrega un JSON y una carpeta de imagenes.
-
-### Estructura de carpetas
-
-```
-data/
-  _TEMPLATE_BODA.json         <- Referencia con TODAS las secciones posibles para boda
-  _TEMPLATE_XV.json           <- Referencia con TODAS las secciones posibles para XV
-  clientes/
-    boda/
-      anto-walter.json        -> tudominio.com/boda/anto-walter (real)
-                              -> tudominio.com/m/boda/anto-walter (muestra)
-    xv/
-      valentina.json          -> tudominio.com/xv/valentina (real)
-                              -> tudominio.com/m/xv/valentina (muestra)
-
-public/
-  clientes/
-    boda/
-      anto-walter/
-        img-hero.jpg
-        galeria-1.jpg
-        ...
-    xv/
-      valentina/
-        quince-hero.jpg
-        quince-portrait.jpg
-        ...
-```
+- La landing comercial se configura desde `data/landing.json`.
+- El footer de marca es global y se edita en un solo archivo.
 
 ---
 
-## 2. COMO CREAR UN NUEVO CLIENTE
+## 2. ESTRUCTURA DEL PROYECTO
 
-### Paso 1: Elegir el template segun tipo de evento
+```
+app/
+  page.tsx                     <- Landing comercial (lee de landing.json)
+  layout.tsx                   <- Layout raiz (fuentes, metadata)
+  globals.css                  <- Estilos globales, variables CSS
+  [tipo]/[slug]/               <- Ruta REAL de cada cliente (/boda/anto-walter)
+    page.tsx
+    layout.tsx
+  m/[tipo]/[slug]/             <- Ruta MUESTRA de cada cliente (/m/boda/anto-walter)
+    page.tsx
+    layout.tsx
 
-- Para **boda**: copiar `data/_TEMPLATE_BODA.json`
-- Para **XV**: copiar `data/_TEMPLATE_XV.json`
+components/
+  landing/
+    landing-page.tsx           <- Componente principal de la landing
+  wedding/
+    wedding-invitation.tsx     <- Renderiza todas las secciones de una invitacion
+    section.tsx                <- Switch que mapea type -> componente
+    footer-section.tsx         <- Footer global de marca (hardcodeado)
+    hero-section.tsx, gallery-section.tsx, rsvp-section.tsx, etc.
 
-Estos templates tienen TODAS las secciones posibles con comentarios explicativos. Borras las que no necesites.
+data/
+  landing.json                 <- Configuracion completa de la landing
+  _TEMPLATE_BODA.json          <- Referencia con TODAS las secciones posibles para boda
+  _TEMPLATE_XV.json            <- Referencia con TODAS las secciones posibles para XV
+  clientes/
+    boda/
+      anto-walter.json         -> /boda/anto-walter (real) y /m/boda/anto-walter (muestra)
+    xv/
+      valentina.json           -> /xv/valentina (real) y /m/xv/valentina (muestra)
 
-### Paso 2: Renombrar y ubicar el JSON
+public/
+  clientes/
+    boda/anto-walter/          <- Imagenes de ese cliente
+    xv/valentina/              <- Imagenes de ese cliente
+```
 
-Copiar al directorio correcto con el nombre que sera la URL:
-- `data/clientes/boda/lucia-sebastian.json` -> `/boda/lucia-sebastian`
-- `data/clientes/xv/camila.json` -> `/xv/camila`
+### Como funciona el ruteo
 
-Usar siempre minusculas, sin espacios, separado por guiones.
-
-### Paso 3: Crear carpeta de imagenes
-
-Crear en `public/clientes/[tipo]/[slug]/` y poner ahi todas las fotos del cliente.
-
-### Paso 4: Editar el JSON
-
-1. **meta** -- nombres, titulo, descripcion
-2. **theme** -- colores y fuente
-3. **hero** -- foto principal, fecha, headline
-4. **sections** -- borrar las que no se necesiten, editar textos, fotos, links, datos bancarios
-5. **Rutas de imagenes** -- todas deben apuntar a `/clientes/[tipo]/[slug]/nombre.jpg` (sin `/public`)
-
-### Paso 5: Probar
-
-- Version real: `http://localhost:3000/boda/lucia-sebastian`
-- Version muestra: `http://localhost:3000/m/boda/lucia-sebastian`
-
-Listo. No hay que tocar ningun otro archivo.
+| URL | Que carga | Fuente de datos |
+| --- | --------- | --------------- |
+| `/` | Landing comercial | `data/landing.json` |
+| `/boda/anto-walter` | Invitacion real | `data/clientes/boda/anto-walter.json` |
+| `/m/boda/anto-walter` | Invitacion muestra | Mismo JSON, con `isMuestra=true` |
+| `/xv/valentina` | Invitacion real | `data/clientes/xv/valentina.json` |
+| `/m/xv/valentina` | Invitacion muestra | Mismo JSON, con `isMuestra=true` |
 
 ---
 
 ## 3. COMO TRABAJAR EN TU MAC LOCAL
 
-### Levantar el proyecto
+### Primera vez
 
 ```bash
+git clone https://github.com/waltermansilla/invitaciones-boda-ku.git
 cd invitaciones-boda-ku
-npm install          # solo la primera vez o si se agregan dependencias
-npm run dev          # levanta el servidor de desarrollo
+npm install
+```
+
+### Levantar el servidor
+
+```bash
+npm run dev
 ```
 
 ### URLs disponibles
 
 | URL | Que es |
 | --- | ------ |
-| `http://localhost:3000` | Pagina raiz -- listado de todas las invitaciones (links a versiones muestra) |
+| `http://localhost:3000` | Landing comercial |
 | `http://localhost:3000/boda/anto-walter` | Version real de boda |
 | `http://localhost:3000/m/boda/anto-walter` | Version muestra de boda |
 | `http://localhost:3000/xv/valentina` | Version real de XV |
@@ -105,100 +119,103 @@ npm run dev          # levanta el servidor de desarrollo
 
 ### Editar y ver en vivo
 
-Cada vez que guardas un archivo (JSON, `.tsx`, `.css`), el navegador se actualiza solo. No hace falta reiniciar el servidor.
+Cada vez que guardas un archivo (JSON, `.tsx`, `.css`), el navegador se actualiza solo (Hot Module Replacement). No hace falta reiniciar el servidor.
 
 ### Flujo de trabajo recomendado
 
-1. Abrir terminal y correr `npm run dev`
-2. Abrir el navegador en `localhost:3000`
+1. Abrir terminal: `npm run dev`
+2. Abrir navegador en `localhost:3000`
 3. Editar el JSON del cliente (textos, fotos, secciones)
-4. Guardar. La pagina se actualiza sola
-5. Ir alternando entre `/boda/slug` (real) y `/m/boda/slug` (muestra) para verificar
-6. Cuando esta listo, pushear a GitHub y se deploya automatico a Vercel
+4. Guardar -> la pagina se actualiza sola
+5. Alternar entre `/boda/slug` (real) y `/m/boda/slug` (muestra)
+6. Cuando esta listo, pushear a GitHub -> se deploya automatico a Vercel
 
 ---
 
-## 4. DIFERENCIA ENTRE BODA Y XV
+## 4. COMO CREAR UN NUEVO CLIENTE (PASO A PASO)
+
+### Paso 1: Elegir el template
+
+- Para **boda**: copiar `data/_TEMPLATE_BODA.json`
+- Para **XV**: copiar `data/_TEMPLATE_XV.json`
+
+Estos templates tienen TODAS las secciones posibles con comentarios explicativos.
+
+### Paso 2: Renombrar y ubicar
+
+Copiar al directorio correcto:
+```
+data/clientes/boda/lucia-sebastian.json  -> /boda/lucia-sebastian
+data/clientes/xv/camila.json             -> /xv/camila
+```
+Siempre minusculas, sin espacios, separado por guiones.
+
+### Paso 3: Crear carpeta de imagenes
+
+```
+public/clientes/boda/lucia-sebastian/    <- Todas las fotos de esa boda
+public/clientes/xv/camila/              <- Todas las fotos de ese XV
+```
+
+### Paso 4: Editar el JSON
+
+1. **meta** -- nombres, titulo, descripcion
+2. **theme** -- colores y fuente
+3. **hero** -- foto principal, fecha, headline
+4. **sections** -- borrar las que no se necesiten, editar textos, fotos, links, datos bancarios
+5. **Rutas de imagenes** -- todas apuntan a `/clientes/[tipo]/[slug]/nombre.jpg` (sin `/public`)
+
+### Paso 5: Probar
+
+```
+http://localhost:3000/boda/lucia-sebastian      <- version real
+http://localhost:3000/m/boda/lucia-sebastian     <- version muestra
+```
+
+### Paso 6: Agregar a la landing (opcional)
+
+Ver seccion 11 "Como agregar una muestra nueva a la landing".
+
+Listo. No hay que tocar ningun otro archivo.
+
+---
+
+## 5. DIFERENCIA ENTRE BODA Y XV
 
 ### Secciones compartidas (disponibles en ambos)
 
-| `type`           | Que hace                                                 | Notas para XV |
-| ---------------- | -------------------------------------------------------- | ------------- |
-| `quote`          | Frase con fondo (autor opcional)                         | |
-| `dateInfo`       | Fecha del evento                                         | |
-| `locationInfo`   | Ubicacion con link a Google Maps                         | |
-| `gallery`        | Slider automatico de fotos                               | |
-| `itinerary`      | Linea de tiempo con iconos                               | |
-| `dressCode`      | Vestimenta con modal de consejos                         | |
-| `photos`         | Invita a subir fotos al album compartido                 | |
-| `emotionalQuote` | Frase emotiva centrada                                   | |
-| `trivia`         | Juego trivia (4 opciones)                                | |
-| `truths`         | Juego verdadero/falso (opcion A o B)                     | |
-| `ourStory`       | Momentos con fotos                                       | En XV se usa como "Mi historia" |
-| `giftCard`       | Tarjeta de regalo con datos bancarios                    | |
-| `honeymoon`      | Alcancia con datos bancarios                             | En XV se usa como "Mi viaje sonado" o similar |
-| `playlist`       | Link a playlist de Spotify                               | |
-| `rsvp`           | Formulario de confirmacion                               | |
-| `specialMessage` | Mensaje personal con firma                               | En boda: de los novios. En XV: de la quinceanera |
-| `closingImage`   | Foto de cierre                                           | |
-| `footer`         | Pie de pagina con redes de tu marca                      | |
+| `type` | Que hace | Notas para XV |
+| ------ | -------- | ------------- |
+| `quote` | Frase con fondo (autor opcional) | |
+| `dateInfo` | Fecha del evento | |
+| `locationInfo` | Ubicacion con link a Maps | |
+| `gallery` | Slider automatico de fotos | |
+| `itinerary` | Linea de tiempo con iconos | |
+| `dressCode` | Vestimenta con modal de consejos | |
+| `photos` | Invita a subir fotos al album | |
+| `emotionalQuote` | Frase emotiva centrada | |
+| `trivia` | Juego trivia (4 opciones) | |
+| `truths` | Juego verdadero/falso | |
+| `ourStory` | Momentos con fotos | En XV: "Mi historia" (crecimiento) |
+| `giftCard` | Tarjeta de regalo con datos bancarios | |
+| `honeymoon` | Alcancia con datos bancarios | En XV: "Mi viaje sonado" |
+| `playlist` | Link a playlist de Spotify | |
+| `rsvp` | Formulario de confirmacion | |
+| `specialMessage` | Mensaje personal con firma | |
+| `closingImage` | Foto de cierre | |
+| `footer` | Footer de marca | |
 
 ### Secciones exclusivas de XV
 
-| `type`            | Que hace                                                |
-| ----------------- | ------------------------------------------------------- |
-| `presentation`    | Foto + nombre + descripcion de la quinceanera           |
-| `parents`         | Listado de padres/padrinos                              |
+| `type` | Que hace |
+| ------ | -------- |
+| `presentation` | Foto + nombre + descripcion |
+| `parents` | Listado de padres/padrinos |
 
-### Templates de referencia
+### Templates
 
-- **`data/_TEMPLATE_BODA.json`** -- Todas las secciones posibles para una boda, con textos de ejemplo adaptados (pareja, "nos casamos", "nuestra historia", etc.)
-- **`data/_TEMPLATE_XV.json`** -- Todas las secciones posibles para un XV, con textos adaptados ("mis 15", "mi historia", "mis padres", etc.) e incluyendo `presentation` y `parents`
-
----
-
-## 5. MODO MUESTRA (PORTFOLIO)
-
-### Que es
-
-Cada invitacion tiene automaticamente dos versiones:
-- **Version real**: `/boda/anto-walter` -- para el cliente. Todos los links activos, datos reales.
-- **Version muestra**: `/m/boda/anto-walter` -- para tu portfolio. Simulacion perfecta sin datos sensibles.
-
-Ambas usan **el mismo JSON**. No se duplica nada.
-
-### Que cambia en modo muestra
-
-La muestra se ve **visualmente identica** a la real. No hay botones grises ni deshabilitados.
-
-| Componente                      | Comportamiento en muestra                                     |
-| ------------------------------- | ------------------------------------------------------------- |
-| Botones de accion (Maps, etc.)  | Mismo estilo. No navegan. Muestra aviso "version de muestra". |
-| Formulario RSVP                 | Se llena normalmente. Al enviar dice "Confirmacion simulada". |
-| Modal de datos bancarios        | Se abre. Datos enmascarados (XXXX-XXXX-XXXX). Sin boton copiar. |
-| Modal de luna de miel           | Se abre. Datos enmascarados (XXXX-XXXX-XXXX). Sin boton copiar. |
-| Footer (Instagram, WhatsApp)    | Funcionan normalmente (son tus links de marca, no del cliente). |
-| Botones del itinerario          | Mismo estilo. No navegan. Muestra aviso "version de muestra". |
-
-### Flujo de trabajo con muestra
-
-1. Crear el JSON del cliente en `data/clientes/[tipo]/[slug].json`
-2. Agregar las imagenes en `public/clientes/[tipo]/[slug]/`
-3. Probar la version real: `tudominio.com/boda/nombre`
-4. Verificar la version muestra: `tudominio.com/m/boda/nombre`
-5. Entregar al cliente **solo** la URL real (`/boda/nombre`)
-6. Publicar en portfolio **solo** la URL muestra (`/m/boda/nombre`)
-
-### Pagina raiz
-
-La pagina raiz (`/`) lista todos los clientes con links a la version **muestra**. La version real nunca se enlaza publicamente.
-
-### Reglas importantes
-
-- **Nunca desactivar la version real.** Queda activa de por vida.
-- **Nunca duplicar el JSON.** Ambas versiones usan el mismo archivo.
-- **Nunca enlazar la version real en el portfolio.** Solo la version `/m/...`.
-- **No existe un campo `isActive`.** No usar, no inventar.
+- `data/_TEMPLATE_BODA.json` -- Todas las secciones para boda
+- `data/_TEMPLATE_XV.json` -- Todas las secciones para XV (incluye `presentation`, `parents`, `ourStory` adaptado)
 
 ---
 
@@ -220,113 +237,304 @@ La pagina raiz (`/`) lista todos los clientes con links a la version **muestra**
 }
 ```
 
-| Campo              | Que controla                                                    |
-| ------------------ | --------------------------------------------------------------- |
-| `primaryColor`     | Color principal: fondos de secciones, botones, acentos, footer  |
-| `backgroundColor`  | Fondo general de la pagina                                      |
-| `textColor`        | Color del texto del body                                        |
-| `lightBgTextColor` | Texto en secciones con fondo claro (iconos, titulos, botones)   |
-| `darkBgTextColor`  | Texto en secciones con fondo primario (blanco por defecto)      |
-| `accentBackground` | Fondo de elementos sutiles (cards, badges)                      |
-| `modalTextColor`   | Color del texto dentro de modales                               |
-| `font.family`      | Nombre exacto de Google Fonts                                   |
-| `font.weights`     | Pesos separados por coma                                        |
+| Campo | Que controla |
+| ----- | ------------ |
+| `primaryColor` | Color principal: fondos, botones, acentos, footer |
+| `backgroundColor` | Fondo general de la pagina |
+| `textColor` | Color del texto del body |
+| `lightBgTextColor` | Texto en secciones claras (iconos, titulos) |
+| `darkBgTextColor` | Texto en secciones con fondo primario |
+| `accentBackground` | Fondo de elementos sutiles (cards, badges) |
+| `modalTextColor` | Texto dentro de modales |
+| `font.family` | Nombre exacto de Google Fonts |
+| `font.weights` | Pesos separados por coma |
 
 ---
 
-## 7. VALORES ESPECIALES
+## 7. MODO MUESTRA (PORTFOLIO)
 
-| Campo                  | Valores validos                                                |
-| ---------------------- | -------------------------------------------------------------- |
-| `button.variant`       | `"primary"`, `"secondary"`, `"background"`                     |
-| `bgColor`              | `"primary"` (fondo color primario), `"background"` (fondo claro) |
-| `trivia correctIndex`  | Numero del 0 al 3 (0 = primera opcion)                        |
-| `truths correctOption` | `"A"` o `"B"`                                                  |
-| `socialLinks icon`     | `"instagram"`, `"whatsapp"`                                    |
-| `aspectRatio`          | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"`                           |
+### Que es
+
+Cada invitacion tiene automaticamente dos versiones:
+- **Version real**: `/boda/anto-walter` -- para el cliente, todo activo
+- **Version muestra**: `/m/boda/anto-walter` -- para portfolio, datos sensibles protegidos
+
+Ambas usan **el mismo JSON**. No se duplica nada.
+
+### Que cambia en modo muestra
+
+| Componente | En muestra |
+| ---------- | ---------- |
+| Botones de accion (Maps, etc.) | No navegan. Muestra aviso. |
+| Formulario RSVP | Se llena. Al enviar dice "Confirmacion simulada". |
+| Modal de datos bancarios | Se abre. Datos enmascarados (XXXX-XXXX-XXXX). Sin copiar. |
+| Modal de luna de miel | Se abre. Datos enmascarados. Sin copiar. |
+| Footer | Funciona normalmente (son tus links de marca). |
+| Botones del itinerario | No navegan. Muestra aviso. |
+
+### Reglas
+
+- **Nunca desactivar la version real.** Queda activa de por vida.
+- **Nunca duplicar el JSON.** Ambas versiones usan el mismo archivo.
+- **Nunca enlazar la version real en el portfolio.** Solo `/m/...`.
+- Entregar al cliente: URL real (`/boda/slug`)
+- Publicar en portfolio: URL muestra (`/m/boda/slug`)
 
 ---
 
-## 8. ITINERARIO - OPCIONES AVANZADAS
+## 8. LANDING COMERCIAL (PAGINA RAIZ)
 
-### Campos de cada evento del itinerario
+La landing en `/` se configura **100% desde** `data/landing.json`.
 
-| Campo    | Obligatorio | Que hace                                                       |
-| -------- | ----------- | -------------------------------------------------------------- |
-| `icon`   | Si          | Icono del evento (ver tabla abajo)                             |
-| `name`   | Si          | Nombre del evento ("Civil", "Cena", etc.)                      |
-| `time`   | Si          | Hora del evento                                                |
-| `date`   | No          | Fecha/dia ("Viernes 16/02"). Si cambia, se muestra separador   |
-| `button` | No          | Boton debajo de la hora. Tiene `text`, `url` y `variant`       |
+### Que se puede editar desde el JSON
 
-### Ejemplo con fecha y boton
+| Seccion | Que editar |
+| ------- | ---------- |
+| `theme` | Colores de toda la landing (fondo, texto, acento, cards, footer) |
+| `whatsapp` | Numero y mensaje default |
+| `ctaButtons` | Todos los botones de accion (ver seccion 10) |
+| `sections.hero` | Titulo (con parte en negrita), subtitulo |
+| `sections.muestras` | Titulo, descripcion, lista de muestras |
+| `sections.servicio` | Planes, precios, features, mostrar/ocultar precios |
+| `sections.proceso` | Pasos, highlights |
+| `sections.faq` | Preguntas y respuestas |
+| `sections.ctaFinal` | Titulo y subtitulo del CTA final |
+
+### Activar/desactivar secciones
+
+Cada seccion tiene `"enabled": true/false`. Poner `false` para ocultarla.
+
+### Titulo del hero con negrita parcial
+
+```json
+"title": {
+  "normal": "Cada historia merece estar a ",
+  "highlight": "la altura"
+}
+```
+`normal` se renderiza con peso ligero, `highlight` en negrita.
+
+---
+
+## 9. FOOTER GLOBAL (MARCA)
+
+El footer es **identico en todas las invitaciones y la landing**. No se configura desde JSON.
+
+### Archivo
+`components/wedding/footer-section.tsx`
+
+### Constantes editables (al principio del archivo)
+
+| Constante | Que es | Valor actual |
+| --------- | ------ | ------------ |
+| `BRAND_NAME` | Nombre de marca | `"momento unico"` |
+| `BRAND_FONT` | Clase CSS de fuente | `"font-serif"` (cursiva) |
+| `BRAND_SIZE` | Clase CSS de tamano | `"text-base"` |
+| `BRAND_ICON` | URL de icono (o null) | `null` (sin icono) |
+| `ICON_SIZE` | Tamano de iconos de redes (px) | `26` |
+| `SOCIAL_LINKS` | Array de redes sociales | Instagram + WhatsApp |
+
+### Como cambiar el nombre de marca
+
+Buscar `BRAND_NAME` y cambiar el texto:
+```js
+const BRAND_NAME = "mi nueva marca"
+```
+
+### Como cambiar la fuente del nombre
+
+Cambiar `BRAND_FONT`:
+- `"font-serif"` -> cursiva elegante (Playfair Display)
+- `"font-sans"` -> recta (la fuente del sistema)
+- `"font-mono"` -> monoespaciada
+
+### Como cambiar el tamano
+
+Cambiar `BRAND_SIZE`:
+- `"text-xs"` (muy chico)
+- `"text-sm"` (chico)
+- `"text-base"` (normal)
+- `"text-lg"` (grande)
+
+### Como agregar un icono al lado del nombre
+
+Cambiar `BRAND_ICON` de `null` a la ruta de la imagen:
+```js
+const BRAND_ICON = "/images/mi-icono.png"
+```
+Subir el icono a `public/images/`.
+
+### Como poner un logo en vez de texto
+
+Reemplazar `{BRAND_NAME}` por un `<img>` dentro del `<Link>` del footer:
+```jsx
+<img src="/images/mi-logo.png" alt="Mi Marca" className="h-5 opacity-40" />
+```
+
+### Como cambiar las redes sociales
+
+Editar `SOCIAL_LINKS`:
+```js
+{ icon: "instagram", url: "https://instagram.com/tu_cuenta", label: "Instagram" },
+{ icon: "whatsapp",  url: "https://wa.me/tunumero", label: "WhatsApp" },
+```
+
+### Como cambiar el tamano de los iconos
+
+Cambiar `ICON_SIZE` (en pixeles):
+```js
+const ICON_SIZE = 28
+```
+
+### Color del footer
+
+- En las **invitaciones**: se adapta automaticamente al `primaryColor` del cliente via CSS variables.
+- En la **landing**: se configura desde `landing.json` en `theme.footerBg` y `theme.footerText`.
+
+---
+
+## 10. BOTONES CTA DE LA LANDING
+
+Todos los botones de accion estan centralizados en `landing.json` > `ctaButtons`.
+
+### Estructura de un boton
 
 ```json
 {
-  "icon": "civil",
-  "name": "Civil",
-  "time": "11:00 hs",
-  "date": "Viernes 16/02",
-  "button": {
-    "text": "Como llegar",
-    "url": "https://maps.app.goo.gl/...",
-    "variant": "secondary"
-  }
+  "text": "Quiero mi invitacion",
+  "type": "whatsapp",
+  "message": "Hola! Me interesa una invitacion digital."
 }
 ```
 
-### Ejemplo basico (sin fecha ni boton)
+### Tipos disponibles
 
+| `type` | Que hace | Campos necesarios |
+| ------ | -------- | ----------------- |
+| `whatsapp` | Abre WhatsApp con mensaje | `message` |
+| `anchor` | Scroll a una seccion de la misma pagina | `anchor` (ej: `"#muestras"`) |
+| `link` | Navega a una URL | `url`, `newTab` (opcional) |
+
+### Botones configurados
+
+| Key en JSON | Donde aparece |
+| ----------- | ------------- |
+| `heroPrimary` | Boton principal del hero |
+| `heroSecondary` | Boton secundario del hero |
+| `planEsencial` | Boton del plan Esencial |
+| `planPremium` | Boton del plan Premium |
+| `proceso` | Boton de la seccion "Como funciona" |
+| `ctaFinal` | Boton del CTA final |
+
+### Como cambiar un boton
+
+Solo editar su objeto en `ctaButtons`:
 ```json
-{ "icon": "camera", "name": "Fotos", "time": "19:30 hs" }
+"heroPrimary": {
+  "text": "Escribime por WhatsApp",
+  "type": "whatsapp",
+  "message": "Hola! Quiero info sobre invitaciones."
+}
 ```
 
-### Tabla completa de iconos
+### Como agregar un nuevo boton
 
-| Nombre en JSON     | Que representa                |
-| ------------------ | ----------------------------- |
-| `heart`            | Corazon                       |
-| `wine`             | Copa de vino                  |
-| `utensils`         | Cubiertos / Cena              |
-| `music`            | Musica                        |
-| `church`           | Iglesia / Ceremonia religiosa |
-| `camera`           | Camara / Fotos                |
-| `cake`             | Torta                         |
-| `car`              | Auto / Traslado               |
-| `glass`            | Vaso de agua / Brindis        |
-| `party`            | Fiesta / Celebracion          |
-| `sparkles`         | Destellos / Recepcion         |
-| `sun`              | Sol / Dia                     |
-| `moon`             | Luna / Noche                  |
-| `clock`            | Reloj / Horario               |
-| `pin`              | Ubicacion                     |
-| `gift`             | Regalo                        |
-| `bus`              | Colectivo / Transporte        |
-| `podium`           | Discursante en atril          |
-| `book`             | Libro                         |
-| `salon`            | Salon de conferencias         |
-| `civil`            | Civil / Anillos               |
-| `mate`             | Mate                          |
-| `fin`              | Fin / Bandera                 |
-| `sidra`            | Sidra (copa)                  |
-| `mesaDulce`        | Mesa dulce                    |
-| `tortaCasamiento`  | Torta de casamiento           |
+1. Agregar al objeto `ctaButtons` con un key nuevo
+2. Referenciarlo desde la seccion que corresponda (ej: un plan nuevo con `"ctaButton": "planNuevo"`)
+
+No hay que tocar ningun componente.
 
 ---
 
-## 9. ERRORES COMUNES
+## 11. COMO AGREGAR UNA MUESTRA NUEVA A LA LANDING
 
-| Error                     | Ejemplo MAL                            | Ejemplo BIEN                           |
-| ------------------------- | -------------------------------------- | -------------------------------------- |
-| Coma final antes de `]`   | `"foto2.jpg",]`                        | `"foto2.jpg"]`                         |
-| Comillas mal cerradas     | `"title": "Hola`                       | `"title": "Hola"`                      |
-| Fecha mal formateada      | `"10 de Octubre 2026"`                 | `"2026-10-10T18:00:00"`               |
-| Ruta con /public          | `"/public/clientes/boda/img.jpg"`      | `"/clientes/boda/anto-walter/img.jpg"` |
-| Link sin https            | `"wa.me/3456023759"`                   | `"https://wa.me/3456023759"`           |
+### Paso 1: Crear el cliente
+
+Seguir la seccion 4 (crear JSON + imagenes).
+
+### Paso 2: Editar landing.json
+
+Buscar `sections.muestras.items` y agregar un objeto:
+
+```json
+{
+  "tipo": "boda",
+  "slug": "lucia-sebastian",
+  "titulo": "Lucia & Sebastian",
+  "etiqueta": "Boda",
+  "accentColor": "#9A8A7A"
+}
+```
+
+| Campo | Que es |
+| ----- | ------ |
+| `tipo` | Carpeta del tipo de evento (`boda`, `xv`) |
+| `slug` | Nombre del JSON (sin `.json`) |
+| `titulo` | Nombre que se muestra en la landing |
+| `etiqueta` | Badge (Boda, XV, etc.) |
+| `accentColor` | Color del acento visual (barra lateral + badge) |
+
+El boton se crea automaticamente con link a `/m/[tipo]/[slug]`.
 
 ---
 
-## 10. CHECKLIST FINAL
+## 12. VALORES ESPECIALES Y OPCIONES AVANZADAS
+
+| Campo | Valores validos |
+| ----- | --------------- |
+| `button.variant` | `"primary"`, `"secondary"`, `"background"` |
+| `bgColor` | `"primary"` (fondo color primario), `"background"` (fondo claro) |
+| `trivia correctIndex` | 0 a 3 (0 = primera opcion) |
+| `truths correctOption` | `"A"` o `"B"` |
+| `socialLinks icon` | `"instagram"`, `"whatsapp"` |
+| `aspectRatio` | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"` |
+
+### Iconos del itinerario
+
+| Nombre | Representa |
+| ------ | ---------- |
+| `heart` | Corazon |
+| `wine` | Copa de vino |
+| `utensils` | Cubiertos / Cena |
+| `music` | Musica |
+| `church` | Iglesia |
+| `camera` | Camara / Fotos |
+| `cake` | Torta |
+| `car` | Auto |
+| `glass` | Brindis |
+| `party` | Fiesta |
+| `sparkles` | Recepcion |
+| `sun` | Sol / Dia |
+| `moon` | Luna / Noche |
+| `clock` | Reloj |
+| `pin` | Ubicacion |
+| `gift` | Regalo |
+| `bus` | Transporte |
+| `podium` | Discurso |
+| `book` | Libro |
+| `salon` | Salon |
+| `civil` | Civil / Anillos |
+| `mate` | Mate |
+| `fin` | Fin |
+| `sidra` | Sidra |
+| `mesaDulce` | Mesa dulce |
+| `tortaCasamiento` | Torta de casamiento |
+
+---
+
+## 13. ERRORES COMUNES
+
+| Error | Ejemplo MAL | Ejemplo BIEN |
+| ----- | ----------- | ------------ |
+| Coma final antes de `]` | `"foto2.jpg",]` | `"foto2.jpg"]` |
+| Comillas mal cerradas | `"title": "Hola` | `"title": "Hola"` |
+| Fecha mal formateada | `"10 de Octubre 2026"` | `"2026-10-10T18:00:00"` |
+| Ruta con /public | `"/public/clientes/..."` | `"/clientes/boda/slug/img.jpg"` |
+| Link sin https | `"wa.me/3456023759"` | `"https://wa.me/3456023759"` |
+
+---
+
+## 14. CHECKLIST FINAL
 
 ### Datos
 - [ ] Nombres correctos en `meta.coupleNames`
@@ -335,102 +543,71 @@ La pagina raiz (`/`) lista todos los clientes con links a la version **muestra**
 - [ ] Cuenta regresiva funcionando
 
 ### Imagenes
-- [ ] Todas las imagenes estan en `public/clientes/[tipo]/[slug]/`
-- [ ] Las rutas en el JSON empiezan con `/clientes/[tipo]/[slug]/`
+- [ ] Todas en `public/clientes/[tipo]/[slug]/`
+- [ ] Rutas en el JSON empiezan con `/clientes/[tipo]/[slug]/`
 - [ ] Hero, galeria, historia y cierre tienen fotos reales
 
 ### Links
 - [ ] Google Maps funciona
 - [ ] Datos bancarios correctos
-- [ ] WhatsApp e Instagram correctos (son de TU MARCA)
-
-### Contenido
-- [ ] Textos personalizados (no datos de ejemplo)
-- [ ] Secciones innecesarias eliminadas del JSON
-- [ ] Orden de secciones tiene sentido
+- [ ] WhatsApp e Instagram del footer son de TU MARCA
 
 ### Versiones
 - [ ] Probar version real: `/boda/slug`
 - [ ] Probar version muestra: `/m/boda/slug`
 - [ ] Probar en celular real
-- [ ] Musica funciona (si esta activada)
-- [ ] Overlay funciona (si esta activado)
 - [ ] Modales abren y cierran
-- [ ] RSVP envia correctamente (real) / muestra mensaje simulado (muestra)
+- [ ] RSVP funciona (real) / muestra simulado (muestra)
 - [ ] Datos bancarios reales (real) / enmascarados (muestra)
 
----
-
-## 11. FOOTER (MARCA)
-
-El footer es **igual en todas las invitaciones**. No se configura desde el JSON -- esta hardcodeado en el componente.
-
-### Donde esta
-Archivo: `components/wedding/footer-section.tsx`
-
-### Que tiene
-- **Nombre de marca**: "walter invitaciones" -- es un link que lleva a la raiz (`/`).
-- **Redes sociales**: Instagram y WhatsApp -- tus links de marca.
-
-### Como cambiar el nombre de marca
-Abrir `components/wedding/footer-section.tsx` y buscar esta linea al principio del archivo:
-```
-const BRAND_NAME = "walter invitaciones"
-```
-Cambiar el texto entre comillas por el nuevo nombre. Listo, se actualiza en todas las invitaciones.
-
-### Como poner un logo en vez de texto
-En el mismo archivo, buscar donde dice `{BRAND_NAME}` dentro del `<Link>` y reemplazarlo por una imagen:
-```jsx
-<img src="/images/mi-logo.png" alt="Mi Marca" className="h-6 opacity-40" />
-```
-Subir el logo a `public/images/`.
-
-### Como cambiar las redes sociales
-En el mismo archivo, buscar `SOCIAL_LINKS` y editar las URLs:
-```
-{ icon: "instagram", url: "https://instagram.com/tu_cuenta", label: "Instagram" },
-{ icon: "whatsapp",  url: "https://wa.me/tunumero", label: "WhatsApp" },
-```
-Para agregar otra red (ej: TikTok) habria que agregar el icono SVG al archivo tambien.
-
-### Importante
-- El footer **no se elimina** del JSON de los clientes (sigue ahi como seccion type `"footer"` para que aparezca en su lugar). Pero los datos que tenga dentro (`brandName`, `socialLinks`) se **ignoran** -- el componente usa los suyos propios.
-- El color se adapta automaticamente al primary de cada invitacion.
+### Landing
+- [ ] Muestras aparecen correctamente
+- [ ] Botones de WhatsApp abren con mensaje correcto
+- [ ] Precios actualizados (o ocultos con `showPrices: false`)
+- [ ] FAQ actualizado
 
 ---
 
-## 12. QUE NO TOCAR
+## 15. QUE NO TOCAR
 
-- **Nombres de propiedades** (`type`, `id`, `blocks`, `data`, etc.)
-- **Valores de `type`** -- usar solo los listados en la seccion 4
-- **Estructura de arrays** -- no convertir `[]` en `{}` o en string
-- **Archivos de codigo** -- salvo que sea estrictamente necesario
-- **Los templates** (`_TEMPLATE_BODA.json`, `_TEMPLATE_XV.json`) -- son de referencia, nunca se borran
+| Que quiero cambiar | Donde |
+| ------------------- | ----- |
+| Textos, fotos, colores de un cliente | Solo su JSON |
+| Textos, precios, FAQ de la landing | `data/landing.json` |
+| Nombre de marca, redes del footer | `components/wedding/footer-section.tsx` (constantes) |
+| Agregar un nuevo tipo de seccion | `components/wedding/section.tsx` (requiere React) |
+| Agregar un nuevo icono al itinerario | `components/wedding/itinerary-section.tsx` |
+| Estilos CSS globales | `app/globals.css` (raramente necesario) |
 
-| Que quiero cambiar               | Donde                                                     |
-| -------------------------------- | --------------------------------------------------------- |
-| Textos, fotos, colores, fuentes  | Solo el JSON del cliente                                  |
-| Agregar un nuevo tipo de seccion | `components/wedding/section.tsx` (requiere React)         |
-| Agregar un nuevo icono           | `components/wedding/itinerary-section.tsx` (agregar map)  |
-| Estilos CSS globales             | `app/globals.css` (raramente necesario)                   |
+**Nunca tocar:**
+- Nombres de propiedades (`type`, `id`, `blocks`, `data`, etc.)
+- Valores de `type` -- usar solo los listados en la seccion 5
+- Estructura de arrays -- no convertir `[]` en `{}` ni en string
+- Los templates (`_TEMPLATE_BODA.json`, `_TEMPLATE_XV.json`) -- son de referencia
 
 ---
 
-## 13. RESUMEN RAPIDO
+## 16. RESUMEN RAPIDO
 
 ```
 Crear nueva boda:
   1. Copiar data/_TEMPLATE_BODA.json -> data/clientes/boda/nuevo-slug.json
   2. Crear public/clientes/boda/nuevo-slug/ con las fotos
-  3. Editar el JSON (textos, colores, fotos, secciones)
+  3. Editar el JSON
   4. Listo: /boda/nuevo-slug (real) y /m/boda/nuevo-slug (muestra)
 
 Crear nuevo XV:
   1. Copiar data/_TEMPLATE_XV.json -> data/clientes/xv/nuevo-slug.json
   2. Crear public/clientes/xv/nuevo-slug/ con las fotos
-  3. Editar el JSON (textos, colores, fotos, secciones)
+  3. Editar el JSON
   4. Listo: /xv/nuevo-slug (real) y /m/xv/nuevo-slug (muestra)
+
+Agregar muestra a la landing:
+  1. Editar data/landing.json > sections.muestras.items
+  2. Agregar { tipo, slug, titulo, etiqueta, accentColor }
+
+Cambiar nombre de marca:
+  1. Editar components/wedding/footer-section.tsx > BRAND_NAME
 
 Entregar al cliente: URL real (/boda/slug)
 Publicar en portfolio: URL muestra (/m/boda/slug)

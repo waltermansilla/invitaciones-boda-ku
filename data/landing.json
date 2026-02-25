@@ -1,5 +1,5 @@
 {
-  "_comment": "Toda la landing se configura desde este archivo. Colores, textos, precios, FAQ, etc.",
+  "_comment": "Toda la landing se configura desde este archivo. Colores, textos, precios, FAQ, botones, etc.",
 
   "theme": {
     "background": "#FAF8F5",
@@ -15,18 +15,51 @@
 
   "whatsapp": {
     "number": "3456023759",
-    "message": "Hola! Me interesa una invitacion digital. Quiero saber mas."
+    "defaultMessage": "Hola! Me interesa una invitacion digital. Quiero saber mas."
+  },
+
+  "ctaButtons": {
+    "heroPrimary": {
+      "text": "Quiero mi invitacion",
+      "type": "whatsapp",
+      "message": "Hola! Me interesa una invitacion digital. Quiero saber mas."
+    },
+    "heroSecondary": {
+      "text": "Ver muestras",
+      "type": "anchor",
+      "anchor": "#muestras"
+    },
+    "planEsencial": {
+      "text": "Elegir Esencial",
+      "type": "whatsapp",
+      "message": "Hola! Me interesa el plan Esencial para mi evento."
+    },
+    "planPremium": {
+      "text": "Elegir Premium",
+      "type": "whatsapp",
+      "message": "Hola! Me interesa el plan Premium para mi evento."
+    },
+    "proceso": {
+      "text": "Quiero mi invitacion",
+      "type": "whatsapp",
+      "message": "Hola! Quiero arrancar con mi invitacion digital."
+    },
+    "ctaFinal": {
+      "text": "Crear mi invitacion ahora",
+      "type": "whatsapp",
+      "message": "Hola! Quiero crear mi invitacion digital."
+    }
   },
 
   "sections": {
 
     "hero": {
       "enabled": true,
-      "title": "Tu evento merece una invitacion a la altura",
-      "subtitle": "Invitaciones digitales elegantes, personalizadas y listas para compartir. Bodas, XV y mas.",
-      "ctaText": "Quiero mi invitacion",
-      "secondaryCtaText": "Ver muestras",
-      "secondaryCtaAnchor": "#muestras"
+      "title": {
+        "normal": "Cada historia merece estar a ",
+        "highlight": "la altura"
+      },
+      "subtitle": "Invitaciones digitales elegantes, personalizadas y listas para compartir. Bodas, XV y mas."
     },
 
     "muestras": {
@@ -38,13 +71,15 @@
           "tipo": "boda",
           "slug": "anto-walter",
           "titulo": "Anto & Walter",
-          "etiqueta": "Boda"
+          "etiqueta": "Boda",
+          "accentColor": "#6B7F5E"
         },
         {
           "tipo": "xv",
           "slug": "valentina",
           "titulo": "Valentina",
-          "etiqueta": "XV"
+          "etiqueta": "XV",
+          "accentColor": "#C4788A"
         }
       ]
     },
@@ -57,6 +92,7 @@
       "planes": [
         {
           "name": "Esencial",
+          "ctaButton": "planEsencial",
           "badge": null,
           "price": "$35.000",
           "description": "Todo lo necesario para una invitacion hermosa.",
@@ -68,6 +104,7 @@
         },
         {
           "name": "Premium",
+          "ctaButton": "planPremium",
           "badge": "Mas elegido",
           "price": "$55.000",
           "description": "La experiencia completa para quienes quieren mas.",
@@ -120,8 +157,7 @@
         "Sin costos mensuales",
         "Funciona en todos los celulares",
         "Soporte post-entrega"
-      ],
-      "ctaText": "Quiero mi invitacion"
+      ]
     },
 
     "faq": {
@@ -158,8 +194,7 @@
     "ctaFinal": {
       "enabled": true,
       "title": "Listo para crear tu invitacion?",
-      "subtitle": "Escribinos hoy y empeza a darle forma a tu evento.",
-      "ctaText": "Crear mi invitacion ahora"
+      "subtitle": "Escribinos hoy y empeza a darle forma a tu evento."
     }
   }
 }

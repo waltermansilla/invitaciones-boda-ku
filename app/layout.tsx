@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from 'next'
+import { Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
+
+const _playfair = Playfair_Display({ subsets: ['latin'], weight: ['400', '500', '600', '700'] })
 
 export const viewport: Viewport = {
   width: 'device-width',
