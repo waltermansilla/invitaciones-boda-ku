@@ -9,7 +9,7 @@
   no define un campo. No poner colores de ningun cliente aca.
 */
 :root {
-  --background: #FAFAFA;
+  --background: #FAF8F5;
   --foreground: #1A1A1A;
   --card: #FFFFFF;
   --card-foreground: #1A1A1A;
@@ -100,7 +100,8 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background-color: var(--background);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
