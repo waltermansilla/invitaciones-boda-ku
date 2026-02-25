@@ -63,8 +63,8 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
   const iconBg = sectionBgColor === "primary"
-    ? (theme.primaryColor as string) || "#555555"
-    : (theme.backgroundColor as string) || "#FAFAFA"
+    ? (theme.primaryColor as string) || "#6B7F5E"
+    : (theme.backgroundColor as string) || "#FAF8F5"
 
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
