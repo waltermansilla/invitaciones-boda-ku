@@ -9,8 +9,8 @@
   no define un campo. No poner colores de ningun cliente aca.
 */
 :root {
-  --background: #FAF8F5;
-  --foreground: #1A1A1A;
+  --background: #FFFFFF;
+  --foreground: #3A3A3A;
   --card: #FFFFFF;
   --card-foreground: #1A1A1A;
   --popover: #FFFFFF;

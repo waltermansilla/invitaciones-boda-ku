@@ -20,6 +20,9 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link href={fontUrl} rel="stylesheet" />
       <style dangerouslySetInnerHTML={{ __html: `
+        html, body {
+          background-color: ${theme.backgroundColor} !important;
+        }
         :root {
           --font-sans: '${fontFamily}', '${fontFamily} Fallback';
           --primary: ${theme.primaryColor};
