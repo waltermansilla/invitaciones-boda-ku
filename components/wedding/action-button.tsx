@@ -30,13 +30,13 @@ export default function ActionButton({ text, url, variant }: ActionButtonProps) 
 
   if (isMuestra) {
     return (
-      <button
-        type="button"
-        onClick={() => alert("Este enlace esta deshabilitado en la version de muestra.")}
-        className={`${base} ${variantClasses} cursor-not-allowed opacity-60`}
+      <a
+        href="#"
+        onClick={(e) => e.preventDefault()}
+        className={`${base} ${variantClasses}`}
       >
         {text}
-      </button>
+      </a>
     )
   }
 

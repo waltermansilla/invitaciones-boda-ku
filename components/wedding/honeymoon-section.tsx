@@ -42,10 +42,10 @@ export default function HoneymoonSection({ title, description, button, modal }: 
   const isMuestra = useIsMuestra()
 
   const handleOpen = () => {
-    if (isMuestra) {
-      alert("Los datos bancarios no estan disponibles en la version de muestra.")
-      return
-    }
+    const maskedData = isMuestra
+      ? modal.bankData.map((item) => ({ ...item, value: "XXXX-XXXX-XXXX" }))
+      : modal.bankData
+
     openModal(
       <>
         <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
@@ -55,7 +55,7 @@ export default function HoneymoonSection({ title, description, button, modal }: 
           {modal.description}
         </p>
         <div className="mb-5 space-y-3">
-          {modal.bankData.map((item) => (
+          {maskedData.map((item) => (
             <div key={item.label} className="flex items-center justify-between rounded-sm border border-primary-foreground/15 px-4 py-3">
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-primary-foreground/50">
@@ -65,7 +65,7 @@ export default function HoneymoonSection({ title, description, button, modal }: 
                   {item.value}
                 </p>
               </div>
-              <CopyBtn value={item.value} />
+              {!isMuestra && <CopyBtn value={item.value} />}
             </div>
           ))}
         </div>

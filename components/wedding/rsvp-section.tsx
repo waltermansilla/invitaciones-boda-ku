@@ -68,10 +68,6 @@ export default function RSVPSection({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (isMuestra) {
-      alert("El formulario esta deshabilitado en la version de muestra.")
-      return
-    }
     setSubmitted(true)
   }
 
@@ -79,10 +75,12 @@ export default function RSVPSection({
     return (
       <section className="px-6 py-16 text-center">
         <h2 className="mb-4 text-3xl font-semibold tracking-[0.15em] text-inherit/90">
-          {"Gracias!"}
+          {isMuestra ? "Modo muestra" : "Gracias!"}
         </h2>
         <p className="text-sm tracking-wide text-inherit/65">
-          Tu confirmacion ha sido registrada.
+          {isMuestra
+            ? "Confirmacion simulada. En la version real, los datos se registran."
+            : "Tu confirmacion ha sido registrada."}
         </p>
       </section>
     )

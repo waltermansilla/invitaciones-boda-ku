@@ -1,7 +1,5 @@
 "use client"
 
-import { useIsMuestra } from "@/lib/config-context"
-
 interface SocialLink {
   icon: "instagram" | "whatsapp"
   url: string
@@ -57,28 +55,12 @@ export default function FooterSection({
   brandName,
   socialLinks,
 }: FooterSectionProps) {
-  const isMuestra = useIsMuestra()
-
   return (
     <footer className="bg-primary px-6 py-16 text-center">
       <div className="mb-6 flex items-center justify-center gap-6">
         {socialLinks.map((link) => {
           const Icon = iconMap[link.icon]
           if (!Icon) return null
-
-          if (isMuestra) {
-            return (
-              <button
-                key={link.icon}
-                type="button"
-                onClick={() => alert("Este enlace esta deshabilitado en la version de muestra.")}
-                className="inline-flex min-h-[44px] min-w-[44px] cursor-not-allowed items-center justify-center text-primary-foreground/40 transition-opacity"
-                aria-label={link.icon}
-              >
-                <Icon />
-              </button>
-            )
-          }
 
           return (
             <a

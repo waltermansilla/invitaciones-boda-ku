@@ -278,20 +278,22 @@ Si dos eventos tienen distinto `date`, se muestra automaticamente una linea suti
 
 Cada invitacion tiene dos versiones:
 - **Version real**: `/boda/anto-walter` -- para el cliente real, con todos los links activos.
-- **Version muestra**: `/m/boda/anto-walter` -- para tu portfolio, con links sensibles deshabilitados.
+- **Version muestra**: `/m/boda/anto-walter` -- para tu portfolio, simulacion perfecta sin datos reales.
 
 Ambas usan **el mismo JSON** y **el mismo layout**. No se duplica nada.
 
-### Que se desactiva en modo muestra
+### Que cambia en modo muestra
 
-| Componente                  | Comportamiento en muestra                                   |
-| --------------------------- | ----------------------------------------------------------- |
-| Botones de accion (Maps, etc.)| Visibles pero deshabilitados. Muestran alerta al tocar.   |
-| Formulario RSVP             | Se puede llenar pero no enviar. Muestra alerta.            |
-| Modal de datos bancarios    | No se abre. Muestra alerta.                                |
-| Modal de luna de miel       | No se abre. Muestra alerta.                                |
-| Links de WhatsApp/Instagram | Visibles pero deshabilitados. Muestran alerta.             |
-| Botones del itinerario      | Visibles pero deshabilitados. Muestran alerta.             |
+La muestra se ve **visualmente identica** a la real. No hay botones grises ni deshabilitados.
+
+| Componente                      | Comportamiento en muestra                                     |
+| ------------------------------- | ------------------------------------------------------------- |
+| Botones de accion (Maps, etc.)  | Mismo estilo. No navegan (preventDefault).                    |
+| Formulario RSVP                 | Se llena normalmente. Al enviar dice "Confirmacion simulada". |
+| Modal de datos bancarios        | Se abre. Datos enmascarados (XXXX-XXXX-XXXX). Sin copiar.    |
+| Modal de luna de miel           | Se abre. Datos enmascarados (XXXX-XXXX-XXXX). Sin copiar.    |
+| Footer (Instagram, WhatsApp)    | Funcionan normalmente (son tus links de marca, no del cliente).|
+| Botones del itinerario          | Mismo estilo. No navegan (preventDefault).                    |
 
 ### Como funciona tecnicamente
 

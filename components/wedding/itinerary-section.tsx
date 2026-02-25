@@ -208,32 +208,19 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
 
                       {/* Optional button */}
                       {event.button && (
-                        isMuestra ? (
-                          <button
-                            type="button"
-                            onClick={() => alert("Este enlace esta deshabilitado en la version de muestra.")}
-                            className={`mt-2 inline-flex min-h-[32px] w-fit cursor-not-allowed items-center justify-center rounded-sm px-3 py-1 text-[9px] font-medium tracking-[0.15em] uppercase opacity-60 transition-all duration-200 ${
-                              event.button.variant === "primary"
-                                ? "bg-primary text-primary-foreground"
-                                : "border border-current/30 text-inherit"
-                            }`}
-                          >
-                            {event.button.text}
-                          </button>
-                        ) : (
-                          <a
-                            href={event.button.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`mt-2 inline-flex min-h-[32px] w-fit items-center justify-center rounded-sm px-3 py-1 text-[9px] font-medium tracking-[0.15em] uppercase transition-all duration-200 ${
-                              event.button.variant === "primary"
-                                ? "bg-primary text-primary-foreground hover:opacity-90"
-                                : "border border-current/30 text-inherit hover:bg-current/5"
-                            }`}
-                          >
-                            {event.button.text}
-                          </a>
-                        )
+                        <a
+                          href={isMuestra ? "#" : event.button.url}
+                          target={isMuestra ? undefined : "_blank"}
+                          rel={isMuestra ? undefined : "noopener noreferrer"}
+                          onClick={isMuestra ? (e: React.MouseEvent) => e.preventDefault() : undefined}
+                          className={`mt-2 inline-flex min-h-[32px] w-fit items-center justify-center rounded-sm px-3 py-1 text-[9px] font-medium tracking-[0.15em] uppercase transition-all duration-200 ${
+                            event.button.variant === "primary"
+                              ? "bg-primary text-primary-foreground hover:opacity-90"
+                              : "border border-current/30 text-inherit hover:bg-current/5"
+                          }`}
+                        >
+                          {event.button.text}
+                        </a>
                       )}
                     </div>
                   </div>
