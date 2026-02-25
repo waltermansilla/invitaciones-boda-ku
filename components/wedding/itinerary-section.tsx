@@ -212,7 +212,7 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
                           href={isMuestra ? "#" : event.button.url}
                           target={isMuestra ? undefined : "_blank"}
                           rel={isMuestra ? undefined : "noopener noreferrer"}
-                          onClick={isMuestra ? (e: React.MouseEvent) => e.preventDefault() : undefined}
+                          onClick={isMuestra ? (e: React.MouseEvent) => { e.preventDefault(); alert("Este enlace esta deshabilitado en la version de muestra.") } : undefined}
                           className={`mt-2 inline-flex min-h-[32px] w-fit items-center justify-center rounded-sm px-3 py-1 text-[9px] font-medium tracking-[0.15em] uppercase transition-all duration-200 ${
                             event.button.variant === "primary"
                               ? "bg-primary text-primary-foreground hover:opacity-90"

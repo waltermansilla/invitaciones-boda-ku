@@ -189,6 +189,35 @@
     },
 
     {
+      "// --- MI HISTORIA (crecimiento) ---": "",
+      "_comment": "Timeline visual con fotos de la quinceanera creciendo. Cada momento tiene imagen, titulo y texto. Se puede adaptar a cualquier cantidad de momentos.",
+      "type": "ourStory",
+      "id": "my-story",
+      "blocks": ["title", "moments"],
+      "data": {
+        "title": "Mi Historia",
+        "aspectRatio": "3/4",
+        "moments": [
+          {
+            "image": "/clientes/xv/valentina/story-1.jpg",
+            "title": "Mis primeros pasos",
+            "text": "Desde chiquita siempre fui curiosa. Tocaba todo, preguntaba todo y no paraba quieta ni un segundo. Mama dice que aprender a caminar fue solo el principio del caos."
+          },
+          {
+            "image": "/clientes/xv/valentina/story-2.jpg",
+            "title": "La del medio",
+            "text": "El colegio, las amigas, las pijamadas, los primeros bailes frente al espejo. Ahi empece a descubrir quien quiero ser y de que cosas me quiero rodear."
+          },
+          {
+            "image": "/clientes/xv/valentina/story-3.jpg",
+            "title": "Hoy, mis 15",
+            "text": "Y aca estoy. Con 15 anos, un millon de suenos y la certeza de que todo lo lindo esta por venir. Esta noche celebro con las personas que me hicieron ser quien soy."
+          }
+        ]
+      }
+    },
+
+    {
       "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
       "_comment": "Cada evento tiene icon, name y time. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus. Agregar/quitar/reordenar libremente.",
       "type": "itinerary",

@@ -32,7 +32,10 @@ export default function ActionButton({ text, url, variant }: ActionButtonProps) 
     return (
       <a
         href="#"
-        onClick={(e) => e.preventDefault()}
+        onClick={(e) => {
+          e.preventDefault()
+          alert("Este enlace esta deshabilitado en la version de muestra.")
+        }}
         className={`${base} ${variantClasses}`}
       >
         {text}

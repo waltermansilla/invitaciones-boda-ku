@@ -262,12 +262,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
         )
 
       case "footer":
-        return (
-          <FooterSection
-            brandName={data.brandName as string}
-            socialLinks={data.socialLinks as { icon: "instagram" | "whatsapp"; url: string }[]}
-          />
-        )
+        return <FooterSection />
 
       default:
         return null
