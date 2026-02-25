@@ -63,6 +63,10 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link href={fontUrl} rel="stylesheet" />
+      {/* Override html+body bg with the client's cremita so nothing else peeks through */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        html, body { background-color: ${theme.backgroundColor} !important; }
+      `}} />
       <div
         style={cssVars as React.CSSProperties}
         className="min-h-screen"
