@@ -1,5 +1,6 @@
-import WeddingInvitation from "@/components/wedding/wedding-invitation"
+import LandingPage from "@/components/landing/landing-page"
+import landingData from "@/data/landing.json"
 
 export default function Page() {
-  return <WeddingInvitation />
+  return <LandingPage data={landingData} />
 }

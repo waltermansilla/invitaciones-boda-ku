@@ -60,9 +60,9 @@
     "// SECCION 5: HERO / PORTADA                ": "",
     "// ==========================================.....": "",
 
-    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/images/anto-walter/img-hero.jpg",
+        "coupleImage": "/clientes/boda/anto-walter/img-hero.jpg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": true,
         "countdownPrefix": "Faltan",
@@ -109,16 +109,16 @@
 
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
                 "images": [
-                    "/images/anto-walter/galeria-1.jpg",
-                    "/images/anto-walter/galeria-2.jpg",
-                    "/images/anto-walter/galeria-3.jpg"
+                    "/clientes/boda/anto-walter/galeria-1.jpg",
+                    "/clientes/boda/anto-walter/galeria-2.jpg",
+                    "/clientes/boda/anto-walter/galeria-3.jpg"
                 ]
             }
         },
@@ -179,7 +179,7 @@
 
         {
             "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
-            "_comment": "Cada evento tiene icon, name y time. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus. Agregar/quitar/reordenar libremente.",
+            "_comment": "Cada evento tiene icon, name, time. Opcionales: date (subtitulo de dia, aparece como separador visual), button (con text, url y variant). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
@@ -188,29 +188,36 @@
                 "title": "Itinerario",
                 "events": [
                     {
-                        "icon": "pin",
+                        "icon": "civil",
                         "name": "Civil",
-                        "time": "Viernes 16/02 11:00 hs"
+                        "time": "11:00 hs",
+                        "date": "Viernes 16/02",
+                        "button": {
+                            "text": "Como llegar",
+                            "url": "https://maps.app.goo.gl/DwZ8MsxfGpoga9y96?g_st=ic",
+                            "variant": "secondary"
+                        }
                     },
                     {
-                        "icon": "church",
+                        "icon": "podium",
                         "name": "Discurso de boda",
-                        "time": "Sábado 17/02 17:00 hs"
+                        "time": "17:00 hs",
+                        "date": "Sabado 17/02"
                     },
                     {
-                        "icon": "sparkles",
-                        "name": "Recepcion (traé tu mate)",
+                        "icon": "mate",
+                        "name": "Recepcion (trae tu mate)",
                         "time": "18:45 hs"
                     },
                     { "icon": "camera", "name": "Fotos", "time": "19:30 hs" },
                     { "icon": "utensils", "name": "Cena", "time": "22:00 hs" },
                     {
-                        "icon": "wine",
+                        "icon": "mesaDulce",
                         "name": "Mesa dulce",
                         "time": "23:30 hs"
                     },
-                    { "icon": "wine", "name": "Torta", "time": "01:00 hs" },
-                    { "icon": "clock", "name": "Fin", "time": "02:00 hs" }
+                    { "icon": "tortaCasamiento", "name": "Torta", "time": "01:00 hs" },
+                    { "icon": "fin", "name": "Fin de fiesta", "time": "02:00 hs" }
                 ]
             }
         },
@@ -270,7 +277,7 @@
 
         {
             "// --- NUESTRA HISTORIA ---": "",
-            "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/images/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
+            "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/clientes/[tipo]/[slug]/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
@@ -280,17 +287,17 @@
                 "title": "Nuestra historia",
                 "moments": [
                     {
-                        "image": "/images/anto-walter/historia-1.jpeg",
+                        "image": "/clientes/boda/anto-walter/historia-1.jpeg",
                         "title": "Nos hicimos amigos",
                         "text": "Fuimos de viaje con un grupo de amigos. Nos conocimos mucho en el día a día, y nos gustábamos, aunque ninguno de los dos lo sabía. Sí, así de loco jaja."
                     },
                     {
-                        "image": "/images/anto-walter/historia-2.jpeg",
+                        "image": "/clientes/boda/anto-walter/historia-2.jpeg",
                         "title": "Nos elegimos",
                         "text": "Con el tiempo, un día en las playas de Santa Clara, nos contamos lo que sentíamos y decidimos caminar juntos una nueva etapa. Y un día de cine, nos pusimos de novios."
                     },
                     {
-                        "image": "/images/anto-walter/historia-3.jpeg",
+                        "image": "/clientes/boda/anto-walter/historia-3.jpeg",
                         "title": "Decidimos casarnos",
                         "text": "No hubo un gran discurso ni un momento perfecto. Solo la certeza de que queremos caminar juntos lo que venga. Y aca estamos, invitandolos a celebrarlo."
                     }
@@ -401,13 +408,13 @@
 
         {
             "// --- CIERRE VISUAL ---": "",
-            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/images/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/images/anto-walter/final.jpg"
+                "image": "/clientes/boda/anto-walter/final.jpg"
             }
         },
 

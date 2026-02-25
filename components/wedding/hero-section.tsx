@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import config from "@/lib/config"
+import { useConfig } from "@/lib/config-context"
 
 interface HeroSectionProps {
   coupleImage: string
@@ -42,6 +42,7 @@ export default function HeroSection({
   countdownPrefix,
   countdownLabels,
 }: HeroSectionProps) {
+  const config = useConfig()
   const theme = config.theme as Record<string, unknown>
   const textColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
   const [time, setTime] = useState<{

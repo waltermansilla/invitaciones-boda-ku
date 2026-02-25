@@ -1,408 +1,614 @@
-# MANUAL OPERATIVO BASICO V1
+# MANUAL OPERATIVO - SISTEMA MULTI-EVENTO
 
-> Guia interna de trabajo para crear y adaptar invitaciones digitales.
-> Lectura estimada: 8-10 minutos.
+> Guia interna completa para crear, administrar y escalar invitaciones digitales.
 > Ultima actualizacion: Febrero 2026.
 
 ---
 
-## 1. INTRODUCCION
+## INDICE
 
-El sistema de invitaciones funciona de la siguiente manera:
-
-- **Un solo archivo JSON** (`data/wedding-config.json`) controla todo el contenido: textos, colores, fuentes, fotos, links, secciones, modales y orden visual.
-- El **Hero** (portada con foto y cuenta regresiva) se renderiza siempre primero y se configura aparte.
-- Las **secciones** son dinamicas: se recorren con `map()` y se muestran en el orden que aparecen en el array `sections` del JSON.
-- Para cambiar el orden de la pagina, solo hay que mover objetos dentro del array.
-- Para ocultar una seccion, se elimina del array. Para agregar, se copia un bloque y se cambia el `id`.
-
-**No se necesita tocar codigo para adaptar una invitacion.** Todo se hace desde el JSON.
+1. Como funciona el sistema
+2. Estructura del proyecto
+3. Como trabajar en tu Mac local
+4. Como crear un nuevo cliente (paso a paso)
+5. Diferencia entre boda y XV
+6. Editar colores y fuente (theme)
+7. Modo muestra (portfolio)
+8. Landing comercial (pagina raiz)
+9. Footer global (marca)
+10. Botones CTA de la landing
+11. Como agregar una muestra nueva a la landing
+12. Valores especiales y opciones avanzadas
+13. Errores comunes
+14. Checklist final
+15. Que no tocar
+16. Resumen rapido
 
 ---
 
-## 2. FLUJO DE TRABAJO RECOMENDADO
+## 1. COMO FUNCIONA EL SISTEMA
 
-Seguir este orden para cada nuevo cliente:
+Un solo proyecto sirve para **todos los clientes y tipos de evento** (bodas, XV, cumples, etc.).
 
-### Paso 1: Duplicar el proyecto base
+- Cada cliente tiene su **propio JSON** en `data/clientes/[tipo]/[slug].json`.
+- Cada cliente tiene sus **propias imagenes** en `public/clientes/[tipo]/[slug]/`.
+- La URL se genera automaticamente: `data/clientes/boda/anto-walter.json` -> `tudominio.com/boda/anto-walter`
+- Cada cliente tiene **dos versiones automaticas**: la real (`/boda/slug`) y la muestra (`/m/boda/slug`).
+- **No se toca codigo para crear un nuevo cliente.** Solo se agrega un JSON y una carpeta de imagenes.
+- La landing comercial se configura desde `data/landing.json`.
+- El footer de marca es global y se edita en un solo archivo.
 
-Copiar la carpeta completa del proyecto. Renombrar si es necesario.
+---
 
-### Paso 2: Editar datos generales (meta)
+## 2. ESTRUCTURA DEL PROYECTO
 
-Abrir `data/wedding-config.json` y cambiar:
+```
+app/
+  page.tsx                     <- Landing comercial (lee de landing.json)
+  layout.tsx                   <- Layout raiz (fuentes, metadata)
+  globals.css                  <- Estilos globales, variables CSS
+  [tipo]/[slug]/               <- Ruta REAL de cada cliente (/boda/anto-walter)
+    page.tsx
+    layout.tsx
+  m/[tipo]/[slug]/             <- Ruta MUESTRA de cada cliente (/m/boda/anto-walter)
+    page.tsx
+    layout.tsx
 
-```json
-"meta": {
-  "title": "Nuestra Boda - Ana & Martin",
-  "description": "Te invitamos a celebrar nuestro amor...",
-  "lang": "es",
-  "coupleNames": {
-    "groomName": "Martin",
-    "brideName": "Ana",
-    "separator": "&"
-  }
-}
+components/
+  landing/
+    landing-page.tsx           <- Componente principal de la landing
+  wedding/
+    wedding-invitation.tsx     <- Renderiza todas las secciones de una invitacion
+    section.tsx                <- Switch que mapea type -> componente
+    footer-section.tsx         <- Footer global de marca (hardcodeado)
+    hero-section.tsx, gallery-section.tsx, rsvp-section.tsx, etc.
+
+data/
+  landing.json                 <- Configuracion completa de la landing
+  _TEMPLATE_BODA.json          <- Referencia con TODAS las secciones posibles para boda
+  _TEMPLATE_XV.json            <- Referencia con TODAS las secciones posibles para XV
+  clientes/
+    boda/
+      anto-walter.json         -> /boda/anto-walter (real) y /m/boda/anto-walter (muestra)
+    xv/
+      valentina.json           -> /xv/valentina (real) y /m/xv/valentina (muestra)
+
+public/
+  clientes/
+    boda/anto-walter/          <- Imagenes de ese cliente
+    xv/valentina/              <- Imagenes de ese cliente
 ```
 
-### Paso 3: Ajustar colores y fuente
+### Como funciona el ruteo
+
+| URL | Que carga | Fuente de datos |
+| --- | --------- | --------------- |
+| `/` | Landing comercial | `data/landing.json` |
+| `/boda/anto-walter` | Invitacion real | `data/clientes/boda/anto-walter.json` |
+| `/m/boda/anto-walter` | Invitacion muestra | Mismo JSON, con `isMuestra=true` |
+| `/xv/valentina` | Invitacion real | `data/clientes/xv/valentina.json` |
+| `/m/xv/valentina` | Invitacion muestra | Mismo JSON, con `isMuestra=true` |
+
+---
+
+## 3. COMO TRABAJAR EN TU MAC LOCAL
+
+### Primera vez
+
+```bash
+git clone https://github.com/waltermansilla/invitaciones-boda-ku.git
+cd invitaciones-boda-ku
+npm install
+```
+
+### Levantar el servidor
+
+```bash
+npm run dev
+```
+
+### URLs disponibles
+
+| URL | Que es |
+| --- | ------ |
+| `http://localhost:3000` | Landing comercial |
+| `http://localhost:3000/boda/anto-walter` | Version real de boda |
+| `http://localhost:3000/m/boda/anto-walter` | Version muestra de boda |
+| `http://localhost:3000/xv/valentina` | Version real de XV |
+| `http://localhost:3000/m/xv/valentina` | Version muestra de XV |
+
+### Editar y ver en vivo
+
+Cada vez que guardas un archivo (JSON, `.tsx`, `.css`), el navegador se actualiza solo (Hot Module Replacement). No hace falta reiniciar el servidor.
+
+### Flujo de trabajo recomendado
+
+1. Abrir terminal: `npm run dev`
+2. Abrir navegador en `localhost:3000`
+3. Editar el JSON del cliente (textos, fotos, secciones)
+4. Guardar -> la pagina se actualiza sola
+5. Alternar entre `/boda/slug` (real) y `/m/boda/slug` (muestra)
+6. Cuando esta listo, pushear a GitHub -> se deploya automatico a Vercel
+
+---
+
+## 4. COMO CREAR UN NUEVO CLIENTE (PASO A PASO)
+
+### Paso 1: Elegir el template
+
+- Para **boda**: copiar `data/_TEMPLATE_BODA.json`
+- Para **XV**: copiar `data/_TEMPLATE_XV.json`
+
+Estos templates tienen TODAS las secciones posibles con comentarios explicativos.
+
+### Paso 2: Renombrar y ubicar
+
+Copiar al directorio correcto:
+```
+data/clientes/boda/lucia-sebastian.json  -> /boda/lucia-sebastian
+data/clientes/xv/camila.json             -> /xv/camila
+```
+Siempre minusculas, sin espacios, separado por guiones.
+
+### Paso 3: Crear carpeta de imagenes
+
+```
+public/clientes/boda/lucia-sebastian/    <- Todas las fotos de esa boda
+public/clientes/xv/camila/              <- Todas las fotos de ese XV
+```
+
+### Paso 4: Editar el JSON
+
+1. **meta** -- nombres, titulo, descripcion
+2. **theme** -- colores y fuente
+3. **hero** -- foto principal, fecha, headline
+4. **sections** -- borrar las que no se necesiten, editar textos, fotos, links, datos bancarios
+5. **Rutas de imagenes** -- todas apuntan a `/clientes/[tipo]/[slug]/nombre.jpg` (sin `/public`)
+
+### Paso 5: Probar
+
+```
+http://localhost:3000/boda/lucia-sebastian      <- version real
+http://localhost:3000/m/boda/lucia-sebastian     <- version muestra
+```
+
+### Paso 6: Agregar a la landing (opcional)
+
+Ver seccion 11 "Como agregar una muestra nueva a la landing".
+
+Listo. No hay que tocar ningun otro archivo.
+
+---
+
+## 5. DIFERENCIA ENTRE BODA Y XV
+
+### Secciones compartidas (disponibles en ambos)
+
+| `type` | Que hace | Notas para XV |
+| ------ | -------- | ------------- |
+| `quote` | Frase con fondo (autor opcional) | |
+| `dateInfo` | Fecha del evento | |
+| `locationInfo` | Ubicacion con link a Maps | |
+| `gallery` | Slider automatico de fotos | |
+| `itinerary` | Linea de tiempo con iconos | |
+| `dressCode` | Vestimenta con modal de consejos | |
+| `photos` | Invita a subir fotos al album | |
+| `emotionalQuote` | Frase emotiva centrada | |
+| `trivia` | Juego trivia (4 opciones) | |
+| `truths` | Juego verdadero/falso | |
+| `ourStory` | Momentos con fotos | En XV: "Mi historia" (crecimiento) |
+| `giftCard` | Tarjeta de regalo con datos bancarios | |
+| `honeymoon` | Alcancia con datos bancarios | En XV: "Mi viaje sonado" |
+| `playlist` | Link a playlist de Spotify | |
+| `rsvp` | Formulario de confirmacion | |
+| `specialMessage` | Mensaje personal con firma | |
+| `closingImage` | Foto de cierre | |
+| `footer` | Footer de marca | |
+
+### Secciones exclusivas de XV
+
+| `type` | Que hace |
+| ------ | -------- |
+| `presentation` | Foto + nombre + descripcion |
+| `parents` | Listado de padres/padrinos |
+
+### Templates
+
+- `data/_TEMPLATE_BODA.json` -- Todas las secciones para boda
+- `data/_TEMPLATE_XV.json` -- Todas las secciones para XV (incluye `presentation`, `parents`, `ourStory` adaptado)
+
+---
+
+## 6. EDITAR COLORES Y FUENTE (THEME)
 
 ```json
 "theme": {
-  "primaryColor": "#6B7F5E",
-  "backgroundColor": "#FAF8F5",
+  "primaryColor": "#C4788A",
+  "backgroundColor": "#FFF9F7",
   "textColor": "#3A3A3A",
-  "lightBgTextColor": "#6B7F5E",
+  "lightBgTextColor": "#C4788A",
   "darkBgTextColor": "#FFFFFF",
-  "accentBackground": "#EDF2E8",
+  "accentBackground": "#FDF0EE",
   "modalTextColor": "#FFFFFF",
   "font": {
-    "family": "Josefin Sans",
-    "weights": "100,200,300,400,500,600,700"
+    "family": "Playfair Display",
+    "weights": "300,400,500,600,700"
   }
 }
 ```
 
-- `primaryColor`: color de las secciones con fondo (verde por defecto).
-- `backgroundColor`: fondo general claro.
-- `textColor`: color texto general global. Si no especificamos colores especificos, se queda este.
-- `lightBgTextColor`: color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Cambiar a cualquier hex (ej: `"#555555"` para gris).
-- `darkBgTextColor`: color de todos los textos en secciones de fondo primario/oscuro. Por defecto blanco.
-- `modalTextColor`: color del texto dentro de los modales.
-- `font.family`: nombre exacto tal como aparece en Google Fonts.
-- `font.weights`: pesos que necesitas, separados por coma.
-
-**Ejemplo rapido:** si queres que el texto en fondo claro sea gris en vez de verde, solo cambias:
-
-```json
-"lightBgTextColor": "#555555"
-```
-
-Todo se actualiza junto: titulos, parrafos, iconos, botones, separadores.
-
-### Paso 4: Configurar hero
-
-```json
-"hero": {
-  "coupleImage": "/images/couple-hero.jpg",
-  "headline": "Nos casamos!",
-  "showNamesOnPhoto": true,
-  "eventDate": "2026-10-10T18:00:00",
-  "countdownLabels": {
-    "days": "Dias",
-    "hours": "Horas",
-    "minutes": "Minutos",
-    "seconds": "Segundos"
-  }
-}
-```
-
-- `eventDate`: formato obligatorio `AAAA-MM-DDTHH:MM:SS`. Controla la cuenta regresiva.
-- `coupleImage`: ruta a la foto. Colocarla en `/public/images/`.
-- `showNamesOnPhoto`: `true` muestra los nombres de la pareja sobre la foto de portada, `false` los oculta (los nombres siguen apareciendo en el overlay de bienvenida y en la seccion de cierre).
-
-### Paso 5: Activar o quitar secciones
-
-Revisar el array `sections` y decidir cuales quedan. Ver seccion 3 de este manual.
-
-### Paso 6: Ajustar textos de cada seccion
-
-Cambiar frases, descripciones, preguntas de trivia, datos bancarios, etc.
-
-### Paso 7: Revisar ubicaciones y links
-
-Verificar que los `url` de Google Maps, WhatsApp e Instagram sean correctos.
-
-### Paso 8: Reemplazar fotos
-
-Colocar fotos reales en `/public/images/` con los mismos nombres o actualizar las rutas en el JSON.
-
-### Paso 9: Probar en mobile
-
-La invitacion esta pensada para celular. Siempre revisar en un telefono real o con el inspector del navegador.
-
-### Paso 10: Checklist final
-
-Ver seccion 7 de este manual.
+| Campo | Que controla |
+| ----- | ------------ |
+| `primaryColor` | Color principal: fondos, botones, acentos, footer |
+| `backgroundColor` | Fondo general de la pagina |
+| `textColor` | Color del texto del body |
+| `lightBgTextColor` | Texto en secciones claras (iconos, titulos) |
+| `darkBgTextColor` | Texto en secciones con fondo primario |
+| `accentBackground` | Fondo de elementos sutiles (cards, badges) |
+| `modalTextColor` | Texto dentro de modales |
+| `font.family` | Nombre exacto de Google Fonts |
+| `font.weights` | Pesos separados por coma |
 
 ---
 
-## 3. QUE PARTES DEL JSON SE EDITAN SIEMPRE
+## 7. MODO MUESTRA (PORTFOLIO)
 
-### Campos que se cambian en TODOS los clientes:
+### Que es
 
-| Campo                                | Ubicacion | Que es                                |
-| ------------------------------------ | --------- | ------------------------------------- |
-| `meta.title`                         | Raiz      | Titulo de la pestana del navegador    |
-| `meta.coupleNames`                   | Raiz      | Nombres de la pareja                  |
-| `hero.coupleImage`                   | Raiz      | Foto principal                        |
-| `hero.eventDate`                     | Raiz      | Fecha del evento (controla countdown) |
-| `dateInfo > data.value`              | Sections  | Fecha en texto ("10 de Octubre 2026") |
-| `locationInfo > data.address`        | Sections  | Direcciones de los lugares            |
-| `locationInfo > data.button.url`     | Sections  | Links a Google Maps                   |
-| `giftCard > data.modal.transferData` | Sections  | Datos bancarios de la tarjeta         |
-| `honeymoon > data.modal.bankData`    | Sections  | Datos bancarios luna de miel          |
-| `rsvp > data.deadline`               | Sections  | Fecha limite de confirmacion          |
-| `footer > data.socialLinks`          | Sections  | URLs de redes sociales                |
+Cada invitacion tiene automaticamente dos versiones:
+- **Version real**: `/boda/anto-walter` -- para el cliente, todo activo
+- **Version muestra**: `/m/boda/anto-walter` -- para portfolio, datos sensibles protegidos
 
-### Color de fondo y texto por seccion:
+Ambas usan **el mismo JSON**. No se duplica nada.
 
-Cada seccion tiene un campo `bgColor` que controla su fondo:
+### Que cambia en modo muestra
+
+| Componente | En muestra |
+| ---------- | ---------- |
+| Botones de accion (Maps, etc.) | No navegan. Muestra aviso. |
+| Formulario RSVP | Se llena. Al enviar dice "Confirmacion simulada". |
+| Modal de datos bancarios | Se abre. Datos enmascarados (XXXX-XXXX-XXXX). Sin copiar. |
+| Modal de luna de miel | Se abre. Datos enmascarados. Sin copiar. |
+| Footer | Funciona normalmente (son tus links de marca). |
+| Botones del itinerario | No navegan. Muestra aviso. |
+
+### Reglas
+
+- **Nunca desactivar la version real.** Queda activa de por vida.
+- **Nunca duplicar el JSON.** Ambas versiones usan el mismo archivo.
+- **Nunca enlazar la version real en el portfolio.** Solo `/m/...`.
+- Entregar al cliente: URL real (`/boda/slug`)
+- Publicar en portfolio: URL muestra (`/m/boda/slug`)
+
+---
+
+## 8. LANDING COMERCIAL (PAGINA RAIZ)
+
+La landing en `/` se configura **100% desde** `data/landing.json`.
+
+### Que se puede editar desde el JSON
+
+| Seccion | Que editar |
+| ------- | ---------- |
+| `theme` | Colores de toda la landing (fondo, texto, acento, cards, footer) |
+| `whatsapp` | Numero y mensaje default |
+| `ctaButtons` | Todos los botones de accion (ver seccion 10) |
+| `sections.hero` | Titulo (con parte en negrita), subtitulo |
+| `sections.muestras` | Titulo, descripcion, lista de muestras |
+| `sections.servicio` | Planes, precios, features, mostrar/ocultar precios |
+| `sections.proceso` | Pasos, highlights |
+| `sections.faq` | Preguntas y respuestas |
+| `sections.ctaFinal` | Titulo y subtitulo del CTA final |
+
+### Activar/desactivar secciones
+
+Cada seccion tiene `"enabled": true/false`. Poner `false` para ocultarla.
+
+### Titulo del hero con negrita parcial
+
+```json
+"title": {
+  "normal": "Cada historia merece estar a ",
+  "highlight": "la altura"
+}
+```
+`normal` se renderiza con peso ligero, `highlight` en negrita.
+
+---
+
+## 9. FOOTER GLOBAL (MARCA)
+
+El footer es **identico en todas las invitaciones y la landing**. No se configura desde JSON.
+
+### Archivo
+`components/wedding/footer-section.tsx`
+
+### Constantes editables (al principio del archivo)
+
+| Constante | Que es | Valor actual |
+| --------- | ------ | ------------ |
+| `BRAND_NAME` | Nombre de marca | `"momento unico"` |
+| `BRAND_FONT` | Clase CSS de fuente | `"font-serif"` (cursiva) |
+| `BRAND_SIZE` | Clase CSS de tamano | `"text-base"` |
+| `BRAND_ICON` | URL de icono (o null) | `null` (sin icono) |
+| `ICON_SIZE` | Tamano de iconos de redes (px) | `26` |
+| `SOCIAL_LINKS` | Array de redes sociales | Instagram + WhatsApp |
+
+### Como cambiar el nombre de marca
+
+Buscar `BRAND_NAME` y cambiar el texto:
+```js
+const BRAND_NAME = "mi nueva marca"
+```
+
+### Como cambiar la fuente del nombre
+
+Cambiar `BRAND_FONT`:
+- `"font-serif"` -> cursiva elegante (Playfair Display)
+- `"font-sans"` -> recta (la fuente del sistema)
+- `"font-mono"` -> monoespaciada
+
+### Como cambiar el tamano
+
+Cambiar `BRAND_SIZE`:
+- `"text-xs"` (muy chico)
+- `"text-sm"` (chico)
+- `"text-base"` (normal)
+- `"text-lg"` (grande)
+
+### Como agregar un icono al lado del nombre
+
+Cambiar `BRAND_ICON` de `null` a la ruta de la imagen:
+```js
+const BRAND_ICON = "/images/mi-icono.png"
+```
+Subir el icono a `public/images/`.
+
+### Como poner un logo en vez de texto
+
+Reemplazar `{BRAND_NAME}` por un `<img>` dentro del `<Link>` del footer:
+```jsx
+<img src="/images/mi-logo.png" alt="Mi Marca" className="h-5 opacity-40" />
+```
+
+### Como cambiar las redes sociales
+
+Editar `SOCIAL_LINKS`:
+```js
+{ icon: "instagram", url: "https://instagram.com/tu_cuenta", label: "Instagram" },
+{ icon: "whatsapp",  url: "https://wa.me/tunumero", label: "WhatsApp" },
+```
+
+### Como cambiar el tamano de los iconos
+
+Cambiar `ICON_SIZE` (en pixeles):
+```js
+const ICON_SIZE = 28
+```
+
+### Color del footer
+
+- En las **invitaciones**: se adapta automaticamente al `primaryColor` del cliente via CSS variables.
+- En la **landing**: se configura desde `landing.json` en `theme.footerBg` y `theme.footerText`.
+
+---
+
+## 10. BOTONES CTA DE LA LANDING
+
+Todos los botones de accion estan centralizados en `landing.json` > `ctaButtons`.
+
+### Estructura de un boton
 
 ```json
 {
-  "type": "quote",
-  "id": "quote-welcome",
-  "bgColor": "primary",
-  "blocks": ["text", "author"],
-  "data": { ... }
+  "text": "Quiero mi invitacion",
+  "type": "whatsapp",
+  "message": "Hola! Me interesa una invitacion digital."
 }
 ```
 
-| Valor de `bgColor` | Que hace                              | Texto automatico                                             |
-| ------------------ | ------------------------------------- | ------------------------------------------------------------ |
-| `"primary"`        | Fondo verde (color primario del tema) | Usa `darkBgTextColor` del tema (blanco por defecto)          |
-| `"background"`     | Fondo crema (color de fondo general)  | Usa `lightBgTextColor` del tema (verde primario por defecto) |
+### Tipos disponibles
 
-**El texto se adapta automaticamente al fondo.** Los colores de texto se controlan globalmente desde el tema:
+| `type` | Que hace | Campos necesarios |
+| ------ | -------- | ----------------- |
+| `whatsapp` | Abre WhatsApp con mensaje | `message` |
+| `anchor` | Scroll a una seccion de la misma pagina | `anchor` (ej: `"#muestras"`) |
+| `link` | Navega a una URL | `url`, `newTab` (opcional) |
 
-- `lightBgTextColor` en el tema -> se aplica a TODAS las secciones con `bgColor: "background"`
-- `darkBgTextColor` en el tema -> se aplica a TODAS las secciones con `bgColor: "primary"`
+### Botones configurados
 
-**Override opcional por seccion:** si UNA seccion necesita un color distinto al global, podes agregar `textColor` solo en esa seccion:
+| Key en JSON | Donde aparece |
+| ----------- | ------------- |
+| `heroPrimary` | Boton principal del hero |
+| `heroSecondary` | Boton secundario del hero |
+| `planEsencial` | Boton del plan Esencial |
+| `planPremium` | Boton del plan Premium |
+| `proceso` | Boton de la seccion "Como funciona" |
+| `ctaFinal` | Boton del CTA final |
+
+### Como cambiar un boton
+
+Solo editar su objeto en `ctaButtons`:
+```json
+"heroPrimary": {
+  "text": "Escribime por WhatsApp",
+  "type": "whatsapp",
+  "message": "Hola! Quiero info sobre invitaciones."
+}
+```
+
+### Como agregar un nuevo boton
+
+1. Agregar al objeto `ctaButtons` con un key nuevo
+2. Referenciarlo desde la seccion que corresponda (ej: un plan nuevo con `"ctaButton": "planNuevo"`)
+
+No hay que tocar ningun componente.
+
+---
+
+## 11. COMO AGREGAR UNA MUESTRA NUEVA A LA LANDING
+
+### Paso 1: Crear el cliente
+
+Seguir la seccion 4 (crear JSON + imagenes).
+
+### Paso 2: Editar landing.json
+
+Buscar `sections.muestras.items` y agregar un objeto:
 
 ```json
 {
-  "type": "quote",
-  "bgColor": "primary",
-  "textColor": "#FF0000",
-  ...
+  "tipo": "boda",
+  "slug": "lucia-sebastian",
+  "titulo": "Lucia & Sebastian",
+  "etiqueta": "Boda",
+  "accentColor": "#9A8A7A"
 }
 ```
 
-El `textColor` de la seccion tiene prioridad sobre el valor global del tema. Acepta cualquier codigo hex.
+| Campo | Que es |
+| ----- | ------ |
+| `tipo` | Carpeta del tipo de evento (`boda`, `xv`) |
+| `slug` | Nombre del JSON (sin `.json`) |
+| `titulo` | Nombre que se muestra en la landing |
+| `etiqueta` | Badge (Boda, XV, etc.) |
+| `accentColor` | Color del acento visual (barra lateral + badge) |
 
-### Campos opcionales (dependen del cliente):
-
-| Campo                             | Que hace                                   |
-| --------------------------------- | ------------------------------------------ |
-| `overlay.enabled`                 | Activa/desactiva la pantalla de bienvenida |
-| `music.enabled`                   | Activa/desactiva la musica                 |
-| `gallery > data.images`           | Agregar/quitar fotos del slider            |
-| `trivia > data.modal.questions`   | Agregar/quitar preguntas                   |
-| `truths > data.questions`         | Agregar/quitar preguntas                   |
-| `ourStory > data.moments`         | Agregar/quitar momentos                    |
-| `itinerary > data.events`         | Agregar/quitar momentos del itinerario     |
-| `dressCode > data.modal.sections` | Agregar/quitar bloques de consejos         |
-
-### Secciones que se pueden eliminar sin romper nada:
-
-Cualquier seccion se puede eliminar del array `sections` sin afectar al resto. Las mas comunes de quitar son:
-
-- `trivia` -- si el cliente no quiere juego
-- `truths` -- si el cliente no quiere juego
-- `ourStory` -- si el cliente no quiere historia
-- `honeymoon` -- si no hay luna de miel
-- `emotionalQuote` -- si no quiere frase intermedia
-- `closingImage` -- si no quiere foto de cierre
-- `photos` -- si no hay album compartido
-
-### Como eliminar una seccion correctamente:
-
-1. Buscar el bloque `{ "type": "..." }` en el array `sections`.
-2. Seleccionar desde la llave `{` de apertura hasta la llave `}` de cierre.
-3. Borrar TODO el bloque, incluyendo la coma que lo separa del siguiente.
-4. Verificar que no quede una coma antes del `]` de cierre del array.
-
-Ejemplo -- ANTES:
-
-```json
-"sections": [
-  { "type": "quote", ... },
-  { "type": "dateInfo", ... },
-  { "type": "gallery", ... }
-]
-```
-
-Quiero eliminar `dateInfo` -- DESPUES:
-
-```json
-"sections": [
-  { "type": "quote", ... },
-  { "type": "gallery", ... }
-]
-```
-
-**Importante:** la ultima seccion del array NO lleva coma al final.
+El boton se crea automaticamente con link a `/m/[tipo]/[slug]`.
 
 ---
 
-## 4. QUE NO DEBE TOCARSE
+## 12. VALORES ESPECIALES Y OPCIONES AVANZADAS
 
-### Nunca cambiar:
+| Campo | Valores validos |
+| ----- | --------------- |
+| `button.variant` | `"primary"`, `"secondary"`, `"background"` |
+| `bgColor` | `"primary"` (fondo color primario), `"background"` (fondo claro) |
+| `trivia correctIndex` | 0 a 3 (0 = primera opcion) |
+| `truths correctOption` | `"A"` o `"B"` |
+| `socialLinks icon` | `"instagram"`, `"whatsapp"` |
+| `aspectRatio` | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"` |
 
-- **Nombres de propiedades** (`type`, `id`, `blocks`, `data`, etc.). Si cambias `"type": "quote"` por otro nombre, el componente no se va a encontrar.
-- **IDs de secciones** a menos que dupliques una seccion (en ese caso el nuevo ID debe ser unico).
-- **La estructura de los arrays**. Si un campo espera un array `[]`, no convertirlo en un objeto `{}` ni en un string.
-- **Valores de `type`**. Los valores validos son:
-    - `quote`, `dateInfo`, `locationInfo`, `gallery`, `itinerary`, `photos`, `giftCard`, `honeymoon`, `dressCode`, `emotionalQuote`, `trivia`, `ourStory`, `truths`, `rsvp`, `closingImage`, `footer`
-- **Archivos fuera del JSON** salvo que sea estrictamente necesario (ver seccion 6).
+### Iconos del itinerario
 
-### Valores especiales que no se deben alterar:
-
-| Campo                  | Valores validos                                                                                                                                     |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `button.variant`       | `"primary"`, `"secondary"`                                                                                                                          |
-| `trivia correctIndex`  | Numero del 0 al 3 (0 = primera opcion)                                                                                                              |
-| `truths correctOption` | `"A"` o `"B"`                                                                                                                                       |
-| `socialLinks icon`     | `"instagram"`, `"whatsapp"`                                                                                                                         |
-| `itinerary icon`       | `heart`, `wine`, `utensils`, `music`, `church`, `camera`, `cake`, `car`, `glass`, `party`, `sparkles`, `sun`, `moon`, `clock`, `pin`, `gift`, `bus` |
-| `aspectRatio`          | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"`                                                                                                                 |
-| `bgColor`              | `"primary"`, `"background"`                                                                                                                         |
-| `textColor`            | `"primary-foreground"`, `"foreground"`, o un hex como `"#FF0000"`                                                                                   |
-
----
-
-## 5. ERRORES COMUNES
-
-### Coma final antes de cierre
-
-```json
-// MAL - coma despues del ultimo elemento
-"images": [
-  "/images/foto1.jpg",
-  "/images/foto2.jpg",   <-- esta coma sobra
-]
-
-// BIEN
-"images": [
-  "/images/foto1.jpg",
-  "/images/foto2.jpg"
-]
-```
-
-### Comillas mal cerradas
-
-```json
-// MAL
-"title": "Nos casamos!
-
-// BIEN
-"title": "Nos casamos!"
-```
-
-### Fecha mal formateada
-
-```json
-// MAL - el countdown no va a funcionar
-"eventDate": "10 de Octubre 2026"
-
-// BIEN - formato ISO obligatorio
-"eventDate": "2026-10-10T18:00:00"
-```
-
-### Array mal cerrado
-
-```json
-// MAL - falta cerrar el array
-"options": ["Vegetariano", "Vegano"
-
-// BIEN
-"options": ["Vegetariano", "Vegano"]
-```
-
-### Links incompletos
-
-```json
-// MAL - falta https://
-"url": "wa.me/3456023759"
-
-// BIEN
-"url": "https://wa.me/3456023759"
-```
-
-### Ruta de imagen incorrecta
-
-```json
-// MAL - la carpeta public no se incluye en la ruta
-"image": "/public/images/foto.jpg"
-
-// BIEN - la ruta empieza desde /images/
-"image": "/images/foto.jpg"
-```
+| Nombre | Representa |
+| ------ | ---------- |
+| `heart` | Corazon |
+| `wine` | Copa de vino |
+| `utensils` | Cubiertos / Cena |
+| `music` | Musica |
+| `church` | Iglesia |
+| `camera` | Camara / Fotos |
+| `cake` | Torta |
+| `car` | Auto |
+| `glass` | Brindis |
+| `party` | Fiesta |
+| `sparkles` | Recepcion |
+| `sun` | Sol / Dia |
+| `moon` | Luna / Noche |
+| `clock` | Reloj |
+| `pin` | Ubicacion |
+| `gift` | Regalo |
+| `bus` | Transporte |
+| `podium` | Discurso |
+| `book` | Libro |
+| `salon` | Salon |
+| `civil` | Civil / Anillos |
+| `mate` | Mate |
+| `fin` | Fin |
+| `sidra` | Sidra |
+| `mesaDulce` | Mesa dulce |
+| `tortaCasamiento` | Torta de casamiento |
 
 ---
 
-## 6. ARCHIVOS FUERA DEL JSON (SI ES NECESARIO)
+## 13. ERRORES COMUNES
 
-En el 95% de los casos solo se toca el JSON. Pero si necesitas algo mas especifico:
-
-| Que quiero cambiar                   | Que archivo tocar                                                  |
-| ------------------------------------ | ------------------------------------------------------------------ |
-| Fuente tipografica                   | Solo el JSON (`theme.font.family` y `theme.font.weights`)          |
-| Colores generales                    | Solo el JSON (`theme.primaryColor`, `theme.backgroundColor`, etc.) |
-| Color de texto en modales            | Solo el JSON (`theme.modalTextColor`)                              |
-| Layout general de la pagina          | `app/layout.tsx` (raramente necesario)                             |
-| Estilos globales CSS                 | `app/globals.css` (solo si necesitas animaciones nuevas)           |
-| Agregar una nueva seccion tipo       | `components/wedding/section.tsx` (requiere conocimiento de React)  |
-| Agregar un nuevo icono al itinerario | `components/wedding/itinerary-section.tsx` (agregar al `iconMap`)  |
-
-**Regla general:** si el cambio se puede hacer desde el JSON, hacelo desde el JSON. Solo tocar codigo si no hay otra opcion.
+| Error | Ejemplo MAL | Ejemplo BIEN |
+| ----- | ----------- | ------------ |
+| Coma final antes de `]` | `"foto2.jpg",]` | `"foto2.jpg"]` |
+| Comillas mal cerradas | `"title": "Hola` | `"title": "Hola"` |
+| Fecha mal formateada | `"10 de Octubre 2026"` | `"2026-10-10T18:00:00"` |
+| Ruta con /public | `"/public/clientes/..."` | `"/clientes/boda/slug/img.jpg"` |
+| Link sin https | `"wa.me/3456023759"` | `"https://wa.me/3456023759"` |
 
 ---
 
-## 7. CHECKLIST FINAL ANTES DE ENTREGAR
+## 14. CHECKLIST FINAL
 
-Recorrer esta lista antes de enviar al cliente:
-
-### Datos basicos
-
+### Datos
 - [ ] Nombres correctos en `meta.coupleNames`
 - [ ] Titulo de pestana correcto en `meta.title`
-- [ ] Fecha correcta en `hero.eventDate` (formato ISO)
-- [ ] Fecha en texto correcta en `dateInfo > data.value`
-- [ ] Cuenta regresiva funcionando (verificar en la pagina)
+- [ ] Fecha en formato ISO en `hero.eventDate`
+- [ ] Cuenta regresiva funcionando
 
-### Fotos
+### Imagenes
+- [ ] Todas en `public/clientes/[tipo]/[slug]/`
+- [ ] Rutas en el JSON empiezan con `/clientes/[tipo]/[slug]/`
+- [ ] Hero, galeria, historia y cierre tienen fotos reales
 
-- [ ] Foto del hero reemplazada (`hero.coupleImage`)
-- [ ] Fotos de la galeria reemplazadas
-- [ ] Fotos de "Nuestra historia" reemplazadas (si aplica)
-- [ ] Foto de cierre reemplazada (si aplica)
-- [ ] Todas las imagenes estan en `/public/images/`
+### Links
+- [ ] Google Maps funciona
+- [ ] Datos bancarios correctos
+- [ ] WhatsApp e Instagram del footer son de TU MARCA
 
-### Links y datos
+### Versiones
+- [ ] Probar version real: `/boda/slug`
+- [ ] Probar version muestra: `/m/boda/slug`
+- [ ] Probar en celular real
+- [ ] Modales abren y cierran
+- [ ] RSVP funciona (real) / muestra simulado (muestra)
+- [ ] Datos bancarios reales (real) / enmascarados (muestra)
 
-- [ ] Links de Google Maps funcionan (abrir y verificar)
-- [ ] Datos bancarios correctos (alias, CBU, titular)
-- [ ] Valor de tarjeta correcto
-- [ ] URL de WhatsApp correcta
-- [ ] URL de Instagram correcta
-
-### Contenido
-
-- [ ] Frases y textos personalizados para el cliente
-- [ ] Preguntas de trivia adaptadas (si aplica)
-- [ ] Preguntas de "verdades" adaptadas (si aplica)
-- [ ] Itinerario con horarios reales
-- [ ] Dress code acorde al evento
-- [ ] Deadline del RSVP correcto
-
-### Secciones
-
-- [ ] No hay secciones vacias o con datos de ejemplo
-- [ ] El orden de secciones tiene sentido narrativo
-- [ ] Secciones innecesarias eliminadas
-
-### Funcional
-
-- [ ] Responsive OK (probar en celular real)
-- [ ] Musica funciona (si esta activada)
-- [ ] Overlay de bienvenida funciona (si esta activado)
-- [ ] Modales abren y cierran correctamente
-- [ ] Boton de copiar en modales funciona
-- [ ] Formulario RSVP envia correctamente
+### Landing
+- [ ] Muestras aparecen correctamente
+- [ ] Botones de WhatsApp abren con mensaje correcto
+- [ ] Precios actualizados (o ocultos con `showPrices: false`)
+- [ ] FAQ actualizado
 
 ---
 
-> **Nota:** Este documento se puede actualizar con nuevas versiones (V2, V3) a medida que se agreguen funcionalidades o secciones al sistema.
+## 15. QUE NO TOCAR
+
+| Que quiero cambiar | Donde |
+| ------------------- | ----- |
+| Textos, fotos, colores de un cliente | Solo su JSON |
+| Textos, precios, FAQ de la landing | `data/landing.json` |
+| Nombre de marca, redes del footer | `components/wedding/footer-section.tsx` (constantes) |
+| Agregar un nuevo tipo de seccion | `components/wedding/section.tsx` (requiere React) |
+| Agregar un nuevo icono al itinerario | `components/wedding/itinerary-section.tsx` |
+| Estilos CSS globales | `app/globals.css` (raramente necesario) |
+
+**Nunca tocar:**
+- Nombres de propiedades (`type`, `id`, `blocks`, `data`, etc.)
+- Valores de `type` -- usar solo los listados en la seccion 5
+- Estructura de arrays -- no convertir `[]` en `{}` ni en string
+- Los templates (`_TEMPLATE_BODA.json`, `_TEMPLATE_XV.json`) -- son de referencia
+
+---
+
+## 16. RESUMEN RAPIDO
+
+```
+Crear nueva boda:
+  1. Copiar data/_TEMPLATE_BODA.json -> data/clientes/boda/nuevo-slug.json
+  2. Crear public/clientes/boda/nuevo-slug/ con las fotos
+  3. Editar el JSON
+  4. Listo: /boda/nuevo-slug (real) y /m/boda/nuevo-slug (muestra)
+
+Crear nuevo XV:
+  1. Copiar data/_TEMPLATE_XV.json -> data/clientes/xv/nuevo-slug.json
+  2. Crear public/clientes/xv/nuevo-slug/ con las fotos
+  3. Editar el JSON
+  4. Listo: /xv/nuevo-slug (real) y /m/xv/nuevo-slug (muestra)
+
+Agregar muestra a la landing:
+  1. Editar data/landing.json > sections.muestras.items
+  2. Agregar { tipo, slug, titulo, etiqueta, accentColor }
+
+Cambiar nombre de marca:
+  1. Editar components/wedding/footer-section.tsx > BRAND_NAME
+
+Entregar al cliente: URL real (/boda/slug)
+Publicar en portfolio: URL muestra (/m/boda/slug)
+```

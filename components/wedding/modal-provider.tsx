@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useCallback, useRef, useEffect } from "react"
 import { createPortal } from "react-dom"
 import { X } from "lucide-react"
-import config from "@/lib/config"
+import { useConfig } from "@/lib/config-context"
 
 type ModalContent = React.ReactNode | null
 
@@ -22,6 +22,7 @@ export function useModal() {
 }
 
 export default function ModalProvider({ children }: { children: React.ReactNode }) {
+  const config = useConfig()
   const [content, setContent] = useState<ModalContent>(null)
   const [visible, setVisible] = useState(false)
   const [closing, setClosing] = useState(false)
@@ -81,7 +82,7 @@ export default function ModalProvider({ children }: { children: React.ReactNode 
         className={`relative w-full max-w-sm rounded-sm bg-primary px-7 py-8 ${
           closing ? "animate-modal-content-out" : "animate-modal-content-in"
         }`}
-        style={{ color: (config.theme as Record<string, unknown>).modalTextColor as string || "#FFFFFF" }}
+        style={{ color: (config.theme as Record<string, unknown>).modalTextColor as string ?? "#FFFFFF" }}
       >
         <button
           onClick={closeModal}

@@ -18,7 +18,11 @@ import FooterSection from "./footer-section"
 import ClosingSection from "./closing-section"
 import OurStorySection from "./our-story-section"
 import TruthsSection from "./truths-section"
-import config from "@/lib/config"
+import PresentationSection from "./presentation-section"
+import ParentsSection from "./parents-section"
+import PlaylistSection from "./playlist-section"
+import SpecialMessageSection from "./special-message-section"
+import { useConfig } from "@/lib/config-context"
 
 export interface SectionConfig {
   type: string
@@ -38,32 +42,22 @@ interface SectionProps {
   }
 }
 
-/**
- * Determines background + text color based on bgColor from JSON.
- * Reads lightBgTextColor and darkBgTextColor from theme for automatic text color.
- * textColor override takes priority if set on a section.
- */
-function getSectionColors(bgColor?: string, textColor?: string) {
+export default function Section({ section, coupleNames }: SectionProps) {
+  const config = useConfig()
+  const { type, id, data, bgColor, textColor } = section
+
+  // Determine bg + text color from theme
   const theme = config.theme as Record<string, unknown>
   const bg = bgColor === "primary" ? "bg-primary" : "bg-background"
-
-  // Resolve text color: override > auto from theme
   let resolvedTextColor: string
   if (textColor) {
-    // Manual override from section-level textColor
     resolvedTextColor = textColor
   } else if (bgColor === "primary") {
     resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF"
   } else {
     resolvedTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
   }
-
-  return { bg, resolvedTextColor }
-}
-
-export default function Section({ section, coupleNames }: SectionProps) {
-  const { type, id, data, bgColor, textColor } = section
-  const colors = getSectionColors(bgColor, textColor)
+  const colors = { bg, resolvedTextColor }
 
   const renderContent = () => {
     switch (type) {
@@ -221,6 +215,43 @@ export default function Section({ section, coupleNames }: SectionProps) {
           />
         )
 
+      case "presentation":
+        return (
+          <PresentationSection
+            image={data.image as string}
+            name={data.name as string}
+            description={data.description as string}
+            aspectRatio={data.aspectRatio as string | undefined}
+          />
+        )
+
+      case "parents":
+        return (
+          <ParentsSection
+            title={data.title as string}
+            subtitle={data.subtitle as string | undefined}
+            parents={data.parents as { name: string; role: string }[]}
+          />
+        )
+
+      case "playlist":
+        return (
+          <PlaylistSection
+            title={data.title as string}
+            description={data.description as string}
+            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
+          />
+        )
+
+      case "specialMessage":
+        return (
+          <SpecialMessageSection
+            title={data.title as string}
+            text={data.text as string}
+            signature={data.signature as string | undefined}
+          />
+        )
+
       case "closingImage":
         return (
           <ClosingSection
@@ -231,12 +262,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
         )
 
       case "footer":
-        return (
-          <FooterSection
-            brandName={data.brandName as string}
-            socialLinks={data.socialLinks as { icon: "instagram" | "whatsapp"; url: string }[]}
-          />
-        )
+        return <FooterSection />
 
       default:
         return null
@@ -244,7 +270,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
   }
 
   // Sections that manage their own bg (gallery, closingImage, footer) skip the wrapper
-  const selfStyledTypes = ["gallery", "closingImage", "footer"]
+  const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
   const skipWrapper = selfStyledTypes.includes(type)
 
   return (

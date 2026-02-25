@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, Fragment } from "react"
+import { useIsMuestra } from "@/lib/config-context"
 
 interface RSVPSectionProps {
   title: string
@@ -35,6 +36,7 @@ export default function RSVPSection({
   guestCountOptions,
   fields,
 }: RSVPSectionProps) {
+  const isMuestra = useIsMuestra()
   const [guestCount, setGuestCount] = useState(1)
   const [guests, setGuests] = useState<GuestForm[]>([
     { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "" },
@@ -73,10 +75,12 @@ export default function RSVPSection({
     return (
       <section className="px-6 py-16 text-center">
         <h2 className="mb-4 text-3xl font-semibold tracking-[0.15em] text-inherit/90">
-          {"Gracias!"}
+          {isMuestra ? "Modo muestra" : "Gracias!"}
         </h2>
         <p className="text-sm tracking-wide text-inherit/65">
-          Tu confirmacion ha sido registrada.
+          {isMuestra
+            ? "Confirmacion simulada. En la version real, los datos se registran."
+            : "Tu confirmacion ha sido registrada."}
         </p>
       </section>
     )

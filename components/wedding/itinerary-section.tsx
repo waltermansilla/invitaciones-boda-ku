@@ -1,13 +1,25 @@
 "use client"
 
 import { useEffect, useRef, useCallback } from "react"
-import { Heart, Wine, UtensilsCrossed, Music, Church, Camera, Cake, Car, GlassWater, PartyPopper, Sparkles, Sun, Moon, Clock, MapPin, Gift, Bus } from "lucide-react"
-import config from "@/lib/config"
+import {
+  Heart, Wine, UtensilsCrossed, Music, Church, Camera, Cake, Car,
+  GlassWater, PartyPopper, Sparkles, Sun, Moon, Clock, MapPin, Gift,
+  Bus, BookOpen, Landmark, CupSoda, Flag, CakeSlice, Gem
+} from "lucide-react"
+import { useConfig, useIsMuestra } from "@/lib/config-context"
+
+interface ItineraryButton {
+  text: string
+  url: string
+  variant?: "primary" | "secondary" | "outline-light"
+}
 
 interface ItineraryEvent {
   icon: string
   name: string
   time: string
+  date?: string
+  button?: ItineraryButton
 }
 
 interface ItinerarySectionProps {
@@ -17,6 +29,7 @@ interface ItinerarySectionProps {
 }
 
 const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
+  // --- Originales ---
   heart: Heart,
   wine: Wine,
   utensils: UtensilsCrossed,
@@ -34,14 +47,26 @@ const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWi
   pin: MapPin,
   gift: Gift,
   bus: Bus,
+  // --- Nuevos ---
+  podium: BookOpen,           // Discursante en atril (lectern/book)
+  book: BookOpen,             // Libro
+  salon: Landmark,            // Salon de conferencias
+  civil: Gem,                 // Civil / anillos
+  mate: CupSoda,              // Mate (taza/vaso)
+  fin: Flag,                  // Fin
+  sidra: Wine,                // Sidra (copa similar a vino)
+  mesaDulce: CakeSlice,       // Mesa dulce
+  tortaCasamiento: Cake,      // Torta de casamiento
 }
 
 export default function ItinerarySection({ title, events, sectionBgColor }: ItinerarySectionProps) {
-  // Resolve the actual bg color so icons can cover the timeline line
+  const config = useConfig()
+  const isMuestra = useIsMuestra()
   const theme = config.theme as Record<string, unknown>
   const iconBg = sectionBgColor === "primary"
     ? (theme.primaryColor as string) || "#6B7F5E"
     : (theme.backgroundColor as string) || "#FAF8F5"
+
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
@@ -49,7 +74,6 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
   const activatedRef = useRef<Set<number>>(new Set())
   const rafRef = useRef<number>(0)
 
-  /* Position the track so it starts at center of first icon and ends at center of last */
   const positionTrack = useCallback(() => {
     const container = containerRef.current
     const track = trackRef.current
@@ -118,56 +142,93 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
     }
   }, [handleScroll, positionTrack])
 
+  /* Group events by date to detect day changes */
+  let lastDate: string | undefined
+
   return (
     <section className="px-6 py-20">
       <h2 className="mb-16 text-center text-2xl font-semibold tracking-[0.25em] uppercase text-inherit md:text-3xl">
         {title}
       </h2>
 
+      {/* Outer wrapper to center the timeline block horizontally */}
       <div className="flex justify-center">
-      <div ref={containerRef} className="relative">
-        {/* Timeline track -- positioned dynamically from first to last icon center */}
-        <div
-          ref={trackRef}
-          className="absolute bg-current/10"
-          style={{ left: "28px", width: "2px", transform: "translateX(-50%)" }}
-        >
+        <div ref={containerRef} className="relative inline-block">
+          {/* Timeline track */}
           <div
-            ref={fillRef}
-            className="absolute top-0 bg-primary"
-            style={{ left: "0px", height: "0%", width: "2px", willChange: "height" }}
-          />
-        </div>
+            ref={trackRef}
+            className="absolute bg-current/10"
+            style={{ left: "28px", width: "2px", transform: "translateX(-50%)" }}
+          >
+            <div
+              ref={fillRef}
+              className="absolute top-0 bg-primary"
+              style={{ left: "0px", height: "0%", width: "2px", willChange: "height" }}
+            />
+          </div>
 
-        {/* Events */}
-        <div className="flex flex-col gap-24">
-          {events.map((event, index) => {
-            const Icon = iconMap[event.icon] || Heart
-            return (
-              <div key={index} className="relative flex items-start gap-6">
-                {/* Icon circle on LEFT, sits on the timeline */}
-                <div
-                  ref={(el) => { iconRefs.current[index] = el }}
-                  className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-current/15 text-inherit/30 transition-colors duration-500"
-                  style={{ backgroundColor: iconBg }}
-                >
-                  <Icon className="h-6 w-6" strokeWidth={1.3} />
-                </div>
+          {/* Events */}
+          <div className="flex flex-col gap-24">
+            {events.map((event, index) => {
+              const Icon = iconMap[event.icon] || Heart
+              const showDateSeparator = event.date && event.date !== lastDate
+              if (event.date) lastDate = event.date
 
-                {/* Details on RIGHT */}
-                <div className="flex flex-col justify-center pt-2">
-                  <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-inherit md:text-lg">
-                    {event.name}
-                  </h3>
-                  <p className="mt-1 text-sm font-light tracking-wide text-inherit/50 md:text-base">
-                    {event.time}
-                  </p>
+              return (
+                <div key={index}>
+                  {/* Day separator -- only when the date changes */}
+                  {showDateSeparator && (
+                    <div className="mb-10 flex items-center justify-center gap-3 pl-[56px]">
+                      <div className="h-px w-8 bg-current/15" />
+                      <span className="whitespace-nowrap text-[10px] font-medium tracking-[0.2em] uppercase text-inherit/40">
+                        {event.date}
+                      </span>
+                      <div className="h-px w-8 bg-current/15" />
+                    </div>
+                  )}
+
+                  <div className="relative flex items-start gap-6">
+                    {/* Icon circle */}
+                    <div
+                      ref={(el) => { iconRefs.current[index] = el }}
+                      className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-current/15 text-inherit/30 transition-colors duration-500"
+                      style={{ backgroundColor: iconBg }}
+                    >
+                      <Icon className="h-6 w-6" strokeWidth={1.3} />
+                    </div>
+
+                    {/* Details */}
+                    <div className="flex flex-col justify-center pt-2">
+                      <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-inherit md:text-lg">
+                        {event.name}
+                      </h3>
+                      <p className="mt-1 text-sm font-light tracking-wide text-inherit/50 md:text-base">
+                        {event.time}
+                      </p>
+
+                      {/* Optional button */}
+                      {event.button && (
+                        <a
+                          href={isMuestra ? "#" : event.button.url}
+                          target={isMuestra ? undefined : "_blank"}
+                          rel={isMuestra ? undefined : "noopener noreferrer"}
+                          onClick={isMuestra ? (e: React.MouseEvent) => { e.preventDefault(); alert("Este enlace esta deshabilitado en la version de muestra.") } : undefined}
+                          className={`mt-2 inline-flex min-h-[32px] w-fit items-center justify-center rounded-sm px-3 py-1 text-[9px] font-medium tracking-[0.15em] uppercase transition-all duration-200 ${
+                            event.button.variant === "primary"
+                              ? "bg-primary text-primary-foreground hover:opacity-90"
+                              : "border border-current/30 text-inherit hover:bg-current/5"
+                          }`}
+                        >
+                          {event.button.text}
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
-      </div>
       </div>
     </section>
   )

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { HelpCircle, Copy, Check } from "lucide-react"
 import { useModal } from "./modal-provider"
+import { useIsMuestra } from "@/lib/config-context"
 
 function CopyBtn({ value }: { value: string }) {
   const [copied, setCopied] = useState(false)
@@ -39,8 +40,13 @@ interface GiftCardSectionProps {
 
 export default function GiftCardSection({ title, description, button, modal }: GiftCardSectionProps) {
   const { openModal } = useModal()
+  const isMuestra = useIsMuestra()
 
   const handleOpen = () => {
+    const maskedData = isMuestra
+      ? modal.transferData.map((item) => ({ ...item, value: "XXXX-XXXX-XXXX" }))
+      : modal.transferData
+
     openModal(
       <>
         <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
@@ -51,14 +57,14 @@ export default function GiftCardSection({ title, description, button, modal }: G
             Valor sugerido
           </p>
           <p className="mt-1 text-2xl font-light text-primary-foreground">
-            {modal.suggestedValue}
+            {isMuestra ? "$XX.XXX" : modal.suggestedValue}
           </p>
         </div>
         <p className="mb-6 text-sm font-light leading-relaxed text-primary-foreground/80">
           {modal.description}
         </p>
         <div className="space-y-3">
-          {modal.transferData.map((item) => (
+          {maskedData.map((item) => (
             <div key={item.label} className="flex items-center justify-between rounded-sm border border-primary-foreground/15 px-4 py-3">
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-primary-foreground/50">
@@ -68,7 +74,7 @@ export default function GiftCardSection({ title, description, button, modal }: G
                   {item.value}
                 </p>
               </div>
-              <CopyBtn value={item.value} />
+              {!isMuestra && <CopyBtn value={item.value} />}
             </div>
           ))}
         </div>
