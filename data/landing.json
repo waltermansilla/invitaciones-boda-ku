@@ -1,6 +1,5 @@
 {
     "_comment": "Toda la landing se configura desde este archivo. Colores, textos, precios, FAQ, botones, etc.",
-
     "theme": {
         "background": "#FAF8F5",
         "foreground": "#2A2A2A",
@@ -12,12 +11,10 @@
         "footerBg": "#1A1A1A",
         "footerText": "#FFFFFF"
     },
-
     "whatsapp": {
         "number": "3456023759",
         "defaultMessage": "Hola! Me interesa una invitación digital. Quiero saber más."
     },
-
     "ctaButtons": {
         "heroPrimary": {
             "text": "Quiero mi invitación",
@@ -50,7 +47,6 @@
             "message": "Hola! Quiero crear mi invitación digital."
         }
     },
-
     "sections": {
         "hero": {
             "enabled": true,
@@ -60,7 +56,6 @@
             },
             "subtitle": "Invitaciones digitales elegantes, personalizadas y listas para compartir. Bodas, XV y más."
         },
-
         "muestras": {
             "enabled": true,
             "title": "Muestras disponibles",
@@ -82,7 +77,6 @@
                 }
             ]
         },
-
         "servicio": {
             "enabled": true,
             "title": "Experiencia Invitación Digital",
@@ -131,7 +125,6 @@
                 ]
             }
         },
-
         "proceso": {
             "enabled": true,
             "title": "Cómo funciona",
@@ -159,7 +152,6 @@
                 "Soporte post-entrega"
             ]
         },
-
         "faq": {
             "enabled": true,
             "title": "Preguntas frecuentes",
@@ -186,7 +178,7 @@
                 },
                 {
                     "question": "Como es la forma de pago?",
-                    "answer": "Trabajamos con 50% de sena al inicio para arrancar con el diseno, y el otro 50% al momento de la entrega del link terminado."
+                    "answer": "Trabajamos con 50% de seña al inicio para arrancar con el diseño, y el otro 50% al momento de la entrega del link terminado."
                 },
                 {
                     "question": "Hacen invitaciones para otros eventos?",
@@ -194,7 +186,6 @@
                 }
             ]
         },
-
         "ctaFinal": {
             "enabled": true,
             "title": "¿Listo para crear tu invitación?",
