@@ -114,8 +114,8 @@ export default function HoneymoonSection({ icon, title, description, button, mod
         </p>
         <button
           onClick={handleOpen}
-          className="inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-200 hover:opacity-70"
-          style={{ borderColor: "currentColor" }}
+          className="inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:opacity-70"
+          style={{ borderColor: "currentColor", borderOpacity: 0.4 }}
         >
           {button.text}
         </button>

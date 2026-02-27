@@ -14,7 +14,7 @@ export default function QuoteSection({ text, author, decorativeLines }: QuoteSec
                 {text}
             </p>
             {author && (
-                <p className="mt-4 text-sm italic opacity-70">
+                <p className="mt-4 text-sm italic text-inherit/70">
                     {"- "}
                     {author}
                 </p>
