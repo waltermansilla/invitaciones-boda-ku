@@ -66,6 +66,7 @@
         "coupleImage": "/images/xv/valentina/quince-hero.jpg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
+        "countdownPrefix": "Faltan",
         "eventDate": "2026-09-19T21:00:00",
         "countdownLabels": {
             "days": "Dias",
@@ -90,7 +91,8 @@
             "blocks": ["text", "author"],
             "data": {
                 "text": "Hoy comienza un nuevo capitulo en mi vida y quiero vivirlo con las personas que mas quiero",
-                "author": ""
+                "author": "",
+                "decorativeLines": true
             }
         },
 
@@ -370,8 +372,8 @@
             "bgColor": "primary",
             "blocks": ["icon", "title", "description", "button", "modal"],
             "data": {
-                "icon": "moon",
-                "title": "REGALOS",
+                "icon": "gift",
+                "title": "Regalos",
                 "description": "Tu presencia es el mejor regalo. Pero si queres tener un detalle, aca te dejo mis datos :)",
                 "button": {
                     "text": "Ver",
@@ -379,10 +381,9 @@
                     "variant": "secondary"
                 },
                 "modal": {
-                    "title": "Datos para mi viaje",
-                    "suggestedValue": "",
-                    "description": "Muchas gracias!.",
-                    "transferData": [
+                    "title": "Datos para regalos",
+                    "description": "Muchas gracias!",
+                    "bankData": [
                         { "label": "Alias", "value": "VALEN.REGALO.MP" },
                         { "label": "CBU", "value": "56478351476478216478" }
                     ]
@@ -418,6 +419,10 @@
                     ],
                     "songRequest": "Que cancion te gustaria que suene?",
                     "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "3456023759",
+                    "messageTemplate": "Hola! Confirmo asistencia para los 15 de Valentina:\n{resumen}\nGracias!"
                 }
             }
         },
@@ -431,7 +436,8 @@
             "data": {
                 "title": "Gracias por estar",
                 "text": "A cada uno de ustedes: gracias por ser parte de mi vida. No seria quien soy sin las personas que me rodean. Esta noche es para celebrar juntos, reir, bailar y crear recuerdos que duren para siempre. Los quiero.",
-                "signature": "Valu"
+                "signature": "Valu",
+                "decorativeLines": true
             }
         },
 

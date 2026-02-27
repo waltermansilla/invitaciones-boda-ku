@@ -19,6 +19,10 @@ interface RSVPSectionProps {
     songRequest: string
     submitButton: string
   }
+  whatsapp?: {
+    number: string
+    messageTemplate: string
+  }
 }
 
 interface GuestForm {
@@ -29,12 +33,34 @@ interface GuestForm {
   songRequest: string
 }
 
+/**
+ * Construye el mensaje de WhatsApp reemplazando placeholders del template.
+ *
+ * Placeholders disponibles en messageTemplate:
+ *   {resumen}  -> Bloque completo con los datos de cada invitado
+ *
+ * Ejemplo de template en JSON:
+ *   "Hola! Confirmo asistencia:\n{resumen}\nGracias!"
+ */
+function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
+  const lines = guests.map((g, i) => {
+    const prefix = guests.length > 1 ? `Invitado ${i + 1}: ` : ""
+    const attendance = g.attendance === "yes" ? "Confirma asistencia" : "No asiste"
+    let line = `${prefix}${g.firstName} ${g.lastName} - ${attendance}`
+    if (g.dietary && g.dietary !== "Ninguno") line += ` | Alimentacion: ${g.dietary}`
+    if (g.songRequest) line += ` | Cancion: ${g.songRequest}`
+    return line
+  })
+  return template.replace("{resumen}", lines.join("\n"))
+}
+
 export default function RSVPSection({
   title,
   deadline,
   guestCountLabel,
   guestCountOptions,
   fields,
+  whatsapp,
 }: RSVPSectionProps) {
   const isMuestra = useIsMuestra()
   const [guestCount, setGuestCount] = useState(1)
@@ -68,7 +94,22 @@ export default function RSVPSection({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
+
+    if (isMuestra) {
+      setSubmitted(true)
+      return
+    }
+
+    // Build WhatsApp message and redirect
+    if (whatsapp?.number && whatsapp?.messageTemplate) {
+      const message = buildWhatsAppMessage(whatsapp.messageTemplate, guests)
+      const url = `https://wa.me/${whatsapp.number}?text=${encodeURIComponent(message)}`
+      window.open(url, "_blank")
+      setSubmitted(true)
+    } else {
+      // Fallback if no whatsapp config
+      setSubmitted(true)
+    }
   }
 
   if (submitted) {
@@ -79,8 +120,8 @@ export default function RSVPSection({
         </h2>
         <p className="text-sm tracking-wide text-inherit/65">
           {isMuestra
-            ? "Confirmacion simulada. En la version real, los datos se registran."
-            : "Tu confirmacion ha sido registrada."}
+            ? "Confirmacion simulada. En la version real, los datos se envian por WhatsApp."
+            : "Tu confirmacion ha sido enviada por WhatsApp."}
         </p>
       </section>
     )

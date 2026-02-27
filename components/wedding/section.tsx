@@ -22,6 +22,7 @@ import PresentationSection from "./presentation-section"
 import ParentsSection from "./parents-section"
 import PlaylistSection from "./playlist-section"
 import SpecialMessageSection from "./special-message-section"
+import ConfirmarWhatsappSection from "./confirmar-whatsapp-section"
 import { useConfig } from "@/lib/config-context"
 
 export interface SectionConfig {
@@ -40,9 +41,10 @@ interface SectionProps {
     brideName: string
     separator: string
   }
+  prevBgColor?: string
 }
 
-export default function Section({ section, coupleNames }: SectionProps) {
+export default function Section({ section, coupleNames, prevBgColor }: SectionProps) {
   const config = useConfig()
   const { type, id, data, bgColor, textColor } = section
 
@@ -59,6 +61,13 @@ export default function Section({ section, coupleNames }: SectionProps) {
   }
   const colors = { bg, resolvedTextColor }
 
+  // Show a subtle divider line when this section has the same bgColor as the previous one
+  const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
+  const skipWrapper = selfStyledTypes.includes(type)
+  const effectiveBg = skipWrapper ? null : (bgColor || "background")
+  const prevEffective = prevBgColor || null
+  const showDivider = !skipWrapper && effectiveBg && prevEffective && effectiveBg === prevEffective
+
   const renderContent = () => {
     switch (type) {
       case "quote":
@@ -66,6 +75,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
           <QuoteSection
             text={data.text as string}
             author={data.author as string}
+            decorativeLines={data.decorativeLines as boolean | undefined}
           />
         )
 
@@ -136,10 +146,11 @@ export default function Section({ section, coupleNames }: SectionProps) {
       case "honeymoon":
         return (
           <HoneymoonSection
+            icon={data.icon as string | undefined}
             title={data.title as string}
             description={data.description as string}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
-            modal={data.modal as { title: string; description: string; bankData: { label: string; value: string }[]; thankYouText: string }}
+            modal={data.modal as { title: string; description: string; bankData: { label: string; value: string }[]; thankYouText?: string }}
           />
         )
 
@@ -186,6 +197,17 @@ export default function Section({ section, coupleNames }: SectionProps) {
                 submitButton: string
               }
             }
+            whatsapp={data.whatsapp as { number: string; messageTemplate: string } | undefined}
+          />
+        )
+
+      case "confirmarWhatsapp":
+        return (
+          <ConfirmarWhatsappSection
+            title={data.title as string}
+            buttonText={data.buttonText as string}
+            whatsappNumber={data.whatsappNumber as string}
+            message={data.message as string}
           />
         )
 
@@ -249,6 +271,7 @@ export default function Section({ section, coupleNames }: SectionProps) {
             title={data.title as string}
             text={data.text as string}
             signature={data.signature as string | undefined}
+            decorativeLines={data.decorativeLines as boolean | undefined}
           />
         )
 
@@ -269,12 +292,14 @@ export default function Section({ section, coupleNames }: SectionProps) {
     }
   }
 
-  // Sections that manage their own bg (gallery, closingImage, footer) skip the wrapper
-  const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
-  const skipWrapper = selfStyledTypes.includes(type)
-
   return (
     <AnimatedSection id={id}>
+      {/* Subtle divider between consecutive sections with same background color */}
+      {showDivider && (
+        <div className={colors.bg}>
+          <div className="mx-auto w-16 border-t" style={{ borderColor: colors.resolvedTextColor, opacity: 0.12 }} />
+        </div>
+      )}
       {skipWrapper ? (
         renderContent()
       ) : (

@@ -198,7 +198,8 @@ Listo. No hay que tocar ningun otro archivo.
 | `truths` | Juego verdadero/falso | |
 | `ourStory` | Momentos con fotos | En XV: "Mi historia" (crecimiento) |
 | `giftCard` | Tarjeta de regalo con datos bancarios | |
-| `honeymoon` | Alcancia con datos bancarios | En XV: "Mi viaje sonado" |
+| `honeymoon` | Alcancia con datos bancarios | En XV: "Regalos" (no viaje) |
+| `confirmarWhatsapp` | Boton WhatsApp directo (Plan Base) | Sin formulario |
 | `playlist` | Link a playlist de Spotify | |
 | `rsvp` | Formulario de confirmacion | |
 | `specialMessage` | Mensaje personal con firma | |
@@ -488,6 +489,93 @@ El boton se crea automaticamente con link a `/m/[tipo]/[slug]`.
 | `truths correctOption` | `"A"` o `"B"` |
 | `socialLinks icon` | `"instagram"`, `"whatsapp"` |
 | `aspectRatio` | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"` |
+| `decorativeLines` | `true` o `false` -- lineas decorativas arriba/abajo en `quote` y `specialMessage` |
+
+### Lineas divisorias entre secciones
+
+Cuando dos secciones seguidas tienen el **mismo color de fondo** (ambas `"background"` o ambas `"primary"`), se muestra automaticamente una linea divisoria sutil entre ellas. No hay que configurar nada -- es automatico. No aparece cuando cambia el color de fondo porque el cambio de color ya separa visualmente.
+
+### Lineas decorativas en frases especiales
+
+En las secciones `quote` y `specialMessage`, podes activar lineas decorativas arriba y abajo del texto:
+
+```json
+"data": {
+  "text": "Mi frase",
+  "decorativeLines": true
+}
+```
+
+Poner `false` o no incluir el campo para desactivarlas.
+
+### Iconos de giftCard (Valor Tarjeta)
+
+Se eligen desde `data.icon` en el JSON:
+
+| Valor | Icono |
+| ----- | ----- |
+| `"gift"` | Caja de regalo (default) |
+| `"creditCard"` | Tarjeta de credito |
+| `"heart"` | Corazon |
+| `"star"` | Estrella |
+| `"sparkles"` | Brillos |
+| `"handHeart"` | Mano con corazon |
+| `"dollar"` | Signo de pesos |
+
+### Iconos de honeymoon (Luna de miel / Regalos)
+
+Se eligen desde `data.icon` en el JSON:
+
+| Valor | Icono |
+| ----- | ----- |
+| `"plane"` | Avion (viaje / luna de miel) |
+| `"gift"` | Caja de regalo (regalos en XV) |
+| `"heart"` | Corazon |
+| `"star"` | Estrella |
+| `"sparkles"` | Brillos |
+| `"moon"` | Luna |
+| `"handHeart"` | Mano con corazon |
+
+**IMPORTANTE**: honeymoon usa `bankData` en el modal (no `transferData`). giftCard usa `transferData`.
+
+### RSVP con WhatsApp
+
+El formulario RSVP ahora envia los datos por WhatsApp al confirmar. Se configura agregando `whatsapp` dentro de `data`:
+
+```json
+"whatsapp": {
+  "number": "3456023759",
+  "messageTemplate": "Hola! Confirmo asistencia para la boda de Anto & Walter:\n{resumen}\nGracias!"
+}
+```
+
+- `number` = numero sin +, sin espacios
+- `messageTemplate` = texto del mensaje. Usar `{resumen}` donde quieras que aparezcan los datos de los invitados
+- El `{resumen}` se reemplaza automaticamente con nombre, apellido, asistencia, dieta y cancion de cada invitado
+- Si hay multiples invitados, aparece cada uno en su linea
+
+### Confirmacion simple por WhatsApp (Plan Base)
+
+Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
+
+```json
+{
+  "type": "confirmarWhatsapp",
+  "id": "confirmar-whatsapp",
+  "bgColor": "primary",
+  "blocks": ["title", "button"],
+  "data": {
+    "title": "Confirmar asistencia",
+    "buttonText": "Confirmar por WhatsApp",
+    "whatsappNumber": "3456023759",
+    "message": "Confirmo mi asistencia a la boda de Anto & Walter"
+  }
+}
+```
+
+- El boton tiene el mismo estilo que "Iniciar Trivia" (rounded-full, elegante)
+- En modo muestra, muestra un alert en vez de abrir WhatsApp
+- Editable al 100% desde JSON: titulo, texto del boton, numero y mensaje
 
 ### Iconos del itinerario
 
@@ -551,14 +639,17 @@ El boton se crea automaticamente con link a `/m/[tipo]/[slug]`.
 - [ ] Google Maps funciona
 - [ ] Datos bancarios correctos
 - [ ] WhatsApp e Instagram del footer son de TU MARCA
+- [ ] RSVP tiene `whatsapp.number` correcto (numero del cliente o tuyo)
+- [ ] RSVP `messageTemplate` menciona los nombres correctos
 
 ### Versiones
 - [ ] Probar version real: `/boda/slug`
 - [ ] Probar version muestra: `/m/boda/slug`
 - [ ] Probar en celular real
-- [ ] Modales abren y cierran
-- [ ] RSVP funciona (real) / muestra simulado (muestra)
+- [ ] Modales abren y cierran (giftCard, honeymoon, dressCode, trivia)
+- [ ] RSVP envia WhatsApp con datos correctos (real) / muestra simulado (muestra)
 - [ ] Datos bancarios reales (real) / enmascarados (muestra)
+- [ ] Iconos de giftCard y honeymoon se ven correctamente
 
 ### Landing
 - [ ] Muestras aparecen correctamente
@@ -581,7 +672,7 @@ El boton se crea automaticamente con link a `/m/[tipo]/[slug]`.
 
 **Nunca tocar:**
 - Nombres de propiedades (`type`, `id`, `blocks`, `data`, etc.)
-- Valores de `type` -- usar solo los listados en la seccion 5
+- Valores de `type` -- usar solo los listados en la seccion 5 mas `confirmarWhatsapp`
 - Estructura de arrays -- no convertir `[]` en `{}` ni en string
 - Los templates (`_TEMPLATE_BODA.json`, `_TEMPLATE_XV.json`) -- son de referencia
 

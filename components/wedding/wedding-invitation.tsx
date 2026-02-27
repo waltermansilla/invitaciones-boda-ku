@@ -51,13 +51,19 @@ export default function WeddingInvitation() {
                 />
 
                 {/* Dynamic sections: order controlled by array position in JSON */}
-                {sections.map((section) => (
-                    <Section
-                        key={section.id}
-                        section={section}
-                        coupleNames={meta.coupleNames}
-                    />
-                ))}
+                {sections.map((section, index) => {
+                    const prev = sections[index - 1]
+                    const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
+                    const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
+                    return (
+                        <Section
+                            key={section.id}
+                            section={section}
+                            coupleNames={meta.coupleNames}
+                            prevBgColor={prevBg}
+                        />
+                    )
+                })}
 
                 {music.enabled && (
                     <MusicPlayer src={music.src} autoplay={music.autoplay} />

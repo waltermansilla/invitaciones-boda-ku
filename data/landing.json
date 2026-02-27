@@ -185,6 +185,10 @@
                     "answer": "Sí, todas las invitaciones incluyen musica de fondo. Podés elegirnos una cancion o dejarnos sugerirte opciones."
                 },
                 {
+                    "question": "Como es la forma de pago?",
+                    "answer": "Trabajamos con 50% de sena al inicio para arrancar con el diseno, y el otro 50% al momento de la entrega del link terminado."
+                },
+                {
                     "question": "Hacen invitaciones para otros eventos?",
                     "answer": "Por ahora nos especializamos en bodas y XV, pero podemos evaluar otros eventos. Escribinos y lo charlamos."
                 }

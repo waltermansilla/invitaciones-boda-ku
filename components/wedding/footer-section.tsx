@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 /* ───────────────────────────────────────────────
  * DATOS DE MARCA - Editar aca para cambiar en TODAS las invitaciones y la landing.
  *
@@ -101,7 +99,7 @@ export default function FooterSection() {
                     );
                 })}
             </div>
-            <Link
+            <a
                 href="/"
                 className={`${BRAND_FONT} ${BRAND_SIZE} inline-flex items-center gap-2 italic tracking-[0.1em] text-primary-foreground/40 transition-opacity hover:text-primary-foreground/60`}
             >
@@ -113,7 +111,7 @@ export default function FooterSection() {
                     />
                 )}
                 {BRAND_NAME}
-            </Link>
+            </a>
         </footer>
     );
 }

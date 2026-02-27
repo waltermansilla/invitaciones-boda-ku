@@ -1,7 +1,7 @@
 {
     "// ==========================================": "",
     "// TEMPLATE BODA - TODAS LAS SECCIONES      ": "",
-    "// ==========================================": "",
+    "// ==========================================.": "",
     "//": "",
     "// NO se usa en la app. Solo de referencia.",
     "// Para crear una nueva boda: copiar a data/clientes/boda/[slug].json",
@@ -63,14 +63,15 @@
     "sections": [
 
         {
-            "_comment": "QUOTE: Frase de bienvenida. Ideal para abrir la invitacion.",
+            "_comment": "QUOTE: Frase de bienvenida. decorativeLines: true/false para lineas arriba y abajo.",
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
                 "text": "El amor no se mira, se siente, y aun mas cuando ella esta junto a mi.",
-                "author": "Julio Cortazar"
+                "author": "Julio Cortazar",
+                "decorativeLines": true
             }
         },
 
@@ -116,7 +117,7 @@
         },
 
         {
-            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. Duplicar con distinto id para varias ubicaciones (civil, iglesia, fiesta).",
+            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. Duplicar con distinto id para varias ubicaciones.",
             "type": "locationInfo",
             "id": "location-civil",
             "bgColor": "background",
@@ -165,7 +166,7 @@
         },
 
         {
-            "_comment": "ITINERARY: Linea de tiempo con iconos, fechas opcionales y botones opcionales.",
+            "_comment": "ITINERARY: Linea de tiempo con iconos, fechas opcionales y botones opcionales. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
@@ -184,10 +185,8 @@
                             "variant": "secondary"
                         }
                     },
-                    { "icon": "mate", "name": "Brunch", "time": "12:00 hs" },
                     { "icon": "church", "name": "Ceremonia", "time": "18:00 hs", "date": "Sabado 17/02" },
                     { "icon": "camera", "name": "Fotos", "time": "19:00 hs" },
-                    { "icon": "sparkles", "name": "Recepcion", "time": "20:30 hs" },
                     { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
                     { "icon": "tortaCasamiento", "name": "Torta", "time": "23:00 hs" },
                     { "icon": "music", "name": "Fiesta", "time": "00:00 hs" },
@@ -205,11 +204,7 @@
             "data": {
                 "title": "Vestimenta",
                 "subtitle": "Elegante Sport",
-                "button": {
-                    "text": "Ver consejos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
+                "button": { "text": "Ver consejos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Consejos de vestimenta",
                     "sections": [
@@ -230,11 +225,7 @@
             "data": {
                 "title": "Subi tus fotos",
                 "description": "Comparti los momentos de la fiesta!",
-                "button": {
-                    "text": "Ir al album",
-                    "url": "https://photos.google.com",
-                    "variant": "background"
-                }
+                "button": { "text": "Ir al album", "url": "https://photos.google.com", "variant": "background" }
             }
         },
 
@@ -260,7 +251,7 @@
         },
 
         {
-            "_comment": "GIFT CARD: Tarjeta de regalo con datos de transferencia en modal.",
+            "_comment": "GIFT CARD: Tarjeta de regalo con modal. ICONOS: gift (caja regalo), creditCard (tarjeta), heart (corazon), star (estrella), sparkles (brillos), handHeart (mano corazon), dollar (signo pesos). suggestedValue = valor sugerido (dejar '' si no queres mostrar).",
             "type": "giftCard",
             "id": "gift-card",
             "bgColor": "primary",
@@ -269,11 +260,7 @@
                 "icon": "gift",
                 "title": "Valor Tarjeta",
                 "description": "Si queres hacernos un regalo, podes contribuir con un valor para nuestra nueva vida juntos.",
-                "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
+                "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos de transferencia",
                     "suggestedValue": "$20.000",
@@ -289,7 +276,7 @@
         },
 
         {
-            "_comment": "HONEYMOON: Alcancia para la luna de miel. Misma estructura que giftCard.",
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "honeymoon",
             "bgColor": "primary",
@@ -298,21 +285,17 @@
                 "icon": "plane",
                 "title": "Luna de miel",
                 "description": "Si queres ayudarnos con nuestra luna de miel, te dejamos los datos.",
-                "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
+                "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos para la luna de miel",
-                    "suggestedValue": "",
                     "description": "Cualquier aporte nos ayuda a cumplir nuestro sueno.",
-                    "transferData": [
+                    "bankData": [
                         { "label": "Alias", "value": "LUNA.DE.MIEL" },
                         { "label": "CBU", "value": "0000000000000000000000" },
                         { "label": "Titular", "value": "Nombre Completo" },
                         { "label": "Banco", "value": "Nombre del Banco" }
-                    ]
+                    ],
+                    "thankYouText": "Gracias por ayudarnos a cumplir nuestro sueno!"
                 }
             }
         },
@@ -323,13 +306,11 @@
             "id": "emotional-quote",
             "bgColor": "primary",
             "blocks": ["text"],
-            "data": {
-                "text": "Lo mejor de la vida es compartirla con alguien especial."
-            }
+            "data": { "text": "Lo mejor de la vida es compartirla con alguien especial." }
         },
 
         {
-            "_comment": "TRIVIA: Juego de preguntas con opciones multiples.",
+            "_comment": "TRIVIA: Juego de preguntas con opciones multiples en modal.",
             "type": "trivia",
             "id": "trivia-game",
             "blocks": ["title", "subtitle", "button", "modal"],
@@ -353,23 +334,19 @@
         },
 
         {
-            "_comment": "PLAYLIST: Link a playlist de Spotify de la fiesta.",
+            "_comment": "PLAYLIST: Link a playlist de Spotify.",
             "type": "playlist",
             "id": "playlist-suggestion",
             "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Arma la playlist",
                 "description": "Agrega tus canciones favoritas a la playlist de la fiesta.",
-                "button": {
-                    "text": "Ir a la playlist",
-                    "url": "https://open.spotify.com",
-                    "variant": "primary"
-                }
+                "button": { "text": "Ir a la playlist", "url": "https://open.spotify.com", "variant": "primary" }
             }
         },
 
         {
-            "_comment": "RSVP: Formulario de confirmacion de asistencia.",
+            "_comment": "RSVP: Formulario de confirmacion. Al confirmar, envia datos por WhatsApp. messageTemplate usa {resumen} como placeholder para los datos de los invitados.",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
@@ -389,19 +366,38 @@
                     "dietaryOptions": ["Ninguno", "Vegetariano", "Vegano", "Celiaco", "Otro"],
                     "songRequest": "Que cancion no puede faltar?",
                     "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "NUMERO_WHATSAPP_SIN_MAS",
+                    "messageTemplate": "Hola! Confirmo asistencia para la boda de NOMBRE & NOMBRE:\n{resumen}\nGracias!"
                 }
             }
         },
 
         {
-            "_comment": "SPECIAL MESSAGE: Mensaje personal de los novios.",
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "primary",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "buttonText": "Confirmar por WhatsApp",
+                "whatsappNumber": "NUMERO_WHATSAPP_SIN_MAS",
+                "message": "Confirmo mi asistencia a la boda de NOMBRE & NOMBRE"
+            }
+        },
+
+        {
+            "_comment": "SPECIAL MESSAGE: Mensaje personal de los novios. decorativeLines: true/false para lineas arriba y abajo.",
             "type": "specialMessage",
             "id": "special-message",
             "blocks": ["title", "text"],
             "data": {
                 "title": "Gracias por acompanarnos",
                 "text": "Mensaje personal de los novios para los invitados.",
-                "signature": "Nombre & Nombre"
+                "signature": "Nombre & Nombre",
+                "decorativeLines": true
             }
         },
 
@@ -410,10 +406,7 @@
             "type": "closingImage",
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
-            "data": {
-                "aspectRatio": "3/4",
-                "image": "/clientes/boda/[slug]/cierre.jpg"
-            }
+            "data": { "aspectRatio": "3/4", "image": "/clientes/boda/[slug]/cierre.jpg" }
         },
 
         {

@@ -90,7 +90,8 @@
             "blocks": ["text", "author"],
             "data": {
                 "text": "¡Al fin! Este momento especial está llegando, y queremos compartirlo con vos",
-                "author": ""
+                "author": "",
+                "decorativeLines": true
             }
         },
 
@@ -410,6 +411,10 @@
                     ],
                     "songRequest": "Que cancion no puede faltar?",
                     "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "3456023759",
+                    "messageTemplate": "Hola! Confirmo asistencia para la boda de Anto & Walter:\n{resumen}\nGracias!"
                 }
             }
         },

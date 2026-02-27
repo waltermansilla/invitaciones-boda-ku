@@ -1,7 +1,7 @@
 {
     "// ==========================================": "",
     "// TEMPLATE XV - TODAS LAS SECCIONES         ": "",
-    "// ==========================================": "",
+    "// ==========================================.": "",
     "//": "",
     "// NO se usa en la app. Solo de referencia.",
     "// Para crear un nuevo XV: copiar a data/clientes/xv/[slug].json",
@@ -64,26 +64,27 @@
     "sections": [
 
         {
-            "_comment": "QUOTE: Frase de bienvenida.",
+            "_comment": "QUOTE: Frase de bienvenida. decorativeLines: true/false para lineas arriba y abajo.",
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
                 "text": "La vida es una fiesta, y hoy quiero celebrarla con vos.",
-                "author": ""
+                "author": "",
+                "decorativeLines": true
             }
         },
 
         {
-            "_comment": "PRESENTATION: Foto + nombre + descripcion de la quinceanera. EXCLUSIVO DE XV.",
+            "_comment": "PRESENTATION: Foto + nombre + descripcion. EXCLUSIVO DE XV.",
             "type": "presentation",
             "id": "presentation",
             "blocks": ["image", "name", "description"],
             "data": {
                 "image": "/clientes/xv/[slug]/portrait.jpg",
-                "name": "Valentina",
-                "description": "Texto de presentacion personal de la quinceanera.",
+                "name": "Nombre",
+                "description": "Texto de presentacion personal.",
                 "aspectRatio": "3/4"
             }
         },
@@ -105,7 +106,7 @@
         },
 
         {
-            "_comment": "OUR STORY: Momentos de crecimiento de la quinceanera con fotos. Adaptado como 'Mi historia'.",
+            "_comment": "OUR STORY: Momentos de crecimiento. Adaptado como 'Mi historia'.",
             "type": "ourStory",
             "id": "my-story",
             "bgColor": "background",
@@ -114,21 +115,9 @@
                 "aspectRatio": "3/4",
                 "title": "Mi historia",
                 "moments": [
-                    {
-                        "image": "/clientes/xv/[slug]/momento-1.jpg",
-                        "title": "Mis primeros pasos",
-                        "text": "Descripcion del momento."
-                    },
-                    {
-                        "image": "/clientes/xv/[slug]/momento-2.jpg",
-                        "title": "Mi primer dia de cole",
-                        "text": "Descripcion del momento."
-                    },
-                    {
-                        "image": "/clientes/xv/[slug]/momento-3.jpg",
-                        "title": "Hoy",
-                        "text": "Descripcion del momento."
-                    }
+                    { "image": "/clientes/xv/[slug]/momento-1.jpg", "title": "Mis primeros pasos", "text": "Descripcion." },
+                    { "image": "/clientes/xv/[slug]/momento-2.jpg", "title": "Creciendo", "text": "Descripcion." },
+                    { "image": "/clientes/xv/[slug]/momento-3.jpg", "title": "Hoy, mis 15", "text": "Descripcion." }
                 ]
             }
         },
@@ -139,10 +128,7 @@
             "id": "date-info",
             "bgColor": "background",
             "blocks": ["title", "value"],
-            "data": {
-                "title": "Cuando?",
-                "value": "17 de Febrero 2027"
-            }
+            "data": { "title": "Cuando?", "value": "17 de Febrero 2027" }
         },
 
         {
@@ -154,11 +140,7 @@
             "data": {
                 "title": "Salon de fiesta",
                 "address": "Direccion completa del salon",
-                "button": {
-                    "text": "Como llegar",
-                    "url": "https://maps.google.com",
-                    "variant": "primary"
-                }
+                "button": { "text": "Como llegar", "url": "https://maps.google.com", "variant": "primary" }
             }
         },
 
@@ -178,35 +160,7 @@
         },
 
         {
-            "_comment": "MI HISTORIA: Timeline visual con fotos de la quinceanera creciendo. Adaptar cantidad y textos.",
-            "type": "ourStory",
-            "id": "my-story",
-            "blocks": ["title", "moments"],
-            "data": {
-                "title": "Mi Historia",
-                "aspectRatio": "3/4",
-                "moments": [
-                    {
-                        "image": "/clientes/xv/SLUG/story-1.jpg",
-                        "title": "Mis primeros pasos",
-                        "text": "REEMPLAZAR CON TEXTO PERSONAL SOBRE SU INFANCIA."
-                    },
-                    {
-                        "image": "/clientes/xv/SLUG/story-2.jpg",
-                        "title": "Creciendo",
-                        "text": "REEMPLAZAR CON TEXTO SOBRE SU CRECIMIENTO."
-                    },
-                    {
-                        "image": "/clientes/xv/SLUG/story-3.jpg",
-                        "title": "Hoy, mis 15",
-                        "text": "REEMPLAZAR CON TEXTO SOBRE EL PRESENTE."
-                    }
-                ]
-            }
-        },
-
-        {
-            "_comment": "ITINERARY: Linea de tiempo con iconos.",
+            "_comment": "ITINERARY: Linea de tiempo. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
@@ -214,21 +168,10 @@
             "data": {
                 "title": "Itinerario",
                 "events": [
-                    {
-                        "icon": "sparkles",
-                        "name": "Recepcion",
-                        "time": "20:00 hs",
-                        "date": "Sabado 17/02",
-                        "button": {
-                            "text": "Como llegar",
-                            "url": "https://maps.google.com",
-                            "variant": "secondary"
-                        }
-                    },
+                    { "icon": "sparkles", "name": "Recepcion", "time": "20:00 hs" },
                     { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
-                    { "icon": "podium", "name": "Ceremonia del vals", "time": "22:00 hs" },
-                    { "icon": "mesaDulce", "name": "Mesa dulce", "time": "23:00 hs" },
-                    { "icon": "cake", "name": "Torta", "time": "23:30 hs" },
+                    { "icon": "heart", "name": "Vals con papa", "time": "22:00 hs" },
+                    { "icon": "cake", "name": "Torta", "time": "23:00 hs" },
                     { "icon": "music", "name": "Fiesta", "time": "00:00 hs" },
                     { "icon": "fin", "name": "Fin de fiesta", "time": "05:00 hs" }
                 ]
@@ -236,7 +179,7 @@
         },
 
         {
-            "_comment": "DRESS CODE: Vestimenta con modal de consejos.",
+            "_comment": "DRESS CODE: Vestimenta con modal.",
             "type": "dressCode",
             "id": "dress-code",
             "bgColor": "background",
@@ -244,24 +187,20 @@
             "data": {
                 "title": "Vestimenta",
                 "subtitle": "Elegante",
-                "button": {
-                    "text": "Ver consejos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
+                "button": { "text": "Ver consejos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Consejos de vestimenta",
                     "sections": [
-                        { "heading": "Chicas", "text": "Descripcion para chicas." },
-                        { "heading": "Chicos", "text": "Descripcion para chicos." },
-                        { "heading": "General", "text": "Descripcion general." }
+                        { "heading": "Chicas", "text": "Descripcion." },
+                        { "heading": "Chicos", "text": "Descripcion." },
+                        { "heading": "General", "text": "Descripcion." }
                     ]
                 }
             }
         },
 
         {
-            "_comment": "PHOTOS: Invitar a subir fotos al album compartido.",
+            "_comment": "PHOTOS: Invitar a subir fotos.",
             "type": "photos",
             "id": "shared-photos",
             "bgColor": "primary",
@@ -269,16 +208,12 @@
             "data": {
                 "title": "Subi tus fotos",
                 "description": "Comparti los momentos de la fiesta!",
-                "button": {
-                    "text": "Ir al album",
-                    "url": "https://photos.google.com",
-                    "variant": "background"
-                }
+                "button": { "text": "Ir al album", "url": "https://photos.google.com", "variant": "background" }
             }
         },
 
         {
-            "_comment": "TRUTHS: Juego A o B sobre la quinceanera.",
+            "_comment": "TRUTHS: Juego A o B.",
             "type": "truths",
             "id": "truths-game",
             "bgColor": "primary",
@@ -287,19 +222,13 @@
                 "title": "Cuanto me conoces?",
                 "finishText": "Me conoces mejor de lo que pensaba!",
                 "questions": [
-                    {
-                        "question": "Que prefiero?",
-                        "optionA": "Playa",
-                        "optionB": "Montana",
-                        "correctOption": "A",
-                        "revealText": "Soy de playa total!"
-                    }
+                    { "question": "Que prefiero?", "optionA": "Playa", "optionB": "Montana", "correctOption": "A", "revealText": "Soy de playa total!" }
                 ]
             }
         },
 
         {
-            "_comment": "GIFT CARD: Tarjeta de regalo con datos de transferencia en modal.",
+            "_comment": "GIFT CARD: Tarjeta de regalo con modal. ICONOS: gift (caja regalo), creditCard (tarjeta), heart (corazon), star (estrella), sparkles (brillos), handHeart (mano corazon), dollar (signo pesos). suggestedValue = valor sugerido (dejar '' si no queres mostrar).",
             "type": "giftCard",
             "id": "gift-card",
             "bgColor": "primary",
@@ -308,11 +237,7 @@
                 "icon": "gift",
                 "title": "Valor Tarjeta",
                 "description": "Si queres hacerme un regalo, podes contribuir con un valor para mi fiesta.",
-                "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
+                "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos de transferencia",
                     "suggestedValue": "$15.000",
@@ -328,26 +253,21 @@
         },
 
         {
-            "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
+            "_comment": "HONEYMOON: Regalos / alcancia. Para XV se usa como 'Regalos' (no viaje). NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "primary",
             "blocks": ["icon", "title", "description", "button", "modal"],
             "data": {
-                "icon": "plane",
-                "title": "Mi viaje sonado",
-                "description": "Si queres ayudarme a cumplir mi sueno de viajar...",
-                "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Tu presencia es el mejor regalo. Pero si queres tener un detalle, aca te dejo mis datos.",
+                "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
-                    "title": "Datos para mi viaje",
-                    "suggestedValue": "",
-                    "description": "Cualquier aporte me ayuda a cumplir este sueno.",
-                    "transferData": [
-                        { "label": "Alias", "value": "MI.VIAJE" },
+                    "title": "Datos para regalos",
+                    "description": "Muchas gracias!",
+                    "bankData": [
+                        { "label": "Alias", "value": "MI.ALIAS" },
                         { "label": "CBU", "value": "0000000000000000000000" }
                     ]
                 }
@@ -360,13 +280,11 @@
             "id": "emotional-quote",
             "bgColor": "primary",
             "blocks": ["text"],
-            "data": {
-                "text": "Creciendo, sonando, brillando."
-            }
+            "data": { "text": "Creciendo, sonando, brillando." }
         },
 
         {
-            "_comment": "TRIVIA: Juego de preguntas con opciones multiples.",
+            "_comment": "TRIVIA: Juego de preguntas multiples en modal.",
             "type": "trivia",
             "id": "trivia-game",
             "blocks": ["title", "subtitle", "button", "modal"],
@@ -378,35 +296,26 @@
                     "finishTitle": "Eso es todo!",
                     "finishText": "Gracias por jugar.",
                     "questions": [
-                        {
-                            "question": "Cual es mi comida favorita?",
-                            "options": ["Pizza", "Sushi", "Asado", "Pasta"],
-                            "correctIndex": 2,
-                            "explanation": "Asado siempre!"
-                        }
+                        { "question": "Cual es mi comida favorita?", "options": ["Pizza", "Sushi", "Asado", "Pasta"], "correctIndex": 2, "explanation": "Asado siempre!" }
                     ]
                 }
             }
         },
 
         {
-            "_comment": "PLAYLIST: Link a playlist de Spotify de la fiesta.",
+            "_comment": "PLAYLIST: Link a playlist de Spotify.",
             "type": "playlist",
             "id": "playlist-suggestion",
             "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Arma la playlist",
                 "description": "Agrega tus canciones favoritas a la playlist de mi fiesta.",
-                "button": {
-                    "text": "Ir a la playlist",
-                    "url": "https://open.spotify.com",
-                    "variant": "primary"
-                }
+                "button": { "text": "Ir a la playlist", "url": "https://open.spotify.com", "variant": "primary" }
             }
         },
 
         {
-            "_comment": "RSVP: Formulario de confirmacion.",
+            "_comment": "RSVP: Formulario de confirmacion. Al confirmar, envia datos por WhatsApp. messageTemplate usa {resumen} como placeholder.",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
@@ -426,35 +335,51 @@
                     "dietaryOptions": ["Ninguno", "Vegetariano", "Vegano", "Celiaco", "Otro"],
                     "songRequest": "Que cancion no puede faltar?",
                     "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "NUMERO_WHATSAPP_SIN_MAS",
+                    "messageTemplate": "Hola! Confirmo asistencia para los 15 de NOMBRE:\n{resumen}\nGracias!"
                 }
             }
         },
 
         {
-            "_comment": "SPECIAL MESSAGE: Mensaje personal de la quinceanera con firma. EXCLUSIVO DE XV.",
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton estilo trivia que abre WhatsApp directo.",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "primary",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "buttonText": "Confirmar por WhatsApp",
+                "whatsappNumber": "NUMERO_WHATSAPP_SIN_MAS",
+                "message": "Confirmo mi asistencia a los 15 de NOMBRE"
+            }
+        },
+
+        {
+            "_comment": "SPECIAL MESSAGE: Mensaje personal. decorativeLines: true/false. EXCLUSIVO DE XV.",
             "type": "specialMessage",
             "id": "special-message",
             "blocks": ["title", "text"],
             "data": {
                 "title": "Gracias por estar",
                 "text": "Mensaje personal de la quinceanera para los invitados.",
-                "signature": "Valu"
+                "signature": "Valu",
+                "decorativeLines": true
             }
         },
 
         {
-            "_comment": "CLOSING IMAGE: Foto de cierre con nombre superpuesto.",
+            "_comment": "CLOSING IMAGE: Foto de cierre con nombre.",
             "type": "closingImage",
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
-            "data": {
-                "aspectRatio": "3/4",
-                "image": "/clientes/xv/[slug]/cierre.jpg"
-            }
+            "data": { "aspectRatio": "3/4", "image": "/clientes/xv/[slug]/cierre.jpg" }
         },
 
         {
-            "_comment": "FOOTER: Pie de pagina con redes de TU MARCA (no del cliente).",
+            "_comment": "FOOTER: Pie de pagina con redes de TU MARCA.",
             "type": "footer",
             "id": "footer-credits",
             "blocks": ["socialLinks", "brandName"],
