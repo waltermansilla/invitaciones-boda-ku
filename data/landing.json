@@ -1,200 +1,200 @@
 {
-  "_comment": "Toda la landing se configura desde este archivo. Colores, textos, precios, FAQ, botones, etc.",
+    "_comment": "Toda la landing se configura desde este archivo. Colores, textos, precios, FAQ, botones, etc.",
 
-  "theme": {
-    "background": "#FAF8F5",
-    "foreground": "#2A2A2A",
-    "accent": "#1A1A1A",
-    "accentForeground": "#FFFFFF",
-    "muted": "#6B6B6B",
-    "cardBg": "#FFFFFF",
-    "cardBorder": "#E8E4DF",
-    "footerBg": "#1A1A1A",
-    "footerText": "#FFFFFF"
-  },
+    "theme": {
+        "background": "#FAF8F5",
+        "foreground": "#2A2A2A",
+        "accent": "#1A1A1A",
+        "accentForeground": "#FFFFFF",
+        "muted": "#6B6B6B",
+        "cardBg": "#FFFFFF",
+        "cardBorder": "#E8E4DF",
+        "footerBg": "#1A1A1A",
+        "footerText": "#FFFFFF"
+    },
 
-  "whatsapp": {
-    "number": "3456023759",
-    "defaultMessage": "Hola! Me interesa una invitacion digital. Quiero saber mas."
-  },
+    "whatsapp": {
+        "number": "3456023759",
+        "defaultMessage": "Hola! Me interesa una invitación digital. Quiero saber más."
+    },
 
-  "ctaButtons": {
-    "heroPrimary": {
-      "text": "Quiero mi invitacion",
-      "type": "whatsapp",
-      "message": "Hola! Me interesa una invitacion digital. Quiero saber mas."
+    "ctaButtons": {
+        "heroPrimary": {
+            "text": "Quiero mi invitación",
+            "type": "whatsapp",
+            "message": "Hola! Me interesa una invitación digital. Quiero saber más."
+        },
+        "heroSecondary": {
+            "text": "Ver muestras",
+            "type": "anchor",
+            "anchor": "#muestras"
+        },
+        "planEsencial": {
+            "text": "Elegir Esencial",
+            "type": "whatsapp",
+            "message": "Hola! Me interesa la invitación Esencial para mi evento."
+        },
+        "planPremium": {
+            "text": "Elegir Premium",
+            "type": "whatsapp",
+            "message": "Hola! Me interesa la invitación Premium para mi evento."
+        },
+        "proceso": {
+            "text": "Quiero mi invitación",
+            "type": "whatsapp",
+            "message": "Hola! Quiero arrancar con mi invitación digital."
+        },
+        "ctaFinal": {
+            "text": "Crear mi invitación ahora",
+            "type": "whatsapp",
+            "message": "Hola! Quiero crear mi invitación digital."
+        }
     },
-    "heroSecondary": {
-      "text": "Ver muestras",
-      "type": "anchor",
-      "anchor": "#muestras"
-    },
-    "planEsencial": {
-      "text": "Elegir Esencial",
-      "type": "whatsapp",
-      "message": "Hola! Me interesa el plan Esencial para mi evento."
-    },
-    "planPremium": {
-      "text": "Elegir Premium",
-      "type": "whatsapp",
-      "message": "Hola! Me interesa el plan Premium para mi evento."
-    },
-    "proceso": {
-      "text": "Quiero mi invitacion",
-      "type": "whatsapp",
-      "message": "Hola! Quiero arrancar con mi invitacion digital."
-    },
-    "ctaFinal": {
-      "text": "Crear mi invitacion ahora",
-      "type": "whatsapp",
-      "message": "Hola! Quiero crear mi invitacion digital."
+
+    "sections": {
+        "hero": {
+            "enabled": true,
+            "title": {
+                "normal": "No es solo un evento. Es tu ",
+                "highlight": "Momento Único"
+            },
+            "subtitle": "Invitaciones digitales elegantes, personalizadas y listas para compartir. Bodas, XV y más."
+        },
+
+        "muestras": {
+            "enabled": true,
+            "title": "Muestras disponibles",
+            "description": "Explora las invitaciones que ya creamos. Cada una tiene su estilo único.",
+            "items": [
+                {
+                    "tipo": "boda",
+                    "slug": "anto-walter",
+                    "titulo": "Anto & Walter",
+                    "etiqueta": "Boda",
+                    "accentColor": "#D4A373"
+                },
+                {
+                    "tipo": "xv",
+                    "slug": "valentina",
+                    "titulo": "Valentina",
+                    "etiqueta": "XV",
+                    "accentColor": "#C4788A"
+                }
+            ]
+        },
+
+        "servicio": {
+            "enabled": true,
+            "title": "Experiencia Invitación Digital",
+            "subtitle": "ElegÍ el plan que mejor se adapte a tu evento.",
+            "showPrices": true,
+            "planes": [
+                {
+                    "name": "Esencial",
+                    "ctaButton": "planEsencial",
+                    "badge": null,
+                    "price": "$35.000",
+                    "description": "Todo lo necesario para una invitación hermosa.",
+                    "features": [
+                        "Confirmación de asistencia por WhatsApp",
+                        "Hasta 5 fotos personalizadas",
+                        "Diseño adaptado a tu estilo"
+                    ]
+                },
+                {
+                    "name": "Premium",
+                    "ctaButton": "planPremium",
+                    "badge": "Mas elegido",
+                    "price": "$55.000",
+                    "description": "La experiencia completa para quienes quieren más.",
+                    "features": [
+                        "Confirmacion de asistencia detallada",
+                        "Hasta 10 fotos personalizadas",
+                        "Trivia interactiva",
+                        "Sección de historias",
+                        "QR hacia album privado en Drive"
+                    ]
+                }
+            ],
+            "sharedFeatures": {
+                "title": "Opciones incluídas en ambos planes",
+                "items": [
+                    "Enlace propio permanente",
+                    "Música de fondo",
+                    "Cuenta regresiva",
+                    "Ubicación con Cómo llegar",
+                    "Itinerario del evento",
+                    "Sección para regalos",
+                    "Valor de tarjeta",
+                    "Colores personalizados",
+                    "Compatible con todos los dispositivos"
+                ]
+            }
+        },
+
+        "proceso": {
+            "enabled": true,
+            "title": "Cómo funciona",
+            "steps": [
+                {
+                    "number": "01",
+                    "title": "Contacto",
+                    "description": "Escribinos por WhatsApp y contanos sobre tu evento."
+                },
+                {
+                    "number": "02",
+                    "title": "Personalización",
+                    "description": "Definis el estilo, colores y nos envias fotos y datos."
+                },
+                {
+                    "number": "03",
+                    "title": "Entrega",
+                    "description": "Recibís el link listo para compartir con tus invitados."
+                }
+            ],
+            "highlights": [
+                "Entrega en 2-4 días hábiles",
+                "Sin costos mensuales",
+                "Funciona en todos los celulares",
+                "Soporte post-entrega"
+            ]
+        },
+
+        "faq": {
+            "enabled": true,
+            "title": "Preguntas frecuentes",
+            "items": [
+                {
+                    "question": "Puedo hacer cambios después de recibir la invitación?",
+                    "answer": "Si, ofrecemos una ronda de cambios incluída. Ajustes menores adicionales también se pueden coordinar."
+                },
+                {
+                    "question": "Cómo la comparten los invitados?",
+                    "answer": "Recibís un link unico que podés enviar por WhatsApp, redes sociales o donde prefieras. Funciona en cualquier celular sin instalar nada."
+                },
+                {
+                    "question": "Cuánto tarda la entrega?",
+                    "answer": "Normalmente entre 2 y 4 días hábiles después de recibir todo el material (fotos, textos, datos del evento)."
+                },
+                {
+                    "question": "El link tiene vencimiento?",
+                    "answer": "No. El link queda activo de forma permanente, incluso después del evento como recuerdo."
+                },
+                {
+                    "question": "Puedo agregar música?",
+                    "answer": "Sí, todas las invitaciones incluyen musica de fondo. Podés elegirnos una cancion o dejarnos sugerirte opciones."
+                },
+                {
+                    "question": "Hacen invitaciones para otros eventos?",
+                    "answer": "Por ahora nos especializamos en bodas y XV, pero podemos evaluar otros eventos. Escribinos y lo charlamos."
+                }
+            ]
+        },
+
+        "ctaFinal": {
+            "enabled": true,
+            "title": "¿Listo para crear tu invitación?",
+            "subtitle": "Escribinos hoy y empezá a darle forma a tu evento."
+        }
     }
-  },
-
-  "sections": {
-
-    "hero": {
-      "enabled": true,
-      "title": {
-        "normal": "Cada historia merece estar a ",
-        "highlight": "la altura"
-      },
-      "subtitle": "Invitaciones digitales elegantes, personalizadas y listas para compartir. Bodas, XV y mas."
-    },
-
-    "muestras": {
-      "enabled": true,
-      "title": "Muestras disponibles",
-      "description": "Explora las invitaciones que ya creamos. Cada una tiene su estilo unico.",
-      "items": [
-        {
-          "tipo": "boda",
-          "slug": "anto-walter",
-          "titulo": "Anto & Walter",
-          "etiqueta": "Boda",
-          "accentColor": "#6B7F5E"
-        },
-        {
-          "tipo": "xv",
-          "slug": "valentina",
-          "titulo": "Valentina",
-          "etiqueta": "XV",
-          "accentColor": "#C4788A"
-        }
-      ]
-    },
-
-    "servicio": {
-      "enabled": true,
-      "title": "Experiencia Invitacion Digital",
-      "subtitle": "Elegi el plan que mejor se adapte a tu evento.",
-      "showPrices": true,
-      "planes": [
-        {
-          "name": "Esencial",
-          "ctaButton": "planEsencial",
-          "badge": null,
-          "price": "$35.000",
-          "description": "Todo lo necesario para una invitacion hermosa.",
-          "features": [
-            "Confirmacion de asistencia por WhatsApp",
-            "Hasta 5 fotos personalizadas",
-            "Diseno adaptado a tu estilo"
-          ]
-        },
-        {
-          "name": "Premium",
-          "ctaButton": "planPremium",
-          "badge": "Mas elegido",
-          "price": "$55.000",
-          "description": "La experiencia completa para quienes quieren mas.",
-          "features": [
-            "Confirmacion de asistencia detallada",
-            "Hasta 10 fotos personalizadas",
-            "Trivia interactiva",
-            "Seccion de historias",
-            "QR hacia album privado en Drive"
-          ]
-        }
-      ],
-      "sharedFeatures": {
-        "title": "Incluido en ambos planes",
-        "items": [
-          "Enlace propio permanente",
-          "Musica de fondo",
-          "Cuenta regresiva",
-          "Ubicacion con Como llegar",
-          "Itinerario del evento",
-          "Seccion para regalos",
-          "Colores personalizados",
-          "Compatible con todos los dispositivos"
-        ]
-      }
-    },
-
-    "proceso": {
-      "enabled": true,
-      "title": "Como funciona",
-      "steps": [
-        {
-          "number": "01",
-          "title": "Contacto",
-          "description": "Escribinos por WhatsApp y contanos sobre tu evento."
-        },
-        {
-          "number": "02",
-          "title": "Personalizacion",
-          "description": "Definis el estilo, colores y nos envias fotos y datos."
-        },
-        {
-          "number": "03",
-          "title": "Entrega",
-          "description": "Recibis el link listo para compartir con tus invitados."
-        }
-      ],
-      "highlights": [
-        "Entrega en 3-5 dias habiles",
-        "Sin costos mensuales",
-        "Funciona en todos los celulares",
-        "Soporte post-entrega"
-      ]
-    },
-
-    "faq": {
-      "enabled": true,
-      "title": "Preguntas frecuentes",
-      "items": [
-        {
-          "question": "Puedo hacer cambios despues de recibir la invitacion?",
-          "answer": "Si, ofrecemos una ronda de cambios incluida. Ajustes menores adicionales tambien se pueden coordinar."
-        },
-        {
-          "question": "Como la comparten los invitados?",
-          "answer": "Recibis un link unico que podes enviar por WhatsApp, redes sociales o donde prefieras. Funciona en cualquier celular sin instalar nada."
-        },
-        {
-          "question": "Cuanto tarda la entrega?",
-          "answer": "Normalmente entre 3 y 5 dias habiles despues de recibir todo el material (fotos, textos, datos del evento)."
-        },
-        {
-          "question": "El link tiene vencimiento?",
-          "answer": "No. El link queda activo de forma permanente, incluso despues del evento como recuerdo."
-        },
-        {
-          "question": "Puedo agregar musica?",
-          "answer": "Si, todas las invitaciones incluyen musica de fondo. Podes elegirnos una cancion o dejarnos sugerirte opciones."
-        },
-        {
-          "question": "Hacen invitaciones para otros eventos?",
-          "answer": "Por ahora nos especializamos en bodas y XV, pero podemos evaluar otros eventos. Escribinos y lo charlamos."
-        }
-      ]
-    },
-
-    "ctaFinal": {
-      "enabled": true,
-      "title": "Listo para crear tu invitacion?",
-      "subtitle": "Escribinos hoy y empeza a darle forma a tu evento."
-    }
-  }
 }

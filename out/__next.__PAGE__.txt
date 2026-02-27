@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[4944,["/invitaciones-boda/_next/static/chunks/a624b468970d3cc4.js","/invitaciones-boda/_next/static/chunks/e831a5e950f169ad.js","/invitaciones-boda/_next/static/chunks/7e054d576145bef3.js"],"default"]
+3:I[97367,["/invitaciones-boda/_next/static/chunks/ff1a16fafef87110.js","/invitaciones-boda/_next/static/chunks/d2be314c3ece3fbe.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"N8xDvlFxjoCaUXKQATXhN","rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","script","script-0",{"src":"/invitaciones-boda/_next/static/chunks/e831a5e950f169ad.js","async":true}],["$","script","script-1",{"src":"/invitaciones-boda/_next/static/chunks/7e054d576145bef3.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null
