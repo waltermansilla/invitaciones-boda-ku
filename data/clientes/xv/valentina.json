@@ -63,7 +63,7 @@
 
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
-        "coupleImage": "/images/xv/valentina/quince-hero.jpg",
+        "coupleImage": "/clientes/xv/valentina/images/quince-hero.jpg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
         "countdownPrefix": "Faltan",
@@ -115,7 +115,7 @@
             "id": "presentation",
             "blocks": ["image", "name", "description"],
             "data": {
-                "image": "/images/xv/valentina/quince-portrait.jpg",
+                "image": "/clientes/xv/valentina/images/quince-portrait.jpg",
                 "name": "Valentina",
                 "description": "Llegaron mis 15 y no me lo puedo creer. Despues de sonar tanto con este dia, al fin esta aca. Quiero compartirlo con todos ustedes, las personas que hicieron de mi infancia algo increible. Esta noche es nuestra.",
                 "aspectRatio": "3/4"
@@ -148,9 +148,9 @@
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
-                    "/images/xv/valentina/gallery-1.jpg",
-                    "/images/xv/valentina/gallery-2.jpg",
-                    "/images/xv/valentina/gallery-3.jpg"
+                    "/clientes/xv/valentina/images/gallery-1.jpg",
+                    "/clientes/xv/valentina/images/gallery-2.jpg",
+                    "/clientes/xv/valentina/images/gallery-3.jpg"
                 ]
             }
         },
@@ -200,17 +200,17 @@
                 "aspectRatio": "3/4",
                 "moments": [
                     {
-                        "image": "/clientes/xv/valentina/story-1.jpg",
+                        "image": "/clientes/xv/valentina/images/story-1.jpg",
                         "title": "Mis primeros pasos",
                         "text": "Desde chiquita siempre fui curiosa. Tocaba todo, preguntaba todo y no paraba quieta ni un segundo. Mama dice que aprender a caminar fue solo el principio del caos."
                     },
                     {
-                        "image": "/clientes/xv/valentina/story-2.jpg",
+                        "image": "/clientes/xv/valentina/images/story-2.jpg",
                         "title": "La del medio",
                         "text": "El colegio, las amigas, las pijamadas, los primeros bailes frente al espejo. Ahi empece a descubrir quien quiero ser y de que cosas me quiero rodear."
                     },
                     {
-                        "image": "/clientes/xv/valentina/story-3.jpg",
+                        "image": "/clientes/xv/valentina/images/story-3.jpg",
                         "title": "Hoy, mis 15",
                         "text": "Y aca estoy. Con 15 anos, un millon de suenos y la certeza de que todo lo lindo esta por venir. Esta noche celebro con las personas que me hicieron ser quien soy."
                     }
@@ -449,7 +449,7 @@
             "blocks": ["image", "name"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/xv/valentina/gallery-3.jpg"
+                "image": "/clientes/xv/valentina/images/closing.jpg"
             }
         },
 
