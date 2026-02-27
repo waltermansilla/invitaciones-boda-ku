@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-/* Links use <a> for full-page navigation to invitation layouts */
 import FooterSection from "@/components/wedding/footer-section"
 
 /* ─── Types ─── */
@@ -251,9 +250,7 @@ function MuestrasSection({
           </div>
 
           <div className="mx-auto grid max-w-lg gap-4">
-            {data.items.map((item) => {
-              console.log("[v0] muestra link:", `/m/${item.tipo}/${item.slug}`)
-              return (
+            {data.items.map((item) => (
               <a
                 key={`${item.tipo}/${item.slug}`}
                 href={`/m/${item.tipo}/${item.slug}`}
@@ -284,8 +281,7 @@ function MuestrasSection({
                   {item.etiqueta}
                 </span>
               </a>
-              )
-            })}
+            ))}
           </div>
         </div>
       </div>

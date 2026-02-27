@@ -80,7 +80,7 @@
         "servicio": {
             "enabled": true,
             "title": "Experiencia Invitación Digital",
-            "subtitle": "ElegÍ el plan que mejor se adapte a tu evento.",
+            "subtitle": "Eleg\u00ed el plan que mejor se adapte a tu evento.",
             "showPrices": true,
             "planes": [
                 {
@@ -98,25 +98,25 @@
                 {
                     "name": "Premium",
                     "ctaButton": "planPremium",
-                    "badge": "Mas elegido",
+                    "badge": "M\u00e1s elegido",
                     "price": "$55.000",
                     "description": "La experiencia completa para quienes quieren más.",
                     "features": [
-                        "Confirmacion de asistencia detallada",
+                        "Confirmaci\u00f3n de asistencia detallada",
                         "Hasta 10 fotos personalizadas",
                         "Trivia interactiva",
-                        "Sección de historias",
-                        "QR hacia album privado en Drive"
+                        "Secci\u00f3n de historias",
+                        "QR hacia \u00e1lbum privado en Drive"
                     ]
                 }
             ],
             "sharedFeatures": {
-                "title": "Opciones incluídas en ambos planes",
+                "title": "Opciones incluidas en ambos planes",
                 "items": [
                     "Enlace propio permanente",
-                    "Música de fondo",
+                    "M\u00fasica de fondo",
                     "Cuenta regresiva",
-                    "Ubicación con Cómo llegar",
+                    "Ubicaci\u00f3n con C\u00f3mo llegar",
                     "Itinerario del evento",
                     "Sección para regalos",
                     "Valor de tarjeta",
@@ -136,17 +136,17 @@
                 },
                 {
                     "number": "02",
-                    "title": "Personalización",
-                    "description": "Definis el estilo, colores y nos envias fotos y datos."
+                    "title": "Personalizaci\u00f3n",
+                    "description": "Defin\u00eds el estilo, colores y nos envi\u00e1s fotos y datos."
                 },
                 {
                     "number": "03",
                     "title": "Entrega",
-                    "description": "Recibís el link listo para compartir con tus invitados."
+                    "description": "Recib\u00eds el link listo para compartir con tus invitados."
                 }
             ],
             "highlights": [
-                "Entrega en 2-4 días hábiles",
+                "Entrega en 2-4 d\u00edas h\u00e1biles",
                 "Sin costos mensuales",
                 "Funciona en todos los celulares",
                 "Soporte post-entrega"
@@ -157,31 +157,31 @@
             "title": "Preguntas frecuentes",
             "items": [
                 {
-                    "question": "Puedo hacer cambios después de recibir la invitación?",
-                    "answer": "Si, ofrecemos una ronda de cambios incluída. Ajustes menores adicionales también se pueden coordinar."
+                    "question": "\u00bfPuedo hacer cambios despu\u00e9s de recibir la invitaci\u00f3n?",
+                    "answer": "S\u00ed, ofrecemos una ronda de cambios incluida. Ajustes menores adicionales tambi\u00e9n se pueden coordinar."
                 },
                 {
-                    "question": "Cómo la comparten los invitados?",
-                    "answer": "Recibís un link unico que podés enviar por WhatsApp, redes sociales o donde prefieras. Funciona en cualquier celular sin instalar nada."
+                    "question": "\u00bfC\u00f3mo la comparten los invitados?",
+                    "answer": "Recib\u00eds un link \u00fanico que pod\u00e9s enviar por WhatsApp, redes sociales o donde prefieras. Funciona en cualquier celular sin instalar nada."
                 },
                 {
-                    "question": "Cuánto tarda la entrega?",
-                    "answer": "Normalmente entre 2 y 4 días hábiles después de recibir todo el material (fotos, textos, datos del evento)."
+                    "question": "\u00bfCu\u00e1nto tarda la entrega?",
+                    "answer": "Normalmente entre 2 y 4 d\u00edas h\u00e1biles despu\u00e9s de recibir todo el material (fotos, textos, datos del evento)."
                 },
                 {
-                    "question": "El link tiene vencimiento?",
-                    "answer": "No. El link queda activo de forma permanente, incluso después del evento como recuerdo."
+                    "question": "\u00bfEl link tiene vencimiento?",
+                    "answer": "No. El link queda activo de forma permanente, incluso despu\u00e9s del evento como recuerdo."
                 },
                 {
-                    "question": "Puedo agregar música?",
-                    "answer": "Sí, todas las invitaciones incluyen musica de fondo. Podés elegirnos una cancion o dejarnos sugerirte opciones."
+                    "question": "\u00bfPuedo agregar m\u00fasica?",
+                    "answer": "S\u00ed, todas las invitaciones incluyen m\u00fasica de fondo. Pod\u00e9s elegirnos una canci\u00f3n o dejarnos sugerirte opciones."
                 },
                 {
-                    "question": "Como es la forma de pago?",
-                    "answer": "Trabajamos con 50% de seña al inicio para arrancar con el diseño, y el otro 50% al momento de la entrega del link terminado."
+                    "question": "\u00bfC\u00f3mo es la forma de pago?",
+                    "answer": "Trabajamos con 50% de se\u00f1a al inicio para arrancar con el dise\u00f1o, y el otro 50% al momento de la entrega del link terminado."
                 },
                 {
-                    "question": "Hacen invitaciones para otros eventos?",
+                    "question": "\u00bfHacen invitaciones para otros eventos?",
                     "answer": "Por ahora nos especializamos en bodas y XV, pero podemos evaluar otros eventos. Escribinos y lo charlamos."
                 }
             ]
@@ -189,7 +189,7 @@
         "ctaFinal": {
             "enabled": true,
             "title": "¿Listo para crear tu invitación?",
-            "subtitle": "Escribinos hoy y empezá a darle forma a tu evento."
+            "subtitle": "Escribinos hoy y empez\u00e1 a darle forma a tu evento."
         }
     }
 }

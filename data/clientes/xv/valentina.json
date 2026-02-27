@@ -6,7 +6,7 @@
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
     "meta": {
         "title": "Mis 15 - Valentina",
-        "description": "Estas invitado a celebrar los 15 de Valentina. Una noche magica que no te podes perder.",
+        "description": "Est\u00e1s invitado a celebrar los 15 de Valentina. Una noche m\u00e1gica que no te pod\u00e9s perder.",
         "lang": "es",
         "quinceaneraName": "Valentina",
         "coupleNames": {
@@ -42,7 +42,7 @@
     "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
-        "phrase": "Estas invitado a celebrar una noche magica e inolvidable",
+        "phrase": "Est\u00e1s invitado a celebrar una noche m\u00e1gica e inolvidable",
         "buttonText": "Ingresar"
     },
 
@@ -69,7 +69,7 @@
         "countdownPrefix": "Faltan",
         "eventDate": "2026-09-19T21:00:00",
         "countdownLabels": {
-            "days": "Dias",
+            "days": "D\u00edas",
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
@@ -90,7 +90,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Hoy comienza un nuevo capitulo en mi vida y quiero vivirlo con las personas que mas quiero",
+                "text": "Hoy comienza un nuevo cap\u00edtulo en mi vida y quiero vivirlo con las personas que m\u00e1s quiero",
                 "author": "",
                 "decorativeLines": true
             }
@@ -103,7 +103,7 @@
             "id": "date-info",
             "blocks": ["title", "value"],
             "data": {
-                "title": "¿Cuando?",
+                "title": "\u00bfCu\u00e1ndo?",
                 "value": "19 de Septiembre 2026"
             }
         },
@@ -117,7 +117,7 @@
             "data": {
                 "image": "/clientes/xv/valentina/images/quince-portrait.jpg",
                 "name": "Valentina",
-                "description": "Llegaron mis 15 y no me lo puedo creer. Despues de sonar tanto con este dia, al fin esta aca. Quiero compartirlo con todos ustedes, las personas que hicieron de mi infancia algo increible. Esta noche es nuestra.",
+                "description": "Llegaron mis 15 y no me lo puedo creer. Despu\u00e9s de so\u00f1ar tanto con este d\u00eda, al fin est\u00e1 ac\u00e1. Quiero compartirlo con todos ustedes, las personas que hicieron de mi infancia algo incre\u00edble. Esta noche es nuestra.",
                 "aspectRatio": "3/4"
             }
         },
@@ -131,10 +131,10 @@
             "blocks": ["title", "parents"],
             "data": {
                 "title": "Mis Padres",
-                "subtitle": "Con todo su amor me acompanan en esta celebracion",
+                "subtitle": "Con todo su amor me acompa\u00f1an en esta celebraci\u00f3n",
                 "parents": [
-                    { "name": "Carolina Martinez", "role": "Mama" },
-                    { "name": "Andres Lopez", "role": "Papa" }
+                    { "name": "Carolina Mart\u00ednez", "role": "Mam\u00e1" },
+                    { "name": "Andr\u00e9s L\u00f3pez", "role": "Pap\u00e1" }
                 ]
             }
         },
@@ -163,9 +163,9 @@
             "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Ceremonia",
-                "address": "Parroquia San Jose, Av. San Martin 456",
+                "address": "Parroquia San Jos\u00e9, Av. San Mart\u00edn 456",
                 "button": {
-                    "text": "Como llegar",
+                    "text": "C\u00f3mo llegar",
                     "url": "https://maps.google.com",
                     "variant": "secondary"
                 }
@@ -180,9 +180,9 @@
             "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Fiesta",
-                "address": "Salon Las Orquideas, Ruta 8 Km 3.5",
+                "address": "Sal\u00f3n Las Orqu\u00eddeas, Ruta 8 Km 3.5",
                 "button": {
-                    "text": "Como llegar",
+                    "text": "C\u00f3mo llegar",
                     "url": "https://maps.google.com",
                     "variant": "secondary"
                 }
@@ -202,17 +202,17 @@
                     {
                         "image": "/clientes/xv/valentina/images/story-1.jpg",
                         "title": "Mis primeros pasos",
-                        "text": "Desde chiquita siempre fui curiosa. Tocaba todo, preguntaba todo y no paraba quieta ni un segundo. Mama dice que aprender a caminar fue solo el principio del caos."
+                        "text": "Desde chiquita siempre fui curiosa. Tocaba todo, preguntaba todo y no paraba quieta ni un segundo. Mam\u00e1 dice que aprender a caminar fue solo el principio del caos."
                     },
                     {
                         "image": "/clientes/xv/valentina/images/story-2.jpg",
                         "title": "La del medio",
-                        "text": "El colegio, las amigas, las pijamadas, los primeros bailes frente al espejo. Ahi empece a descubrir quien quiero ser y de que cosas me quiero rodear."
+                        "text": "El colegio, las amigas, las pijamadas, los primeros bailes frente al espejo. Ah\u00ed empec\u00e9 a descubrir qui\u00e9n quiero ser y de qu\u00e9 cosas me quiero rodear."
                     },
                     {
                         "image": "/clientes/xv/valentina/images/story-3.jpg",
                         "title": "Hoy, mis 15",
-                        "text": "Y aca estoy. Con 15 anos, un millon de suenos y la certeza de que todo lo lindo esta por venir. Esta noche celebro con las personas que me hicieron ser quien soy."
+                        "text": "Y ac\u00e1 estoy. Con 15 a\u00f1os, un mill\u00f3n de sue\u00f1os y la certeza de que todo lo lindo est\u00e1 por venir. Esta noche celebro con las personas que me hicieron ser quien soy."
                     }
                 ]
             }
@@ -230,17 +230,17 @@
                     { "icon": "church", "name": "Misa", "time": "19:00 hs" },
                     {
                         "icon": "camera",
-                        "name": "Sesion de fotos",
+                        "name": "Sesi\u00f3n de fotos",
                         "time": "20:00 hs"
                     },
                     {
                         "icon": "sparkles",
-                        "name": "Entrada al salon",
+                        "name": "Entrada al sal\u00f3n",
                         "time": "21:00 hs"
                     },
                     {
                         "icon": "heart",
-                        "name": "Vals con mi papa",
+                        "name": "Vals con mi pap\u00e1",
                         "time": "21:30 hs"
                     },
                     { "icon": "utensils", "name": "Cena", "time": "22:00 hs" },
@@ -267,7 +267,7 @@
             "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Arma la playlist",
-                "description": "Quiero que esta noche suene todo lo que nos gusta. Agrega tus canciones a la playlist de la fiesta.",
+                "description": "Quiero que esta noche suene todo lo que nos gusta. Agreg\u00e1 tus canciones a la playlist de la fiesta.",
                 "button": {
                     "text": "Ir a la playlist",
                     "url": "https://open.spotify.com",
@@ -295,8 +295,8 @@
             "id": "trivia-game",
             "blocks": ["title", "subtitle", "button", "modal"],
             "data": {
-                "title": "Cuanto me conoces?",
-                "subtitle": "Jugamos un poco?",
+                "title": "\u00bfCu\u00e1nto me conoc\u00e9s?",
+                "subtitle": "\u00bfJugamos un poco?",
                 "button": {
                     "text": "Iniciar Trivia",
                     "variant": "primary"
@@ -306,7 +306,7 @@
                     "finishText": "Gracias por jugar. Nos vemos en la fiesta para seguir descubriendo cosas sobre mi.",
                     "questions": [
                         {
-                            "question": "Cual es mi comida favorita?",
+                            "question": "\u00bfCu\u00e1l es mi comida favorita?",
                             "options": [
                                 "Pizza",
                                 "Sushi",
@@ -314,18 +314,18 @@
                                 "Empanadas"
                             ],
                             "correctIndex": 0,
-                            "explanation": "Pizza. Con muzza doble y siempre pidiendo la misma. No necesito mas nada en la vida."
+                            "explanation": "Pizza. Con muzza doble y siempre pidiendo la misma. No necesito m\u00e1s nada en la vida."
                         },
                         {
-                            "question": "Que quiero ser cuando sea grande?",
+                            "question": "\u00bfQu\u00e9 quiero ser cuando sea grande?",
                             "options": [
-                                "Disenadora",
-                                "Medica",
+                                "Dise\u00f1adora",
+                                "M\u00e9dica",
                                 "Abogada",
-                                "Todavia no se"
+                                "Todav\u00eda no s\u00e9"
                             ],
                             "correctIndex": 3,
-                            "explanation": "Todavia no lo se, y esta bien. Tengo 15 recien, dejenme disfrutar."
+                            "explanation": "Todav\u00eda no lo s\u00e9, y est\u00e1 bien. Tengo 15 reci\u00e9n, d\u00e9jenme disfrutar."
                         },
                         {
                             "question": "Cual es mi cancion del momento?",
