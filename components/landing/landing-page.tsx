@@ -251,12 +251,11 @@ function MuestrasSection({
           </div>
 
           <div className="mx-auto grid max-w-lg gap-4">
-            {data.items.map((item) => {
-              console.log("[v0] muestra link:", `/m/${item.tipo}/${item.slug}`)
-              return (
+            {data.items.map((item) => (
               <a
                 key={`${item.tipo}/${item.slug}`}
                 href={`/m/${item.tipo}/${item.slug}`}
+                rel="noopener"
                 className="group relative flex min-h-[72px] items-center justify-between overflow-hidden rounded-sm border px-6 py-5 transition-all duration-300 hover:shadow-md"
                 style={{
                   background: theme.cardBg,
@@ -284,8 +283,7 @@ function MuestrasSection({
                   {item.etiqueta}
                 </span>
               </a>
-              )
-            })}
+            ))}
           </div>
         </div>
       </div>
@@ -570,8 +568,8 @@ function LandingFooter({ theme }: { theme: LandingTheme }) {
   return (
     <div
       style={{
-        "--primary": theme.footerBg,
-        "--primary-foreground": theme.footerText,
+        "--color-primary": theme.footerBg,
+        "--color-primary-foreground": theme.footerText,
       } as React.CSSProperties}
     >
       <FooterSection />

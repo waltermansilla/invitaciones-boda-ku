@@ -38,12 +38,13 @@ export default function ConfirmarWhatsappSection({
 
   return (
     <section className="flex flex-col items-center px-6 py-14 text-center">
-      <h2 className="mb-6 text-xl font-semibold tracking-[0.2em] uppercase text-inherit/90 md:text-2xl">
+      <h2 className="mb-6 text-xl font-semibold tracking-[0.2em] uppercase opacity-90 md:text-2xl">
         {title}
       </h2>
       <button
         onClick={handleClick}
-        className="inline-flex min-h-[48px] items-center rounded-full border border-current/40 px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-inherit transition-opacity hover:bg-current/10"
+        className="inline-flex min-h-[48px] items-center rounded-full px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase transition-opacity hover:opacity-70"
+        style={{ border: "1px solid currentColor", borderOpacity: 0.4 }}
       >
         {buttonText}
       </button>
