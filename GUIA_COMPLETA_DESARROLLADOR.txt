@@ -1,0 +1,1153 @@
+================================================================================
+  GUIA COMPLETA DEL PROYECTO - INVITACIONES DIGITALES "MOMENTO UNICO"
+  Para desarrolladores y ayudantes
+  Ultima actualizacion: Febrero 2026
+================================================================================
+
+Esta guia explica TODO el proyecto: como esta armado, como funciona por dentro,
+que hace cada archivo, como se conectan entre si y como editar cualquier cosa
+sin romper nada. Es la referencia definitiva antes de tocar cualquier codigo.
+
+Si ya leiste el MANUAL_OPERATIVO_BASICO_V1.md (que es mas operativo y rapido),
+esta guia va mas profundo y cubre la arquitectura completa.
+
+
+================================================================================
+PARTE 1 - VISION GENERAL DEL PROYECTO
+================================================================================
+
+1.1 QUE ES ESTE PROYECTO
+-------------------------
+Un sistema multi-evento para crear invitaciones digitales (bodas, XV, etc.)
+Todo funciona con un solo deploy. Cada cliente tiene su propio JSON y sus propias
+imagenes. No se toca codigo para crear un nuevo cliente.
+
+La app tiene tres "caras":
+  - Landing comercial (/) -> Pagina de ventas con muestras, precios, FAQ
+  - Invitacion real (/boda/slug) -> La que recibe el invitado final
+  - Invitacion muestra (/m/boda/slug) -> La que se muestra en el portfolio
+
+1.2 STACK TECNOLOGICO
+----------------------
+  - Framework: Next.js 16 (App Router)
+  - React: 19.2.4
+  - CSS: Tailwind CSS v4 (con @theme inline, sin tailwind.config.js)
+  - Componentes base: shadcn/ui (en components/ui/)
+  - Carrusel: Embla Carousel (embla-carousel-react 8.6)
+  - Iconos: Lucide React
+  - Fuentes: Google Fonts (cargadas dinamicamente por cliente)
+  - Deploy: Vercel (auto-deploy desde GitHub)
+  - Analytics: Vercel Analytics
+
+1.3 PRINCIPIOS DE DISENO
+--------------------------
+  - Mobile-first: todo se disena para celular primero
+  - Data-driven: la UI se genera a partir del JSON, no se hardcodea
+  - Un solo componente para todo: wedding-invitation.tsx sirve para bodas Y XV
+  - Secciones modulares: cada seccion es un componente independiente
+  - Zero-config para nuevo cliente: solo JSON + imagenes
+
+
+================================================================================
+PARTE 2 - ESTRUCTURA DE CARPETAS Y ARCHIVOS
+================================================================================
+
+2.1 ARBOL COMPLETO
+-------------------
+
+/
+├── app/                              <- Rutas de Next.js (App Router)
+│   ├── layout.tsx                    <- Layout raiz (fuente global, metadata SEO, viewport)
+│   ├── page.tsx                      <- Ruta "/" = Landing comercial
+│   ├── globals.css                   <- CSS global: variables, animaciones, tokens de color
+│   ├── favicon.jpg                   <- Icono de la pestana del navegador
+│   ├── [tipo]/[slug]/                <- Ruta DINAMICA para invitaciones reales
+│   │   ├── layout.tsx                <- Inyecta CSS variables del tema del cliente
+│   │   └── page.tsx                  <- Carga el JSON y renderiza la invitacion
+│   └── m/[tipo]/[slug]/              <- Ruta DINAMICA para invitaciones muestra
+│       ├── layout.tsx                <- Mismo layout que el real (inyecta tema)
+│       └── page.tsx                  <- Igual al real pero con isMuestra=true
+│
+├── components/
+│   ├── landing/
+│   │   └── landing-page.tsx          <- Componente unico de la landing (todo en uno)
+│   ├── wedding/                      <- TODOS los componentes de invitacion
+│   │   ├── wedding-invitation.tsx    <- Orquestador: lee el config y renderiza todo
+│   │   ├── section.tsx               <- Switch maestro: mapea type -> componente
+│   │   ├── animated-section.tsx      <- Wrapper de animacion fade-in para cada seccion
+│   │   ├── modal-provider.tsx        <- Sistema de modales (Context + Portal)
+│   │   ├── hero-overlay.tsx          <- Pantalla de entrada con nombres y boton
+│   │   ├── hero-section.tsx          <- Foto principal + cuenta regresiva
+│   │   ├── music-player.tsx          <- Boton flotante de musica
+│   │   ├── action-button.tsx         <- Boton reutilizable (primary/secondary/outline)
+│   │   ├── quote-section.tsx         <- Frase con fondo de color
+│   │   ├── emotional-quote-section.tsx <- Frase emotiva centrada
+│   │   ├── date-info-section.tsx     <- Fecha del evento
+│   │   ├── event-info-section.tsx    <- Info del evento (fecha + ubicaciones)
+│   │   ├── location-info-section.tsx <- Ubicacion individual con boton Maps
+│   │   ├── gallery-section.tsx       <- Slider de fotos (Embla Carousel)
+│   │   ├── itinerary-section.tsx     <- Linea de tiempo con iconos
+│   │   ├── dress-code-section.tsx    <- Vestimenta con modal de consejos
+│   │   ├── photos-section.tsx        <- Invita a subir fotos al album
+│   │   ├── gift-card-section.tsx     <- Valor tarjeta con datos bancarios en modal
+│   │   ├── honeymoon-section.tsx     <- Luna de miel / regalos con datos bancarios
+│   │   ├── trivia-section.tsx        <- Juego trivia (4 opciones, modal)
+│   │   ├── truths-section.tsx        <- Juego verdadero/falso (A o B)
+│   │   ├── our-story-section.tsx     <- Momentos con fotos (historia pareja / crecimiento)
+│   │   ├── rsvp-section.tsx          <- Formulario de confirmacion -> WhatsApp
+│   │   ├── confirmar-whatsapp-section.tsx <- Boton simple de confirmacion WhatsApp
+│   │   ├── presentation-section.tsx  <- Foto + nombre + descripcion (exclusivo XV)
+│   │   ├── parents-section.tsx       <- Padres/padrinos (exclusivo XV)
+│   │   ├── playlist-section.tsx      <- Link a playlist de Spotify
+│   │   ├── special-message-section.tsx <- Mensaje personal con firma
+│   │   ├── closing-section.tsx       <- Foto de cierre con nombres
+│   │   └── footer-section.tsx        <- Footer de marca (hardcodeado, compartido)
+│   ├── theme-provider.tsx            <- Provider de tema (no se usa activamente)
+│   └── ui/                           <- Componentes base de shadcn (no tocar)
+│
+├── data/
+│   ├── landing.json                  <- Configuracion COMPLETA de la landing
+│   ├── wedding-config.json           <- Archivo legacy (no se usa)
+│   ├── _TEMPLATE_BODA.json           <- Plantilla de referencia con TODAS las secciones de boda
+│   ├── _TEMPLATE_XV.json             <- Plantilla de referencia con TODAS las secciones de XV
+│   └── clientes/
+│       ├── boda/
+│       │   └── anto-walter.json      <- Cliente real: boda de Anto & Walter
+│       └── xv/
+│           └── valentina.json        <- Cliente real: XV de Valentina
+│
+├── hooks/
+│   ├── use-fade-in.ts                <- Hook de IntersectionObserver para animacion
+│   ├── use-mobile.ts                 <- Hook de deteccion de pantalla mobile
+│   └── use-toast.ts                  <- Hook de notificaciones toast (shadcn)
+│
+├── lib/
+│   ├── get-client-config.ts          <- Lee el JSON del cliente desde el filesystem
+│   ├── config-context.tsx            <- Context de React para pasar el config a todos
+│   └── utils.ts                      <- Funcion cn() para clases condicionales
+│
+├── public/
+│   ├── manifest.json                 <- Manifest PWA (nombre, icono en pantalla inicio)
+│   └── clientes/
+│       ├── boda/anto-walter/
+│       │   ├── images/               <- Todas las fotos de esa boda
+│       │   └── music/                <- MP3 de musica de fondo
+│       └── xv/valentina/
+│           ├── images/               <- Todas las fotos de ese XV
+│           └── music/                <- MP3 de musica de fondo
+│
+├── styles/
+│   └── globals.css                   <- CSS base de shadcn (NO es el que usa la app)
+│
+├── MANUAL_OPERATIVO_BASICO_V1.md     <- Manual operativo rapido
+├── GUIA_COMPLETA_DESARROLLADOR.txt   <- Esta guia (la que estas leyendo)
+├── package.json                      <- Dependencias y scripts
+├── next.config.mjs                   <- Configuracion de Next.js
+├── tsconfig.json                     <- Configuracion de TypeScript
+└── postcss.config.mjs                <- Configuracion de PostCSS
+
+
+2.2 CARPETAS CLAVE Y SU PROPOSITO
+-----------------------------------
+
+  app/          -> Rutas de la aplicacion. Cada carpeta es una URL.
+                   El [tipo] y [slug] son parametros dinamicos.
+
+  components/wedding/  -> El corazon del proyecto. Todos los componentes de
+                          invitacion estan aca. Si queres agregar una seccion
+                          nueva, es aca donde se crea.
+
+  data/         -> TODOS los datos del proyecto. JSON puro. Aca es donde se
+                   edita el 95% del tiempo. No hay base de datos.
+
+  public/       -> Archivos estaticos servidos tal cual. Las imagenes y musica
+                   de cada cliente van aca. Las rutas en el JSON empiezan con
+                   /clientes/... (sin /public).
+
+  lib/          -> Logica compartida. El sistema de carga de configs y el
+                   Context de React que distribuye los datos.
+
+  hooks/        -> Hooks reutilizables. El mas importante es use-fade-in.ts.
+
+  styles/       -> CSS base de shadcn. NO es el que usa la app. El que usa la
+                   app es app/globals.css.
+
+  components/ui/ -> Componentes de shadcn/ui. NO TOCAR. Se generan con CLI.
+
+
+================================================================================
+PARTE 3 - COMO FUNCIONA EL RUTEO
+================================================================================
+
+3.1 TABLA DE RUTAS
+-------------------
+
+  URL                          Que carga                Fuente de datos
+  ─────────────────────────    ─────────────────────    ────────────────────
+  /                            Landing comercial        data/landing.json
+  /boda/anto-walter            Invitacion REAL           data/clientes/boda/anto-walter.json
+  /m/boda/anto-walter          Invitacion MUESTRA        Mismo JSON, isMuestra=true
+  /xv/valentina                Invitacion REAL           data/clientes/xv/valentina.json
+  /m/xv/valentina              Invitacion MUESTRA        Mismo JSON, isMuestra=true
+
+  REGLA: data/clientes/[tipo]/[slug].json  ->  URL: /[tipo]/[slug]
+  Automatico. No hay que configurar nada.
+
+3.2 COMO SE GENERA UNA INVITACION (FLUJO COMPLETO)
+----------------------------------------------------
+
+  1. El usuario visita /boda/anto-walter
+
+  2. Next.js ejecuta app/[tipo]/[slug]/page.tsx (Server Component)
+     -> Llama a getClientConfig("boda", "anto-walter")
+     -> Lee data/clientes/boda/anto-walter.json del disco
+     -> Genera metadata (titulo + descripcion para SEO)
+     -> Pasa el config a <ConfigProvider>
+
+  3. En paralelo, app/[tipo]/[slug]/layout.tsx (Server Component)
+     -> Lee el mismo JSON
+     -> Extrae el theme (colores, fuente)
+     -> Genera un <link> a Google Fonts con la fuente del cliente
+     -> Genera un <style> con CSS variables personalizadas
+     -> Inyecta todo esto en el <head> del HTML
+
+  4. ConfigProvider (Client Component) envuelve todo el arbol
+     -> Expone useConfig() y useIsMuestra() a todos los hijos
+
+  5. WeddingInvitation (Client Component) lee el config
+     -> Renderiza HeroOverlay (si enabled)
+     -> Renderiza HeroSection (siempre)
+     -> Itera sections[] y renderiza <Section> por cada una
+     -> Renderiza MusicPlayer (si enabled)
+
+  6. Section.tsx recibe cada objeto del array sections[]
+     -> Lee section.type
+     -> Hace un switch y renderiza el componente correcto
+     -> Calcula colores (bg + texto) segun bgColor y theme
+     -> Envuelve todo en <AnimatedSection> para el fade-in
+
+  7. Cada componente de seccion recibe sus props desde section.data
+     -> Es 100% presentacional
+     -> Lee datos del Context solo si necesita el theme
+
+3.3 DIFERENCIA ENTRE RUTA REAL Y MUESTRA
+------------------------------------------
+
+  Ambas rutas cargan el MISMO JSON. La unica diferencia:
+
+  - /boda/slug       -> <ConfigProvider config={config}>
+  - /m/boda/slug     -> <ConfigProvider config={config} isMuestra={true}>
+
+  Los componentes que necesitan saber si es muestra usan useIsMuestra():
+  - action-button.tsx  -> En muestra, los links no navegan (muestran alert)
+  - rsvp-section.tsx   -> En muestra, el formulario no envia por WhatsApp
+  - gift-card-section.tsx -> En muestra, los datos bancarios aparecen como XXXX
+  - honeymoon-section.tsx -> En muestra, los datos bancarios aparecen como XXXX
+  - confirmar-whatsapp-section.tsx -> En muestra, no abre WhatsApp
+
+
+================================================================================
+PARTE 4 - COMPONENTES EN DETALLE
+================================================================================
+
+4.1 WEDDING-INVITATION.TSX (El orquestador)
+---------------------------------------------
+  Ubicacion: components/wedding/wedding-invitation.tsx
+  Tipo: Client Component ("use client")
+  Funcion: Lee el config completo y decide que renderizar.
+
+  Estructura:
+    <ModalProvider>           <- Necesario para que funcionen los modales
+      <main>                  <- Contenedor principal (max-w-lg/xl/2xl)
+        <HeroOverlay />       <- Pantalla de entrada (si overlay.enabled)
+        <HeroSection />       <- Foto + cuenta regresiva (siempre)
+        {sections.map()}      <- Secciones dinamicas del array
+        <MusicPlayer />       <- Boton flotante de musica (si music.enabled)
+      </main>
+    </ModalProvider>
+
+  IMPORTANTE:
+    - El max-w limita el ancho en desktop para que se vea "de celular"
+    - El orden de las secciones lo define el array sections[] del JSON
+    - HeroOverlay y HeroSection no son parte del array (son fijos)
+
+4.2 SECTION.TSX (El switch maestro)
+-------------------------------------
+  Ubicacion: components/wedding/section.tsx
+  Funcion: Recibe un objeto del array sections[] y decide que componente renderizar.
+
+  Como funciona:
+    1. Lee section.type (ej: "quote", "gallery", "rsvp")
+    2. Hace un switch con todos los tipos disponibles
+    3. Renderiza el componente correspondiente pasandole section.data como props
+    4. Calcula el color de fondo y texto segun bgColor y theme
+    5. Detecta si necesita linea divisoria (dos secciones seguidas mismo fondo)
+    6. Envuelve todo en <AnimatedSection>
+
+  Tipos de seccion "self-styled" (no reciben wrapper de fondo):
+    - gallery        -> Fondo propio (las fotos llenan todo)
+    - closingImage   -> Fondo propio (imagen a ancho completo)
+    - footer         -> Fondo propio (bg-primary hardcodeado)
+    - presentation   -> Fondo propio (imagen a ancho completo)
+    - specialMessage -> Fondo propio (tiene su propio estilo)
+
+  Todos los demas tipos reciben un wrapper <div> con bg-primary o bg-background.
+
+  AGREGAR UN TIPO NUEVO:
+    1. Crear el componente en components/wedding/ (ej: new-section.tsx)
+    2. Importarlo en section.tsx
+    3. Agregar un case nuevo en el switch
+    4. Usarlo en el JSON con "type": "newSection"
+    (Requiere saber React y TypeScript)
+
+4.3 ANIMATED-SECTION.TSX (Animacion de entrada)
+-------------------------------------------------
+  Ubicacion: components/wedding/animated-section.tsx
+  Funcion: Envuelve cada seccion y le aplica un fade-in al hacer scroll.
+
+  Como funciona:
+    - Usa el hook useFadeIn() que internamente usa IntersectionObserver
+    - Cuando la seccion entra en el viewport (15% visible), le pone opacity:1 + translateY:0
+    - La transicion es CSS puro (duration-700 ease-out)
+    - Solo se activa UNA vez (no se repite al scrollear de nuevo)
+
+4.4 MODAL-PROVIDER.TSX (Sistema de modales)
+---------------------------------------------
+  Ubicacion: components/wedding/modal-provider.tsx
+  Funcion: Provee un sistema global de modales para toda la invitacion.
+
+  Como funciona:
+    - Usa React Context + createPortal para renderizar modales
+    - Cualquier componente puede llamar useModal().openModal(<contenido JSX>)
+    - El modal se renderiza en document.body (fuera del arbol de la invitacion)
+    - Tiene animaciones de entrada/salida (scale + opacity)
+    - Se cierra con click en backdrop, tecla Escape, o boton X
+    - Bloquea el scroll del body mientras esta abierto
+    - El color de fondo del modal es bg-primary (el color del cliente)
+    - El color del texto del modal se configura con theme.modalTextColor
+
+  Lo usan: gift-card-section, honeymoon-section, dress-code-section, trivia-section
+
+4.5 HERO-OVERLAY.TSX (Pantalla de entrada)
+---------------------------------------------
+  Ubicacion: components/wedding/hero-overlay.tsx
+  Funcion: Pantalla fullscreen que aparece al abrir la invitacion.
+
+  Muestra:
+    - Nombre de la novia
+    - Separador (& para bodas, vacio para XV)
+    - Nombre del novio (vacio para XV)
+    - Frase romantica (config: overlay.phrase)
+    - Boton "Ingresar" (config: overlay.buttonText)
+
+  Al tocar el boton, hace una animacion de fade-out de 1.2 segundos y desaparece.
+  Se puede desactivar con overlay.enabled: false en el JSON.
+
+4.6 HERO-SECTION.TSX (Foto principal + countdown)
+---------------------------------------------------
+  Ubicacion: components/wedding/hero-section.tsx
+  Funcion: Foto de pareja con nombres superpuestos + cuenta regresiva.
+
+  Estructura:
+    - Foto (aspect-ratio 3/4, priority loading)
+    - Nombres sobre la foto (con gradiente oscuro para contraste)
+    - Headline (ej: "Nos casamos!")
+    - Prefijo del countdown (ej: "Faltan")
+    - Countdown: dias : horas : minutos : segundos
+
+  La cuenta regresiva se actualiza cada segundo con setInterval.
+  Si hero.showNamesOnPhoto es false, no se muestran nombres sobre la foto.
+
+4.7 MUSIC-PLAYER.TSX (Boton de musica)
+----------------------------------------
+  Ubicacion: components/wedding/music-player.tsx
+  Funcion: Boton flotante en la esquina inferior derecha para reproducir/pausar musica.
+
+  - Usa un <audio> nativo de HTML con loop
+  - Icono: Volume2 (sonando) o VolumeX (mudo) de Lucide
+  - Si autoplay: true, intenta reproducir automaticamente (los navegadores lo bloquean)
+  - Posicion: fixed, bottom-4, right-4, z-50
+
+4.8 ACTION-BUTTON.TSX (Boton generico)
+----------------------------------------
+  Ubicacion: components/wedding/action-button.tsx
+  Funcion: Boton reutilizable con 3 variantes de estilo.
+
+  Variantes:
+    - "primary"       -> Fondo solido (bg-primary)
+    - "secondary"     -> Borde con fondo transparente
+    - "outline-light" -> Borde claro (para fondos oscuros)
+
+  En modo muestra: muestra alert y no navega.
+  En modo real: abre el link en nueva pestana.
+
+4.9 FOOTER-SECTION.TSX (Footer de marca)
+------------------------------------------
+  Ubicacion: components/wedding/footer-section.tsx
+  Funcion: Footer identico en TODAS las invitaciones y la landing.
+
+  IMPORTANTE: Este es el UNICO componente que NO lee datos del JSON.
+  Los datos de marca estan hardcodeados como constantes al principio del archivo:
+
+    BRAND_NAME = "Momento Unico"       <- Nombre que aparece
+    BRAND_FONT = "font-serif"          <- Fuente (font-serif = cursiva)
+    BRAND_SIZE = "text-lg"             <- Tamano del nombre
+    BRAND_ICON = null                  <- URL de icono (null = sin icono)
+    ICON_SIZE  = 30                    <- Tamano de iconos de redes en px
+    SOCIAL_LINKS = [...]               <- Array de redes (instagram + whatsapp)
+
+  El color se adapta automaticamente via CSS variables:
+    - En invitaciones: bg-primary usa el primaryColor del cliente
+    - En la landing: se sobreescribe desde landing.json (footerBg/footerText)
+
+  Para editar la marca: cambiar las constantes al principio de este archivo.
+  Para agregar una red social: agregar un SVG al objeto iconMap y un item a SOCIAL_LINKS.
+
+4.10 GALLERY-SECTION.TSX (Slider de fotos)
+--------------------------------------------
+  Usa Embla Carousel con auto-scroll cada 3 segundos.
+  Loop infinito, dots de navegacion abajo.
+  El aspect ratio se configura desde el JSON (data.aspectRatio).
+
+4.11 RSVP-SECTION.TSX (Formulario de confirmacion)
+----------------------------------------------------
+  Formulario completo con:
+    - Selector de cantidad de invitados (1-5)
+    - Por cada invitado: nombre, apellido, asistencia (si/no), dieta, cancion
+    - Al confirmar, arma un mensaje y abre WhatsApp con los datos
+
+  En modo muestra: muestra "Confirmacion simulada" sin abrir WhatsApp.
+
+  El mensaje de WhatsApp se arma con buildWhatsAppMessage():
+    - Lee el template del JSON (whatsapp.messageTemplate)
+    - Reemplaza {resumen} con los datos de cada invitado
+    - Genera una URL wa.me con el mensaje codificado
+
+4.12 GIFT-CARD-SECTION.TSX y HONEYMOON-SECTION.TSX
+----------------------------------------------------
+  Ambos abren un modal con datos bancarios.
+
+  DIFERENCIA IMPORTANTE:
+    - giftCard usa modal.transferData (array de {label, value})
+    - honeymoon usa modal.bankData (array de {label, value})
+  (Los nombres de las propiedades son diferentes, ojo al editar el JSON)
+
+  En modo muestra, los valores se reemplazan por "XXXX-XXXX-XXXX".
+  En modo real, tienen boton de "Copiar" con feedback visual.
+
+  giftCard tiene un campo extra: modal.suggestedValue (valor sugerido).
+
+
+================================================================================
+PARTE 5 - EL SISTEMA DE TEMAS (COLORES Y FUENTES)
+================================================================================
+
+5.1 COMO FUNCIONAN LOS COLORES
+--------------------------------
+
+  Hay DOS sistemas de color en el proyecto:
+
+  SISTEMA 1: Landing (landing.json > theme)
+    - Se aplican directamente como style={{ background: theme.background }}
+    - No usan CSS variables
+    - Son colores fijos hardcodeados en el JSX de landing-page.tsx
+    - Campos: background, foreground, accent, accentForeground, muted, cardBg,
+              cardBorder, footerBg, footerText
+
+  SISTEMA 2: Invitaciones (JSON del cliente > theme)
+    - Se inyectan como CSS variables en el <style> del layout
+    - Los componentes usan clases de Tailwind (bg-primary, text-foreground, etc.)
+    - Cada cliente tiene sus propios colores
+    - Campos: primaryColor, backgroundColor, textColor, lightBgTextColor,
+              darkBgTextColor, accentBackground, modalTextColor
+
+5.2 QUE CONTROLA CADA CAMPO DEL THEME (INVITACIONES)
+------------------------------------------------------
+
+  primaryColor        Color principal. Se usa como:
+                      - --primary (fondo de secciones con bgColor:"primary")
+                      - --accent (color de acentos)
+                      - Fondo del footer
+                      - Fondo de modales
+                      - Fondo del boton de musica
+
+  backgroundColor     Fondo general de la pagina (--background)
+
+  textColor           Color base del texto del body (--foreground)
+
+  lightBgTextColor    Color de textos en secciones con fondo claro.
+                      Iconos, titulos, subtitulos. Por defecto = primaryColor.
+                      Podes cambiarlo a gris si queres algo mas neutro.
+
+  darkBgTextColor     Color de textos en secciones con fondo primary.
+                      Por defecto = #FFFFFF (blanco).
+
+  accentBackground    Fondo de elementos sutiles (--secondary, --muted).
+                      Generalmente un tono muy claro del primaryColor.
+
+  modalTextColor      Color del texto dentro de modales. Por defecto #FFFFFF.
+
+  font.family         Nombre exacto de Google Fonts (ej: "Josefin Sans").
+                      Se carga dinamicamente en el layout.
+
+  font.weights        Pesos separados por coma (ej: "100,200,300,400,500,600,700").
+
+5.3 COMO SE INYECTAN LAS CSS VARIABLES
+----------------------------------------
+
+  El archivo app/[tipo]/[slug]/layout.tsx genera un <style> inline con:
+
+    :root {
+      --font-sans: 'Josefin Sans', 'Josefin Sans Fallback';
+      --primary: #D4A373;
+      --background: #FAF8F5;
+      --foreground: #3A3A3A;
+      ... (muchas mas)
+    }
+
+  Esto sobreescribe las variables por defecto de app/globals.css.
+  Cada cliente tiene su propio set de variables. No hay conflicto.
+
+5.4 COMO SECTION.TSX DECIDE LOS COLORES
+-----------------------------------------
+
+  Cuando una seccion tiene bgColor: "primary":
+    -> bg-primary (fondo = primaryColor del cliente)
+    -> texto = darkBgTextColor (blanco por defecto)
+
+  Cuando una seccion tiene bgColor: "background" (o no tiene bgColor):
+    -> bg-background (fondo = backgroundColor del cliente)
+    -> texto = lightBgTextColor (por defecto = primaryColor)
+
+  Si textColor esta explicitamente definido en la seccion del JSON,
+  se usa ese valor directamente (permite forzar un color especifico).
+
+5.5 ALTERNANCIA DE FONDOS
+---------------------------
+
+  Para que la invitacion se vea visualmente variada, se recomienda alternar
+  secciones con bgColor: "primary" y bgColor: "background".
+
+  Cuando dos secciones seguidas tienen el MISMO fondo, el sistema agrega
+  automaticamente una linea divisoria sutil entre ellas (12% opacidad).
+  No hay que configurar nada, es automatico.
+
+5.6 COMO CAMBIAR LA FUENTE
+----------------------------
+
+  1. Ir a fonts.google.com y elegir una fuente
+  2. Copiar el nombre exacto (ej: "Great Vibes")
+  3. En el JSON del cliente:
+     "font": {
+       "family": "Great Vibes",
+       "weights": "400"
+     }
+  4. Listo. El layout carga la fuente automaticamente de Google Fonts.
+
+  No hay que tocar ningun archivo de codigo. Solo el JSON.
+
+5.7 ARCHIVOS CSS: CUALES SE USAN Y CUALES NO
+-----------------------------------------------
+
+  app/globals.css       <- ESTE ES EL QUE SE USA. Tiene:
+                           - Variables CSS por defecto (fallback)
+                           - Configuracion de Tailwind v4 (@theme inline)
+                           - Animaciones (fadeInUp, overlay, modal, iconTouch)
+                           - Reglas base (smooth scroll, antialiasing)
+
+  styles/globals.css    <- NO SE USA activamente. Es el CSS base de shadcn que
+                           vino con la instalacion. Tiene variables en oklch.
+                           Se puede ignorar. No borrarlo por si acaso.
+
+
+================================================================================
+PARTE 6 - EL JSON MAESTRO (ESTRUCTURA COMPLETA)
+================================================================================
+
+6.1 ESTRUCTURA GENERAL DE UN JSON DE CLIENTE
+----------------------------------------------
+
+  {
+    "meta": { ... },          <- OBLIGATORIO. Titulo, descripcion, nombres.
+    "theme": { ... },         <- OBLIGATORIO. Colores y fuente.
+    "overlay": { ... },       <- OBLIGATORIO. Pantalla de entrada.
+    "music": { ... },         <- OBLIGATORIO. Musica de fondo.
+    "hero": { ... },          <- OBLIGATORIO. Foto principal + countdown.
+    "sections": [ ... ]       <- OBLIGATORIO. Array de secciones (el corazon).
+  }
+
+  Todo lo demas (comentarios con //, _comment, etc.) es decorativo y se ignora.
+
+6.2 BLOQUE META
+-----------------
+
+  "meta": {
+    "title": "Nuestra Boda - Anto & Walter",      <- Titulo de la pestana
+    "description": "Te invitamos a celebrar...",   <- Descripcion SEO
+    "lang": "es",                                  <- Idioma
+    "coupleNames": {                               <- Nombres usados en toda la app
+      "groomName": "Walter",                       <- Para bodas: novio. Para XV: vacio ""
+      "brideName": "Anto",                         <- Para bodas: novia. Para XV: nombre de la quinceanera
+      "separator": "&"                             <- Para bodas: "&". Para XV: ""
+    }
+  }
+
+  En XV, se suele agregar "quinceaneraName": "Valentina" (informativo, no se usa en codigo).
+
+6.3 BLOQUE HERO
+-----------------
+
+  "hero": {
+    "coupleImage": "/clientes/boda/anto-walter/images/img-hero.jpg",  <- Ruta SIN /public
+    "headline": "Nos casamos!",                                        <- Titulo grande
+    "showNamesOnPhoto": true,                                          <- Nombres sobre la foto
+    "countdownPrefix": "Faltan",                                       <- Texto arriba del countdown
+    "eventDate": "2027-02-16T18:00:00",                                <- Fecha ISO (AAAA-MM-DDTHH:MM:SS)
+    "countdownLabels": {
+      "days": "Dias", "hours": "Horas", "minutes": "Minutos", "seconds": "Segundos"
+    }
+  }
+
+6.4 ARRAY SECTIONS (EL CORAZON)
+---------------------------------
+
+  El array sections[] es lo mas importante. Cada objeto del array es una seccion
+  que se renderiza en la pagina. El ORDEN del array define el orden visual.
+
+  Estructura de cada objeto:
+  {
+    "type": "quote",              <- OBLIGATORIO. Tipo de seccion (ver tabla completa)
+    "id": "quote-welcome",        <- OBLIGATORIO. ID unico (para el DOM)
+    "bgColor": "primary",         <- OPCIONAL. "primary" o "background" (default)
+    "textColor": "#FF0000",       <- OPCIONAL. Forzar color de texto (hex o nombre)
+    "blocks": ["text", "author"], <- INFORMATIVO. No se usa en codigo, es para referencia humana
+    "data": { ... }               <- OBLIGATORIO. Datos especificos de esa seccion
+  }
+
+  REGLAS:
+    - Para mover una seccion: cortar y pegar el objeto entero a otra posicion del array
+    - Para eliminar una seccion: borrar el objeto del array
+    - Para duplicar una seccion: copiar el objeto y cambiar el "id" (debe ser unico)
+    - El campo "blocks" es pura documentacion, no afecta nada
+
+6.5 TABLA COMPLETA DE TIPOS DE SECCION
+----------------------------------------
+
+  type                  Que hace                                  bgColor soporta
+  ──────────────────    ──────────────────────────────────────    ─────────────────
+  quote                 Frase con autor (opcional)                Si (primary/background)
+  emotionalQuote        Frase emotiva centrada                    Si
+  dateInfo              Fecha del evento (titulo + valor)         Si
+  locationInfo          Ubicacion con boton Maps                  Si
+  eventInfo             Fecha + ubicaciones (todo junto)          Si
+  gallery               Slider de fotos                           No (autostyled)
+  itinerary             Linea de tiempo con iconos                Si
+  dressCode             Vestimenta con modal de consejos          Si
+  photos                Invita a subir fotos al album             Si
+  ourStory              Momentos con fotos (historia/crecimiento) Si
+  giftCard              Valor tarjeta con datos bancarios          Si
+  honeymoon             Luna de miel / regalos con datos           Si
+  trivia                Juego trivia (4 opciones)                 Si
+  truths                Juego verdadero/falso                     Si
+  rsvp                  Formulario RSVP -> WhatsApp               Si
+  confirmarWhatsapp     Boton simple de WhatsApp                  Si
+  playlist              Link a playlist de Spotify                Si
+  specialMessage        Mensaje personal con firma                No (autostyled)
+  presentation          Foto + nombre + descripcion (solo XV)     No (autostyled)
+  parents               Padres/padrinos (solo XV)                 Si
+  closingImage          Foto de cierre con nombres                No (autostyled)
+  footer                Footer de marca                           No (autostyled)
+
+6.6 CAMPOS OPCIONALES VS OBLIGATORIOS POR TIPO
+-------------------------------------------------
+
+  quote:
+    OBLIGATORIO: data.text
+    OPCIONAL: data.author (vacio = no se muestra), data.decorativeLines (true/false)
+
+  dateInfo:
+    OBLIGATORIO: data.title, data.value
+
+  locationInfo:
+    OBLIGATORIO: data.title, data.address
+    OPCIONAL: data.button (si no hay, no se muestra boton)
+      button: { text, url, variant ("primary" | "secondary") }
+
+  gallery:
+    OBLIGATORIO: data.images (array de strings)
+    OPCIONAL: data.aspectRatio (default "3/4")
+
+  itinerary:
+    OBLIGATORIO: data.title, data.events (array)
+    Cada event: { icon, name, time }
+    OPCIONAL por event: date (separador visual), button (con text, url, variant)
+
+  dressCode:
+    OBLIGATORIO: data.title, data.subtitle, data.button, data.modal
+    modal: { title, sections: [{ heading, text }] }
+
+  photos:
+    OBLIGATORIO: data.title, data.description, data.button
+
+  ourStory:
+    OBLIGATORIO: data.title, data.moments (array)
+    Cada moment: { image, title, text }
+    OPCIONAL: data.aspectRatio (default "3/4")
+
+  giftCard:
+    OBLIGATORIO: data.title, data.description, data.button, data.modal
+    modal: { title, suggestedValue, description, transferData: [{label, value}] }
+    OPCIONAL: data.icon (default "gift")
+
+  honeymoon:
+    OBLIGATORIO: data.title, data.description, data.button, data.modal
+    modal: { title, description, bankData: [{label, value}] }
+    OPCIONAL: data.icon (default "plane"), modal.thankYouText
+
+  trivia:
+    OBLIGATORIO: data.title, data.subtitle, data.button, data.modal
+    modal: { finishTitle, finishText, questions: [{question, options, correctIndex, explanation}] }
+
+  truths:
+    OBLIGATORIO: data.title, data.questions, data.finishText
+    Cada question: { question, optionA, optionB, correctOption ("A"/"B"), revealText }
+
+  rsvp:
+    OBLIGATORIO: data.title, data.deadline, data.guestCountLabel,
+                 data.guestCountOptions, data.fields
+    OPCIONAL: data.whatsapp (si no hay, solo muestra "Gracias")
+    whatsapp: { number, messageTemplate (usa {resumen} como placeholder) }
+
+  confirmarWhatsapp:
+    OBLIGATORIO: data.title, data.buttonText, data.whatsappNumber, data.message
+
+  presentation (solo XV):
+    OBLIGATORIO: data.image, data.name, data.description
+    OPCIONAL: data.aspectRatio
+
+  parents (solo XV):
+    OBLIGATORIO: data.title, data.parents (array de {name, role})
+    OPCIONAL: data.subtitle
+
+  playlist:
+    OBLIGATORIO: data.title, data.description, data.button
+
+  specialMessage:
+    OBLIGATORIO: data.title, data.text
+    OPCIONAL: data.signature, data.decorativeLines
+
+  closingImage:
+    OBLIGATORIO: data.image
+    OPCIONAL: data.aspectRatio (default "3/4")
+
+  footer:
+    Sin data necesaria. Lee las constantes hardcodeadas del componente.
+    (El data.brandName y data.socialLinks del JSON se ignoran)
+
+  emotionalQuote:
+    OBLIGATORIO: data.text
+
+
+================================================================================
+PARTE 7 - LA LANDING COMERCIAL
+================================================================================
+
+7.1 COMO FUNCIONA
+-------------------
+
+  La landing se configura 100% desde data/landing.json.
+  El componente esta en components/landing/landing-page.tsx.
+  Se renderiza en app/page.tsx.
+
+  A diferencia de las invitaciones, la landing es UN SOLO componente grande
+  que contiene todas las sub-secciones (hero, muestras, servicio, proceso, faq,
+  cta final, footer). No usa el sistema de sections[] como las invitaciones.
+
+7.2 ESTRUCTURA DE LANDING.JSON
+---------------------------------
+
+  {
+    "theme": { ... },           <- Colores de toda la landing
+    "whatsapp": { ... },        <- Numero y mensaje default de WhatsApp
+    "ctaButtons": { ... },      <- TODOS los botones de accion
+    "sections": {
+      "hero": { ... },          <- Titulo, subtitulo
+      "muestras": { ... },      <- Lista de invitaciones de muestra
+      "servicio": { ... },      <- Planes, precios, features
+      "proceso": { ... },       <- Pasos de "como funciona"
+      "faq": { ... },           <- Preguntas frecuentes
+      "ctaFinal": { ... }       <- CTA de cierre
+    }
+  }
+
+7.3 BOTONES CTA CENTRALIZADOS
+-------------------------------
+
+  Todos los botones de la landing estan en un solo lugar: ctaButtons.
+  Cada boton tiene:
+    text    -> Texto del boton
+    type    -> "whatsapp" (abre WA), "anchor" (scroll), "link" (URL externa)
+    message -> Solo para type "whatsapp": mensaje pre-llenado
+    anchor  -> Solo para type "anchor": selector (ej: "#muestras")
+    url     -> Solo para type "link": URL destino
+    newTab  -> Solo para type "link": true/false
+
+  Keys existentes: heroPrimary, heroSecondary, planEsencial, planPremium, proceso, ctaFinal
+
+7.4 SECCION MUESTRAS
+-----------------------
+
+  Cada item en muestras.items es un link a una invitacion de muestra:
+
+  {
+    "tipo": "boda",                <- Tipo de evento
+    "slug": "anto-walter",         <- Nombre del JSON (sin .json)
+    "titulo": "Anto & Walter",     <- Lo que se muestra en la tarjeta
+    "etiqueta": "Boda",            <- Badge (Boda, XV, etc.)
+    "accentColor": "#D4A373"       <- Color del acento visual
+  }
+
+  La URL se genera automatica: /m/[tipo]/[slug]
+  SIEMPRE enlaza a la version muestra (/m/...), nunca a la real.
+
+7.5 ACTIVAR/DESACTIVAR SECCIONES
+-----------------------------------
+
+  Cada seccion tiene "enabled": true/false.
+  Si pones false, esa seccion desaparece completamente de la landing.
+
+
+================================================================================
+PARTE 8 - IMAGENES Y ARCHIVOS ESTATICOS
+================================================================================
+
+8.1 DONDE VAN LAS IMAGENES
+-----------------------------
+
+  public/clientes/[tipo]/[slug]/images/   <- Fotos del cliente
+  public/clientes/[tipo]/[slug]/music/    <- MP3 de musica
+
+  Ejemplo:
+    public/clientes/boda/anto-walter/images/img-hero.jpg
+    public/clientes/boda/anto-walter/images/galeria-1.jpg
+    public/clientes/boda/anto-walter/music/Para-Siempre.mp3
+
+8.2 COMO REFERENCIARLAS EN EL JSON
+-------------------------------------
+
+  SIEMPRE sin /public al principio:
+    BIEN:  "/clientes/boda/anto-walter/images/img-hero.jpg"
+    MAL:   "/public/clientes/boda/anto-walter/images/img-hero.jpg"
+
+  Next.js sirve todo lo de /public/ directamente desde /.
+
+8.3 OPTIMIZACION DE IMAGENES
+-------------------------------
+
+  - La foto del hero usa next/image con priority (se carga primero)
+  - La galeria usa next/image con fill + object-cover
+  - Recomendacion: fotos de 1200-1600px de ancho, formato JPG
+  - Para fotos verticales (portrait): aspect-ratio 3/4
+  - Para fotos horizontales (landscape): aspect-ratio 4/3 o 16/9
+  - Para fotos cuadradas: aspect-ratio 1/1
+
+8.4 FAVICON
+-------------
+
+  El favicon esta en app/favicon.jpg.
+  Next.js lo detecta automaticamente por convencion de nombre.
+  Para cambiarlo: reemplazar el archivo (minimo 512x512px, cuadrado).
+
+8.5 MANIFEST.JSON
+-------------------
+
+  public/manifest.json define como se ve la app si alguien la agrega a la
+  pantalla de inicio del celular. Tiene name, short_name y description.
+  Sincronizarlo con los datos de la landing cuando se cambie el nombre de marca.
+
+
+================================================================================
+PARTE 9 - ANIMACIONES Y EFECTOS
+================================================================================
+
+9.1 ANIMACIONES EXISTENTES (definidas en app/globals.css)
+-----------------------------------------------------------
+
+  fadeInUp           Secciones que aparecen desde abajo al scrollear
+                     Se aplica via animated-section.tsx + useFadeIn hook
+
+  overlayFadeOut     Pantalla de entrada que desaparece al tocar "Ingresar"
+                     Duracion: 1.2s, ease-in-out
+
+  modalBackdropIn    Backdrop del modal apareciendo (opacity 0->1)
+  modalBackdropOut   Backdrop del modal desapareciendo (opacity 1->0)
+  modalContentIn     Contenido del modal apareciendo (scale 0.96->1 + opacity)
+  modalContentOut    Contenido del modal desapareciendo (scale 1->0.96 + opacity)
+
+  iconTouch          Efecto de "rebote" al tocar un icono (scale 1->1.18->0.95->1)
+
+9.2 COMO FUNCIONA EL FADE-IN DE SECCIONES
+--------------------------------------------
+
+  1. El hook useFadeIn() crea un ref y un estado isVisible
+  2. Un IntersectionObserver observa el ref
+  3. Cuando el elemento entra en el viewport (15%), setIsVisible(true)
+  4. El observer se desconecta (no se repite)
+  5. AnimatedSection aplica transition-all duration-700 ease-out
+  6. Cuando isVisible es true: translate-y-0 opacity-100
+  7. Cuando es false: translate-y-8 opacity-0
+
+9.3 COMO AGREGAR NUEVAS ANIMACIONES
+--------------------------------------
+
+  1. Definir el @keyframes en app/globals.css
+  2. Crear una clase CSS que aplique la animacion
+  3. Usarla en el componente via className
+
+  Ejemplo:
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-24px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-slide-in-left {
+      animation: slideInLeft 0.6s ease-out forwards;
+    }
+
+
+================================================================================
+PARTE 10 - LIB Y HOOKS (LOGICA COMPARTIDA)
+================================================================================
+
+10.1 get-client-config.ts
+--------------------------
+  Funcion: getClientConfig(tipo, slug)
+    - Lee data/clientes/[tipo]/[slug].json del disco
+    - Si no existe, devuelve 404 (notFound())
+    - Retorna el JSON parseado como ClientConfig
+
+  Funcion: getAllClientParams()
+    - Recorre data/clientes/ buscando todos los .json
+    - Retorna un array de {tipo, slug} para generateStaticParams
+    - Esto permite que Next.js pre-renderice todas las invitaciones en build
+
+10.2 config-context.tsx
+------------------------
+  Provee:
+    - ConfigProvider: componente que envuelve la invitacion y le pasa el config
+    - useConfig(): hook para acceder al config completo desde cualquier componente
+    - useIsMuestra(): hook para saber si estamos en modo muestra
+
+  Flujo:
+    page.tsx carga el JSON -> lo pasa a ConfigProvider -> todos los hijos usan useConfig()
+
+10.3 use-fade-in.ts
+---------------------
+  Hook que retorna un ref y un booleano isVisible.
+  Usa IntersectionObserver con threshold 0.15.
+  Se usa en AnimatedSection para el fade-in de cada seccion.
+
+10.4 utils.ts
+--------------
+  Solo tiene la funcion cn() de shadcn:
+    cn(...classes) -> combina clases de Tailwind con twMerge
+
+
+================================================================================
+PARTE 11 - COMO CREAR UN NUEVO CLIENTE (PASO A PASO EXTENDIDO)
+================================================================================
+
+  1. ELEGIR EL TEMPLATE
+     - Para boda: copiar data/_TEMPLATE_BODA.json
+     - Para XV: copiar data/_TEMPLATE_XV.json
+
+  2. RENOMBRAR Y UBICAR
+     - Destino: data/clientes/[tipo]/[slug].json
+     - Ejemplo: data/clientes/boda/lucia-sebastian.json
+     - Siempre minusculas, sin espacios, separado por guiones
+
+  3. CREAR CARPETA DE IMAGENES
+     - Crear: public/clientes/[tipo]/[slug]/images/
+     - Opcional: public/clientes/[tipo]/[slug]/music/
+     - Poner las fotos y musica del cliente ahi
+
+  4. EDITAR EL JSON
+     a. meta: nombres, titulo de pestana, descripcion
+     b. theme: elegir colores y fuente
+     c. overlay: frase y texto del boton (o enabled: false para desactivar)
+     d. music: ruta al MP3 (o enabled: false para desactivar)
+     e. hero: ruta a la foto, headline, fecha
+     f. sections: el orden visual, borrar lo que no se necesite
+     g. Rutas de imagenes: todas apuntan a /clientes/[tipo]/[slug]/images/...
+
+  5. PROBAR
+     - npm run dev
+     - http://localhost:3000/[tipo]/[slug] (real)
+     - http://localhost:3000/m/[tipo]/[slug] (muestra)
+     - Probar en celular real (con ngrok o red local)
+
+  6. AGREGAR A LA LANDING (OPCIONAL)
+     - Editar data/landing.json > sections.muestras.items
+     - Agregar: { tipo, slug, titulo, etiqueta, accentColor }
+
+  7. SUBIR A PRODUCCION
+     - git add / commit / push
+     - Vercel deploya automaticamente
+
+  NO hay que tocar ningun otro archivo del proyecto.
+
+
+================================================================================
+PARTE 12 - DIFERENCIAS ENTRE BODA Y XV
+================================================================================
+
+  El sistema es IDENTICO para ambos. La unica diferencia es:
+
+  1. NOMBRES
+     - Boda: groomName + separator + brideName (ej: "Walter & Anto")
+     - XV: brideName solamente, groomName y separator vacios
+
+  2. SECCIONES EXCLUSIVAS DE XV
+     - presentation: foto + nombre + descripcion de la quinceanera
+     - parents: listado de padres/padrinos
+
+  3. ADAPTACIONES SEMANTICAS
+     - ourStory en boda = "Nuestra historia" (momentos de pareja)
+     - ourStory en XV = "Mi historia" (crecimiento de la quinceanera)
+     - honeymoon en boda = "Luna de miel" (alcancia para el viaje)
+     - honeymoon en XV = "Regalos" (alcancia para regalos)
+
+  4. TEMPLATES DIFERENTES
+     - _TEMPLATE_BODA.json tiene secciones orientadas a pareja
+     - _TEMPLATE_XV.json tiene secciones orientadas a quinceanera
+     Pero el codigo que los renderiza es exactamente el mismo.
+
+
+================================================================================
+PARTE 13 - TIPS PRACTICOS
+================================================================================
+
+13.1 MANTENER ORDENADO EL PROYECTO
+-------------------------------------
+  - Un JSON por cliente, siempre en data/clientes/[tipo]/[slug].json
+  - Una carpeta por cliente en public/clientes/[tipo]/[slug]/
+  - Nunca poner imagenes sueltas en public/ (siempre en la carpeta del cliente)
+  - Nunca duplicar el JSON para hacer una muestra (la ruta /m/ ya lo hace)
+  - Usar los templates como referencia, nunca editarlos directamente
+
+13.2 REUTILIZAR ENTRE PROYECTOS
+----------------------------------
+  - Todos los componentes de wedding/ sirven para boda Y XV
+  - Para un tipo de evento nuevo (ej: cumple, bautismo):
+    1. Crear data/_TEMPLATE_CUMPLE.json
+    2. Poner los clientes en data/clientes/cumple/slug.json
+    3. Listo. El ruteo lo detecta automaticamente.
+  - No hay que tocar ningun componente (salvo que necesites una seccion nueva)
+
+13.3 COMO NO ROMPER NADA
+---------------------------
+  - SIEMPRE validar el JSON antes de guardar (un editor con lint JSON ayuda)
+  - Errores comunes que rompen todo:
+    * Coma final antes de ] o }
+    * Comillas mal cerradas
+    * Falta una coma entre objetos del array
+  - Si la pagina se pone blanca, revisar la consola del navegador
+  - Si dice "notFound", el JSON no existe o la ruta esta mal
+  - Nunca cambiar los nombres de las propiedades (type, id, data, etc.)
+  - Nunca cambiar los valores de type (usar solo los listados)
+  - No confundir transferData (giftCard) con bankData (honeymoon)
+
+13.4 EDITAR DESDE CSS vs JSON
+--------------------------------
+  - Colores de un cliente -> JSON (theme)
+  - Colores de la landing -> JSON (landing.json > theme)
+  - Animaciones globales -> app/globals.css (los @keyframes)
+  - Variables CSS por defecto -> app/globals.css (:root)
+  - Fuente de la landing -> app/layout.tsx (Playfair_Display)
+  - Fuente de cada cliente -> JSON (theme.font)
+  - Footer de marca -> footer-section.tsx (constantes)
+
+13.5 AGREGAR UNA SECCION NUEVA (REQUIERE CODIGO)
+---------------------------------------------------
+  1. Crear components/wedding/mi-nueva-seccion.tsx
+  2. Definir las props que va a recibir (desde data del JSON)
+  3. Importar en section.tsx
+  4. Agregar un case en el switch:
+       case "miNuevaSeccion":
+         return <MiNuevaSeccion ... />
+  5. Usarla en el JSON:
+       { "type": "miNuevaSeccion", "id": "...", "data": { ... } }
+
+
+================================================================================
+PARTE 14 - ARCHIVOS QUE NO TOCAR (Y POR QUE)
+================================================================================
+
+  ARCHIVO                           POR QUE NO TOCARLO
+  ──────────────────────────        ──────────────────────────────────────
+  components/ui/*                   Componentes de shadcn. Se generan con CLI.
+  styles/globals.css                CSS base de shadcn. No es el que usa la app.
+  lib/utils.ts                      Solo tiene cn(). No necesita cambios.
+  next.config.mjs                   Config de Next.js. Ya esta optimizado.
+  tsconfig.json                     Config de TypeScript. Ya funciona.
+  postcss.config.mjs                Config de PostCSS. Ya funciona.
+  package.json                      Solo tocar si agregas dependencias.
+  components/theme-provider.tsx     Provider de shadcn. No se usa activamente.
+  hooks/use-mobile.ts               Hook de shadcn. No se usa activamente.
+  hooks/use-toast.ts                Hook de shadcn. No se usa activamente.
+  data/_TEMPLATE_BODA.json          Son de referencia. No editarlos.
+  data/_TEMPLATE_XV.json            Son de referencia. No editarlos.
+  data/wedding-config.json          Archivo legacy. No se usa.
+
+
+================================================================================
+PARTE 15 - FLUJO DE DEPLOY
+================================================================================
+
+  1. Editar archivos localmente
+  2. git add . && git commit -m "descripcion del cambio"
+  3. git push origin main (o la branch correspondiente)
+  4. Vercel detecta el push automaticamente
+  5. Build se ejecuta en ~30 segundos
+  6. El sitio se actualiza en produccion
+
+  URL de produccion: la que tenga configurada en Vercel (dominio custom o .vercel.app)
+
+
+================================================================================
+PARTE 16 - GLOSARIO
+================================================================================
+
+  JSON maestro    El archivo .json de cada cliente con toda la configuracion
+  Theme           Los colores y fuente de un cliente (dentro del JSON)
+  Section         Un bloque visual de la invitacion (quote, gallery, etc.)
+  Section type    El identificador que decide que componente se renderiza
+  bgColor         Color de fondo de una seccion ("primary" o "background")
+  Overlay         Pantalla de entrada fullscreen al abrir la invitacion
+  Hero            La foto principal + countdown (siempre primero)
+  Muestra         Version de portfolio con datos sensibles protegidos
+  Self-styled     Secciones que manejan su propio fondo (gallery, footer, etc.)
+  Modal           Ventana que aparece sobre la invitacion (trivia, datos bancarios)
+  CTA             Call To Action (boton de accion)
+  Slug            Nombre corto del cliente usado en la URL (ej: "anto-walter")
+  Config          Objeto TypeScript con todos los datos del JSON parseado
+  ConfigProvider  Context de React que distribuye el config a todos los componentes
+  isMuestra       Boolean que indica si estamos en modo muestra
+  CSS Variables   Variables como --primary que se inyectan en :root
+  Tailwind tokens bg-primary, text-foreground, etc. (mapean a CSS variables)
+
+
+================================================================================
+FIN DE LA GUIA
+================================================================================
+
+Con esta guia, deberias poder:
+  - Entender como funciona cada parte del proyecto
+  - Crear nuevos clientes sin ayuda
+  - Editar cualquier aspecto visual desde el JSON o CSS
+  - Agregar secciones nuevas si sabes React/TypeScript
+  - Debuggear problemas comunes
+  - No romper nada
+
+Si despues de leer esto todavia tenes dudas sobre algo especifico, consulta
+el MANUAL_OPERATIVO_BASICO_V1.md para los pasos operativos rapidos, o pregunta
+directamente.
