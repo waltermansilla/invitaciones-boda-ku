@@ -13,6 +13,100 @@ esta guia va mas profundo y cubre la arquitectura completa.
 
 
 ================================================================================
+  INDICE - BUSCA RAPIDO LO QUE NECESITAS
+================================================================================
+
+  QUIERO...                                          IR A
+  ───────────────────────────────────────────────────────────────────────────
+
+  ENTENDER EL PROYECTO
+    Saber que es y como funciona .................. PARTE 1 (1.1)
+    Ver el stack tecnologico ...................... PARTE 1 (1.2)
+    Entender la estructura de carpetas ............ PARTE 2 (2.1 - 2.2)
+
+  ENTENDER EL RUTEO Y LAS URLS
+    Ver todas las rutas y que hace cada una ........ PARTE 3 (3.1)
+    Entender como se genera una invitacion ......... PARTE 3 (3.2)
+    Diferencia entre /boda/slug y /m/boda/slug ..... PARTE 3 (3.3)
+
+  ENTENDER LOS COMPONENTES
+    Ver como se orquesta la invitacion ............. PARTE 4 (4.1)
+    Entender el switch de secciones ................ PARTE 4 (4.2)
+    Saber como funcionan los modales ............... PARTE 4 (4.4)
+    Entender la pantalla de entrada (overlay) ...... PARTE 4 (4.5)
+    Ver como funciona la foto + countdown .......... PARTE 4 (4.6)
+    Entender el reproductor de musica .............. PARTE 4 (4.7)
+    Ver como funciona el RSVP ...................... PARTE 4 (4.11)
+    Ver como funciona giftCard y honeymoon ......... PARTE 4 (4.12)
+
+  CAMBIAR COLORES Y FUENTES
+    Entender como funcionan los colores ............ PARTE 5 (5.1)
+    Saber que controla cada campo del theme ........ PARTE 5 (5.2)
+    Cambiar la fuente de una invitacion ............ PARTE 5 (5.6)
+    Entender que CSS se usa y cual no .............. PARTE 5 (5.7)
+
+  EDITAR EL JSON DE UN CLIENTE
+    Ver la estructura general del JSON ............. PARTE 6 (6.1)
+    Editar los datos meta (titulo, SEO) ............ PARTE 6 (6.2)
+    Editar el hero (foto, nombres, countdown) ...... PARTE 6 (6.3)
+    Ver todos los tipos de seccion posibles ........ PARTE 6 (6.5)
+    Saber que campos son obligatorios u opcionales . PARTE 6 (6.6)
+
+  EDITAR LA LANDING COMERCIAL
+    Entender como funciona la landing .............. PARTE 7 (7.1)
+    Editar la estructura de landing.json ........... PARTE 7 (7.2)
+    Cambiar los botones de WhatsApp ................ PARTE 7 (7.3)
+    Agregar o quitar muestras ...................... PARTE 7 (7.4)
+    Activar o desactivar secciones ................. PARTE 7 (7.5)
+
+  MANEJAR IMAGENES Y ARCHIVOS
+    Saber donde poner las fotos .................... PARTE 8 (8.1)
+    Referenciar imagenes en el JSON ................ PARTE 8 (8.2)
+    Optimizar fotos para rendimiento ............... PARTE 8 (8.3)
+
+  CAMBIAR COSAS QUE ESTAN FUERA DEL JSON
+    Cambiar titulo de la pestana del navegador ..... PARTE 8 (8.6)
+    Cambiar el favicon (icono de pestana) .......... PARTE 8 (8.4 / 8.6)
+    Agregar imagen al compartir por WhatsApp ....... PARTE 8 (8.6)
+    Cambiar nombre/logo/redes del footer ........... PARTE 8 (8.6)
+    Cambiar fuente global de la landing ............ PARTE 8 (8.6)
+    Editar el manifest (nombre PWA en celular) ..... PARTE 8 (8.5 / 8.6)
+
+  ANIMACIONES Y EFECTOS
+    Ver las animaciones existentes ................. PARTE 9 (9.1)
+    Entender el fade-in de secciones ............... PARTE 9 (9.2)
+    Agregar animaciones nuevas ..................... PARTE 9 (9.3)
+
+  LOGICA INTERNA Y HOOKS
+    Entender get-client-config (lector de JSONs) ... PARTE 10 (10.1)
+    Entender el contexto de configuracion .......... PARTE 10 (10.2)
+    Entender el hook de fade-in .................... PARTE 10 (10.3)
+    Funciones utilitarias (cn, etc.) ............... PARTE 10 (10.4)
+
+  CREAR UN CLIENTE NUEVO
+    Paso a paso extendido .......................... PARTE 11
+
+  DIFERENCIAS ENTRE BODA Y XV
+    Que cambia entre los dos tipos ................. PARTE 12
+
+  TIPS Y BUENAS PRACTICAS
+    Mantener ordenado el proyecto .................. PARTE 13 (13.1)
+    Reutilizar entre proyectos ..................... PARTE 13 (13.2)
+    Como no romper nada ............................ PARTE 13 (13.3)
+    Cuando editar CSS vs JSON ...................... PARTE 13 (13.4)
+    Agregar una seccion nueva (requiere codigo) .... PARTE 13 (13.5)
+
+  ARCHIVOS QUE NO TOCAR
+    Lista de archivos protegidos ................... PARTE 14
+
+  DEPLOY Y PUBLICACION
+    Como publicar cambios .......................... PARTE 15
+
+  GLOSARIO DE TERMINOS
+    Definiciones rapidas ........................... PARTE 16
+
+
+================================================================================
 PARTE 1 - VISION GENERAL DEL PROYECTO
 ================================================================================
 
@@ -871,7 +965,7 @@ PARTE 8 - IMAGENES Y ARCHIVOS ESTATICOS
   Estas son las cosas del sitio que NO se editan desde un JSON, sino desde
   archivos de codigo. Son pocas pero importantes:
 
-  ┌────────────────────────────┬──────────────────────────────────────────┐
+  ┌─��──────────────────────────┬──────────────────────────────────────────┐
   │ QUE QUERES CAMBIAR         │ DONDE SE EDITA                           │
   ├────────────────────────────┼──────────────────────────────────────────┤
   │ Titulo de la pestana       │ app/layout.tsx -> metadata.title         │
@@ -939,7 +1033,7 @@ PARTE 8 - IMAGENES Y ARCHIVOS ESTATICOS
   ├────────────────────────────┼──────────────────────────────────────────┤
   │ Animaciones / transiciones │ app/globals.css                          │
   │                            │ @keyframes y variables CSS               │
-  ├────────────────────────────┼──────────────────────────────────────────┤
+  ├──────��─────────────────────┼──────────────────────────────────────────┤
   │ Tokens de color globales   │ app/globals.css                          │
   │  (background, foreground,  │ @theme inline { --color-... }           │
   │   border, etc.)            │ Solo se usan en la landing               │
