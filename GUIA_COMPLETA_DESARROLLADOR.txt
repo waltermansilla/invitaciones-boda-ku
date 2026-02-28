@@ -865,6 +865,105 @@ PARTE 8 - IMAGENES Y ARCHIVOS ESTATICOS
   pantalla de inicio del celular. Tiene name, short_name y description.
   Sincronizarlo con los datos de la landing cuando se cambie el nombre de marca.
 
+8.6 CONFIGURACIONES IMPORTANTES FUERA DEL JSON
+-------------------------------------------------
+
+  Estas son las cosas del sitio que NO se editan desde un JSON, sino desde
+  archivos de codigo. Son pocas pero importantes:
+
+  ┌────────────────────────────┬──────────────────────────────────────────┐
+  │ QUE QUERES CAMBIAR         │ DONDE SE EDITA                           │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Titulo de la pestana       │ app/layout.tsx -> metadata.title         │
+  │  (lo que dice la tab del   │                                          │
+  │   navegador en la landing) │ Ej: "momento unico | Invitaciones..."   │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Descripcion SEO            │ app/layout.tsx -> metadata.description   │
+  │  (lo que muestra Google)   │                                          │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Titulo de la pestana       │ JSON del cliente -> meta.title           │
+  │  de cada INVITACION        │ Ej: "Nuestra Boda - Anto & Walter"      │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Favicon (icono pestana)    │ app/favicon.jpg                          │
+  │                            │ Reemplazar con imagen cuadrada 512x512+  │
+  │                            │ Puede ser .jpg, .png o .ico              │
+  │                            │ Next.js lo detecta automaticamente       │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Imagen al compartir link   │ Crear archivo: app/opengraph-image.jpg   │
+  │  por WhatsApp / redes      │ Tamano ideal: 1200x630px                 │
+  │  (Open Graph image)        │ Next.js lo detecta automaticamente       │
+  │                            │ Si no existe, cada red muestra generico  │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Nombre de marca "Momento   │ components/wedding/footer-section.tsx    │
+  │  Unico" en el footer       │ Constante BRAND_NAME (linea ~8)         │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Fuente del nombre de marca │ components/wedding/footer-section.tsx    │
+  │  en el footer              │ Constante BRAND_FONT (linea ~9)         │
+  │                            │ Valores: "font-serif", "font-sans",     │
+  │                            │ "font-mono", o clase CSS custom          │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Tamano del nombre de marca │ components/wedding/footer-section.tsx    │
+  │  en el footer              │ Constante BRAND_SIZE (linea ~10)        │
+  │                            │ Valores: "text-sm", "text-base",        │
+  │                            │ "text-lg", "text-xl"                     │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Logo/icono junto al nombre │ components/wedding/footer-section.tsx    │
+  │  en el footer              │ Constante BRAND_ICON (linea ~11)        │
+  │                            │ null = sin logo. "/images/logo.png" =   │
+  │                            │ con logo (poner imagen en public/)       │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Redes sociales del footer  │ components/wedding/footer-section.tsx    │
+  │  (links de Instagram y WA) │ Array SOCIAL_LINKS (linea ~13)          │
+  │                            │ Cambiar url y label de cada red          │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Tamano iconos de redes     │ components/wedding/footer-section.tsx    │
+  │  del footer                │ Constante ICON_SIZE (linea ~12)         │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Fuente global de la landing│ app/layout.tsx                           │
+  │                            │ Importar de next/font/google y asignar  │
+  │                            │ a la variable CSS en globals.css         │
+  │                            │ (ver seccion 5.6 de esta guia)          │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Fuente de cada invitacion  │ JSON del cliente -> theme.font           │
+  │                            │ Nombre exacto de Google Fonts            │
+  │                            │ Ej: "Cormorant Garamond"                │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Colores de la landing      │ data/landing.json -> theme               │
+  │                            │ background, foreground, accent, etc.     │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Colores de cada invitacion │ JSON del cliente -> theme.colors         │
+  │                            │ primary, background, accent              │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Nombre de app en pantalla  │ public/manifest.json                     │
+  │  inicio (celular PWA)      │ Campos "name" y "short_name"            │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Animaciones / transiciones │ app/globals.css                          │
+  │                            │ @keyframes y variables CSS               │
+  ├────────────────────────────┼──────────────────────────────────────────┤
+  │ Tokens de color globales   │ app/globals.css                          │
+  │  (background, foreground,  │ @theme inline { --color-... }           │
+  │   border, etc.)            │ Solo se usan en la landing               │
+  └────────────────────────────┴──────────────────────────────────────────┘
+
+  NOTA SOBRE OPEN GRAPH (imagen al compartir por WhatsApp/redes):
+  ───────────────────────────────────────────────────────────────
+  Cuando alguien comparte tu link por WhatsApp, Instagram, Facebook, Twitter,
+  etc., la red social busca una imagen para mostrar como preview. Esa imagen
+  se llama "Open Graph image".
+
+  - NO es una captura de pantalla automatica de tu pagina.
+  - Es una imagen que vos definis manualmente.
+  - Tamano ideal: 1200x630 pixeles (horizontal, tipo banner).
+  - Para la landing: crear app/opengraph-image.jpg (o .png).
+  - Para cada invitacion: crear app/[tipo]/[slug]/opengraph-image.jpg
+    (o agregar openGraph.images al metadata de la page.tsx del cliente).
+  - Si no pones ninguna, algunas redes muestran nada y otras intentan
+    generar un preview generico que se ve feo.
+
+  RECOMENDACION: Crear una imagen con el logo de "Momento Unico", los
+  colores de tu marca, y un texto tipo "Invitaciones Digitales". Eso
+  se muestra cada vez que alguien comparte tu landing en cualquier red.
+
 
 ================================================================================
 PARTE 9 - ANIMACIONES Y EFECTOS
