@@ -1,0 +1,297 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Nuestra Boda - Meliza & Iván",
+        "description": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Iván",
+            "brideName": "Meliza",
+            "separator": "&"
+        }
+    },
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. verde grisaceo: 59695c, marron: 735751, gris oscuro 333",
+    "theme": {
+        "primaryColor": "#59695c",
+        "backgroundColor": "#FAF8F5",
+        "textColor": "#777",
+        "lightBgTextColor": "#777",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#EDF2E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": false,
+        "phrase": "",
+        "buttonText": "Ingresar"
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": false
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "hero": {
+        "coupleImage": "/clientes/boda/meliza-ivan/images/img-hero.jpeg",
+        "headline": "¡Nos casamos!",
+        "showNamesOnPhoto": false,
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-05-23T21:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Si recibiste esta invitación, es porque queremos que estés con nosotros en uno de los días más importantes de nuestras vidas. Tu presencia haría este momento aún más especial.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "23 de Mayo del 2026"
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/meliza-ivan/images/galeria-1.jpeg"]
+            }
+        },
+
+        {
+            "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-ceremonia",
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Ceremonia civil y religiosa",
+                "address": "Parroquia San Pedro y San Pablo",
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/f5c2xKsVRKJgitNC9",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "// --- UBICACION: RECEPCION ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-recepcion",
+            "bgColor": "primary",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "¡Fiesta!",
+                "address": "Salón de eventos 'San Cayetano'",
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/s3hhbVMq5JojVsRU6",
+                    "variant": "background"
+                }
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/meliza-ivan/images/galeria-2.jpeg",
+                    "/clientes/boda/meliza-ivan/images/galeria-3.jpeg"
+                ]
+            }
+        },
+        {
+            "// --- DRESS CODE (con modal) ---": "",
+            "_comment": "El boton abre modal con consejos. modal.sections = array {heading, text}. Agregar/quitar bloques libremente.",
+            "type": "dressCode",
+            "id": "dress-code",
+            "bgColor": "background",
+            "blocks": ["title", "subtitle", "button", "modal"],
+            "data": {
+                "title": "Código de vestimenta",
+                "subtitle": "Elegante",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Elegante",
+                    "sections": [
+                        {
+                            "heading": "Color de vestimenta",
+                            "text": "Te pedimos amablemente evitar los colores BLANCO y VERDE"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
+            "type": "honeymoon",
+            "id": "dream-trip",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Tu presencia es el mejor regalo. Pero si queres tener un detalle, aca te dejo mis datos :)",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos para regalos",
+                    "description": "Muchas gracias!",
+                    "bankData": [
+                        { "label": "CBU", "value": "56478351476478216478" }
+                    ]
+                }
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
+                "author": "Meliza & Iván",
+                "decorativeLines": true
+            }
+        },
+        {
+            "_comment": "GIFT CARD: Tarjeta de regalo con modal. ICONOS: gift (caja regalo), creditCard (tarjeta), heart (corazon), star (estrella), sparkles (brillos), handHeart (mano corazon), dollar (signo pesos). suggestedValue = valor sugerido (dejar '' si no queres mostrar).",
+            "type": "giftCard",
+            "id": "gift-card",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "heart",
+                "title": "Valor Tarjeta",
+                "description": "Agradecemos que confirmes tu asistencia antes del 23 de Abril.",
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "suggestedValue": "$65.000",
+                    "description": "No olvides enviarnos el comprobante.",
+                    "transferData": [
+                        { "label": "Alias", "value": "BODAIVANYMELI" },
+                        {
+                            "label": "Titular",
+                            "value": "Iván Francisco Coronel"
+                        },
+                        { "label": "Banco", "value": "Nación Argentina" },
+                        { "label": "Cuit", "value": "20-38736617-3" }
+                    ]
+                }
+            }
+        },
+        {
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "primary",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "buttonText": "Voy a asistir!",
+                "whatsappNumber": "543815993451",
+                "message": "Hola Iván y Meliza! Confirmo mi asistencia a tu boda. Ya aboné el valor de la tarjeta. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗"
+            }
+        },
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/boda/meliza-ivan/images/final.jpeg"
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}

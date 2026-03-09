@@ -81,13 +81,13 @@ public/
 
 ### Como funciona el ruteo
 
-| URL | Que carga | Fuente de datos |
-| --- | --------- | --------------- |
-| `/` | Landing comercial | `data/landing.json` |
-| `/boda/anto-walter` | Invitacion real | `data/clientes/boda/anto-walter.json` |
-| `/m/boda/anto-walter` | Invitacion muestra | Mismo JSON, con `isMuestra=true` |
-| `/xv/valentina` | Invitacion real | `data/clientes/xv/valentina.json` |
-| `/m/xv/valentina` | Invitacion muestra | Mismo JSON, con `isMuestra=true` |
+| URL                   | Que carga          | Fuente de datos                       |
+| --------------------- | ------------------ | ------------------------------------- |
+| `/`                   | Landing comercial  | `data/landing.json`                   |
+| `/boda/anto-walter`   | Invitacion real    | `data/clientes/boda/anto-walter.json` |
+| `/m/boda/anto-walter` | Invitacion muestra | Mismo JSON, con `isMuestra=true`      |
+| `/xv/valentina`       | Invitacion real    | `data/clientes/xv/valentina.json`     |
+| `/m/xv/valentina`     | Invitacion muestra | Mismo JSON, con `isMuestra=true`      |
 
 ---
 
@@ -109,13 +109,13 @@ npm run dev
 
 ### URLs disponibles
 
-| URL | Que es |
-| --- | ------ |
-| `http://localhost:3000` | Landing comercial |
-| `http://localhost:3000/boda/anto-walter` | Version real de boda |
+| URL                                        | Que es                  |
+| ------------------------------------------ | ----------------------- |
+| `http://localhost:3000`                    | Landing comercial       |
+| `http://localhost:3000/boda/anto-walter`   | Version real de boda    |
 | `http://localhost:3000/m/boda/anto-walter` | Version muestra de boda |
-| `http://localhost:3000/xv/valentina` | Version real de XV |
-| `http://localhost:3000/m/xv/valentina` | Version muestra de XV |
+| `http://localhost:3000/xv/valentina`       | Version real de XV      |
+| `http://localhost:3000/m/xv/valentina`     | Version muestra de XV   |
 
 ### Editar y ver en vivo
 
@@ -144,17 +144,19 @@ Estos templates tienen TODAS las secciones posibles con comentarios explicativos
 ### Paso 2: Renombrar y ubicar
 
 Copiar al directorio correcto:
+
 ```
 data/clientes/boda/lucia-sebastian.json  -> /boda/lucia-sebastian
 data/clientes/xv/camila.json             -> /xv/camila
 ```
+
 Siempre minusculas, sin espacios, separado por guiones.
 
-### Paso 3: Crear carpeta de imagenes
+### Paso 3: Crear carpeta de imagenes y musica
 
 ```
-public/clientes/boda/lucia-sebastian/    <- Todas las fotos de esa boda
-public/clientes/xv/camila/              <- Todas las fotos de ese XV
+public/clientes/boda/lucia-sebastian/images    <- Todas las fotos de esa boda
+public/clientes/xv/camila/images              <- Todas las fotos de ese XV
 ```
 
 ### Paso 4: Editar el JSON
@@ -184,34 +186,34 @@ Listo. No hay que tocar ningun otro archivo.
 
 ### Secciones compartidas (disponibles en ambos)
 
-| `type` | Que hace | Notas para XV |
-| ------ | -------- | ------------- |
-| `quote` | Frase con fondo (autor opcional) | |
-| `dateInfo` | Fecha del evento | |
-| `locationInfo` | Ubicacion con link a Maps | |
-| `gallery` | Slider automatico de fotos | |
-| `itinerary` | Linea de tiempo con iconos | |
-| `dressCode` | Vestimenta con modal de consejos | |
-| `photos` | Invita a subir fotos al album | |
-| `emotionalQuote` | Frase emotiva centrada | |
-| `trivia` | Juego trivia (4 opciones) | |
-| `truths` | Juego verdadero/falso | |
-| `ourStory` | Momentos con fotos | En XV: "Mi historia" (crecimiento) |
-| `giftCard` | Tarjeta de regalo con datos bancarios | |
-| `honeymoon` | Alcancia con datos bancarios | En XV: "Regalos" (no viaje) |
-| `confirmarWhatsapp` | Boton WhatsApp directo (Plan Base) | Sin formulario |
-| `playlist` | Link a playlist de Spotify | |
-| `rsvp` | Formulario de confirmacion | |
-| `specialMessage` | Mensaje personal con firma | |
-| `closingImage` | Foto de cierre | |
-| `footer` | Footer de marca | |
+| `type`              | Que hace                              | Notas para XV                      |
+| ------------------- | ------------------------------------- | ---------------------------------- |
+| `quote`             | Frase con fondo (autor opcional)      |                                    |
+| `dateInfo`          | Fecha del evento                      |                                    |
+| `locationInfo`      | Ubicacion con link a Maps             |                                    |
+| `gallery`           | Slider automatico de fotos            |                                    |
+| `itinerary`         | Linea de tiempo con iconos            |                                    |
+| `dressCode`         | Vestimenta con modal de consejos      |                                    |
+| `photos`            | Invita a subir fotos al album         |                                    |
+| `emotionalQuote`    | Frase emotiva centrada                |                                    |
+| `trivia`            | Juego trivia (4 opciones)             |                                    |
+| `truths`            | Juego verdadero/falso                 |                                    |
+| `ourStory`          | Momentos con fotos                    | En XV: "Mi historia" (crecimiento) |
+| `giftCard`          | Tarjeta de regalo con datos bancarios |                                    |
+| `honeymoon`         | Alcancia con datos bancarios          | En XV: "Regalos" (no viaje)        |
+| `confirmarWhatsapp` | Boton WhatsApp directo (Plan Base)    | Sin formulario                     |
+| `playlist`          | Link a playlist de Spotify            |                                    |
+| `rsvp`              | Formulario de confirmacion            |                                    |
+| `specialMessage`    | Mensaje personal con firma            |                                    |
+| `closingImage`      | Foto de cierre                        |                                    |
+| `footer`            | Footer de marca                       |                                    |
 
 ### Secciones exclusivas de XV
 
-| `type` | Que hace |
-| ------ | -------- |
+| `type`         | Que hace                    |
+| -------------- | --------------------------- |
 | `presentation` | Foto + nombre + descripcion |
-| `parents` | Listado de padres/padrinos |
+| `parents`      | Listado de padres/padrinos  |
 
 ### Templates
 
@@ -238,17 +240,17 @@ Listo. No hay que tocar ningun otro archivo.
 }
 ```
 
-| Campo | Que controla |
-| ----- | ------------ |
-| `primaryColor` | Color principal: fondos, botones, acentos, footer |
-| `backgroundColor` | Fondo general de la pagina |
-| `textColor` | Color del texto del body |
-| `lightBgTextColor` | Texto en secciones claras (iconos, titulos) |
-| `darkBgTextColor` | Texto en secciones con fondo primario |
-| `accentBackground` | Fondo de elementos sutiles (cards, badges) |
-| `modalTextColor` | Texto dentro de modales |
-| `font.family` | Nombre exacto de Google Fonts |
-| `font.weights` | Pesos separados por coma |
+| Campo              | Que controla                                      |
+| ------------------ | ------------------------------------------------- |
+| `primaryColor`     | Color principal: fondos, botones, acentos, footer |
+| `backgroundColor`  | Fondo general de la pagina                        |
+| `textColor`        | Color del texto del body                          |
+| `lightBgTextColor` | Texto en secciones claras (iconos, titulos)       |
+| `darkBgTextColor`  | Texto en secciones con fondo primario             |
+| `accentBackground` | Fondo de elementos sutiles (cards, badges)        |
+| `modalTextColor`   | Texto dentro de modales                           |
+| `font.family`      | Nombre exacto de Google Fonts                     |
+| `font.weights`     | Pesos separados por coma                          |
 
 ---
 
@@ -257,6 +259,7 @@ Listo. No hay que tocar ningun otro archivo.
 ### Que es
 
 Cada invitacion tiene automaticamente dos versiones:
+
 - **Version real**: `/boda/anto-walter` -- para el cliente, todo activo
 - **Version muestra**: `/m/boda/anto-walter` -- para portfolio, datos sensibles protegidos
 
@@ -264,14 +267,14 @@ Ambas usan **el mismo JSON**. No se duplica nada.
 
 ### Que cambia en modo muestra
 
-| Componente | En muestra |
-| ---------- | ---------- |
-| Botones de accion (Maps, etc.) | No navegan. Muestra aviso. |
-| Formulario RSVP | Se llena. Al enviar dice "Confirmacion simulada". |
-| Modal de datos bancarios | Se abre. Datos enmascarados (XXXX-XXXX-XXXX). Sin copiar. |
-| Modal de luna de miel | Se abre. Datos enmascarados. Sin copiar. |
-| Footer | Funciona normalmente (son tus links de marca). |
-| Botones del itinerario | No navegan. Muestra aviso. |
+| Componente                     | En muestra                                                |
+| ------------------------------ | --------------------------------------------------------- |
+| Botones de accion (Maps, etc.) | No navegan. Muestra aviso.                                |
+| Formulario RSVP                | Se llena. Al enviar dice "Confirmacion simulada".         |
+| Modal de datos bancarios       | Se abre. Datos enmascarados (XXXX-XXXX-XXXX). Sin copiar. |
+| Modal de luna de miel          | Se abre. Datos enmascarados. Sin copiar.                  |
+| Footer                         | Funciona normalmente (son tus links de marca).            |
+| Botones del itinerario         | No navegan. Muestra aviso.                                |
 
 ### Reglas
 
@@ -289,17 +292,17 @@ La landing en `/` se configura **100% desde** `data/landing.json`.
 
 ### Que se puede editar desde el JSON
 
-| Seccion | Que editar |
-| ------- | ---------- |
-| `theme` | Colores de toda la landing (fondo, texto, acento, cards, footer) |
-| `whatsapp` | Numero y mensaje default |
-| `ctaButtons` | Todos los botones de accion (ver seccion 10) |
-| `sections.hero` | Titulo (con parte en negrita), subtitulo |
-| `sections.muestras` | Titulo, descripcion, lista de muestras |
-| `sections.servicio` | Planes, precios, features, mostrar/ocultar precios |
-| `sections.proceso` | Pasos, highlights |
-| `sections.faq` | Preguntas y respuestas |
-| `sections.ctaFinal` | Titulo y subtitulo del CTA final |
+| Seccion             | Que editar                                                       |
+| ------------------- | ---------------------------------------------------------------- |
+| `theme`             | Colores de toda la landing (fondo, texto, acento, cards, footer) |
+| `whatsapp`          | Numero y mensaje default                                         |
+| `ctaButtons`        | Todos los botones de accion (ver seccion 10)                     |
+| `sections.hero`     | Titulo (con parte en negrita), subtitulo                         |
+| `sections.muestras` | Titulo, descripcion, lista de muestras                           |
+| `sections.servicio` | Planes, precios, features, mostrar/ocultar precios               |
+| `sections.proceso`  | Pasos, highlights                                                |
+| `sections.faq`      | Preguntas y respuestas                                           |
+| `sections.ctaFinal` | Titulo y subtitulo del CTA final                                 |
 
 ### Activar/desactivar secciones
 
@@ -313,6 +316,7 @@ Cada seccion tiene `"enabled": true/false`. Poner `false` para ocultarla.
   "highlight": "la altura"
 }
 ```
+
 `normal` se renderiza con peso ligero, `highlight` en negrita.
 
 ---
@@ -322,29 +326,32 @@ Cada seccion tiene `"enabled": true/false`. Poner `false` para ocultarla.
 El footer es **identico en todas las invitaciones y la landing**. No se configura desde JSON.
 
 ### Archivo
+
 `components/wedding/footer-section.tsx`
 
 ### Constantes editables (al principio del archivo)
 
-| Constante | Que es | Valor actual |
-| --------- | ------ | ------------ |
-| `BRAND_NAME` | Nombre de marca | `"momento unico"` |
-| `BRAND_FONT` | Clase CSS de fuente | `"font-serif"` (cursiva) |
-| `BRAND_SIZE` | Clase CSS de tamano | `"text-base"` |
-| `BRAND_ICON` | URL de icono (o null) | `null` (sin icono) |
-| `ICON_SIZE` | Tamano de iconos de redes (px) | `26` |
-| `SOCIAL_LINKS` | Array de redes sociales | Instagram + WhatsApp |
+| Constante      | Que es                         | Valor actual             |
+| -------------- | ------------------------------ | ------------------------ |
+| `BRAND_NAME`   | Nombre de marca                | `"momento unico"`        |
+| `BRAND_FONT`   | Clase CSS de fuente            | `"font-serif"` (cursiva) |
+| `BRAND_SIZE`   | Clase CSS de tamano            | `"text-base"`            |
+| `BRAND_ICON`   | URL de icono (o null)          | `null` (sin icono)       |
+| `ICON_SIZE`    | Tamano de iconos de redes (px) | `26`                     |
+| `SOCIAL_LINKS` | Array de redes sociales        | Instagram + WhatsApp     |
 
 ### Como cambiar el nombre de marca
 
 Buscar `BRAND_NAME` y cambiar el texto:
+
 ```js
-const BRAND_NAME = "mi nueva marca"
+const BRAND_NAME = "mi nueva marca";
 ```
 
 ### Como cambiar la fuente del nombre
 
 Cambiar `BRAND_FONT`:
+
 - `"font-serif"` -> cursiva elegante (Playfair Display)
 - `"font-sans"` -> recta (la fuente del sistema)
 - `"font-mono"` -> monoespaciada
@@ -352,6 +359,7 @@ Cambiar `BRAND_FONT`:
 ### Como cambiar el tamano
 
 Cambiar `BRAND_SIZE`:
+
 - `"text-xs"` (muy chico)
 - `"text-sm"` (chico)
 - `"text-base"` (normal)
@@ -360,14 +368,17 @@ Cambiar `BRAND_SIZE`:
 ### Como agregar un icono al lado del nombre
 
 Cambiar `BRAND_ICON` de `null` a la ruta de la imagen:
+
 ```js
-const BRAND_ICON = "/images/mi-icono.png"
+const BRAND_ICON = "/images/mi-icono.png";
 ```
+
 Subir el icono a `public/images/`.
 
 ### Como poner un logo en vez de texto
 
 Reemplazar `{BRAND_NAME}` por un `<img>` dentro del `<Link>` del footer:
+
 ```jsx
 <img src="/images/mi-logo.png" alt="Mi Marca" className="h-5 opacity-40" />
 ```
@@ -375,6 +386,7 @@ Reemplazar `{BRAND_NAME}` por un `<img>` dentro del `<Link>` del footer:
 ### Como cambiar las redes sociales
 
 Editar `SOCIAL_LINKS`:
+
 ```js
 { icon: "instagram", url: "https://instagram.com/tu_cuenta", label: "Instagram" },
 { icon: "whatsapp",  url: "https://wa.me/tunumero", label: "WhatsApp" },
@@ -383,8 +395,9 @@ Editar `SOCIAL_LINKS`:
 ### Como cambiar el tamano de los iconos
 
 Cambiar `ICON_SIZE` (en pixeles):
+
 ```js
-const ICON_SIZE = 28
+const ICON_SIZE = 28;
 ```
 
 ### Color del footer
@@ -402,34 +415,35 @@ Todos los botones de accion estan centralizados en `landing.json` > `ctaButtons`
 
 ```json
 {
-  "text": "Quiero mi invitacion",
-  "type": "whatsapp",
-  "message": "Hola! Me interesa una invitacion digital."
+    "text": "Quiero mi invitacion",
+    "type": "whatsapp",
+    "message": "Hola! Me interesa una invitacion digital."
 }
 ```
 
 ### Tipos disponibles
 
-| `type` | Que hace | Campos necesarios |
-| ------ | -------- | ----------------- |
-| `whatsapp` | Abre WhatsApp con mensaje | `message` |
-| `anchor` | Scroll a una seccion de la misma pagina | `anchor` (ej: `"#muestras"`) |
-| `link` | Navega a una URL | `url`, `newTab` (opcional) |
+| `type`     | Que hace                                | Campos necesarios            |
+| ---------- | --------------------------------------- | ---------------------------- |
+| `whatsapp` | Abre WhatsApp con mensaje               | `message`                    |
+| `anchor`   | Scroll a una seccion de la misma pagina | `anchor` (ej: `"#muestras"`) |
+| `link`     | Navega a una URL                        | `url`, `newTab` (opcional)   |
 
 ### Botones configurados
 
-| Key en JSON | Donde aparece |
-| ----------- | ------------- |
-| `heroPrimary` | Boton principal del hero |
-| `heroSecondary` | Boton secundario del hero |
-| `planEsencial` | Boton del plan Esencial |
-| `planPremium` | Boton del plan Premium |
-| `proceso` | Boton de la seccion "Como funciona" |
-| `ctaFinal` | Boton del CTA final |
+| Key en JSON     | Donde aparece                       |
+| --------------- | ----------------------------------- |
+| `heroPrimary`   | Boton principal del hero            |
+| `heroSecondary` | Boton secundario del hero           |
+| `planEsencial`  | Boton del plan Esencial             |
+| `planPremium`   | Boton del plan Premium              |
+| `proceso`       | Boton de la seccion "Como funciona" |
+| `ctaFinal`      | Boton del CTA final                 |
 
 ### Como cambiar un boton
 
 Solo editar su objeto en `ctaButtons`:
+
 ```json
 "heroPrimary": {
   "text": "Escribime por WhatsApp",
@@ -459,20 +473,20 @@ Buscar `sections.muestras.items` y agregar un objeto:
 
 ```json
 {
-  "tipo": "boda",
-  "slug": "lucia-sebastian",
-  "titulo": "Lucia & Sebastian",
-  "etiqueta": "Boda",
-  "accentColor": "#9A8A7A"
+    "tipo": "boda",
+    "slug": "lucia-sebastian",
+    "titulo": "Lucia & Sebastian",
+    "etiqueta": "Boda",
+    "accentColor": "#9A8A7A"
 }
 ```
 
-| Campo | Que es |
-| ----- | ------ |
-| `tipo` | Carpeta del tipo de evento (`boda`, `xv`) |
-| `slug` | Nombre del JSON (sin `.json`) |
-| `titulo` | Nombre que se muestra en la landing |
-| `etiqueta` | Badge (Boda, XV, etc.) |
+| Campo         | Que es                                          |
+| ------------- | ----------------------------------------------- |
+| `tipo`        | Carpeta del tipo de evento (`boda`, `xv`)       |
+| `slug`        | Nombre del JSON (sin `.json`)                   |
+| `titulo`      | Nombre que se muestra en la landing             |
+| `etiqueta`    | Badge (Boda, XV, etc.)                          |
 | `accentColor` | Color del acento visual (barra lateral + badge) |
 
 El boton se crea automaticamente con link a `/m/[tipo]/[slug]`.
@@ -481,15 +495,15 @@ El boton se crea automaticamente con link a `/m/[tipo]/[slug]`.
 
 ## 12. VALORES ESPECIALES Y OPCIONES AVANZADAS
 
-| Campo | Valores validos |
-| ----- | --------------- |
-| `button.variant` | `"primary"`, `"secondary"`, `"background"` |
-| `bgColor` | `"primary"` (fondo color primario), `"background"` (fondo claro) |
-| `trivia correctIndex` | 0 a 3 (0 = primera opcion) |
-| `truths correctOption` | `"A"` o `"B"` |
-| `socialLinks icon` | `"instagram"`, `"whatsapp"` |
-| `aspectRatio` | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"` |
-| `decorativeLines` | `true` o `false` -- lineas decorativas arriba/abajo en `quote` y `specialMessage` |
+| Campo                  | Valores validos                                                                   |
+| ---------------------- | --------------------------------------------------------------------------------- |
+| `button.variant`       | `"primary"`, `"secondary"`, `"background"`                                        |
+| `bgColor`              | `"primary"` (fondo color primario), `"background"` (fondo claro)                  |
+| `trivia correctIndex`  | 0 a 3 (0 = primera opcion)                                                        |
+| `truths correctOption` | `"A"` o `"B"`                                                                     |
+| `socialLinks icon`     | `"instagram"`, `"whatsapp"`                                                       |
+| `aspectRatio`          | `"3/4"`, `"4/3"`, `"1/1"`, `"16/9"`                                               |
+| `decorativeLines`      | `true` o `false` -- lineas decorativas arriba/abajo en `quote` y `specialMessage` |
 
 ### Lineas divisorias entre secciones
 
@@ -512,29 +526,29 @@ Poner `false` o no incluir el campo para desactivarlas.
 
 Se eligen desde `data.icon` en el JSON:
 
-| Valor | Icono |
-| ----- | ----- |
-| `"gift"` | Caja de regalo (default) |
-| `"creditCard"` | Tarjeta de credito |
-| `"heart"` | Corazon |
-| `"star"` | Estrella |
-| `"sparkles"` | Brillos |
-| `"handHeart"` | Mano con corazon |
-| `"dollar"` | Signo de pesos |
+| Valor          | Icono                    |
+| -------------- | ------------------------ |
+| `"gift"`       | Caja de regalo (default) |
+| `"creditCard"` | Tarjeta de credito       |
+| `"heart"`      | Corazon                  |
+| `"star"`       | Estrella                 |
+| `"sparkles"`   | Brillos                  |
+| `"handHeart"`  | Mano con corazon         |
+| `"dollar"`     | Signo de pesos           |
 
 ### Iconos de honeymoon (Luna de miel / Regalos)
 
 Se eligen desde `data.icon` en el JSON:
 
-| Valor | Icono |
-| ----- | ----- |
-| `"plane"` | Avion (viaje / luna de miel) |
-| `"gift"` | Caja de regalo (regalos en XV) |
-| `"heart"` | Corazon |
-| `"star"` | Estrella |
-| `"sparkles"` | Brillos |
-| `"moon"` | Luna |
-| `"handHeart"` | Mano con corazon |
+| Valor         | Icono                          |
+| ------------- | ------------------------------ |
+| `"plane"`     | Avion (viaje / luna de miel)   |
+| `"gift"`      | Caja de regalo (regalos en XV) |
+| `"heart"`     | Corazon                        |
+| `"star"`      | Estrella                       |
+| `"sparkles"`  | Brillos                        |
+| `"moon"`      | Luna                           |
+| `"handHeart"` | Mano con corazon               |
 
 **IMPORTANTE**: honeymoon usa `bankData` en el modal (no `transferData`). giftCard usa `transferData`.
 
@@ -560,16 +574,16 @@ Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
 
 ```json
 {
-  "type": "confirmarWhatsapp",
-  "id": "confirmar-whatsapp",
-  "bgColor": "primary",
-  "blocks": ["title", "button"],
-  "data": {
-    "title": "Confirmar asistencia",
-    "buttonText": "Confirmar por WhatsApp",
-    "whatsappNumber": "3456023759",
-    "message": "Confirmo mi asistencia a la boda de Anto & Walter"
-  }
+    "type": "confirmarWhatsapp",
+    "id": "confirmar-whatsapp",
+    "bgColor": "primary",
+    "blocks": ["title", "button"],
+    "data": {
+        "title": "Confirmar asistencia",
+        "buttonText": "Confirmar por WhatsApp",
+        "whatsappNumber": "3456023759",
+        "message": "Confirmo mi asistencia a la boda de Anto & Walter"
+    }
 }
 ```
 
@@ -579,63 +593,66 @@ Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
 
 ### Iconos del itinerario
 
-| Nombre | Representa |
-| ------ | ---------- |
-| `heart` | Corazon |
-| `wine` | Copa de vino |
-| `utensils` | Cubiertos / Cena |
-| `music` | Musica |
-| `church` | Iglesia |
-| `camera` | Camara / Fotos |
-| `cake` | Torta |
-| `car` | Auto |
-| `glass` | Brindis |
-| `party` | Fiesta |
-| `sparkles` | Recepcion |
-| `sun` | Sol / Dia |
-| `moon` | Luna / Noche |
-| `clock` | Reloj |
-| `pin` | Ubicacion |
-| `gift` | Regalo |
-| `bus` | Transporte |
-| `podium` | Discurso |
-| `book` | Libro |
-| `salon` | Salon |
-| `civil` | Civil / Anillos |
-| `mate` | Mate |
-| `fin` | Fin |
-| `sidra` | Sidra |
-| `mesaDulce` | Mesa dulce |
+| Nombre            | Representa          |
+| ----------------- | ------------------- |
+| `heart`           | Corazon             |
+| `wine`            | Copa de vino        |
+| `utensils`        | Cubiertos / Cena    |
+| `music`           | Musica              |
+| `church`          | Iglesia             |
+| `camera`          | Camara / Fotos      |
+| `cake`            | Torta               |
+| `car`             | Auto                |
+| `glass`           | Brindis             |
+| `party`           | Fiesta              |
+| `sparkles`        | Recepcion           |
+| `sun`             | Sol / Dia           |
+| `moon`            | Luna / Noche        |
+| `clock`           | Reloj               |
+| `pin`             | Ubicacion           |
+| `gift`            | Regalo              |
+| `bus`             | Transporte          |
+| `podium`          | Discurso            |
+| `book`            | Libro               |
+| `salon`           | Salon               |
+| `civil`           | Civil / Anillos     |
+| `mate`            | Mate                |
+| `fin`             | Fin                 |
+| `sidra`           | Sidra               |
+| `mesaDulce`       | Mesa dulce          |
 | `tortaCasamiento` | Torta de casamiento |
 
 ---
 
 ## 13. ERRORES COMUNES
 
-| Error | Ejemplo MAL | Ejemplo BIEN |
-| ----- | ----------- | ------------ |
-| Coma final antes de `]` | `"foto2.jpg",]` | `"foto2.jpg"]` |
-| Comillas mal cerradas | `"title": "Hola` | `"title": "Hola"` |
-| Fecha mal formateada | `"10 de Octubre 2026"` | `"2026-10-10T18:00:00"` |
-| Ruta con /public | `"/public/clientes/..."` | `"/clientes/boda/slug/img.jpg"` |
-| Link sin https | `"wa.me/3456023759"` | `"https://wa.me/3456023759"` |
+| Error                   | Ejemplo MAL              | Ejemplo BIEN                    |
+| ----------------------- | ------------------------ | ------------------------------- |
+| Coma final antes de `]` | `"foto2.jpg",]`          | `"foto2.jpg"]`                  |
+| Comillas mal cerradas   | `"title": "Hola`         | `"title": "Hola"`               |
+| Fecha mal formateada    | `"10 de Octubre 2026"`   | `"2026-10-10T18:00:00"`         |
+| Ruta con /public        | `"/public/clientes/..."` | `"/clientes/boda/slug/img.jpg"` |
+| Link sin https          | `"wa.me/3456023759"`     | `"https://wa.me/3456023759"`    |
 
 ---
 
 ## 14. CHECKLIST FINAL
 
 ### Datos
+
 - [ ] Nombres correctos en `meta.coupleNames`
 - [ ] Titulo de pestana correcto en `meta.title`
 - [ ] Fecha en formato ISO en `hero.eventDate`
 - [ ] Cuenta regresiva funcionando
 
 ### Imagenes
+
 - [ ] Todas en `public/clientes/[tipo]/[slug]/`
 - [ ] Rutas en el JSON empiezan con `/clientes/[tipo]/[slug]/`
 - [ ] Hero, galeria, historia y cierre tienen fotos reales
 
 ### Links
+
 - [ ] Google Maps funciona
 - [ ] Datos bancarios correctos
 - [ ] WhatsApp e Instagram del footer son de TU MARCA
@@ -643,6 +660,7 @@ Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
 - [ ] RSVP `messageTemplate` menciona los nombres correctos
 
 ### Versiones
+
 - [ ] Probar version real: `/boda/slug`
 - [ ] Probar version muestra: `/m/boda/slug`
 - [ ] Probar en celular real
@@ -652,6 +670,7 @@ Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
 - [ ] Iconos de giftCard y honeymoon se ven correctamente
 
 ### Landing
+
 - [ ] Muestras aparecen correctamente
 - [ ] Botones de WhatsApp abren con mensaje correcto
 - [ ] Precios actualizados (o ocultos con `showPrices: false`)
@@ -661,16 +680,17 @@ Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
 
 ## 15. QUE NO TOCAR
 
-| Que quiero cambiar | Donde |
-| ------------------- | ----- |
-| Textos, fotos, colores de un cliente | Solo su JSON |
-| Textos, precios, FAQ de la landing | `data/landing.json` |
-| Nombre de marca, redes del footer | `components/wedding/footer-section.tsx` (constantes) |
-| Agregar un nuevo tipo de seccion | `components/wedding/section.tsx` (requiere React) |
-| Agregar un nuevo icono al itinerario | `components/wedding/itinerary-section.tsx` |
-| Estilos CSS globales | `app/globals.css` (raramente necesario) |
+| Que quiero cambiar                   | Donde                                                |
+| ------------------------------------ | ---------------------------------------------------- |
+| Textos, fotos, colores de un cliente | Solo su JSON                                         |
+| Textos, precios, FAQ de la landing   | `data/landing.json`                                  |
+| Nombre de marca, redes del footer    | `components/wedding/footer-section.tsx` (constantes) |
+| Agregar un nuevo tipo de seccion     | `components/wedding/section.tsx` (requiere React)    |
+| Agregar un nuevo icono al itinerario | `components/wedding/itinerary-section.tsx`           |
+| Estilos CSS globales                 | `app/globals.css` (raramente necesario)              |
 
 **Nunca tocar:**
+
 - Nombres de propiedades (`type`, `id`, `blocks`, `data`, etc.)
 - Valores de `type` -- usar solo los listados en la seccion 5 mas `confirmarWhatsapp`
 - Estructura de arrays -- no convertir `[]` en `{}` ni en string
