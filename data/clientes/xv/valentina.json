@@ -66,13 +66,28 @@
         "coupleImage": "/clientes/xv/valentina/images/quince-hero.jpg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": true,
+            "position": "bottom",
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": ""
+        },
         "countdownPrefix": "Faltan",
         "eventDate": "2026-09-19T21:00:00",
         "countdownLabels": {
-            "days": "D\u00edas",
+            "days": "Días",
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
         }
     },
 

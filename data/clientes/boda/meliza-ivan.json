@@ -56,11 +56,16 @@
         "coupleImage": "/clientes/boda/meliza-ivan/images/img-hero.jpeg",
         "headline": "¡Nos casamos!",
         "showNamesOnPhoto": false,
-        "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
+        "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
         "namesDisplay": {
             "enabled": false,
             "position": "top",
             "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
             "logo": ""
         },
         "countdownPrefix": "Faltan",
@@ -70,6 +75,10 @@
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
         }
     },
     "// ==========================================+": "",

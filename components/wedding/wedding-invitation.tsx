@@ -44,7 +44,17 @@ export default function WeddingInvitation() {
                     }
                     namesDisplay={
                         (hero as Record<string, unknown>).namesDisplay as
-                            | { enabled: boolean; position: "top" | "bottom"; font?: string; logo?: string }
+                            | { 
+                                enabled: boolean
+                                position: "top" | "bottom"
+                                font?: string
+                                weight?: string
+                                size?: string
+                                style?: string
+                                color?: string
+                                decorativeLines?: boolean
+                                logo?: string 
+                              }
                             | undefined
                     }
                     countdownPrefix={
@@ -53,6 +63,14 @@ export default function WeddingInvitation() {
                             | undefined
                     }
                     countdownLabels={hero.countdownLabels}
+                    countdownStyle={
+                        (hero as Record<string, unknown>).countdownStyle as
+                            | { 
+                                background: "none" | "background" | "primary" | "secondary"
+                                shape: "rounded" | "circle" | "square" | "pill" 
+                              }
+                            | undefined
+                    }
                 />
 
                 {/* Dynamic sections: order controlled by array position in JSON */}

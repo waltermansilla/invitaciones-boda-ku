@@ -25,9 +25,9 @@
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
-        "font": {
+"font": {
             "family": "Josefin Sans",
-            "weights": "400,500,600,700"
+            "weights": "300,400,500,600,700"
         }
     },
     "// ==========================================;": "",
@@ -56,11 +56,16 @@
         "coupleImage": "/clientes/boda/anto-walter/images/img-hero.jpg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": false,
-        "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
+        "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm','base','lg','xl','2xl','3xl','4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
         "namesDisplay": {
             "enabled": true,
             "position": "bottom",
             "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
             "logo": ""
         },
         "countdownPrefix": "Faltan",
@@ -70,6 +75,11 @@
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
+        },
+        "_comment_countdownStyle": "Estilo del countdown. background: 'none', 'background', 'primary', 'secondary'. shape: 'rounded', 'circle', 'square', 'pill'.",
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
         }
     },
     "// ==========================================+": "",
