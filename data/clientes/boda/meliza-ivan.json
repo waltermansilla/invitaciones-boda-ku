@@ -18,7 +18,7 @@
     "// ==========================================..": "",
     "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. verde grisaceo: 59695c, marron: 735751, gris oscuro 333",
     "theme": {
-        "primaryColor": "#59695c",
+        "primaryColor": "#222",
         "backgroundColor": "#FAF8F5",
         "textColor": "#777",
         "lightBgTextColor": "#777",
@@ -115,7 +115,7 @@
             "bgColor": "background",
             "blocks": ["title", "address", "button"],
             "data": {
-                "title": "Ceremonia civil y religiosa",
+                "title": "Ceremonia religiosa",
                 "address": "Parroquia San Pedro y San Pablo",
                 "button": {
                     "text": "Cómo llegar",
@@ -125,14 +125,14 @@
             }
         },
         {
-            "// --- UBICACION: RECEPCION ---": "",
+            "// --- UBICACION: CIVIL y RECEPCION ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-recepcion",
             "bgColor": "primary",
             "blocks": ["title", "address", "button"],
             "data": {
-                "title": "¡Fiesta!",
+                "title": "Civil y ¡Fiesta!",
                 "address": "Salón de eventos 'San Cayetano'",
                 "button": {
                     "text": "Cómo llegar",
@@ -181,30 +181,7 @@
                 }
             }
         },
-        {
-            "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
-            "type": "honeymoon",
-            "id": "dream-trip",
-            "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
-            "data": {
-                "icon": "gift",
-                "title": "Regalos",
-                "description": "Tu presencia es el mejor regalo. Pero si queres tener un detalle, aca te dejo mis datos :)",
-                "button": {
-                    "text": "Ver",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Datos para regalos",
-                    "description": "Muchas gracias!",
-                    "bankData": [
-                        { "label": "CBU", "value": "56478351476478216478" }
-                    ]
-                }
-            }
-        },
+
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
