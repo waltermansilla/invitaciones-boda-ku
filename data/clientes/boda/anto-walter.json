@@ -26,8 +26,8 @@
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
         "font": {
-            "family": "Josefin Sans",
-            "weights": "100,200,300,400,500,600,700"
+            "family": "Playfair Display",
+            "weights": "400,500,600,700"
         }
     },
     "// ==========================================;": "",
