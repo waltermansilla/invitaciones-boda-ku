@@ -1,29 +1,99 @@
-import { MapPin } from "lucide-react"
+import { 
+  MapPin, 
+  Church, 
+  UtensilsCrossed, 
+  PartyPopper, 
+  Building2,
+  BookOpen,
+  Presentation,
+  GlassWater,
+  Heart,
+  Music,
+  Sparkles
+} from "lucide-react"
 import ActionButton from "./action-button"
+
+/**
+ * Location Info Section
+ * 
+ * icon: "pin" (default), "church", "dinner", "party", "salon", "book", "podium", "reception", "ring", "music", "sparkles"
+ * showButton: true (default) / false para ocultar el boton "Como llegar"
+ * datetime: { date: string, time: string } - (OPCIONAL) fecha y hora del evento
+ */
 
 interface LocationInfoSectionProps {
   title: string
   address: string
+  icon?: string
+  showButton?: boolean
+  datetime?: {
+    date?: string
+    time?: string
+  }
   button: {
     text: string
     url: string
-    variant: "primary" | "secondary"
+    variant: "primary" | "secondary" | "background"
   }
 }
 
-export default function LocationInfoSection({ title, address, button }: LocationInfoSectionProps) {
+// Map icon names to components
+const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
+  pin: MapPin,
+  church: Church,
+  dinner: UtensilsCrossed,
+  party: PartyPopper,
+  salon: Building2,
+  book: BookOpen,
+  podium: Presentation,
+  reception: GlassWater,
+  ring: Heart,
+  music: Music,
+  sparkles: Sparkles,
+}
+
+export default function LocationInfoSection({ 
+  title, 
+  address, 
+  icon = "pin",
+  showButton = true,
+  datetime,
+  button 
+}: LocationInfoSectionProps) {
+  const IconComponent = iconMap[icon] || MapPin
+
   return (
     <section className="flex flex-col items-center gap-4 px-6 py-14 text-center">
-      <MapPin className="h-9 w-9 text-inherit/50" strokeWidth={1} />
+      <IconComponent className="h-9 w-9 text-inherit/50" strokeWidth={1} />
       <h2 className="text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl">
         {title}
       </h2>
+      
+      {/* Date and time if provided */}
+      {datetime && (datetime.date || datetime.time) && (
+        <div className="flex flex-col items-center gap-1">
+          {datetime.date && (
+            <p className="text-sm font-medium tracking-[0.15em] uppercase text-inherit/80">
+              {datetime.date}
+            </p>
+          )}
+          {datetime.time && (
+            <p className="text-lg font-semibold tracking-[0.1em] text-inherit">
+              {datetime.time}
+            </p>
+          )}
+        </div>
+      )}
+      
       <p className="text-sm font-medium tracking-[0.1em] uppercase text-inherit/70">
         {address}
       </p>
-      <div className="mt-1">
-        <ActionButton text={button.text} url={button.url} variant={button.variant} />
-      </div>
+      
+      {showButton && (
+        <div className="mt-1">
+          <ActionButton text={button.text} url={button.url} variant={button.variant} />
+        </div>
+      )}
     </section>
   )
 }

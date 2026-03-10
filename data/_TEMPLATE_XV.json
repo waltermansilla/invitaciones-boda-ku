@@ -49,11 +49,16 @@
         "coupleImage": "/clientes/xv/[slug]/hero.jpg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
-        "_comment_namesDisplay": "OPCIONAL: enabled (true/false), position ('top'/'bottom'), font (Google Font), logo (ruta a imagen).",
+        "_comment_namesDisplay": "CONTROLA LOS NOMBRES EN LA FOTO. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900' o 'light','normal','bold'. size: 'sm','base','lg','xl','2xl','3xl','4xl'. style: 'normal'/'italic'. color: hex (default blanco). decorativeLines: true/false para lineas. logo: ruta a imagen en vez de texto.",
         "namesDisplay": {
             "enabled": true,
             "position": "bottom",
             "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
             "logo": ""
         },
         "countdownPrefix": "Faltan",
@@ -63,10 +68,15 @@
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
+        },
+        "_comment_countdownStyle": "ESTILO DEL COUNTDOWN. background: 'none' (sin fondo), 'background' (fondo claro con borde), 'primary' (fondo color principal), 'secondary' (fondo suave). shape: 'rounded' (redondeado), 'circle' (circulo), 'square' (cuadrado), 'pill' (pastilla).",
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
         }
     },
 
-    "_comment_sections": "El orden de los objetos define el orden visual en la pagina. bgColor: 'primary' = fondo color principal, 'background' = fondo claro (default si no se pone).",
+    "_comment_sections": "El orden de los objetos define el orden visual en la pagina. enabled: true/false para activar/desactivar cada seccion (true por defecto). bgColor: 'primary' = fondo color principal, 'background' = fondo claro (default si no se pone).",
 
     "sections": [
 
@@ -74,6 +84,7 @@
             "_comment": "QUOTE: Frase de bienvenida. decorativeLines: true/false para lineas arriba y abajo.",
             "type": "quote",
             "id": "quote-welcome",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
@@ -87,6 +98,7 @@
             "_comment": "PRESENTATION: Foto + nombre + descripcion. EXCLUSIVO DE XV.",
             "type": "presentation",
             "id": "presentation",
+            "enabled": true,
             "blocks": ["image", "name", "description"],
             "data": {
                 "image": "/clientes/xv/[slug]/portrait.jpg",
@@ -100,6 +112,7 @@
             "_comment": "PARENTS: Nombre de los padres/padrinos. EXCLUSIVO DE XV.",
             "type": "parents",
             "id": "parents",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["title", "parents"],
             "data": {
@@ -116,6 +129,7 @@
             "_comment": "OUR STORY: Momentos de crecimiento. Adaptado como 'Mi historia'.",
             "type": "ourStory",
             "id": "my-story",
+            "enabled": true,
             "bgColor": "background",
             "blocks": ["title", "moments"],
             "data": {
@@ -133,20 +147,28 @@
             "_comment": "DATE INFO: Fecha del evento.",
             "type": "dateInfo",
             "id": "date-info",
+            "enabled": true,
             "bgColor": "background",
             "blocks": ["title", "value"],
             "data": { "title": "Cuando?", "value": "17 de Febrero 2027" }
         },
 
         {
-            "_comment": "LOCATION INFO: Ubicacion con boton de mapa.",
+            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. ICONOS: 'pin' (default), 'church', 'dinner', 'party', 'salon', 'book', 'podium', 'reception', 'ring', 'music', 'sparkles'. showButton: true/false. datetime: fecha y hora opcional.",
             "type": "locationInfo",
             "id": "location-fiesta",
+            "enabled": true,
             "bgColor": "background",
             "blocks": ["title", "address", "button"],
             "data": {
+                "icon": "party",
                 "title": "Salon de fiesta",
                 "address": "Direccion completa del salon",
+                "showButton": true,
+                "datetime": {
+                    "date": "Sabado 17 de Febrero",
+                    "time": "21:00 hs"
+                },
                 "button": { "text": "Como llegar", "url": "https://maps.google.com", "variant": "primary" }
             }
         },
@@ -155,6 +177,7 @@
             "_comment": "GALLERY: Slider de fotos.",
             "type": "gallery",
             "id": "gallery-photos",
+            "enabled": true,
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
@@ -170,6 +193,7 @@
             "_comment": "ITINERARY: Linea de tiempo. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
+            "enabled": true,
             "bgColor": "background",
             "blocks": ["title", "timeline"],
             "data": {
@@ -189,6 +213,7 @@
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
             "type": "dressCode",
             "id": "dress-code",
+            "enabled": true,
             "bgColor": "background",
             "blocks": ["title", "subtitle", "icons", "description", "colorSwatches", "button", "modal"],
             "data": {
@@ -218,6 +243,7 @@
             "_comment": "PHOTOS: Invitar a subir fotos.",
             "type": "photos",
             "id": "shared-photos",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["icon", "title", "description", "button"],
             "data": {
@@ -231,6 +257,7 @@
             "_comment": "TRUTHS: Juego A o B.",
             "type": "truths",
             "id": "truths-game",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["title", "questions"],
             "data": {
@@ -246,6 +273,7 @@
             "_comment": "GIFT CARD: Tarjeta de regalo con modal. ICONOS: gift (caja regalo), creditCard (tarjeta), heart (corazon), star (estrella), sparkles (brillos), handHeart (mano corazon), dollar (signo pesos). suggestedValue = valor sugerido (dejar '' si no queres mostrar).",
             "type": "giftCard",
             "id": "gift-card",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["icon", "title", "description", "button", "modal"],
             "data": {
@@ -272,6 +300,7 @@
             "_comment": "HONEYMOON: Regalos / alcancia. Para XV se usa como 'Regalos' (no viaje). NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "dream-trip",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["icon", "title", "description", "button", "modal"],
             "data": {
@@ -294,6 +323,7 @@
             "_comment": "EMOTIONAL QUOTE: Frase emotiva centrada.",
             "type": "emotionalQuote",
             "id": "emotional-quote",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["text"],
             "data": { "text": "Creciendo, sonando, brillando." }
@@ -302,7 +332,8 @@
         {
             "_comment": "TRIVIA: Juego de preguntas multiples en modal.",
             "type": "trivia",
-            "id": "trivia-game",
+            "id": "trivia-game-modal",
+            "enabled": true,
             "blocks": ["title", "subtitle", "button", "modal"],
             "data": {
                 "title": "Cuanto me conoces?",
@@ -322,6 +353,7 @@
             "_comment": "PLAYLIST: Link a playlist de Spotify.",
             "type": "playlist",
             "id": "playlist-suggestion",
+            "enabled": true,
             "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Arma la playlist",
@@ -334,6 +366,7 @@
             "_comment": "RSVP: Formulario de confirmacion. Al confirmar, envia datos por WhatsApp. messageTemplate usa {resumen} como placeholder.",
             "type": "rsvp",
             "id": "rsvp-form",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["title", "form"],
             "data": {
@@ -363,6 +396,7 @@
             "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple. subtitle: (opcional) texto entre titulo y boton.",
             "type": "confirmarWhatsapp",
             "id": "confirmar-whatsapp",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["title", "subtitle", "button"],
             "data": {
@@ -378,6 +412,7 @@
             "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
             "type": "adultsOnly",
             "id": "adults-only",
+            "enabled": true,
             "bgColor": "background",
             "blocks": ["icon", "title", "description"],
             "data": {
@@ -391,6 +426,7 @@
             "_comment": "SPECIAL MESSAGE: Mensaje personal. decorativeLines: true/false. EXCLUSIVO DE XV.",
             "type": "specialMessage",
             "id": "special-message",
+            "enabled": true,
             "blocks": ["title", "text"],
             "data": {
                 "title": "Gracias por estar",
@@ -401,32 +437,35 @@
         },
 
         {
-            "_comment": "CLOSING IMAGE: Foto de cierre. namesDisplay: font (Google Font), logo (imagen en vez de texto).",
+            "_comment": "CLOSING IMAGE: Foto de cierre. namesDisplay: enabled (true/false), font, weight, size, style, color, decorativeLines, logo, copyFromHero (copia estilos del hero).",
             "type": "closingImage",
             "id": "closing-image",
+            "enabled": true,
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/xv/[slug]/cierre.jpg",
                 "namesDisplay": {
+                    "enabled": true,
                     "font": "",
-                    "logo": ""
+                    "weight": "300",
+                    "size": "lg",
+                    "style": "normal",
+                    "color": "",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false
                 }
             }
         },
 
         {
-            "_comment": "FOOTER: Pie de pagina con redes de TU MARCA.",
+            "_comment": "FOOTER: Pie de pagina con redes. La marca se configura en landing.json -> brand (igual en todas las invitaciones).",
             "type": "footer",
             "id": "footer-credits",
+            "enabled": true,
             "blocks": ["socialLinks", "brandName"],
-            "data": {
-                "brandName": "walter invitaciones",
-                "socialLinks": [
-                    { "icon": "instagram", "url": "https://instagram.com/tu_marca" },
-                    { "icon": "whatsapp", "url": "https://wa.me/1234567890" }
-                ]
-            }
+            "data": {}
         }
     ]
 }

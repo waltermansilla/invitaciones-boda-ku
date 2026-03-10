@@ -1,5 +1,20 @@
 {
     "_comment": "Toda la landing se configura desde este archivo. Colores, textos, precios, FAQ, botones, etc.",
+    
+    "_comment_brand": "MARCA: Configura el nombre, fuente y estilo que aparece en el footer de TODAS las invitaciones y en la landing. name = nombre de la marca. font = 'font-serif' (cursiva), 'font-sans' (recta), 'font-mono' (monoespaciada). size = 'text-sm', 'text-base', 'text-lg', 'text-xl'. style = 'italic' o 'normal'. icon = null o URL de imagen de logo. socialLinks = array de redes sociales.",
+    "brand": {
+        "name": "Momento Único",
+        "font": "font-serif",
+        "size": "text-lg",
+        "style": "italic",
+        "icon": null,
+        "iconSize": 30,
+        "socialLinks": [
+            { "icon": "instagram", "url": "https://instagram.com/waltermansilla.web", "label": "Instagram" },
+            { "icon": "whatsapp", "url": "https://wa.me/3456023759", "label": "WhatsApp" }
+        ]
+    },
+
     "theme": {
         "background": "#FAF8F5",
         "foreground": "#2A2A2A",

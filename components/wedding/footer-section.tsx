@@ -1,34 +1,41 @@
 "use client";
 
-/* ───────────────────────────────────────────────
- * DATOS DE MARCA - Editar aca para cambiar en TODAS las invitaciones y la landing.
- *
- * BRAND_NAME      -> Texto que aparece en el footer. Cambiar por otro nombre cuando quieras.
- * BRAND_FONT      -> Clase CSS para la fuente del nombre. Usa "font-serif" para cursiva elegante.
- *                    Opciones: "font-serif" (cursiva), "font-sans" (recta), "font-mono" (monoespaciada).
- * BRAND_SIZE      -> Clase Tailwind para el tamano. Ej: "text-sm", "text-base", "text-lg".
- * BRAND_ICON      -> null = sin icono. Para agregar un icono, poner la URL de una imagen (ej: "/images/mi-icono.png").
- * SOCIAL_LINKS    -> Redes sociales. Editar URLs y labels. Para agregar otra red, agregar un SVG al iconMap.
- * ICON_SIZE       -> Tamano de los iconos de redes sociales en px.
- *
- * ─────────────────────────────────────────────── */
-const BRAND_NAME = "Momento Único";
-const BRAND_FONT = "font-serif";
-const BRAND_SIZE = "text-lg";
-const BRAND_ICON: string | null = null;
-const ICON_SIZE = 30;
+import landingConfig from "@/data/landing.json";
 
-const SOCIAL_LINKS: {
-    icon: "instagram" | "whatsapp";
-    url: string;
-    label: string;
-}[] = [
+/* ───────────────────────────────────────────────
+ * DATOS DE MARCA - Se leen desde landing.json (seccion "brand").
+ * Para modificar la marca, editar landing.json -> brand
+ *
+ * La marca es igual en TODAS las invitaciones y en la landing.
+ * Solo cambia el color de fondo que se adapta al tema de cada invitacion.
+ * ─────────────────────────────────────────────── */
+
+// Leer configuracion de marca desde landing.json
+const brandConfig = (landingConfig as Record<string, unknown>).brand as {
+    name: string;
+    font: string;
+    size: string;
+    style: string;
+    icon: string | null;
+    socialLinks: { icon: "instagram" | "whatsapp"; url: string; label: string }[];
+    iconSize: number;
+} | undefined;
+
+// Fallback values si no existe la config en landing.json
+const BRAND_NAME = brandConfig?.name || "Momento Único";
+const BRAND_FONT = brandConfig?.font || "font-serif";
+const BRAND_SIZE = brandConfig?.size || "text-lg";
+const BRAND_STYLE = brandConfig?.style || "italic";
+const BRAND_ICON: string | null = brandConfig?.icon || null;
+const ICON_SIZE = brandConfig?.iconSize || 30;
+
+const SOCIAL_LINKS = brandConfig?.socialLinks || [
     {
-        icon: "instagram",
+        icon: "instagram" as const,
         url: "https://instagram.com/waltermansilla.web",
         label: "Instagram",
     },
-    { icon: "whatsapp", url: "https://wa.me/3456023759", label: "WhatsApp" },
+    { icon: "whatsapp" as const, url: "https://wa.me/3456023759", label: "WhatsApp" },
 ];
 /* ─────────────────────────────────────────────── */
 
@@ -76,7 +83,7 @@ const iconMap: Record<string, () => React.JSX.Element> = {
 /**
  * Footer fijo de marca. Igual en TODAS las invitaciones y la landing.
  * El color se adapta automaticamente via CSS variables (bg-primary / text-primary-foreground).
- * Los datos de marca estan hardcodeados arriba en las constantes.
+ * Los datos de marca se leen desde landing.json -> brand
  */
 export default function FooterSection() {
     return (
@@ -101,7 +108,7 @@ export default function FooterSection() {
             </div>
             <a
                 href="/"
-                className={`${BRAND_FONT} ${BRAND_SIZE} inline-flex items-center gap-2 italic tracking-[0.1em] text-primary-foreground/40 transition-opacity hover:text-primary-foreground/60`}
+                className={`${BRAND_FONT} ${BRAND_SIZE} ${BRAND_STYLE === "italic" ? "italic" : ""} inline-flex items-center gap-2 tracking-[0.1em] text-primary-foreground/40 transition-opacity hover:text-primary-foreground/60`}
             >
                 {BRAND_ICON && (
                     <img

@@ -8,13 +8,19 @@ import { useConfig } from "@/lib/config-context"
  * Hero Section - Portada principal de la invitacion
  * 
  * Opciones de nombres sobre la foto (namesDisplay):
- *   enabled: boolean    -> true para mostrar, false para ocultar
+ *   enabled: boolean         -> true para mostrar, false para ocultar
  *   position: "top" | "bottom" -> arriba o abajo de la imagen
- *   font: string        -> (OPCIONAL) Google Font para los nombres (ej: "Great Vibes")
- *   logo: string        -> (OPCIONAL) Ruta a imagen de logo en vez de texto (ej: "/clientes/boda/xxx/logo.png")
+ *   font: string             -> (OPCIONAL) Google Font para los nombres
+ *   weight: string           -> (OPCIONAL) "100"-"900" o "light", "normal", "bold"
+ *   size: string             -> (OPCIONAL) "sm", "base", "lg", "xl", "2xl", "3xl", "4xl", "5xl"
+ *   style: string            -> (OPCIONAL) "normal", "italic"
+ *   color: string            -> (OPCIONAL) color hex para los nombres (default: white)
+ *   decorativeLines: boolean -> (OPCIONAL) mostrar lineas decorativas arriba/abajo
+ *   logo: string             -> (OPCIONAL) Ruta a imagen de logo en vez de texto
  * 
- * Si namesDisplay.logo tiene valor, se muestra el logo en vez de los nombres.
- * El font especificado aqui tambien se aplica en closing-section si se usa.
+ * Opciones de countdown (countdownStyle):
+ *   background: "none" | "background" | "primary" | "secondary"
+ *   shape: "rounded" | "circle" | "square" | "pill"
  */
 
 interface HeroSectionProps {
@@ -29,6 +35,11 @@ interface HeroSectionProps {
     enabled: boolean
     position: "top" | "bottom"
     font?: string
+    weight?: string
+    size?: string
+    style?: string
+    color?: string
+    decorativeLines?: boolean
     logo?: string
   }
   countdownPrefix?: string
@@ -37,6 +48,10 @@ interface HeroSectionProps {
     hours: string
     minutes: string
     seconds: string
+  }
+  countdownStyle?: {
+    background: "none" | "background" | "primary" | "secondary"
+    shape: "rounded" | "circle" | "square" | "pill"
   }
 }
 
@@ -50,6 +65,30 @@ function getTimeRemaining(targetDate: string) {
   return { days, hours, minutes, seconds }
 }
 
+// Map size names to Tailwind classes
+const sizeMap: Record<string, string> = {
+  sm: "text-xl sm:text-2xl",
+  base: "text-2xl sm:text-3xl",
+  lg: "text-3xl sm:text-4xl",
+  xl: "text-4xl sm:text-5xl",
+  "2xl": "text-4xl sm:text-5xl md:text-6xl",
+  "3xl": "text-5xl sm:text-6xl md:text-7xl",
+  "4xl": "text-6xl sm:text-7xl md:text-8xl",
+}
+
+// Map weight names to CSS values
+const weightMap: Record<string, string> = {
+  thin: "100",
+  extralight: "200",
+  light: "300",
+  normal: "400",
+  medium: "500",
+  semibold: "600",
+  bold: "700",
+  extrabold: "800",
+  black: "900",
+}
+
 export default function HeroSection({
   coupleImage,
   headline,
@@ -61,10 +100,14 @@ export default function HeroSection({
   namesDisplay,
   countdownPrefix,
   countdownLabels,
+  countdownStyle,
 }: HeroSectionProps) {
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
   const textColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
+  const primaryColor = (theme.primaryColor as string) || "#6B7F5E"
+  const backgroundColor = (theme.backgroundColor as string) || "#FAF8F5"
+  
   const [time, setTime] = useState<{
     days: number
     hours: number
@@ -85,11 +128,57 @@ export default function HeroSection({
   const namesPosition = namesDisplay?.position || "bottom"
   const namesFont = namesDisplay?.font
   const namesLogo = namesDisplay?.logo
+  const namesWeight = namesDisplay?.weight || "300"
+  const namesSize = namesDisplay?.size || "lg"
+  const namesStyle = namesDisplay?.style || "normal"
+  const namesColor = namesDisplay?.color || "rgba(255,255,255,0.9)"
+  const showDecorativeLines = namesDisplay?.decorativeLines ?? false
+
+  // Resolve weight value
+  const resolvedWeight = weightMap[namesWeight] || namesWeight
 
   // Build font family style if custom font specified
-  const namesFontStyle = namesFont 
-    ? { fontFamily: `'${namesFont}', cursive` } 
-    : {}
+  const namesFontStyle: React.CSSProperties = {
+    ...(namesFont ? { fontFamily: `'${namesFont}', cursive` } : {}),
+    fontWeight: resolvedWeight,
+    fontStyle: namesStyle,
+    color: namesColor,
+  }
+
+  // Get size class
+  const sizeClass = sizeMap[namesSize] || sizeMap.lg
+
+  // Countdown style options
+  const cdBg = countdownStyle?.background || "none"
+  const cdShape = countdownStyle?.shape || "rounded"
+
+  // Build countdown item classes based on style
+  const getCountdownBgClass = () => {
+    if (cdBg === "none") return ""
+    if (cdBg === "background") return "border border-current/20"
+    if (cdBg === "primary") return ""
+    if (cdBg === "secondary") return ""
+    return ""
+  }
+
+  const getCountdownBgStyle = (): React.CSSProperties => {
+    if (cdBg === "none") return {}
+    if (cdBg === "background") return { backgroundColor: backgroundColor }
+    if (cdBg === "primary") return { backgroundColor: primaryColor, color: "#fff" }
+    if (cdBg === "secondary") return { backgroundColor: `${primaryColor}20`, borderColor: primaryColor }
+    return {}
+  }
+
+  const getCountdownShapeClass = () => {
+    if (cdBg === "none") return ""
+    switch (cdShape) {
+      case "circle": return "rounded-full aspect-square"
+      case "square": return "rounded-none"
+      case "pill": return "rounded-full"
+      case "rounded":
+      default: return "rounded-lg"
+    }
+  }
 
   const items = [
     { value: time?.days ?? 0, label: countdownLabels.days },
@@ -123,15 +212,21 @@ export default function HeroSection({
         className={`absolute inset-x-0 ${namesPosition === "top" ? "top-0 pt-10" : "bottom-0 pb-10"} flex flex-col items-center`}
         style={namesFontStyle}
       >
-        <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl md:text-5xl">
+        {showDecorativeLines && (
+          <div className="mb-3 h-px w-12 bg-current opacity-40" />
+        )}
+        <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`}>
           {brideName}
         </p>
-        <span className="my-1 text-lg font-extralight tracking-[0.3em] text-white/60 sm:text-xl md:text-2xl">
+        <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">
           {separator}
         </span>
-        <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl md:text-5xl">
+        <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`}>
           {groomName}
         </p>
+        {showDecorativeLines && (
+          <div className="mt-3 h-px w-12 bg-current opacity-40" />
+        )}
       </div>
     )
   }
@@ -144,7 +239,7 @@ export default function HeroSection({
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link 
-            href={`https://fonts.googleapis.com/css2?family=${namesFont.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap`} 
+            href={`https://fonts.googleapis.com/css2?family=${namesFont.replace(/ /g, "+")}:wght@100;200;300;400;500;600;700;800;900&display=swap`} 
             rel="stylesheet" 
           />
         </>
@@ -189,9 +284,12 @@ export default function HeroSection({
         <div className="flex items-start justify-center gap-2" aria-live="polite">
           {items.map((item, i) => (
             <div key={item.label} className="flex items-start gap-2">
-              <div className="flex flex-col items-center">
+              <div 
+                className={`flex flex-col items-center ${cdBg !== "none" ? "px-3 py-2 min-w-[60px]" : ""} ${getCountdownBgClass()} ${getCountdownShapeClass()}`}
+                style={getCountdownBgStyle()}
+              >
                 <span
-                  className="text-4xl font-light tabular-nums text-inherit md:text-5xl"
+                  className={`text-4xl font-light tabular-nums md:text-5xl ${cdBg === "primary" ? "text-white" : "text-inherit"}`}
                   suppressHydrationWarning
                 >
                   {time
@@ -201,11 +299,11 @@ export default function HeroSection({
                       )
                     : "--"}
                 </span>
-                <span className="mt-1 text-[9px] font-medium tracking-[0.15em] uppercase text-inherit/50">
+                <span className={`mt-1 text-[9px] font-medium tracking-[0.15em] uppercase ${cdBg === "primary" ? "text-white/70" : "text-inherit/50"}`}>
                   {item.label}
                 </span>
               </div>
-              {i < 3 && (
+              {i < 3 && cdBg === "none" && (
                 <span className="mt-1 text-3xl font-light text-inherit/40 md:text-4xl">
                   :
                 </span>

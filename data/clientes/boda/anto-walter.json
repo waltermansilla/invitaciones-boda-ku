@@ -82,6 +82,7 @@
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-welcome",
+            "enabled": true,
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
@@ -95,6 +96,7 @@
             "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
             "type": "dateInfo",
             "id": "date-info",
+            "enabled": true,
             "bgColor": "background",
             "blocks": ["title", "value", "button"],
             "data": {

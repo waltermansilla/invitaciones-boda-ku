@@ -33,6 +33,7 @@ export interface SectionConfig {
   data: Record<string, unknown>
   bgColor?: string
   textColor?: string
+  enabled?: boolean // true por defecto si no se especifica
 }
 
 interface SectionProps {
@@ -47,7 +48,10 @@ interface SectionProps {
 
 export default function Section({ section, coupleNames, prevBgColor }: SectionProps) {
   const config = useConfig()
-  const { type, id, data, bgColor, textColor } = section
+  const { type, id, data, bgColor, textColor, enabled = true } = section
+
+  // Si enabled es false, no renderizar la seccion
+  if (enabled === false) return null
 
   // Determine bg + text color from theme
   const theme = config.theme as Record<string, unknown>
@@ -108,7 +112,10 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
           <LocationInfoSection
             title={data.title as string}
             address={data.address as string}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
+            icon={data.icon as string | undefined}
+            showButton={data.showButton as boolean | undefined}
+            datetime={data.datetime as { date?: string; time?: string } | undefined}
+            button={data.button as { text: string; url: string; variant: "primary" | "secondary" | "background" }}
           />
         )
 
@@ -296,7 +303,17 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
             image={data.image as string}
             aspectRatio={data.aspectRatio as string | undefined}
             coupleNames={coupleNames}
-            namesDisplay={data.namesDisplay as { font?: string; logo?: string } | undefined}
+            namesDisplay={data.namesDisplay as { 
+              enabled?: boolean
+              font?: string
+              weight?: string
+              size?: string
+              style?: string
+              color?: string
+              decorativeLines?: boolean
+              logo?: string
+              copyFromHero?: boolean 
+            } | undefined}
           />
         )
 

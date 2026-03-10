@@ -5,8 +5,15 @@ import { useConfig } from "@/lib/config-context"
  * Closing Section - Imagen de cierre con nombres
  * 
  * Soporta las mismas opciones de namesDisplay que hero-section:
- *   font: string  -> (OPCIONAL) Google Font para los nombres
- *   logo: string  -> (OPCIONAL) Ruta a imagen de logo en vez de texto
+ *   enabled: boolean         -> (OPCIONAL) true por defecto, false para ocultar nombres
+ *   font: string             -> (OPCIONAL) Google Font para los nombres
+ *   weight: string           -> (OPCIONAL) "100"-"900" o "light", "normal", "bold"
+ *   size: string             -> (OPCIONAL) "sm", "base", "lg", "xl", "2xl", "3xl"
+ *   style: string            -> (OPCIONAL) "normal", "italic"
+ *   color: string            -> (OPCIONAL) color hex para los nombres
+ *   decorativeLines: boolean -> (OPCIONAL) mostrar lineas decorativas
+ *   logo: string             -> (OPCIONAL) Ruta a imagen de logo en vez de texto
+ *   copyFromHero: boolean    -> (OPCIONAL) copiar estilos del hero namesDisplay
  */
 
 interface ClosingSectionProps {
@@ -18,9 +25,39 @@ interface ClosingSectionProps {
     separator: string
   }
   namesDisplay?: {
+    enabled?: boolean
     font?: string
+    weight?: string
+    size?: string
+    style?: string
+    color?: string
+    decorativeLines?: boolean
     logo?: string
+    copyFromHero?: boolean
   }
+}
+
+// Map size names to Tailwind classes
+const sizeMap: Record<string, string> = {
+  sm: "text-lg sm:text-xl",
+  base: "text-xl sm:text-2xl",
+  lg: "text-2xl sm:text-3xl md:text-4xl",
+  xl: "text-3xl sm:text-4xl md:text-5xl",
+  "2xl": "text-4xl sm:text-5xl md:text-6xl",
+  "3xl": "text-5xl sm:text-6xl md:text-7xl",
+}
+
+// Map weight names to CSS values
+const weightMap: Record<string, string> = {
+  thin: "100",
+  extralight: "200",
+  light: "300",
+  normal: "400",
+  medium: "500",
+  semibold: "600",
+  bold: "700",
+  extrabold: "800",
+  black: "900",
 }
 
 export default function ClosingSection({
@@ -31,25 +68,55 @@ export default function ClosingSection({
 }: ClosingSectionProps) {
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
-  const textColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
+  const hero = config.hero as Record<string, unknown> | undefined
+  const defaultTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
 
-  const namesFont = namesDisplay?.font
-  const namesLogo = namesDisplay?.logo
+  // If copyFromHero is true, get settings from hero.namesDisplay
+  const heroNamesDisplay = hero?.namesDisplay as Record<string, unknown> | undefined
+  const shouldCopyFromHero = namesDisplay?.copyFromHero ?? false
+
+  const isEnabled = namesDisplay?.enabled ?? true
+  const namesFont = shouldCopyFromHero 
+    ? (heroNamesDisplay?.font as string) || namesDisplay?.font 
+    : namesDisplay?.font
+  const namesLogo = shouldCopyFromHero 
+    ? (heroNamesDisplay?.logo as string) || namesDisplay?.logo 
+    : namesDisplay?.logo
+  const namesWeight = shouldCopyFromHero 
+    ? (heroNamesDisplay?.weight as string) || namesDisplay?.weight || "300" 
+    : namesDisplay?.weight || "300"
+  const namesSize = shouldCopyFromHero 
+    ? (heroNamesDisplay?.size as string) || namesDisplay?.size || "lg" 
+    : namesDisplay?.size || "lg"
+  const namesStyle = shouldCopyFromHero 
+    ? (heroNamesDisplay?.style as string) || namesDisplay?.style || "normal" 
+    : namesDisplay?.style || "normal"
+  const namesColor = namesDisplay?.color // No copiar color del hero, usar el del closing o default
+  const showDecorativeLines = namesDisplay?.decorativeLines ?? true
+
+  // Resolve weight value
+  const resolvedWeight = weightMap[namesWeight] || namesWeight
 
   // Build font family style if custom font specified
-  const namesFontStyle = namesFont 
-    ? { fontFamily: `'${namesFont}', cursive` } 
-    : {}
+  const namesFontStyle: React.CSSProperties = {
+    ...(namesFont ? { fontFamily: `'${namesFont}', cursive` } : {}),
+    fontWeight: resolvedWeight,
+    fontStyle: namesStyle,
+    color: namesColor || defaultTextColor,
+  }
+
+  // Get size class
+  const sizeClass = sizeMap[namesSize] || sizeMap.lg
 
   return (
-    <section className="bg-background" style={{ color: textColor }}>
+    <section className="bg-background" style={{ color: defaultTextColor }}>
       {/* Load custom font if specified */}
       {namesFont && (
         <>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link 
-            href={`https://fonts.googleapis.com/css2?family=${namesFont.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap`} 
+            href={`https://fonts.googleapis.com/css2?family=${namesFont.replace(/ /g, "+")}:wght@100;200;300;400;500;600;700;800;900&display=swap`} 
             rel="stylesheet" 
           />
         </>
@@ -66,35 +133,45 @@ export default function ClosingSection({
       </div>
 
       {/* Names or Logo as elegant close */}
-      <div className="flex flex-col items-center px-6 py-14">
-        <div className="mb-4 h-px w-10 bg-current/30" />
-        
-        {namesLogo ? (
-          // Show logo instead of names
-          <Image
-            src={namesLogo}
-            alt="Logo"
-            width={180}
-            height={90}
-            className="max-h-20 w-auto object-contain sm:max-h-24"
-          />
-        ) : (
-          // Show names as text
-          <div style={namesFontStyle}>
-            <p className="text-center text-2xl font-light tracking-[0.2em] uppercase text-inherit sm:text-3xl md:text-4xl">
-              {coupleNames.brideName}
-            </p>
-            <span className="my-1 block text-center text-base font-extralight tracking-[0.3em] text-inherit/50 md:text-lg">
-              {coupleNames.separator}
-            </span>
-            <p className="text-center text-2xl font-light tracking-[0.2em] uppercase text-inherit sm:text-3xl md:text-4xl">
-              {coupleNames.groomName}
-            </p>
-          </div>
-        )}
-        
-        <div className="mt-4 h-px w-10 bg-current/30" />
-      </div>
+      {isEnabled && (
+        <div className="flex flex-col items-center px-6 py-14">
+          {showDecorativeLines && (
+            <div className="mb-4 h-px w-10 bg-current/30" />
+          )}
+          
+          {namesLogo ? (
+            // Show logo instead of names
+            <Image
+              src={namesLogo}
+              alt="Logo"
+              width={180}
+              height={90}
+              className="max-h-20 w-auto object-contain sm:max-h-24"
+            />
+          ) : (
+            // Show names as text
+            <div style={namesFontStyle}>
+              <p className={`text-center tracking-[0.2em] uppercase ${sizeClass}`}>
+                {coupleNames.brideName}
+              </p>
+              {coupleNames.separator && (
+                <span className="my-1 block text-center text-base font-extralight tracking-[0.3em] opacity-50 md:text-lg">
+                  {coupleNames.separator}
+                </span>
+              )}
+              {coupleNames.groomName && (
+                <p className={`text-center tracking-[0.2em] uppercase ${sizeClass}`}>
+                  {coupleNames.groomName}
+                </p>
+              )}
+            </div>
+          )}
+          
+          {showDecorativeLines && (
+            <div className="mt-4 h-px w-10 bg-current/30" />
+          )}
+        </div>
+      )}
     </section>
   )
 }
