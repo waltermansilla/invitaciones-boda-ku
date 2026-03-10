@@ -68,6 +68,7 @@
                     "etiqueta": "Boda",
                     "accentColor": "#D4A373"
                 },
+
                 {
                     "tipo": "xv",
                     "slug": "valentina",
@@ -87,7 +88,7 @@
                     "name": "Esencial",
                     "ctaButton": "planEsencial",
                     "badge": null,
-                    "price": "$35.000",
+                    "price": "$39.000",
                     "description": "Todo lo necesario para una invitación hermosa.",
                     "features": [
                         "Confirmación de asistencia por WhatsApp",

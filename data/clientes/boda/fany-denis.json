@@ -45,7 +45,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": false,
-        "src": "/clientes/boda/anto-walter/music/Para-Siempre.mp3",
+        "src": "",
         "autoplay": false
     },
     "// ==========================================-": "",
@@ -113,23 +113,7 @@
                 "images": []
             }
         },
-        {
-            "// --- UBICACION: CIVIL ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "id": "location-civil",
-            "bgColor": "background",
-            "blocks": ["title", "address", "button"],
-            "data": {
-                "title": "Civil",
-                "address": "Registro Civil, Lugar",
-                "button": {
-                    "text": "Cómo llegar",
-                    "url": "",
-                    "variant": "primary"
-                }
-            }
-        },
+
         {
             "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
@@ -139,10 +123,10 @@
             "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Ceremonia religiosa",
-                "address": "Iglesia San Cayetano",
+                "address": "Parroquia San Cayetano",
                 "button": {
                     "text": "Cómo llegar",
-                    "url": "",
+                    "url": "https://maps.app.goo.gl/D8wYcnPjMbY6u9s86?g_st=iw",
                     "variant": "primary"
                 }
             }
@@ -159,7 +143,7 @@
                 "address": "Salón San Cayetano",
                 "button": {
                     "text": "Cómo llegar",
-                    "url": "",
+                    "url": "https://maps.app.goo.gl/D8wYcnPjMbY6u9s86?g_st=iw",
                     "variant": "background"
                 }
             }

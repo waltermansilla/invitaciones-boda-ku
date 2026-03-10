@@ -1,0 +1,477 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Mis 15 - Valentina",
+        "description": "Est\u00e1s invitado a celebrar los 15 de Valentina. Una noche m\u00e1gica que no te pod\u00e9s perder.",
+        "lang": "es",
+        "quinceaneraName": "Valentina",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Valentina",
+            "separator": ""
+        }
+    },
+
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+
+    "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma.",
+    "theme": {
+        "primaryColor": "#C4788A",
+        "backgroundColor": "#FFF9F7",
+        "textColor": "#3A3A3A",
+        "lightBgTextColor": "#C4788A",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#FDF0EE",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+
+    "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Est\u00e1s invitado a celebrar una noche m\u00e1gica e inolvidable",
+        "buttonText": "Ingresar"
+    },
+
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/xv/valentina/music/Lucky.mp3",
+        "autoplay": false
+    },
+
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+
+    "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
+    "hero": {
+        "coupleImage": "/clientes/xv/valentina/images/quince-hero.jpg",
+        "headline": "Mis 15!",
+        "showNamesOnPhoto": true,
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-09-19T21:00:00",
+        "countdownLabels": {
+            "days": "D\u00edas",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        }
+    },
+
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Hoy comienza un nuevo cap\u00edtulo en mi vida y quiero vivirlo con las personas que m\u00e1s quiero",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "\u00bfCu\u00e1ndo?",
+                "value": "19 de Septiembre 2026"
+            }
+        },
+
+        {
+            "// --- PRESENTACION DE LA QUINCEANERA ---": "",
+            "_comment": "Seccion para presentar a la quinceanera con una foto y un texto personal. image = foto en /public/images/. description = texto de presentacion.",
+            "type": "presentation",
+            "id": "presentation",
+            "blocks": ["image", "name", "description"],
+            "data": {
+                "image": "/clientes/xv/valentina/images/quince-portrait.jpg",
+                "name": "Valentina",
+                "description": "Llegaron mis 15 y no me lo puedo creer. Despu\u00e9s de so\u00f1ar tanto con este d\u00eda, al fin est\u00e1 ac\u00e1. Quiero compartirlo con todos ustedes, las personas que hicieron de mi infancia algo incre\u00edble. Esta noche es nuestra.",
+                "aspectRatio": "3/4"
+            }
+        },
+
+        {
+            "// --- PADRES ---": "",
+            "_comment": "Seccion con los nombres de los padres de la quinceanera. title = titulo. parents = array de padres con nombre y role.",
+            "type": "parents",
+            "id": "parents",
+            "bgColor": "primary",
+            "blocks": ["title", "parents"],
+            "data": {
+                "title": "Mis Padres",
+                "subtitle": "Con todo su amor me acompa\u00f1an en esta celebraci\u00f3n",
+                "parents": [
+                    { "name": "Carolina Mart\u00ednez", "role": "Mam\u00e1" },
+                    { "name": "Andr\u00e9s L\u00f3pez", "role": "Pap\u00e1" }
+                ]
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/xv/valentina/images/gallery-1.jpg",
+                    "/clientes/xv/valentina/images/gallery-2.jpg",
+                    "/clientes/xv/valentina/images/gallery-3.jpg"
+                ]
+            }
+        },
+
+        {
+            "// --- UBICACION: CEREMONIA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-ceremonia",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Ceremonia",
+                "address": "Parroquia San Jos\u00e9, Av. San Mart\u00edn 456",
+                "button": {
+                    "text": "C\u00f3mo llegar",
+                    "url": "https://maps.google.com",
+                    "variant": "secondary"
+                }
+            }
+        },
+
+        {
+            "// --- UBICACION: FIESTA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Fiesta",
+                "address": "Sal\u00f3n Las Orqu\u00eddeas, Ruta 8 Km 3.5",
+                "button": {
+                    "text": "C\u00f3mo llegar",
+                    "url": "https://maps.google.com",
+                    "variant": "secondary"
+                }
+            }
+        },
+
+        {
+            "// --- MI HISTORIA (crecimiento) ---": "",
+            "_comment": "Timeline visual con fotos de la quinceanera creciendo. Cada momento tiene imagen, titulo y texto. Se puede adaptar a cualquier cantidad de momentos.",
+            "type": "ourStory",
+            "id": "my-story",
+            "blocks": ["title", "moments"],
+            "data": {
+                "title": "Mi Historia",
+                "aspectRatio": "3/4",
+                "moments": [
+                    {
+                        "image": "/clientes/xv/valentina/images/story-1.jpg",
+                        "title": "Mis primeros pasos",
+                        "text": "Desde chiquita siempre fui curiosa. Tocaba todo, preguntaba todo y no paraba quieta ni un segundo. Mam\u00e1 dice que aprender a caminar fue solo el principio del caos."
+                    },
+                    {
+                        "image": "/clientes/xv/valentina/images/story-2.jpg",
+                        "title": "La del medio",
+                        "text": "El colegio, las amigas, las pijamadas, los primeros bailes frente al espejo. Ah\u00ed empec\u00e9 a descubrir qui\u00e9n quiero ser y de qu\u00e9 cosas me quiero rodear."
+                    },
+                    {
+                        "image": "/clientes/xv/valentina/images/story-3.jpg",
+                        "title": "Hoy, mis 15",
+                        "text": "Y ac\u00e1 estoy. Con 15 a\u00f1os, un mill\u00f3n de sue\u00f1os y la certeza de que todo lo lindo est\u00e1 por venir. Esta noche celebro con las personas que me hicieron ser quien soy."
+                    }
+                ]
+            }
+        },
+
+        {
+            "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
+            "_comment": "Cada evento tiene icon, name y time. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus. Agregar/quitar/reordenar libremente.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    { "icon": "church", "name": "Misa", "time": "19:00 hs" },
+                    {
+                        "icon": "camera",
+                        "name": "Sesi\u00f3n de fotos",
+                        "time": "20:00 hs"
+                    },
+                    {
+                        "icon": "sparkles",
+                        "name": "Entrada al sal\u00f3n",
+                        "time": "21:00 hs"
+                    },
+                    {
+                        "icon": "heart",
+                        "name": "Vals con mi pap\u00e1",
+                        "time": "21:30 hs"
+                    },
+                    { "icon": "utensils", "name": "Cena", "time": "22:00 hs" },
+                    {
+                        "icon": "cake",
+                        "name": "Torta y brindis",
+                        "time": "23:30 hs"
+                    },
+                    {
+                        "icon": "music",
+                        "name": "Fiesta libre",
+                        "time": "00:00 hs"
+                    },
+                    { "icon": "party", "name": "Hora loca", "time": "02:00 hs" }
+                ]
+            }
+        },
+
+        {
+            "// --- PLAYLIST SUGERIDA ---": "",
+            "_comment": "Seccion para que los invitados sugieran canciones. link = link a Spotify playlist o similar.",
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "blocks": ["title", "description", "button"],
+            "data": {
+                "title": "Arma la playlist",
+                "description": "Quiero que esta noche suene todo lo que nos gusta. Agreg\u00e1 tus canciones a la playlist de la fiesta.",
+                "button": {
+                    "text": "Ir a la playlist",
+                    "url": "https://open.spotify.com",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "// --- FRASE EMOTIVA ---": "",
+            "_comment": "Fondo rosa. Solo texto centrado.",
+            "type": "emotionalQuote",
+            "id": "emotional-quote",
+            "bgColor": "primary",
+            "blocks": ["text"],
+            "data": {
+                "text": "No es solo una fiesta. Es el inicio de todo lo que quiero ser."
+            }
+        },
+
+        {
+            "// --- TRIVIA / JUEGO (con modal) ---": "",
+            "_comment": "Al presionar el boton se abre modal con preguntas. Cada pregunta: question, options (2-4), correctIndex (0=primera), explanation. finishTitle y finishText = pantalla final.",
+            "type": "trivia",
+            "id": "trivia-game",
+            "blocks": ["title", "subtitle", "button", "modal"],
+            "data": {
+                "title": "\u00bfCu\u00e1nto me conoc\u00e9s?",
+                "subtitle": "\u00bfJugamos un poco?",
+                "button": {
+                    "text": "Iniciar Trivia",
+                    "variant": "primary"
+                },
+                "modal": {
+                    "finishTitle": "Eso es todo!",
+                    "finishText": "Gracias por jugar. Nos vemos en la fiesta para seguir descubriendo cosas sobre mi.",
+                    "questions": [
+                        {
+                            "question": "\u00bfCu\u00e1l es mi comida favorita?",
+                            "options": [
+                                "Pizza",
+                                "Sushi",
+                                "Hamburguesas",
+                                "Empanadas"
+                            ],
+                            "correctIndex": 0,
+                            "explanation": "Pizza. Con muzza doble y siempre pidiendo la misma. No necesito m\u00e1s nada en la vida."
+                        },
+                        {
+                            "question": "\u00bfQu\u00e9 quiero ser cuando sea grande?",
+                            "options": [
+                                "Dise\u00f1adora",
+                                "M\u00e9dica",
+                                "Abogada",
+                                "Todav\u00eda no s\u00e9"
+                            ],
+                            "correctIndex": 3,
+                            "explanation": "Todav\u00eda no lo s\u00e9, y est\u00e1 bien. Tengo 15 reci\u00e9n, d\u00e9jenme disfrutar."
+                        },
+                        {
+                            "question": "Cual es mi cancion del momento?",
+                            "options": [
+                                "Flowers - Miley Cyrus",
+                                "Shakira: Bzrp Session",
+                                "As It Was - Harry Styles",
+                                "Vampiro - Olivia Rodrigo"
+                            ],
+                            "correctIndex": 2,
+                            "explanation": "As It Was de Harry Styles. La escucho en repeat y no me canso."
+                        },
+                        {
+                            "question": "Con quien me la paso mas en el colegio?",
+                            "options": [
+                                "Camila",
+                                "Sofia",
+                                "Martina",
+                                "Julieta"
+                            ],
+                            "correctIndex": 1,
+                            "explanation": "Sofia. Es mi mejor amiga desde jardin y no hay dia que no nos riamos de algo."
+                        },
+                        {
+                            "question": "Que es lo que mas me emociona de mis 15?",
+                            "options": [
+                                "La fiesta",
+                                "El vestido",
+                                "El vals con papa",
+                                "Todo junto"
+                            ],
+                            "correctIndex": 3,
+                            "explanation": "Todo junto. Es un dia que sone mucho y quiero disfrutar cada segundo."
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
+            "type": "honeymoon",
+            "id": "dream-trip",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Tu presencia es el mejor regalo. Pero si queres tener un detalle, aca te dejo mis datos :)",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos para regalos",
+                    "description": "Muchas gracias!",
+                    "bankData": [
+                        { "label": "Alias", "value": "VALEN.REGALO.MP" },
+                        { "label": "CBU", "value": "56478351476478216478" }
+                    ]
+                }
+            }
+        },
+
+        {
+            "// --- FORMULARIO RSVP ---": "",
+            "_comment": "Fondo rosa. Formulario de confirmacion. Todos los labels, opciones y textos son editables.",
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "primary",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirma tu asistencia",
+                "deadline": "Antes del 20 de agosto",
+                "guestCountLabel": "Numero de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "Vas a poder venir?",
+                    "attendanceYes": "Ahi voy!",
+                    "attendanceNo": "No voy a poder",
+                    "dietary": "Algun requerimiento alimentario?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celiaco",
+                        "Otro"
+                    ],
+                    "songRequest": "Que cancion te gustaria que suene?",
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "3456023759",
+                    "messageTemplate": "Hola! Confirmo asistencia para los 15 de Valentina:\n{resumen}\nGracias!"
+                }
+            }
+        },
+
+        {
+            "// --- MENSAJE ESPECIAL ---": "",
+            "_comment": "Fondo rosa. Un mensaje personal de la quinceanera a los invitados.",
+            "type": "specialMessage",
+            "id": "special-message",
+            "blocks": ["title", "text"],
+            "data": {
+                "title": "Gracias por estar",
+                "text": "A cada uno de ustedes: gracias por ser parte de mi vida. No seria quien soy sin las personas que me rodean. Esta noche es para celebrar juntos, reir, bailar y crear recuerdos que duren para siempre. Los quiero.",
+                "signature": "Valu",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombre debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "name"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/xv/valentina/images/closing.jpg"
+            }
+        },
+
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": "https://wa.me/3456023759"
+                    }
+                ]
+            }
+        }
+    ]
+}

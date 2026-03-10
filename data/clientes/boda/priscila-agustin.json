@@ -4,12 +4,12 @@
     "// ==========================================.": "",
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
     "meta": {
-        "title": "Nuestra Boda - Anto & Walter",
+        "title": "Nuestra Boda - Priscila & Agustín",
         "description": "Estamos felices de invitarte a celebrar nuestro amor.",
         "lang": "es",
         "coupleNames": {
-            "groomName": "Walter",
-            "brideName": "Anto",
+            "groomName": "Agustín",
+            "brideName": "Priscila",
             "separator": "&"
         }
     },
@@ -18,10 +18,10 @@
     "// ==========================================..": "",
     "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma.",
     "theme": {
-        "primaryColor": "#D4A373",
+        "primaryColor": "#bb8588",
         "backgroundColor": "#FAF8F5",
         "textColor": "#3A3A3A",
-        "lightBgTextColor": "#888",
+        "lightBgTextColor": "#666",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
@@ -35,7 +35,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": true,
+        "enabled": false,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar"
     },
@@ -44,8 +44,8 @@
     "// ==========================================....": "",
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
-        "enabled": true,
-        "src": "/clientes/boda/anto-walter/music/Para-Siempre.mp3",
+        "enabled": false,
+        "src": "",
         "autoplay": false
     },
     "// ==========================================-": "",
@@ -64,7 +64,7 @@
             "logo": ""
         },
         "countdownPrefix": "Faltan",
-        "eventDate": "2027-02-16T18:00:00",
+        "eventDate": "2026-10-24T22:00:00",
         "countdownLabels": {
             "days": "Dias",
             "hours": "Horas",
@@ -99,7 +99,7 @@
             "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
-                "value": "16 y 17 de Febrero 2027"
+                "value": "24 de Octubre de 2026"
             }
         },
         {
@@ -110,11 +110,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
-                "images": [
-                    "/clientes/boda/anto-walter/images/galeria-1.jpg",
-                    "/clientes/boda/anto-walter/images/galeria-2.jpg",
-                    "/clientes/boda/anto-walter/images/galeria-3.jpg"
-                ]
+                "images": []
             }
         },
         {
@@ -126,27 +122,27 @@
             "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Civil",
-                "address": "Registro Civil, Villa Paranacito",
+                "address": "Registro Civil",
                 "button": {
                     "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/QBmVDq7o6xhQPJek9?g_st=ic",
+                    "url": "",
                     "variant": "primary"
                 }
             }
         },
         {
-            "// --- UBICACION: DISCURSO DE BODA ---": "",
+            "// --- UBICACION: IGLESIA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-discurso",
             "bgColor": "background",
             "blocks": ["title", "address", "button"],
             "data": {
-                "title": "Discurso de boda",
-                "address": "Salón del Reino, Ramírez 276",
+                "title": "Iglesia",
+                "address": "Parroquia, Ramírez 276",
                 "button": {
                     "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/DwZ8MsxfGpoga9y96?g_st=ic",
+                    "url": "",
                     "variant": "primary"
                 }
             }
@@ -159,91 +155,20 @@
             "bgColor": "primary",
             "blocks": ["title", "address", "button"],
             "data": {
-                "title": "Recepcion",
-                "address": "Salón Restaurant, Barrio Náutico",
+                "title": "Recepción",
+                "address": "Club Jubilados Jeppener",
                 "button": {
                     "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/6MynwwpeFMp9mwUVA?g_st=ic",
+                    "url": "",
                     "variant": "background"
                 }
             }
         },
-        {
-            "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
-            "_comment": "Cada evento tiene icon, name, time. Opcionales: date (subtitulo de dia, aparece como separador visual), button (con text, url y variant). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
-            "type": "itinerary",
-            "id": "itinerary-timeline",
-            "bgColor": "background",
-            "blocks": ["title", "timeline"],
-            "data": {
-                "title": "Itinerario",
-                "events": [
-                    {
-                        "icon": "civil",
-                        "name": "Civil",
-                        "time": "11:00 hs",
-                        "date": "Viernes 16/02",
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/DwZ8MsxfGpoga9y96?g_st=ic",
-                            "variant": "secondary"
-                        }
-                    },
-                    {
-                        "icon": "podium",
-                        "name": "Discurso de boda",
-                        "time": "17:00 hs",
-                        "date": "Sabado 17/02"
-                    },
-                    {
-                        "icon": "mate",
-                        "name": "Recepcion (traé tu mate)",
-                        "time": "18:45 hs"
-                    },
-                    {
-                        "icon": "camera",
-                        "name": "Fotos",
-                        "time": "19:30 hs"
-                    },
-                    {
-                        "icon": "utensils",
-                        "name": "Cena",
-                        "time": "22:00 hs"
-                    },
-                    {
-                        "icon": "mesaDulce",
-                        "name": "Mesa dulce",
-                        "time": "23:30 hs"
-                    },
-                    {
-                        "icon": "tortaCasamiento",
-                        "name": "Torta",
-                        "time": "01:00 hs"
-                    },
-                    {
-                        "icon": "fin",
-                        "name": "Fin de fiesta",
-                        "time": "02:00 hs"
-                    }
-                ]
-            }
-        },
-        {
-            "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
-            "type": "adultsOnly",
-            "id": "adults-only",
-            "bgColor": "background",
-            "blocks": ["icon", "title", "description"],
-            "data": {
-                "icon": "baby",
-                "title": "Evento solo para adultos",
-                "description": "Les pedimos disculpas, pero por cuestiones de espacio y organizacion, este evento es exclusivamente para adultos."
-            }
-        },
+
         {
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
             "type": "dressCode",
-            "id": "dress-code2",
+            "id": "dress-code",
             "bgColor": "background",
             "blocks": [
                 "title",
@@ -257,13 +182,13 @@
             "data": {
                 "icons": ["star"],
                 "title": "Vestimenta",
-                "subtitle": "Evento al aire libre",
-                "description": "Por favor, evitar los siguientes colores",
-                "showButton": true,
+                "subtitle": "Elegante",
+                "description": "Te pedimos amablemente evitar el BLANCO y BEIGE. Si podés, traé algo con tonos azules:",
+                "showButton": false,
                 "colorSwatches": {
                     "enabled": true,
-                    "shape": "circle",
-                    "colors": ["#ffffff", "#1ABC9C", "#6deebe"]
+                    "shape": "square",
+                    "colors": ["#012a4a", "#013a63", "#01497c", "#2a6f97"]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -272,126 +197,39 @@
                 },
                 "modal": {
                     "title": "Consejos de vestimenta",
-                    "sections": [
-                        {
-                            "heading": "Hombres",
-                            "text": "Pantalón de vestir o chino, camisa clara (puede ser sin corbata), zapatos o mocasines. Evitar zapatillas deportivas y bermudas. El evento es al aire libre, asi que prioriza comodidad con elegancia."
-                        },
-                        {
-                            "heading": "Mujeres",
-                            "text": "Vestido midi o largo, sandalias o zapatos comodos (el terreno es cesped). Evitar blanco y colores muy claros para no coincidir con la novia. Se sugieren tonos pasteles, tierra o colores vivos."
-                        },
-                        {
-                            "heading": "General",
-                            "text": "El evento es campestre y al atardecer. Llevar un abrigo liviano por si refresca a la noche. Evitar tacones muy altos por el terreno irregular."
-                        }
-                    ]
+                    "sections": []
+                }
+            }
+        },
+        {
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "",
+                "title": "Regalos",
+                "description": "Tu presencia es el mejor regalo que podríamos recibir. Si querés hacernos un obsequio, preferimos que sea en un SOBRE el día de la fiesta, o mediante el siguiente ALIAS.",
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos bancarios",
+                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
+                    "bankData": [
+                        { "label": "Alias", "value": "LUNA.DE.MIEL" },
+                        { "label": "CBU", "value": "0000000000000000000000" },
+                        { "label": "Titular", "value": "Nombre Completo" },
+                        { "label": "Banco", "value": "Nombre del Banco" }
+                    ],
+                    "thankYouText": "¡Muchas gracias!"
                 }
             }
         },
 
-        {
-            "// --- SUBIR FOTOS ---": "",
-            "_comment": "Invita a subir fotos al album compartido. button.url = link al album (Google Photos, etc).",
-            "type": "photos",
-            "id": "shared-photos",
-            "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button"],
-            "data": {
-                "title": "Queremos ver tus fotos",
-                "description": "Pueden subir todas las fotos del gran dia a nuestro album compartido",
-                "button": {
-                    "text": "Ir al album",
-                    "url": "https://photos.google.com",
-                    "variant": "background"
-                }
-            }
-        },
-        {
-            "// --- NUESTRA HISTORIA ---": "",
-            "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/clientes/[tipo]/[slug]/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
-            "type": "ourStory",
-            "id": "our-story",
-            "bgColor": "background",
-            "blocks": ["title", "moments"],
-            "data": {
-                "aspectRatio": "3/4",
-                "title": "Nuestra historia",
-                "moments": [
-                    {
-                        "image": "/clientes/boda/anto-walter/images/historia-1.jpeg",
-                        "title": "Nos hicimos amigos",
-                        "text": "Fuimos de viaje con un grupo de amigos. Nos conocimos mucho en el día a día, y nos gustábamos, aunque ninguno de los dos lo sabía. Sí, así de loco jaja."
-                    },
-                    {
-                        "image": "/clientes/boda/anto-walter/images/historia-2.jpeg",
-                        "title": "Nos elegimos",
-                        "text": "Con el tiempo, un día en las playas de Santa Clara, nos contamos lo que sentíamos y decidimos caminar juntos una nueva etapa. Y un día de cine, nos pusimos de novios."
-                    },
-                    {
-                        "image": "/clientes/boda/anto-walter/images/historia-3.jpeg",
-                        "title": "Decidimos casarnos",
-                        "text": "No hubo un gran discurso ni un momento perfecto. Solo la certeza de que queremos caminar juntos lo que venga. Y acá estamos, invitandolos a celebrarlo."
-                    }
-                ]
-            }
-        },
-        {
-            "// --- PEQUEÑAS VERDADES ---": "",
-            "_comment": "Fondo verde. Preguntas de a una, 2 opciones (A o B). correctOption = 'A' o 'B'. revealText = frase al responder. finishText = mensaje final. Sin puntaje. Agregar/quitar preguntas libremente.",
-            "type": "truths",
-            "id": "truths-game",
-            "bgColor": "primary",
-            "blocks": ["title", "questions"],
-            "data": {
-                "title": "Pequeñas verdades sobre nosotros",
-                "finishText": "Gracias por jugar. Ahora ya saben un poco mas sobre nosotros. Nos vemos en la fiesta.",
-                "questions": [
-                    {
-                        "question": "Quien dijo 'te amo' primero?",
-                        "optionA": "Anto",
-                        "optionB": "Walter",
-                        "correctOption": "A",
-                        "revealText": "Anto no pudo aguantar más y se lo dijo sólo unos días después de contarse lo que sentían. Walter se reía porque sentía que era demasiado pronto."
-                    },
-                    {
-                        "question": "Cual es nuestra comida favorita para acompañar con una peli?",
-                        "optionA": "Milanesas",
-                        "optionB": "Pizza",
-                        "correctOption": "A",
-                        "revealText": "Milanesas. Aunque si hay cervecita o vino tinto, cualquier cosa les viene bien."
-                    },
-                    {
-                        "question": "Quién tarda mas en arreglarse?",
-                        "optionA": "Anto",
-                        "optionB": "Walter",
-                        "correctOption": "B",
-                        "revealText": "Walter. Tarda 80 años, se toma todo su tiempo. ¡Y que no lo atrase el remolino del cabello!"
-                    },
-                    {
-                        "question": "Cuál es la canción que identifica su historia de amor?",
-                        "optionA": "Universo Paralelo - Nahuel Pennisi",
-                        "optionB": "Para Siempre - Benjamín Amadeo",
-                        "correctOption": "B",
-                        "revealText": "Universo Paralelo. Refleja lo que sentían el uno por el otro cuando eran amigos."
-                    },
-                    {
-                        "question": "Quien cocina mejor?",
-                        "optionA": "Anto",
-                        "optionB": "Walter",
-                        "correctOption": "A",
-                        "revealText": "Walter una vez quemo agua hirviendo. No pregunten como, pero paso. (Se le derritio la pava)"
-                    },
-                    {
-                        "question": "Quien maneja en los viajes largos?",
-                        "optionA": "Anto",
-                        "optionB": "Walter",
-                        "correctOption": "B",
-                        "revealText": "Walter maneja y Anto va de DJ, copiloto y encargada de snacks. Un equipo imbatible."
-                    }
-                ]
-            }
-        },
         {
             "// --- FRASE EMOTIVA ---": "",
             "_comment": "Fondo verde. Solo texto centrado.",
@@ -412,7 +250,7 @@
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 11 de noviembre",
+                "deadline": "Antes del 15 de Julio",
                 "guestCountLabel": "Número de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
@@ -421,7 +259,7 @@
                     "attendance": "Confirmás tu asistencia?",
                     "attendanceYes": "Confirmo!",
                     "attendanceNo": "No podré asistir",
-                    "dietary": "Algún requerimiento en la alimentacion?",
+                    "dietary": "¿Alguna limitación en la alimentación?",
                     "dietaryOptions": [
                         "Ninguno",
                         "Vegetariano",
@@ -434,7 +272,7 @@
                 },
                 "whatsapp": {
                     "number": "3456023759",
-                    "messageTemplate": "Hola! Confirmo asistencia para la boda de Anto & Walter:\n{resumen}\nGracias!"
+                    "messageTemplate": "Hola Pri y Agus! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
                 }
             }
         },
