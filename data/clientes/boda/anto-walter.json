@@ -26,7 +26,7 @@
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
         "font": {
-            "family": "Sans Serif",
+            "family": "Josefin Sans",
             "weights": "100,200,300,400,500,600,700"
         }
     },
