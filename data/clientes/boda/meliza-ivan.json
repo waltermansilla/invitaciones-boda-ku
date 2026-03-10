@@ -56,6 +56,13 @@
         "coupleImage": "/clientes/boda/meliza-ivan/images/img-hero.jpeg",
         "headline": "¡Nos casamos!",
         "showNamesOnPhoto": false,
+        "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
+        "namesDisplay": {
+            "enabled": false,
+            "position": "top",
+            "font": "",
+            "logo": ""
+        },
         "countdownPrefix": "Faltan",
         "eventDate": "2026-05-23T21:00:00",
         "countdownLabels": {
@@ -156,22 +163,43 @@
             }
         },
         {
-            "// --- DRESS CODE (con modal) ---": "",
-            "_comment": "El boton abre modal con consejos. modal.sections = array {heading, text}. Agregar/quitar bloques libremente.",
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
             "type": "dressCode",
             "id": "dress-code",
             "bgColor": "background",
-            "blocks": ["title", "subtitle", "button", "modal"],
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
             "data": {
+                "icons": ["gem"],
                 "title": "Código de vestimenta",
                 "subtitle": "Elegante",
+                "description": "Te pedimos amablemente evitar colores de la siguiente paleta de colores",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "square",
+                    "colors": [
+                        "#d9d9de",
+                        "#fff",
+                        "#bce9c8",
+                        "#2c6b46",
+                        "#1a3a26"
+                    ]
+                },
                 "button": {
-                    "text": "Ver",
+                    "text": "Ver consejos",
                     "url": "#",
                     "variant": "secondary"
                 },
                 "modal": {
-                    "title": "Elegante",
+                    "title": "Consejos de vestimenta",
                     "sections": [
                         {
                             "heading": "Color de vestimenta",
@@ -234,6 +262,7 @@
             "blocks": ["title", "button"],
             "data": {
                 "title": "Confirmar asistencia",
+                "subtitle": "",
                 "buttonText": "Voy a asistir!",
                 "whatsappNumber": "543815993451",
                 "message": "Hola Iván y Meliza! Confirmo mi asistencia a tu boda. Ya aboné el valor de la tarjeta. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗"

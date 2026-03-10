@@ -26,7 +26,7 @@
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
         "font": {
-            "family": "Playfair Display",
+            "family": "Josefin Sans",
             "weights": "400,500,600,700"
         }
     },
@@ -35,7 +35,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": true,
+        "enabled": false,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar"
     },
@@ -55,7 +55,14 @@
     "hero": {
         "coupleImage": "/clientes/boda/anto-walter/images/img-hero.jpg",
         "headline": "Nos casamos!",
-        "showNamesOnPhoto": true,
+        "showNamesOnPhoto": false,
+        "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
+        "namesDisplay": {
+            "enabled": true,
+            "position": "bottom",
+            "font": "",
+            "logo": ""
+        },
         "countdownPrefix": "Faltan",
         "eventDate": "2027-02-16T18:00:00",
         "countdownLabels": {
@@ -76,10 +83,7 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "¡Al fin! Este momento especial está llegando, y queremos compartirlo con vos",
                 "author": "",
@@ -92,11 +96,7 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "value",
-                "button"
-            ],
+            "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "16 y 17 de Febrero 2027"
@@ -107,9 +107,7 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
                 "images": [
@@ -125,11 +123,7 @@
             "type": "locationInfo",
             "id": "location-civil",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Civil",
                 "address": "Registro Civil, Villa Paranacito",
@@ -146,11 +140,7 @@
             "type": "locationInfo",
             "id": "location-discurso",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Discurso de boda",
                 "address": "Salón del Reino, Ramírez 276",
@@ -167,11 +157,7 @@
             "type": "locationInfo",
             "id": "location-recepcion",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Recepcion",
                 "address": "Salón Restaurant, Barrio Náutico",
@@ -188,10 +174,7 @@
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "timeline"
-            ],
+            "blocks": ["title", "timeline"],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -246,27 +229,49 @@
             }
         },
         {
-            "// --- DRESS CODE (con modal) ---": "",
-            "_comment": "El boton abre modal con consejos. modal.sections = array {heading, text}. Agregar/quitar bloques libremente.",
+            "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
+            "type": "adultsOnly",
+            "id": "adults-only",
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description"],
+            "data": {
+                "icon": "baby",
+                "title": "Evento solo para adultos",
+                "description": "Les pedimos disculpas, pero por cuestiones de espacio y organizacion, este evento es exclusivamente para adultos."
+            }
+        },
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
             "type": "dressCode",
-            "id": "dress-code",
+            "id": "dress-code2",
             "bgColor": "background",
             "blocks": [
                 "title",
                 "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
                 "button",
                 "modal"
             ],
             "data": {
+                "icons": ["star"],
                 "title": "Vestimenta",
                 "subtitle": "Evento al aire libre",
+                "description": "Por favor, evitar los siguientes colores",
+                "showButton": true,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "circle",
+                    "colors": ["#ffffff", "#1ABC9C", "#6deebe"]
+                },
                 "button": {
                     "text": "Ver consejos",
                     "url": "#",
                     "variant": "secondary"
                 },
                 "modal": {
-                    "title": "Consejos para la celebracion",
+                    "title": "Consejos de vestimenta",
                     "sections": [
                         {
                             "heading": "Hombres",
@@ -284,18 +289,14 @@
                 }
             }
         },
+
         {
             "// --- SUBIR FOTOS ---": "",
             "_comment": "Invita a subir fotos al album compartido. button.url = link al album (Google Photos, etc).",
             "type": "photos",
             "id": "shared-photos",
             "bgColor": "primary",
-            "blocks": [
-                "icon",
-                "title",
-                "description",
-                "button"
-            ],
+            "blocks": ["icon", "title", "description", "button"],
             "data": {
                 "title": "Queremos ver tus fotos",
                 "description": "Pueden subir todas las fotos del gran dia a nuestro album compartido",
@@ -312,10 +313,7 @@
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "moments"
-            ],
+            "blocks": ["title", "moments"],
             "data": {
                 "aspectRatio": "3/4",
                 "title": "Nuestra historia",
@@ -344,10 +342,7 @@
             "type": "truths",
             "id": "truths-game",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "questions"
-            ],
+            "blocks": ["title", "questions"],
             "data": {
                 "title": "Pequeñas verdades sobre nosotros",
                 "finishText": "Gracias por jugar. Ahora ya saben un poco mas sobre nosotros. Nos vemos en la fiesta.",
@@ -403,9 +398,7 @@
             "type": "emotionalQuote",
             "id": "emotional-quote",
             "bgColor": "background",
-            "blocks": [
-                "text"
-            ],
+            "blocks": ["text"],
             "data": {
                 "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
             }
@@ -416,21 +409,12 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "form"
-            ],
+            "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 11 de noviembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
+                "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -459,10 +443,7 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": [
-                "image",
-                "coupleNames"
-            ],
+            "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/anto-walter/images/final.jpg"
@@ -473,10 +454,7 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": [
-                "socialLinks",
-                "brandName"
-            ],
+            "blocks": ["socialLinks", "brandName"],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [
