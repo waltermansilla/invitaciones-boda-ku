@@ -23,6 +23,7 @@ import ParentsSection from "./parents-section"
 import PlaylistSection from "./playlist-section"
 import SpecialMessageSection from "./special-message-section"
 import ConfirmarWhatsappSection from "./confirmar-whatsapp-section"
+import AdultsOnlySection from "./adults-only-section"
 import { useConfig } from "@/lib/config-context"
 
 export interface SectionConfig {
@@ -159,8 +160,12 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
           <DressCodeSection
             title={data.title as string}
             subtitle={data.subtitle as string}
+            description={data.description as string | undefined}
+            icons={data.icons as string[] | undefined}
+            showButton={data.showButton as boolean | undefined}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
             modal={data.modal as { title: string; sections: { heading: string; text: string }[] }}
+            colorSwatches={data.colorSwatches as { enabled: boolean; shape: "circle" | "square"; colors: string[] } | undefined}
           />
         )
 
@@ -205,9 +210,18 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
         return (
           <ConfirmarWhatsappSection
             title={data.title as string}
+            subtitle={data.subtitle as string | undefined}
             buttonText={data.buttonText as string}
             whatsappNumber={data.whatsappNumber as string}
             message={data.message as string}
+          />
+        )
+
+      case "adultsOnly":
+        return (
+          <AdultsOnlySection
+            title={data.title as string}
+            description={data.description as string}
           />
         )
 
@@ -281,6 +295,7 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
             image={data.image as string}
             aspectRatio={data.aspectRatio as string | undefined}
             coupleNames={coupleNames}
+            namesDisplay={data.namesDisplay as { font?: string; logo?: string } | undefined}
           />
         )
 

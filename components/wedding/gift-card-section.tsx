@@ -73,6 +73,7 @@ interface GiftCardSectionProps {
     button: { text: string; url: string; variant: "primary" | "secondary" };
     modal: {
         title: string;
+        suggestedValueLabel?: string;
         suggestedValue: string;
         description: string;
         transferData: { label: string; value: string }[];
@@ -108,7 +109,7 @@ export default function GiftCardSection({
                 {modal.suggestedValue && (
                     <div className="mb-5 rounded-sm bg-primary-foreground/10 px-5 py-4 text-center">
                         <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
-                            Valor tarjeta por persona
+                            {modal.suggestedValueLabel || "Valor tarjeta por persona"}
                         </p>
                         <p className="mt-1 text-2xl font-light text-primary-foreground">
                             {isMuestra ? "$XX.XXX" : modal.suggestedValue}

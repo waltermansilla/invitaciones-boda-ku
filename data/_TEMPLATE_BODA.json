@@ -48,6 +48,13 @@
         "coupleImage": "/clientes/boda/[slug]/hero.jpg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": true,
+        "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto.",
+        "namesDisplay": {
+            "enabled": true,
+            "position": "bottom",
+            "font": "",
+            "logo": ""
+        },
         "countdownPrefix": "Faltan",
         "eventDate": "2027-01-01T21:00:00",
         "countdownLabels": {
@@ -196,14 +203,22 @@
         },
 
         {
-            "_comment": "DRESS CODE: Vestimenta con modal de consejos.",
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
             "type": "dressCode",
             "id": "dress-code",
             "bgColor": "background",
-            "blocks": ["title", "subtitle", "button", "modal"],
+            "blocks": ["title", "subtitle", "icons", "description", "colorSwatches", "button", "modal"],
             "data": {
+                "icons": ["dress", "suit", "gem"],
                 "title": "Vestimenta",
                 "subtitle": "Elegante Sport",
+                "description": "El blanco esta reservado para la novia",
+                "showButton": true,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "circle",
+                    "colors": ["#2C3E50", "#8E44AD", "#1ABC9C", "#E74C3C"]
+                },
                 "button": { "text": "Ver consejos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Consejos de vestimenta",
@@ -263,6 +278,7 @@
                 "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos de transferencia",
+                    "suggestedValueLabel": "Valor tarjeta por persona",
                     "suggestedValue": "$20.000",
                     "description": "Podes transferir el monto que quieras.",
                     "transferData": [
@@ -375,16 +391,29 @@
         },
 
         {
-            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). subtitle: (opcional) texto entre titulo y boton (ej: 'Confirmar antes del 15 de marzo').",
             "type": "confirmarWhatsapp",
             "id": "confirmar-whatsapp",
             "bgColor": "primary",
-            "blocks": ["title", "button"],
+            "blocks": ["title", "subtitle", "button"],
             "data": {
                 "title": "Confirmar asistencia",
+                "subtitle": "Antes del 15 de marzo",
                 "buttonText": "Confirmar por WhatsApp",
                 "whatsappNumber": "NUMERO_WHATSAPP_SIN_MAS",
                 "message": "Confirmo mi asistencia a la boda de NOMBRE & NOMBRE"
+            }
+        },
+
+        {
+            "_comment": "ADULTS ONLY: Evento solo para adultos. Muestra icono de bebe tachado.",
+            "type": "adultsOnly",
+            "id": "adults-only",
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description"],
+            "data": {
+                "title": "Evento solo para adultos",
+                "description": "Les pedimos disculpas, pero por cuestiones de espacio y organizacion, este evento es exclusivamente para adultos."
             }
         },
 
@@ -402,11 +431,18 @@
         },
 
         {
-            "_comment": "CLOSING IMAGE: Foto de cierre con nombres superpuestos.",
+            "_comment": "CLOSING IMAGE: Foto de cierre con nombres superpuestos. namesDisplay: (opcional) font para los nombres, logo para mostrar imagen en vez de texto.",
             "type": "closingImage",
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
-            "data": { "aspectRatio": "3/4", "image": "/clientes/boda/[slug]/cierre.jpg" }
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/boda/[slug]/cierre.jpg",
+                "namesDisplay": {
+                    "font": "",
+                    "logo": ""
+                }
+            }
         },
 
         {

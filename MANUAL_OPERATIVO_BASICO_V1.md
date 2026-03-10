@@ -202,6 +202,7 @@ Listo. No hay que tocar ningun otro archivo.
 | `giftCard`          | Tarjeta de regalo con datos bancarios |                                    |
 | `honeymoon`         | Alcancia con datos bancarios          | En XV: "Regalos" (no viaje)        |
 | `confirmarWhatsapp` | Boton WhatsApp directo (Plan Base)    | Sin formulario                     |
+| `adultsOnly`        | Evento solo para adultos              | Icono de bebe tachado              |
 | `playlist`          | Link a playlist de Spotify            |                                    |
 | `rsvp`              | Formulario de confirmacion            |                                    |
 | `specialMessage`    | Mensaje personal con firma            |                                    |
@@ -577,9 +578,10 @@ Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
     "type": "confirmarWhatsapp",
     "id": "confirmar-whatsapp",
     "bgColor": "primary",
-    "blocks": ["title", "button"],
+    "blocks": ["title", "subtitle", "button"],
     "data": {
         "title": "Confirmar asistencia",
+        "subtitle": "Antes del 15 de marzo",
         "buttonText": "Confirmar por WhatsApp",
         "whatsappNumber": "3456023759",
         "message": "Confirmo mi asistencia a la boda de Anto & Walter"
@@ -587,9 +589,118 @@ Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
 }
 ```
 
+- `subtitle` es opcional: texto entre el titulo y el boton (ej: "Confirmar antes del 15 de marzo")
 - El boton tiene el mismo estilo que "Iniciar Trivia" (rounded-full, elegante)
 - En modo muestra, muestra un alert en vez de abrir WhatsApp
-- Editable al 100% desde JSON: titulo, texto del boton, numero y mensaje
+- Editable al 100% desde JSON: titulo, subtitulo, texto del boton, numero y mensaje
+
+### Seccion adultsOnly (Solo Adultos)
+
+Nueva seccion para indicar que el evento es exclusivo para adultos:
+
+```json
+{
+    "type": "adultsOnly",
+    "id": "adults-only",
+    "bgColor": "background",
+    "blocks": ["icon", "title", "description"],
+    "data": {
+        "title": "Evento solo para adultos",
+        "description": "Les pedimos disculpas, pero este evento es exclusivamente para adultos."
+    }
+}
+```
+
+Muestra un icono de cochecito/bebe tachado automaticamente.
+
+### Dress Code mejorado
+
+Dress Code ahora soporta iconos, texto explicativo, paleta de colores y boton opcional:
+
+```json
+{
+    "type": "dressCode",
+    "id": "dress-code",
+    "bgColor": "background",
+    "data": {
+        "icons": ["dress", "suit", "gem"],
+        "title": "Vestimenta",
+        "subtitle": "Elegante Sport",
+        "description": "El blanco esta reservado para la novia",
+        "showButton": true,
+        "colorSwatches": {
+            "enabled": true,
+            "shape": "circle",
+            "colors": ["#2C3E50", "#8E44AD", "#1ABC9C"]
+        },
+        "button": { "text": "Ver consejos", "url": "#", "variant": "secondary" },
+        "modal": { ... }
+    }
+}
+```
+
+**Iconos disponibles para dressCode:** `dress` (vestido), `suit` (traje), `gem` (diamante), `crown` (corona), `sparkles` (brillos), `star` (estrella), `heart` (corazon).
+
+**colorSwatches:**
+- `enabled`: true/false
+- `shape`: `"circle"` (circulos separados) o `"square"` (cuadrados pegados)
+- `colors`: array de colores hex
+
+**showButton:** true/false para mostrar u ocultar el boton que abre el modal.
+
+### Gift Card texto personalizable
+
+El texto arriba del precio ("Valor tarjeta por persona") ahora es editable:
+
+```json
+"modal": {
+    "title": "Datos de transferencia",
+    "suggestedValueLabel": "Valor sugerido por persona",
+    "suggestedValue": "$20.000",
+    ...
+}
+```
+
+Si no se incluye `suggestedValueLabel`, usa "Valor tarjeta por persona" por defecto.
+
+### Nombres en hero y cierre (namesDisplay)
+
+El hero ahora tiene control avanzado sobre como se muestran los nombres:
+
+```json
+"hero": {
+    ...
+    "namesDisplay": {
+        "enabled": true,
+        "position": "bottom",
+        "font": "Great Vibes",
+        "logo": ""
+    }
+}
+```
+
+- `enabled`: true/false para mostrar/ocultar nombres
+- `position`: `"top"` o `"bottom"` (posicion sobre la foto)
+- `font`: nombre de Google Font para los nombres (opcional)
+- `logo`: ruta a imagen PNG con fondo transparente (opcional, reemplaza texto)
+
+Lo mismo para `closingImage`:
+
+```json
+{
+    "type": "closingImage",
+    "data": {
+        "image": "/clientes/boda/slug/cierre.jpg",
+        "aspectRatio": "3/4",
+        "namesDisplay": {
+            "font": "Great Vibes",
+            "logo": ""
+        }
+    }
+}
+```
+
+Si `logo` tiene valor, se muestra la imagen en vez de los nombres como texto.
 
 ### Iconos del itinerario
 

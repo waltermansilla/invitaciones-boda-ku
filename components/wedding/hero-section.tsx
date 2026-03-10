@@ -4,6 +4,19 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useConfig } from "@/lib/config-context"
 
+/**
+ * Hero Section - Portada principal de la invitacion
+ * 
+ * Opciones de nombres sobre la foto (namesDisplay):
+ *   enabled: boolean    -> true para mostrar, false para ocultar
+ *   position: "top" | "bottom" -> arriba o abajo de la imagen
+ *   font: string        -> (OPCIONAL) Google Font para los nombres (ej: "Great Vibes")
+ *   logo: string        -> (OPCIONAL) Ruta a imagen de logo en vez de texto (ej: "/clientes/boda/xxx/logo.png")
+ * 
+ * Si namesDisplay.logo tiene valor, se muestra el logo en vez de los nombres.
+ * El font especificado aqui tambien se aplica en closing-section si se usa.
+ */
+
 interface HeroSectionProps {
   coupleImage: string
   headline: string
@@ -11,7 +24,13 @@ interface HeroSectionProps {
   groomName: string
   brideName: string
   separator: string
-  showNamesOnPhoto?: boolean
+  showNamesOnPhoto?: boolean // backward compatibility
+  namesDisplay?: {
+    enabled: boolean
+    position: "top" | "bottom"
+    font?: string
+    logo?: string
+  }
   countdownPrefix?: string
   countdownLabels: {
     days: string
@@ -39,6 +58,7 @@ export default function HeroSection({
   brideName,
   separator,
   showNamesOnPhoto = true,
+  namesDisplay,
   countdownPrefix,
   countdownLabels,
 }: HeroSectionProps) {
@@ -60,6 +80,17 @@ export default function HeroSection({
     return () => clearInterval(interval)
   }, [eventDate])
 
+  // Determine if names should show (support both old and new format)
+  const shouldShowNames = namesDisplay?.enabled ?? showNamesOnPhoto
+  const namesPosition = namesDisplay?.position || "bottom"
+  const namesFont = namesDisplay?.font
+  const namesLogo = namesDisplay?.logo
+
+  // Build font family style if custom font specified
+  const namesFontStyle = namesFont 
+    ? { fontFamily: `'${namesFont}', cursive` } 
+    : {}
+
   const items = [
     { value: time?.days ?? 0, label: countdownLabels.days },
     { value: time?.hours ?? 0, label: countdownLabels.hours },
@@ -67,8 +98,58 @@ export default function HeroSection({
     { value: time?.seconds ?? 0, label: countdownLabels.seconds },
   ]
 
+  // Names/Logo overlay component
+  const NamesOverlay = () => {
+    if (!shouldShowNames) return null
+
+    // If logo is provided, show logo instead of names
+    if (namesLogo) {
+      return (
+        <div className={`absolute inset-x-0 ${namesPosition === "top" ? "top-0 pt-10" : "bottom-0 pb-10"} flex flex-col items-center`}>
+          <Image
+            src={namesLogo}
+            alt="Logo"
+            width={200}
+            height={100}
+            className="max-h-24 w-auto object-contain sm:max-h-32"
+          />
+        </div>
+      )
+    }
+
+    // Show names as text
+    return (
+      <div 
+        className={`absolute inset-x-0 ${namesPosition === "top" ? "top-0 pt-10" : "bottom-0 pb-10"} flex flex-col items-center`}
+        style={namesFontStyle}
+      >
+        <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl md:text-5xl">
+          {brideName}
+        </p>
+        <span className="my-1 text-lg font-extralight tracking-[0.3em] text-white/60 sm:text-xl md:text-2xl">
+          {separator}
+        </span>
+        <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl md:text-5xl">
+          {groomName}
+        </p>
+      </div>
+    )
+  }
+
   return (
     <section className="flex flex-col items-center bg-background">
+      {/* Load custom font if specified */}
+      {namesFont && (
+        <>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link 
+            href={`https://fonts.googleapis.com/css2?family=${namesFont.replace(/ /g, "+")}:wght@300;400;500;600;700&display=swap`} 
+            rel="stylesheet" 
+          />
+        </>
+      )}
+
       {/* Couple photo with names overlaid */}
       <div className="relative aspect-[3/4] w-full sm:aspect-[4/5]">
         <Image
@@ -78,23 +159,15 @@ export default function HeroSection({
           className="object-cover"
           priority
         />
-        {showNamesOnPhoto && (
+        {shouldShowNames && (
           <>
             {/* Subtle gradient overlay for text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-
-            {/* Names on the photo */}
-            <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-10">
-              <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl md:text-5xl">
-                {brideName}
-              </p>
-              <span className="my-1 text-lg font-extralight tracking-[0.3em] text-white/60 sm:text-xl md:text-2xl">
-                {separator}
-              </span>
-              <p className="text-center text-3xl font-extralight tracking-[0.25em] uppercase text-white/90 sm:text-4xl md:text-5xl">
-                {groomName}
-              </p>
-            </div>
+            <div className={`absolute inset-0 ${
+              namesPosition === "top" 
+                ? "bg-gradient-to-b from-black/50 via-black/10 to-transparent" 
+                : "bg-gradient-to-t from-black/50 via-black/10 to-transparent"
+            }`} />
+            <NamesOverlay />
           </>
         )}
       </div>

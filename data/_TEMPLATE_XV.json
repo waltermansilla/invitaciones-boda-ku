@@ -49,6 +49,13 @@
         "coupleImage": "/clientes/xv/[slug]/hero.jpg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
+        "_comment_namesDisplay": "OPCIONAL: enabled (true/false), position ('top'/'bottom'), font (Google Font), logo (ruta a imagen).",
+        "namesDisplay": {
+            "enabled": true,
+            "position": "bottom",
+            "font": "",
+            "logo": ""
+        },
         "countdownPrefix": "Faltan",
         "eventDate": "2027-01-01T21:00:00",
         "countdownLabels": {
@@ -179,14 +186,22 @@
         },
 
         {
-            "_comment": "DRESS CODE: Vestimenta con modal.",
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
             "type": "dressCode",
             "id": "dress-code",
             "bgColor": "background",
-            "blocks": ["title", "subtitle", "button", "modal"],
+            "blocks": ["title", "subtitle", "icons", "description", "colorSwatches", "button", "modal"],
             "data": {
+                "icons": ["dress", "suit", "gem"],
                 "title": "Vestimenta",
                 "subtitle": "Elegante",
+                "description": "",
+                "showButton": true,
+                "colorSwatches": {
+                    "enabled": false,
+                    "shape": "circle",
+                    "colors": []
+                },
                 "button": { "text": "Ver consejos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Consejos de vestimenta",
@@ -240,6 +255,7 @@
                 "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos de transferencia",
+                    "suggestedValueLabel": "Valor tarjeta por persona",
                     "suggestedValue": "$15.000",
                     "description": "Podes transferir el monto que quieras.",
                     "transferData": [
@@ -344,16 +360,29 @@
         },
 
         {
-            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton estilo trivia que abre WhatsApp directo.",
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple. subtitle: (opcional) texto entre titulo y boton.",
             "type": "confirmarWhatsapp",
             "id": "confirmar-whatsapp",
             "bgColor": "primary",
-            "blocks": ["title", "button"],
+            "blocks": ["title", "subtitle", "button"],
             "data": {
                 "title": "Confirmar asistencia",
+                "subtitle": "Antes del 15 de marzo",
                 "buttonText": "Confirmar por WhatsApp",
                 "whatsappNumber": "NUMERO_WHATSAPP_SIN_MAS",
                 "message": "Confirmo mi asistencia a los 15 de NOMBRE"
+            }
+        },
+
+        {
+            "_comment": "ADULTS ONLY: Evento solo para adultos.",
+            "type": "adultsOnly",
+            "id": "adults-only",
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description"],
+            "data": {
+                "title": "Evento solo para adultos",
+                "description": "Les pedimos disculpas, pero este evento es exclusivamente para adultos."
             }
         },
 
@@ -371,11 +400,18 @@
         },
 
         {
-            "_comment": "CLOSING IMAGE: Foto de cierre con nombre.",
+            "_comment": "CLOSING IMAGE: Foto de cierre. namesDisplay: font (Google Font), logo (imagen en vez de texto).",
             "type": "closingImage",
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
-            "data": { "aspectRatio": "3/4", "image": "/clientes/xv/[slug]/cierre.jpg" }
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/xv/[slug]/cierre.jpg",
+                "namesDisplay": {
+                    "font": "",
+                    "logo": ""
+                }
+            }
         },
 
         {

@@ -779,6 +779,10 @@ PARTE 6 - EL JSON MAESTRO (ESTRUCTURA COMPLETA)
   dressCode:
     OBLIGATORIO: data.title, data.subtitle, data.button, data.modal
     modal: { title, sections: [{ heading, text }] }
+    OPCIONAL: data.icons (array: "dress", "suit", "gem", "crown", "sparkles", "star", "heart")
+              data.description (texto explicativo debajo del subtitulo)
+              data.showButton (true/false, default true)
+              data.colorSwatches: { enabled, shape ("circle"/"square"), colors: ["#hex"] }
 
   photos:
     OBLIGATORIO: data.title, data.description, data.button
@@ -792,6 +796,7 @@ PARTE 6 - EL JSON MAESTRO (ESTRUCTURA COMPLETA)
     OBLIGATORIO: data.title, data.description, data.button, data.modal
     modal: { title, suggestedValue, description, transferData: [{label, value}] }
     OPCIONAL: data.icon (default "gift")
+              modal.suggestedValueLabel (default "Valor tarjeta por persona")
 
   honeymoon:
     OBLIGATORIO: data.title, data.description, data.button, data.modal
@@ -814,6 +819,7 @@ PARTE 6 - EL JSON MAESTRO (ESTRUCTURA COMPLETA)
 
   confirmarWhatsapp:
     OBLIGATORIO: data.title, data.buttonText, data.whatsappNumber, data.message
+    OPCIONAL: data.subtitle (texto entre titulo y boton, ej: "Antes del 15 de marzo")
 
   presentation (solo XV):
     OBLIGATORIO: data.image, data.name, data.description
@@ -833,6 +839,7 @@ PARTE 6 - EL JSON MAESTRO (ESTRUCTURA COMPLETA)
   closingImage:
     OBLIGATORIO: data.image
     OPCIONAL: data.aspectRatio (default "3/4")
+              data.namesDisplay: { font (Google Font), logo (ruta a imagen PNG) }
 
   footer:
     Sin data necesaria. Lee las constantes hardcodeadas del componente.
@@ -840,6 +847,10 @@ PARTE 6 - EL JSON MAESTRO (ESTRUCTURA COMPLETA)
 
   emotionalQuote:
     OBLIGATORIO: data.text
+
+  adultsOnly:
+    OBLIGATORIO: data.title, data.description
+    Muestra icono de bebe/cochecito tachado automaticamente.
 
 
 ================================================================================
@@ -994,7 +1005,7 @@ PARTE 8 - IMAGENES Y ARCHIVOS ESTATICOS
   │ Fuente del nombre de marca │ components/wedding/footer-section.tsx    │
   │  en el footer              │ Constante BRAND_FONT (linea ~9)         │
   │                            │ Valores: "font-serif", "font-sans",     │
-  │                            │ "font-mono", o clase CSS custom          │
+  ��                            │ "font-mono", o clase CSS custom          │
   ├────────────────────────────┼──────────────────────────────────────────┤
   │ Tamano del nombre de marca │ components/wedding/footer-section.tsx    │
   │  en el footer              │ Constante BRAND_SIZE (linea ~10)        │
@@ -1269,6 +1280,91 @@ PARTE 13 - TIPS PRACTICOS
          return <MiNuevaSeccion ... />
   5. Usarla en el JSON:
        { "type": "miNuevaSeccion", "id": "...", "data": { ... } }
+
+
+================================================================================
+PARTE 13B - COMO MODIFICAR COSAS HARDCODEADAS (FUERA DEL JSON)
+================================================================================
+
+Algunas cosas no estan en el JSON porque son globales o de marca. Aca como editarlas:
+
+13B.1 FOOTER (NOMBRE DE MARCA Y REDES)
+---------------------------------------
+  Archivo: components/wedding/footer-section.tsx
+  
+  Buscar las constantes al inicio del archivo:
+    BRAND_NAME     -> "momento unico" (cambiar por tu marca)
+    BRAND_FONT     -> "font-serif" (cursiva) o "font-sans" (recta)
+    BRAND_SIZE     -> "text-base" (tamano normal), "text-lg" (grande), etc.
+    BRAND_ICON     -> null o "/images/icono.png" (icono al lado del nombre)
+    ICON_SIZE      -> 26 (tamano en px de iconos de redes)
+    SOCIAL_LINKS   -> array de { icon, url, label } para redes sociales
+
+13B.2 FAVICON E IMAGEN DE COMPARTIR
+------------------------------------
+  Favicon:
+    - Archivo: public/favicon.ico (y app/favicon.ico)
+    - Reemplazar con tu icono (formato .ico, 32x32 o 64x64)
+
+  Imagen al compartir (og:image):
+    - Archivo: app/[tipo]/[slug]/page.tsx
+    - Buscar: openGraph: { images: [...] }
+    - Poner ruta a imagen en public/ (ej: "/og-image.jpg", 1200x630 recomendado)
+
+13B.3 TITULO DE PESTANA Y META TAGS
+-------------------------------------
+  Para cada invitacion individual:
+    - Esta en el JSON del cliente: meta.title y meta.description
+    - Se lee en app/[tipo]/[slug]/page.tsx y se exporta como metadata
+
+  Para la landing:
+    - Archivo: app/layout.tsx (metadata export)
+    - O en data/landing.json si hay soporte de metadata
+
+13B.4 TEXTOS DE UI DENTRO DE COMPONENTES
+-----------------------------------------
+  Algunos textos estan hardcodeados en los componentes porque son de UI, no de contenido:
+  
+  - "Copiado!" en los botones de copiar -> gift-card-section.tsx y honeymoon-section.tsx
+  - "Modo muestra" en confirmacion simulada -> rsvp-section.tsx
+  - Textos de confirmacion simulada -> confirmar-whatsapp-section.tsx
+  
+  Buscar el texto con Ctrl+F en el componente y editar directamente.
+
+13B.5 ESTILOS GLOBALES (COLORES BASE, ANIMACIONES)
+----------------------------------------------------
+  Archivo: app/globals.css
+  
+  - Variables CSS globales (no las de cliente, esas se inyectan desde layout.tsx)
+  - Animaciones @keyframes
+  - Estilos de reset
+  
+  Normalmente no hay que tocar globals.css - los colores de cada cliente
+  se inyectan dinamicamente en el layout.
+
+13B.6 COLORES DEL TEMA DEL CLIENTE
+-----------------------------------
+  Los colores se inyectan en: app/[tipo]/[slug]/layout.tsx
+  
+  El layout lee theme del JSON y genera CSS variables dinamicas:
+    --primary, --background, --foreground, --accent-bg, etc.
+  
+  Si queres agregar un nuevo color al sistema:
+    1. Agregarlo al JSON del cliente en theme (ej: "highlightColor": "#FF0000")
+    2. Agregarlo al CSS inyectado en layout.tsx (ej: --highlight: ${theme.highlightColor})
+    3. Usarlo en los componentes con Tailwind (ej: bg-[var(--highlight)])
+
+13B.7 MANIFEST.JSON (PWA, NOMBRE EN CELULAR)
+---------------------------------------------
+  Archivo: public/manifest.json
+  
+  Controla:
+    - name: nombre largo que aparece al agregar a inicio
+    - short_name: nombre corto (debajo del icono)
+    - theme_color: color de la barra de estado
+    - icons: iconos para distintos tamanos
+  
+  Si cambias el nombre de marca, actualizarlo aca tambien.
 
 
 ================================================================================

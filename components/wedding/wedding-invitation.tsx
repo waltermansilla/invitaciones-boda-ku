@@ -42,6 +42,11 @@ export default function WeddingInvitation() {
                             | boolean
                             | undefined
                     }
+                    namesDisplay={
+                        (hero as Record<string, unknown>).namesDisplay as
+                            | { enabled: boolean; position: "top" | "bottom"; font?: string; logo?: string }
+                            | undefined
+                    }
                     countdownPrefix={
                         (hero as Record<string, unknown>).countdownPrefix as
                             | string

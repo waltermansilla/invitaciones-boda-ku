@@ -10,9 +10,18 @@ export default async function MuestraLayout({ children, params }: LayoutProps) {
   const config = getClientConfig(tipo, slug)
   const { theme } = config
 
-  const fontFamily = theme.font.family
-  const fontWeights = theme.font.weights
-  const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, "+")}&wght@${fontWeights}&display=swap`
+  // Handle both old format (theme.font as string) and new format (theme.font.family)
+  const fontFamily = typeof theme.font === "string" 
+    ? theme.font 
+    : theme.font?.family || "Cormorant Garamond"
+  
+  const fontWeights = typeof theme.font === "string"
+    ? "300,400,500,600,700"
+    : theme.font?.weights || "300,400,500,600,700"
+
+  // Build Google Fonts URL - encode properly for fonts with spaces
+  const encodedFamily = fontFamily.replace(/ /g, "+")
+  const fontUrl = `https://fonts.googleapis.com/css2?family=${encodedFamily}:wght@${fontWeights}&display=swap`
 
   return (
     <>
@@ -22,9 +31,14 @@ export default async function MuestraLayout({ children, params }: LayoutProps) {
       <style dangerouslySetInnerHTML={{ __html: `
         html, body {
           background-color: ${theme.backgroundColor} !important;
+          font-family: '${fontFamily}', '${fontFamily} Fallback', ui-serif, Georgia, serif !important;
+        }
+        * {
+          font-family: inherit;
         }
         :root {
-          --font-sans: '${fontFamily}', '${fontFamily} Fallback';
+          --font-sans: '${fontFamily}', '${fontFamily} Fallback', ui-serif, Georgia, serif;
+          --font-serif: '${fontFamily}', '${fontFamily} Fallback', ui-serif, Georgia, serif;
           --primary: ${theme.primaryColor};
           --primary-foreground: #FFFFFF;
           --background: ${theme.backgroundColor};
