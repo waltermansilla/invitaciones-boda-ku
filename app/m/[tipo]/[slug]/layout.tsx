@@ -31,14 +31,14 @@ export default async function MuestraLayout({ children, params }: LayoutProps) {
       <style dangerouslySetInnerHTML={{ __html: `
         html, body {
           background-color: ${theme.backgroundColor} !important;
-          font-family: '${fontFamily}', '${fontFamily} Fallback', ui-serif, Georgia, serif !important;
+          font-family: '${fontFamily}', ui-sans-serif, system-ui, sans-serif !important;
         }
         * {
           font-family: inherit;
         }
         :root {
-          --font-sans: '${fontFamily}', '${fontFamily} Fallback', ui-serif, Georgia, serif;
-          --font-serif: '${fontFamily}', '${fontFamily} Fallback', ui-serif, Georgia, serif;
+          --font-sans: '${fontFamily}', ui-sans-serif, system-ui, sans-serif;
+          --font-serif: '${fontFamily}', ui-sans-serif, system-ui, sans-serif;
           --primary: ${theme.primaryColor};
           --primary-foreground: #FFFFFF;
           --background: ${theme.backgroundColor};
