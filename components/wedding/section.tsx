@@ -220,6 +220,7 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
       case "adultsOnly":
         return (
           <AdultsOnlySection
+            icon={data.icon as string | undefined}
             title={data.title as string}
             description={data.description as string}
           />

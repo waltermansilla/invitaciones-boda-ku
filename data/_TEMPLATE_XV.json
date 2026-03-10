@@ -375,12 +375,13 @@
         },
 
         {
-            "_comment": "ADULTS ONLY: Evento solo para adultos.",
+            "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
             "type": "adultsOnly",
             "id": "adults-only",
             "bgColor": "background",
             "blocks": ["icon", "title", "description"],
             "data": {
+                "icon": "baby-strike",
                 "title": "Evento solo para adultos",
                 "description": "Les pedimos disculpas, pero este evento es exclusivamente para adultos."
             }
