@@ -4,30 +4,30 @@
     "// ==========================================.": "",
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
     "meta": {
-        "title": "Nuestra Boda - Meliza & Iván",
+        "title": "Nuestra Boda - Fany & Denis",
         "description": "Estamos felices de invitarte a celebrar nuestro amor.",
         "lang": "es",
         "coupleNames": {
-            "groomName": "Iván",
-            "brideName": "Meliza",
+            "groomName": "Denis",
+            "brideName": "Fany",
             "separator": "&"
         }
     },
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
-    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. verde grisaceo: 59695c, marron: 735751, gris oscuro 333",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Colores: rosa pastel bb8588, azul verdoso 15616d, celeste verdoso pastel 588b8b, deep taupe 785964",
     "theme": {
-        "primaryColor": "#222",
+        "primaryColor": "#588b8b",
         "backgroundColor": "#FAF8F5",
-        "textColor": "#777",
-        "lightBgTextColor": "#777",
-        "darkBgTextColor": "#FFFFFF",
+        "textColor": "#3A3A3A",
+        "lightBgTextColor": "#888",
+        "darkBgTextColor": "#fff",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
         "font": {
             "family": "Josefin Sans",
-            "weights": "100,200,300,400,500,600,700"
+            "weights": "400,500,600,700"
         }
     },
     "// ==========================================;": "",
@@ -36,7 +36,7 @@
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
-        "phrase": "",
+        "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar"
     },
     "// ==========================================:": "",
@@ -45,7 +45,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": false,
-        "src": "",
+        "src": "/clientes/boda/anto-walter/music/Para-Siempre.mp3",
         "autoplay": false
     },
     "// ==========================================-": "",
@@ -53,18 +53,18 @@
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/meliza-ivan/images/img-hero.jpeg",
-        "headline": "¡Nos casamos!",
+        "coupleImage": "/clientes/boda/fany-denis/images/img-hero.jpeg",
+        "headline": "Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
         "namesDisplay": {
-            "enabled": false,
-            "position": "top",
+            "enabled": true,
+            "position": "bottom",
             "font": "",
             "logo": ""
         },
         "countdownPrefix": "Faltan",
-        "eventDate": "2026-05-23T21:00:00",
+        "eventDate": "2026-11-14T00:00:00",
         "countdownLabels": {
             "days": "Dias",
             "hours": "Horas",
@@ -85,7 +85,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Si recibiste esta invitación, es porque queremos que estés con nosotros en uno de los días más importantes de nuestras vidas. Tu presencia haría este momento aún más especial.",
+                "text": "¡Al fin! Este momento especial está llegando, y queremos compartirlo con vos",
                 "author": "",
                 "decorativeLines": true
             }
@@ -99,7 +99,7 @@
             "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
-                "value": "23 de Mayo del 2026"
+                "value": "14 de Noviembre de 2026"
             }
         },
         {
@@ -109,59 +109,62 @@
             "id": "gallery-photos",
             "blocks": ["slider"],
             "data": {
-                "aspectRatio": "3/4",
-                "images": ["/clientes/boda/meliza-ivan/images/galeria-1.jpeg"]
+                "aspectRatio": "4/3",
+                "images": []
             }
         },
-
         {
-            "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
+            "// --- UBICACION: CIVIL ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
-            "id": "location-ceremonia",
+            "id": "location-civil",
             "bgColor": "background",
             "blocks": ["title", "address", "button"],
             "data": {
-                "title": "Ceremonia religiosa",
-                "address": "Parroquia San Pedro y San Pablo",
+                "title": "Civil",
+                "address": "Registro Civil, Lugar",
                 "button": {
                     "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/f5c2xKsVRKJgitNC9",
+                    "url": "",
                     "variant": "primary"
                 }
             }
         },
         {
-            "// --- UBICACION: CIVIL y RECEPCION ---": "",
+            "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-discurso",
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Ceremonia religiosa",
+                "address": "Iglesia San Cayetano",
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "// --- UBICACION: FIESTA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-recepcion",
             "bgColor": "primary",
             "blocks": ["title", "address", "button"],
             "data": {
-                "title": "Civil y ¡Fiesta!",
-                "address": "Salón de eventos 'San Cayetano'",
+                "title": "¡Fiesta!",
+                "address": "Salón San Cayetano",
                 "button": {
                     "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/s3hhbVMq5JojVsRU6",
+                    "url": "",
                     "variant": "background"
                 }
             }
         },
-        {
-            "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
-            "type": "gallery",
-            "id": "gallery-photos2",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "3/4",
-                "images": [
-                    "/clientes/boda/meliza-ivan/images/galeria-2.jpeg",
-                    "/clientes/boda/meliza-ivan/images/galeria-3.jpeg"
-                ]
-            }
-        },
+
         {
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
             "type": "dressCode",
@@ -178,20 +181,14 @@
             ],
             "data": {
                 "icons": ["gem"],
-                "title": "Código de vestimenta",
-                "subtitle": "Elegante",
-                "description": "Te pedimos amablemente evitar colores de la siguiente paleta de colores",
+                "title": "Vestimenta",
+                "subtitle": "",
+                "description": "Por favor, evitar el azul marino",
                 "showButton": false,
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
-                    "colors": [
-                        "#d9d9de",
-                        "#fff",
-                        "#bce9c8",
-                        "#2c6b46",
-                        "#1a3a26"
-                    ]
+                    "colors": ["#ffffff", "#162b4e", "#004f8c"]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -202,8 +199,8 @@
                     "title": "Consejos de vestimenta",
                     "sections": [
                         {
-                            "heading": "Color de vestimenta",
-                            "text": "Te pedimos amablemente evitar los colores BLANCO y VERDE"
+                            "heading": "",
+                            "text": ""
                         }
                     ]
                 }
@@ -211,16 +208,14 @@
         },
 
         {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-final",
+            "// --- FRASE EMOTIVA ---": "",
+            "_comment": "Fondo verde. Solo texto centrado.",
+            "type": "emotionalQuote",
+            "id": "emotional-quote",
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": ["text"],
             "data": {
-                "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
-                "author": "Meliza & Iván",
-                "decorativeLines": true
+                "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
             }
         },
         {
@@ -232,7 +227,7 @@
             "data": {
                 "icon": "heart",
                 "title": "Valor Tarjeta",
-                "description": "Agradecemos que confirmes tu asistencia antes del 23 de Abril.",
+                "description": "Agradecemos que confirmes tu asistencia antes del 15 de Agosto.",
                 "button": {
                     "text": "Ver datos",
                     "url": "#",
@@ -240,32 +235,48 @@
                 },
                 "modal": {
                     "title": "Datos de transferencia",
-                    "suggestedValue": "$65.000",
+                    "suggestedValue": "$85.000",
+                    "suggestedValueLabel": "Valor tarjeta por persona",
                     "description": "No olvides enviarnos el comprobante.",
                     "transferData": [
-                        { "label": "Alias", "value": "BODAIVANYMELI" },
-                        {
-                            "label": "Titular",
-                            "value": "Iván Francisco Coronel"
-                        },
-                        { "label": "Banco", "value": "Nación Argentina" },
-                        { "label": "Cuit", "value": "20-38736617-3" }
+                        { "label": "Alias", "value": "fanywalter.mp" }
                     ]
                 }
             }
         },
         {
-            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
-            "type": "confirmarWhatsapp",
-            "id": "confirmar-whatsapp",
+            "// --- FORMULARIO RSVP ---": "",
+            "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
+            "type": "rsvp",
+            "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": ["title", "button"],
+            "blocks": ["title", "form"],
             "data": {
-                "title": "Confirmar asistencia",
-                "subtitle": "",
-                "buttonText": "Voy a asistir!",
-                "whatsappNumber": "543815993451",
-                "message": "Hola Iván y Meliza! Confirmo mi asistencia a tu boda. Ya aboné el valor de la tarjeta. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗"
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 15 de agosto",
+                "guestCountLabel": "Número de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "Confirmás tu asistencia?",
+                    "attendanceYes": "Confirmo!",
+                    "attendanceNo": "No podré asistir",
+                    "dietary": "Algún requerimiento en la alimentacion?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celiaco",
+                        "Otro"
+                    ],
+                    "songRequest": "Que canción no puede faltar?",
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "543456023759",
+                    "messageTemplate": "Hola Fany y Denis! Confirmo la asistencia a su boda. Ya aboné el valor de la tarjeta por persona.\n\n{resumen}\n\nGracias! 🫶🏼🤗"
+                }
             }
         },
         {
@@ -276,7 +287,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/meliza-ivan/images/final.jpeg"
+                "image": "/clientes/boda/fany-denis/images/img-hero.jpeg"
             }
         },
         {
