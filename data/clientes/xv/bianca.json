@@ -412,7 +412,7 @@
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirma tu asistencia",
-                "deadline": "",
+                "deadline": "Antes del 5 de Julio",
                 "guestCountLabel": "Numero de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
