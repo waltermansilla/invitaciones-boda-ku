@@ -35,7 +35,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": true,
+        "enabled": false,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar"
     },
@@ -85,7 +85,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "¡Al fin! Este momento especial está llegando, y queremos compartirlo con vos",
+                "text": "LLEGÓ EL MOMENTO! ESTAMOS MUY FELICES DE PODER COMPARTIR ESTE DÍA TAN ESPECIAL CON VOS.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -100,6 +100,54 @@
             "data": {
                 "title": "¿Cuándo?",
                 "value": "14 de Noviembre de 2026"
+            }
+        },
+        {
+            "_comment": "ITINERARY: Linea de tiempo con iconos, fechas opcionales y botones opcionales. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Te invitamos a estos dos eventos",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia religiosa",
+                        "time": "19:00 hs",
+                        "date": "",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/D8wYcnPjMbY6u9s86?g_st=iw",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "party",
+                        "name": "¡Fiesta!",
+                        "time": "21:00 hs",
+                        "date": "",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/D8wYcnPjMbY6u9s86?g_st=iw",
+                            "variant": "primary"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "ALGUNAS HISTORIAS COMIENZAN SIN SABERLO… Y TERMINAN SIENDO PARA TODA LA VIDA.",
+                "author": "",
+                "decorativeLines": true
             }
         },
         {
@@ -118,6 +166,7 @@
             "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
+            "enabled": false,
             "id": "location-discurso",
             "bgColor": "background",
             "blocks": ["title", "address", "button"],
@@ -135,6 +184,7 @@
             "// --- UBICACION: FIESTA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
+            "enabled": false,
             "id": "location-recepcion",
             "bgColor": "primary",
             "blocks": ["title", "address", "button"],
@@ -192,14 +242,20 @@
         },
 
         {
-            "// --- FRASE EMOTIVA ---": "",
-            "_comment": "Fondo verde. Solo texto centrado.",
-            "type": "emotionalQuote",
-            "id": "emotional-quote",
+            "_comment": "PHOTOS: Invitar a subir fotos al album compartido.",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
             "bgColor": "background",
-            "blocks": ["text"],
+            "blocks": ["icon", "title", "description", "button"],
             "data": {
-                "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
+                "title": "Compartí tus fotos",
+                "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
+                "button": {
+                    "text": "Ir al album",
+                    "url": "https://photos.google.com",
+                    "variant": "primary"
+                }
             }
         },
         {
@@ -258,9 +314,22 @@
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "543456023759",
+                    "number": "543492634710",
                     "messageTemplate": "Hola Fany y Denis! Confirmo la asistencia a su boda. Ya aboné el valor de la tarjeta por persona.\n\n{resumen}\n\nGracias! 🫶🏼🤗"
                 }
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "UNA NUEVA ETAPA COMIENZA… Y QUEREMOS COMPARTIRLA CON VOS. GRACIAS POR ESTAR",
+                "author": "Fany y Denis",
+                "decorativeLines": false
             }
         },
         {
