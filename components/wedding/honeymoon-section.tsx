@@ -51,6 +51,7 @@ interface HoneymoonSectionProps {
   icon?: string
   title: string
   description: string
+  showButton?: boolean // true por defecto
   button: { text: string; url: string; variant: "primary" | "secondary" }
   modal: {
     title: string
@@ -60,7 +61,7 @@ interface HoneymoonSectionProps {
   }
 }
 
-export default function HoneymoonSection({ icon, title, description, button, modal }: HoneymoonSectionProps) {
+export default function HoneymoonSection({ icon, title, description, showButton = true, button, modal }: HoneymoonSectionProps) {
   const { openModal } = useModal()
   const isMuestra = useIsMuestra()
 
@@ -109,16 +110,18 @@ export default function HoneymoonSection({ icon, title, description, button, mod
         <h2 className="mb-3 text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl">
           {title}
         </h2>
-        <p className="mb-6 max-w-sm text-sm font-light leading-relaxed opacity-80">
+        <p className={`max-w-sm text-sm font-light leading-relaxed opacity-80 ${showButton ? "mb-6" : ""}`}>
           {description}
         </p>
-        <button
-          onClick={handleOpen}
-          className="inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:opacity-70"
-          style={{ borderColor: "currentColor", borderOpacity: 0.4 }}
-        >
-          {button.text}
-        </button>
+        {showButton && (
+          <button
+            onClick={handleOpen}
+            className="inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:opacity-70"
+            style={{ borderColor: "currentColor", borderOpacity: 0.4 }}
+          >
+            {button.text}
+          </button>
+        )}
     </section>
   )
 }

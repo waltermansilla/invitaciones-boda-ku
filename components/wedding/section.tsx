@@ -157,6 +157,7 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
             icon={data.icon as string | undefined}
             title={data.title as string}
             description={data.description as string}
+            showButton={data.showButton as boolean | undefined}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
             modal={data.modal as { title: string; description: string; bankData: { label: string; value: string }[]; thankYouText?: string }}
           />

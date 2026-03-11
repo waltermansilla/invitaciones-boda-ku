@@ -201,7 +201,7 @@
         },
 
         {
-            "_comment": "ITINERARY: Linea de tiempo con iconos, fechas opcionales y botones opcionales. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "enabled": true,
@@ -213,6 +213,7 @@
                     {
                         "icon": "civil",
                         "name": "Civil",
+                        "address": "Registro Civil - Av. Principal 123",
                         "time": "11:00 hs",
                         "date": "Viernes 16/02",
                         "button": {
@@ -221,9 +222,9 @@
                             "variant": "secondary"
                         }
                     },
-                    { "icon": "church", "name": "Ceremonia", "time": "18:00 hs", "date": "Sabado 17/02" },
+                    { "icon": "church", "name": "Ceremonia", "address": "Parroquia San Jose", "time": "18:00 hs", "date": "Sabado 17/02" },
                     { "icon": "camera", "name": "Fotos", "time": "19:00 hs" },
-                    { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
+                    { "icon": "utensils", "name": "Cena", "address": "Salon de Eventos - Ruta 14 Km 5", "time": "21:00 hs" },
                     { "icon": "tortaCasamiento", "name": "Torta", "time": "23:00 hs" },
                     { "icon": "music", "name": "Fiesta", "time": "00:00 hs" },
                     { "icon": "fin", "name": "Fin de fiesta", "time": "05:00 hs" }
@@ -325,7 +326,7 @@
         },
 
         {
-            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "_comment": "HONEYMOON: Luna de miel. showButton: true/false para mostrar/ocultar boton. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "honeymoon",
             "enabled": true,
@@ -335,6 +336,7 @@
                 "icon": "plane",
                 "title": "Luna de miel",
                 "description": "Si queres ayudarnos con nuestra luna de miel, te dejamos los datos.",
+                "showButton": true,
                 "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos para la luna de miel",

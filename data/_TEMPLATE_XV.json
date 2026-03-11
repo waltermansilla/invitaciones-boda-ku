@@ -190,7 +190,7 @@
         },
 
         {
-            "_comment": "ITINERARY: Linea de tiempo. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "enabled": true,
@@ -199,7 +199,7 @@
             "data": {
                 "title": "Itinerario",
                 "events": [
-                    { "icon": "sparkles", "name": "Recepcion", "time": "20:00 hs" },
+                    { "icon": "sparkles", "name": "Recepcion", "address": "Salon de Eventos - Ruta 14 Km 5", "time": "20:00 hs" },
                     { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
                     { "icon": "heart", "name": "Vals con papa", "time": "22:00 hs" },
                     { "icon": "cake", "name": "Torta", "time": "23:00 hs" },
@@ -297,7 +297,7 @@
         },
 
         {
-            "_comment": "HONEYMOON: Regalos / alcancia. Para XV se usa como 'Regalos' (no viaje). NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "_comment": "HONEYMOON: Regalos / alcancia. showButton: true/false para mostrar/ocultar boton. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "dream-trip",
             "enabled": true,
@@ -307,6 +307,7 @@
                 "icon": "gift",
                 "title": "Regalos",
                 "description": "Tu presencia es el mejor regalo. Pero si queres tener un detalle, aca te dejo mis datos.",
+                "showButton": true,
                 "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos para regalos",

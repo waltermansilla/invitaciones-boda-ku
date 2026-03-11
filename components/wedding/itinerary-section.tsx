@@ -17,6 +17,7 @@ interface ItineraryButton {
 interface ItineraryEvent {
   icon: string
   name: string
+  address?: string
   time: string
   date?: string
   button?: ItineraryButton
@@ -202,6 +203,11 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
                       <h3 className="text-base font-semibold tracking-[0.15em] uppercase text-inherit md:text-lg">
                         {event.name}
                       </h3>
+                      {event.address && (
+                        <p className="mt-1 text-xs font-light tracking-wide text-inherit/60 md:text-sm">
+                          {event.address}
+                        </p>
+                      )}
                       <p className="mt-1 text-sm font-light tracking-wide text-inherit/50 md:text-base">
                         {event.time}
                       </p>
