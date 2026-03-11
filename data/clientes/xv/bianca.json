@@ -5,13 +5,13 @@
 
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
     "meta": {
-        "title": "Mis 15 - Valentina",
-        "description": "Est\u00e1s invitado a celebrar los 15 de Valentina. Una noche m\u00e1gica que no te pod\u00e9s perder.",
+        "title": "Mis 15 - Bianca",
+        "description": "Te invito a celebrar conmigo una noche muy especial.",
         "lang": "es",
-        "quinceaneraName": "Valentina",
+        "quinceaneraName": "Bianca",
         "coupleNames": {
             "groomName": "",
-            "brideName": "Valentina",
+            "brideName": "Bianca",
             "separator": ""
         }
     },
@@ -22,10 +22,10 @@
 
     "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma.",
     "theme": {
-        "primaryColor": "#C4788A",
-        "backgroundColor": "#FFF9F7",
+        "primaryColor": "#c8b273",
+        "backgroundColor": "#fef9ef",
         "textColor": "#3A3A3A",
-        "lightBgTextColor": "#C4788A",
+        "lightBgTextColor": "#a69658",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#FDF0EE",
         "modalTextColor": "#FFFFFF",
@@ -42,7 +42,7 @@
     "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
-        "phrase": "Est\u00e1s invitado a celebrar una noche m\u00e1gica e inolvidable",
+        "phrase": "Te invito a celebrar conmigo una noche muy especial.",
         "buttonText": "Ingresar"
     },
 
@@ -53,7 +53,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/xv/valentina/music/Lucky.mp3",
+        "src": "/clientes/xv/bianca/music/Photograph.mp3",
         "autoplay": false
     },
 
@@ -63,16 +63,33 @@
 
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
-        "coupleImage": "/clientes/xv/valentina/images/quince-hero.jpg",
+        "coupleImage": "/clientes/xv/bianca/images/img-hero.jpeg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
+        "_comment_namesDisplay": "CONTROLA LOS NOMBRES EN LA FOTO. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900' o 'light','normal','bold'. size: 'sm','base','lg','xl','2xl','3xl','4xl'. style: 'normal'/'italic'. color: hex (default blanco). decorativeLines: true/false para lineas. logo: ruta a imagen en vez de texto.",
+        "namesDisplay": {
+            "enabled": true,
+            "position": "top",
+            "font": "",
+            "weight": "300",
+            "size": "xl",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": ""
+        },
         "countdownPrefix": "Faltan",
-        "eventDate": "2026-09-19T21:00:00",
+        "eventDate": "2026-08-29T21:15:00",
         "countdownLabels": {
-            "days": "D\u00edas",
+            "days": "Dias",
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
+        },
+        "_comment_countdownStyle": "ESTILO DEL COUNTDOWN. background: 'none' (sin fondo), 'background' (fondo claro con borde), 'primary' (fondo color principal), 'secondary' (fondo suave). shape: 'rounded' (redondeado), 'circle' (circulo), 'square' (cuadrado), 'pill' (pastilla).",
+        "countdownStyle": {
+            "background": "none",
+            "shape": "pill"
         }
     },
 
@@ -90,7 +107,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Hoy comienza un nuevo cap\u00edtulo en mi vida y quiero vivirlo con las personas que m\u00e1s quiero",
+                "text": "Hoy comienza un nuevo capítulo en mi vida y quiero vivirlo con las personas que más quiero",
                 "author": "",
                 "decorativeLines": true
             }
@@ -103,8 +120,8 @@
             "id": "date-info",
             "blocks": ["title", "value"],
             "data": {
-                "title": "\u00bfCu\u00e1ndo?",
-                "value": "19 de Septiembre 2026"
+                "title": "¿Cuándo?",
+                "value": "29 de Agosto 2026"
             }
         },
 
@@ -115,9 +132,9 @@
             "id": "presentation",
             "blocks": ["image", "name", "description"],
             "data": {
-                "image": "/clientes/xv/valentina/images/quince-portrait.jpg",
-                "name": "Valentina",
-                "description": "Llegaron mis 15 y no me lo puedo creer. Despu\u00e9s de so\u00f1ar tanto con este d\u00eda, al fin est\u00e1 ac\u00e1. Quiero compartirlo con todos ustedes, las personas que hicieron de mi infancia algo incre\u00edble. Esta noche es nuestra.",
+                "image": "/clientes/xv/bianca/images/presentacion.jpeg",
+                "name": "Bianca",
+                "description": "Mis 15 finalmente llegaron. Después de imaginar tanto este momento, hoy se hace realidad. Quiero compartir esta noche tan especial con todos ustedes, que fueron parte de mi historia y de mi infancia.",
                 "aspectRatio": "3/4"
             }
         },
@@ -131,10 +148,10 @@
             "blocks": ["title", "parents"],
             "data": {
                 "title": "Mis Padres",
-                "subtitle": "Con todo su amor me acompa\u00f1an en esta celebraci\u00f3n",
+                "subtitle": "Con todo su amor me acompañan en esta celebración",
                 "parents": [
-                    { "name": "Carolina Mart\u00ednez", "role": "Mam\u00e1" },
-                    { "name": "Andr\u00e9s L\u00f3pez", "role": "Pap\u00e1" }
+                    { "name": "Abigail Sosa", "role": "Mamá" },
+                    { "name": "Pablo Laciar", "role": "Papá" }
                 ]
             }
         },
@@ -148,47 +165,76 @@
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
-                    "/clientes/xv/valentina/images/gallery-1.jpg",
-                    "/clientes/xv/valentina/images/gallery-2.jpg",
-                    "/clientes/xv/valentina/images/gallery-3.jpg"
+                    "/clientes/xv/bianca/images/galeria1.jpeg",
+                    "/clientes/xv/bianca/images/galeria2.jpeg"
                 ]
             }
         },
 
         {
-            "// --- UBICACION: CEREMONIA ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "id": "location-ceremonia",
-            "blocks": ["title", "address", "button"],
-            "data": {
-                "title": "Ceremonia",
-                "address": "Parroquia San Jos\u00e9, Av. San Mart\u00edn 456",
-                "button": {
-                    "text": "C\u00f3mo llegar",
-                    "url": "https://maps.google.com",
-                    "variant": "secondary"
-                }
-            }
-        },
-
-        {
-            "// --- UBICACION: FIESTA ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. ICONOS: 'pin' (default), 'church', 'dinner', 'party', 'salon', 'book', 'podium', 'reception', 'ring', 'music', 'sparkles'. showButton: true/false. datetime: fecha y hora opcional.",
             "type": "locationInfo",
             "id": "location-fiesta",
+            "enabled": true,
+            "bgColor": "background",
             "blocks": ["title", "address", "button"],
             "data": {
-                "title": "Fiesta",
-                "address": "Sal\u00f3n Las Orqu\u00eddeas, Ruta 8 Km 3.5",
+                "icon": "",
+                "title": "Dónde será",
+                "address": "Salón 'Las Pircas Eventos",
+                "showButton": true,
+                "datetime": {
+                    "date": "",
+                    "time": "21:15 hs"
+                },
                 "button": {
-                    "text": "C\u00f3mo llegar",
-                    "url": "https://maps.google.com",
-                    "variant": "secondary"
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/zeBqNVZJHAzGKz4P7?g_st=ic",
+                    "variant": "primary"
                 }
             }
         },
-
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
+            "type": "dressCode",
+            "id": "dress-code",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Vestimenta",
+                "subtitle": "Elegante",
+                "description": "Por favor, evitar los siguientes colores (dorado, rosa, azul)",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "square",
+                    "colors": ["#d4af37", "#ffd1dc", "#014ba0"]
+                },
+                "button": {
+                    "text": "Ver consejos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Consejos de vestimenta",
+                    "sections": [
+                        { "heading": "Chicas", "text": "Descripcion." },
+                        { "heading": "Chicos", "text": "Descripcion." },
+                        { "heading": "General", "text": "Descripcion." }
+                    ]
+                }
+            }
+        },
         {
             "// --- MI HISTORIA (crecimiento) ---": "",
             "_comment": "Timeline visual con fotos de la quinceanera creciendo. Cada momento tiene imagen, titulo y texto. Se puede adaptar a cualquier cantidad de momentos.",
@@ -200,94 +246,23 @@
                 "aspectRatio": "3/4",
                 "moments": [
                     {
-                        "image": "/clientes/xv/valentina/images/story-1.jpg",
-                        "title": "Mis primeros pasos",
-                        "text": "Desde chiquita siempre fui curiosa. Tocaba todo, preguntaba todo y no paraba quieta ni un segundo. Mam\u00e1 dice que aprender a caminar fue solo el principio del caos."
+                        "image": "/clientes/xv/bianca/images/historia1.jpeg",
+                        "title": "Pequeños comienzos",
+                        "text": "Así empezaba mi historia, rodeada del amor de mi familia y de las primeras sonrisas que llenaban cada día de felicidad."
                     },
                     {
-                        "image": "/clientes/xv/valentina/images/story-2.jpg",
-                        "title": "La del medio",
-                        "text": "El colegio, las amigas, las pijamadas, los primeros bailes frente al espejo. Ah\u00ed empec\u00e9 a descubrir qui\u00e9n quiero ser y de qu\u00e9 cosas me quiero rodear."
+                        "image": "/clientes/xv/bianca/images/historia2.jpeg",
+                        "title": "Tiempos de juego",
+                        "text": "Entre juegos, risas y momentos inolvidables fui descubriendo el mundo, disfrutando cada instante de una infancia llena de alegría."
                     },
                     {
-                        "image": "/clientes/xv/valentina/images/story-3.jpg",
-                        "title": "Hoy, mis 15",
-                        "text": "Y ac\u00e1 estoy. Con 15 a\u00f1os, un mill\u00f3n de sue\u00f1os y la certeza de que todo lo lindo est\u00e1 por venir. Esta noche celebro con las personas que me hicieron ser quien soy."
+                        "image": "/clientes/xv/bianca/images/historia3.jpeg",
+                        "title": "Paso a paso",
+                        "text": "Los años fueron pasando y, sin darme cuenta, fui creciendo y sumando recuerdos que hoy forman parte de quien soy."
                     }
                 ]
             }
         },
-
-        {
-            "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
-            "_comment": "Cada evento tiene icon, name y time. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus. Agregar/quitar/reordenar libremente.",
-            "type": "itinerary",
-            "id": "itinerary-timeline",
-            "blocks": ["title", "timeline"],
-            "data": {
-                "title": "Itinerario",
-                "events": [
-                    { "icon": "church", "name": "Misa", "time": "19:00 hs" },
-                    {
-                        "icon": "camera",
-                        "name": "Sesi\u00f3n de fotos",
-                        "time": "20:00 hs"
-                    },
-                    {
-                        "icon": "sparkles",
-                        "name": "Entrada al sal\u00f3n",
-                        "time": "21:00 hs"
-                    },
-                    {
-                        "icon": "heart",
-                        "name": "Vals con mi pap\u00e1",
-                        "time": "21:30 hs"
-                    },
-                    { "icon": "utensils", "name": "Cena", "time": "22:00 hs" },
-                    {
-                        "icon": "cake",
-                        "name": "Torta y brindis",
-                        "time": "23:30 hs"
-                    },
-                    {
-                        "icon": "music",
-                        "name": "Fiesta libre",
-                        "time": "00:00 hs"
-                    },
-                    { "icon": "party", "name": "Hora loca", "time": "02:00 hs" }
-                ]
-            }
-        },
-
-        {
-            "// --- PLAYLIST SUGERIDA ---": "",
-            "_comment": "Seccion para que los invitados sugieran canciones. link = link a Spotify playlist o similar.",
-            "type": "playlist",
-            "id": "playlist-suggestion",
-            "blocks": ["title", "description", "button"],
-            "data": {
-                "title": "Arma la playlist",
-                "description": "Quiero que esta noche suene todo lo que nos gusta. Agreg\u00e1 tus canciones a la playlist de la fiesta.",
-                "button": {
-                    "text": "Ir a la playlist",
-                    "url": "https://open.spotify.com",
-                    "variant": "background"
-                }
-            }
-        },
-
-        {
-            "// --- FRASE EMOTIVA ---": "",
-            "_comment": "Fondo rosa. Solo texto centrado.",
-            "type": "emotionalQuote",
-            "id": "emotional-quote",
-            "bgColor": "primary",
-            "blocks": ["text"],
-            "data": {
-                "text": "No es solo una fiesta. Es el inicio de todo lo que quiero ser."
-            }
-        },
-
         {
             "// --- TRIVIA / JUEGO (con modal) ---": "",
             "_comment": "Al presionar el boton se abre modal con preguntas. Cada pregunta: question, options (2-4), correctIndex (0=primera), explanation. finishTitle y finishText = pantalla final.",
@@ -302,52 +277,47 @@
                     "variant": "primary"
                 },
                 "modal": {
-                    "finishTitle": "Eso es todo!",
-                    "finishText": "Gracias por jugar. Nos vemos en la fiesta para seguir descubriendo cosas sobre mi.",
+                    "finishTitle": "Respuestas correctas",
+                    "finishText": "¡Gracias por acompañarme en este pequeño juego! Espero que te haya gustado conocer un poquito más de mi historia. Nos vemos muy pronto para celebrar juntos mis quince.",
                     "questions": [
                         {
                             "question": "\u00bfCu\u00e1l es mi comida favorita?",
                             "options": [
                                 "Pizza",
-                                "Sushi",
+                                "Milanesas",
                                 "Hamburguesas",
-                                "Empanadas"
+                                "Lomitos"
                             ],
-                            "correctIndex": 0,
-                            "explanation": "Pizza. Con muzza doble y siempre pidiendo la misma. No necesito m\u00e1s nada en la vida."
+                            "correctIndex": 1,
+                            "explanation": ""
                         },
                         {
                             "question": "\u00bfQu\u00e9 quiero ser cuando sea grande?",
                             "options": [
-                                "Dise\u00f1adora",
-                                "M\u00e9dica",
+                                "Diseñadora",
+                                "Médica",
                                 "Abogada",
                                 "Todav\u00eda no s\u00e9"
                             ],
-                            "correctIndex": 3,
-                            "explanation": "Todav\u00eda no lo s\u00e9, y est\u00e1 bien. Tengo 15 reci\u00e9n, d\u00e9jenme disfrutar."
+                            "correctIndex": 0,
+                            "explanation": ""
                         },
                         {
-                            "question": "Cual es mi cancion del momento?",
+                            "question": "Con quién paso más tiempo en el colegio?",
                             "options": [
-                                "Flowers - Miley Cyrus",
-                                "Shakira: Bzrp Session",
-                                "As It Was - Harry Styles",
-                                "Vampiro - Olivia Rodrigo"
-                            ],
-                            "correctIndex": 2,
-                            "explanation": "As It Was de Harry Styles. La escucho en repeat y no me canso."
-                        },
-                        {
-                            "question": "Con quien me la paso mas en el colegio?",
-                            "options": [
-                                "Camila",
-                                "Sofia",
-                                "Martina",
-                                "Julieta"
+                                "Joaquín",
+                                "Valentina",
+                                "Santiago",
+                                "Mia"
                             ],
                             "correctIndex": 1,
-                            "explanation": "Sofia. Es mi mejor amiga desde jardin y no hay dia que no nos riamos de algo."
+                            "explanation": ""
+                        },
+                        {
+                            "question": "Cuál es mi color favorito?",
+                            "options": ["Blanco", "Rosa", "Violeta", "Negro"],
+                            "correctIndex": 0,
+                            "explanation": ""
                         },
                         {
                             "question": "Que es lo que mas me emociona de mis 15?",
@@ -358,15 +328,57 @@
                                 "Todo junto"
                             ],
                             "correctIndex": 3,
-                            "explanation": "Todo junto. Es un dia que sone mucho y quiero disfrutar cada segundo."
+                            "explanation": "Todo junto. Es un dia que soñé mucho y quiero disfrutar cada segundo."
                         }
                     ]
                 }
             }
         },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "El tiempo pasó volando, pero esa sonrisa llena de sueños sigue siendo parte de mí.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/xv/bianca/images/foto-sola.jpeg"]
+            }
+        },
 
         {
+            "// --- PLAYLIST SUGERIDA ---": "",
+            "_comment": "Seccion para que los invitados sugieran canciones. link = link a Spotify playlist o similar.",
+            "enabled": false,
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "blocks": ["title", "description", "button"],
+            "data": {
+                "title": "Arma la playlist",
+                "description": "Quiero que esta noche suene todo lo que nos gusta. Agreg\u00e1 tus canciones a la playlist de la fiesta.",
+                "button": {
+                    "text": "Ir a la playlist",
+                    "url": "https://open.spotify.com",
+                    "variant": "background"
+                }
+            }
+        },
+        {
             "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
+            "enabled": false,
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "primary",
@@ -396,33 +408,27 @@
             "_comment": "Fondo rosa. Formulario de confirmacion. Todos los labels, opciones y textos son editables.",
             "type": "rsvp",
             "id": "rsvp-form",
-            "bgColor": "primary",
+            "bgColor": "background",
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirma tu asistencia",
-                "deadline": "Antes del 20 de agosto",
+                "deadline": "",
                 "guestCountLabel": "Numero de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
                     "attendance": "Vas a poder venir?",
-                    "attendanceYes": "Ahi voy!",
+                    "attendanceYes": "Siii!",
                     "attendanceNo": "No voy a poder",
                     "dietary": "Algun requerimiento alimentario?",
-                    "dietaryOptions": [
-                        "Ninguno",
-                        "Vegetariano",
-                        "Vegano",
-                        "Celiaco",
-                        "Otro"
-                    ],
+                    "dietaryOptions": ["Ninguno", "Vegetariano", "Celiaco"],
                     "songRequest": "Que cancion te gustaria que suene?",
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "3456023759",
-                    "messageTemplate": "Hola! Confirmo asistencia para los 15 de Valentina:\n{resumen}\nGracias!"
+                    "number": "543516123774",
+                    "messageTemplate": "Hola! Confirmo asistencia para los 15 de Bianca:\n\n{resumen}\n\nGracias por la invitación a este momento tan especial! 🫶🏼🤗"
                 }
             }
         },
@@ -435,8 +441,8 @@
             "blocks": ["title", "text"],
             "data": {
                 "title": "Gracias por estar",
-                "text": "A cada uno de ustedes: gracias por ser parte de mi vida. No seria quien soy sin las personas que me rodean. Esta noche es para celebrar juntos, reir, bailar y crear recuerdos que duren para siempre. Los quiero.",
-                "signature": "Valu",
+                "text": "Quiero agradecer a mi familia y a todas las personas que me acompañaron a lo largo de mi vida, por su amor, su apoyo y por estar siempre presentes en cada momento. Gracias por ser parte de mi historia. Me hace muy feliz poder compartir mis quince con ustedes y celebrar juntos una noche que siempre voy a recordar con mucho cariño.",
+                "signature": "Bianca",
                 "decorativeLines": true
             }
         },
@@ -449,7 +455,7 @@
             "blocks": ["image", "name"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/xv/valentina/images/closing.jpg"
+                "image": "/clientes/xv/bianca/images/final.jpeg"
             }
         },
 
