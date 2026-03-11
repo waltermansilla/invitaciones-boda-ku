@@ -16,12 +16,12 @@
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
-    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma.",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Azul q le pase al msj 003049",
     "theme": {
-        "primaryColor": "#bb8588",
-        "backgroundColor": "#FAF8F5",
+        "primaryColor": "#013a63",
+        "backgroundColor": "#fff",
         "textColor": "#3A3A3A",
-        "lightBgTextColor": "#666",
+        "lightBgTextColor": "#013a63",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
@@ -53,7 +53,7 @@
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/anto-walter/images/img-hero.jpg",
+        "coupleImage": "/clientes/boda/priscila-agustin/images/img-hero.jpeg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
@@ -109,14 +109,62 @@
             "id": "gallery-photos",
             "blocks": ["slider"],
             "data": {
-                "aspectRatio": "4/3",
-                "images": []
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/priscila-agustin/images/galeria1.jpeg",
+                    "/clientes/boda/priscila-agustin/images/galeria2.jpeg"
+                ]
+            }
+        },
+        {
+            "_comment": "ITINERARY: Linea de tiempo con iconos, fechas opcionales y botones opcionales. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "civil",
+                        "name": "Civil",
+                        "time": "11:00 hs",
+
+                        "button": {
+                            "text": "Como llegar",
+                            "url": "https://maps.google.com",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "church",
+                        "name": "Iglesia",
+                        "time": "18:00 hs",
+                        "button": {
+                            "text": "Como llegar",
+                            "url": "https://maps.google.com",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "camera",
+                        "name": "Recepción",
+                        "time": "19:00 hs",
+                        "button": {
+                            "text": "Como llegar",
+                            "url": "https://maps.google.com",
+                            "variant": "primary"
+                        }
+                    }
+                ]
             }
         },
         {
             "// --- UBICACION: CIVIL ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
+            "enabled": false,
             "id": "location-civil",
             "bgColor": "background",
             "blocks": ["title", "address", "button"],
@@ -134,6 +182,7 @@
             "// --- UBICACION: IGLESIA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
+            "enabled": false,
             "id": "location-discurso",
             "bgColor": "background",
             "blocks": ["title", "address", "button"],
@@ -151,6 +200,7 @@
             "// --- UBICACION: RECEPCION ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
+            "enabled": false,
             "id": "location-recepcion",
             "bgColor": "primary",
             "blocks": ["title", "address", "button"],
@@ -206,11 +256,11 @@
             "type": "honeymoon",
             "id": "honeymoon",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": ["icon", "title", "description", "modal"],
             "data": {
                 "icon": "",
                 "title": "Regalos",
-                "description": "Tu presencia es el mejor regalo que podríamos recibir. Si querés hacernos un obsequio, preferimos que sea en un SOBRE el día de la fiesta, o mediante el siguiente ALIAS.",
+                "description": "Tu presencia es el mejor regalo que podríamos recibir. Si querés hacernos un obsequio, preferimos que sea en un SOBRE el día de la fiesta.",
                 "button": {
                     "text": "Ver datos",
                     "url": "#",
