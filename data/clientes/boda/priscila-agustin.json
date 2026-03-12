@@ -178,10 +178,10 @@
                 "modal"
             ],
             "data": {
-                "icons": ["star"],
+                "icons": ["gem"],
                 "title": "Vestimenta",
-                "subtitle": "Elegante",
-                "description": "Te pedimos amablemente evitar el BLANCO y BEIGE. Si podés, traé algo con tonos azules:",
+                "subtitle": "Evitar el blanco y beige",
+                "description": "Si podés, traé algo con tonos azules:",
                 "showButton": false,
                 "colorSwatches": {
                     "enabled": true,
@@ -315,7 +315,7 @@
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "3456023759",
+                    "number": "542223515132",
                     "messageTemplate": "Hola Pri y Agus! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
                 }
             }
