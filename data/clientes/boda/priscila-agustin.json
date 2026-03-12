@@ -35,7 +35,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar"
     },
@@ -44,9 +44,9 @@
     "// ==========================================....": "",
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
-        "enabled": false,
-        "src": "",
-        "autoplay": false
+        "enabled": true,
+        "src": "/clientes/boda/priscila-agustin/music/Casate-conmigo.mp3",
+        "autoplay": true
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
@@ -85,7 +85,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "¡Al fin! Este momento especial está llegando, y queremos compartirlo con vos",
+                "text": "Después de tantos años compartiendo la vida juntos, llegó el momento de celebrar nuestro amor. Y no podemos imaginar este día sin vos",
                 "author": "",
                 "decorativeLines": true
             }
@@ -109,7 +109,7 @@
             "id": "gallery-photos",
             "blocks": ["slider"],
             "data": {
-                "aspectRatio": "3/4",
+                "aspectRatio": "4/3",
                 "images": [
                     "/clientes/boda/priscila-agustin/images/galeria1.jpeg",
                     "/clientes/boda/priscila-agustin/images/galeria2.jpeg"
@@ -127,91 +127,39 @@
                 "title": "Itinerario",
                 "events": [
                     {
-                        "icon": "civil",
+                        "icon": "heart",
                         "name": "Civil",
-                        "time": "11:00 hs",
-
+                        "time": "Horario a definir",
+                        "address": "Registro Civil, Brandsen",
                         "button": {
-                            "text": "Como llegar",
-                            "url": "https://maps.google.com",
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/gGDzMSZvu6rHjLE6A?g_st=aw",
                             "variant": "primary"
                         }
                     },
                     {
                         "icon": "church",
                         "name": "Iglesia",
-                        "time": "18:00 hs",
+                        "time": "Horario a definir",
+                        "address": "Parroquia San José, Jeppener",
                         "button": {
-                            "text": "Como llegar",
-                            "url": "https://maps.google.com",
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/7irnKePtfSyFk3Sa9?g_st=iw",
                             "variant": "primary"
                         }
                     },
                     {
-                        "icon": "camera",
+                        "icon": "sparkles",
                         "name": "Recepción",
-                        "time": "19:00 hs",
+                        "time": "22:00 hs",
+                        "address": "Club Jubilados, Jeppener",
                         "button": {
-                            "text": "Como llegar",
-                            "url": "https://maps.google.com",
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/dvdbthmm6YpSWJpw6?g_st=iw",
                             "variant": "primary"
                         }
                     }
                 ]
-            }
-        },
-        {
-            "// --- UBICACION: CIVIL ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "enabled": false,
-            "id": "location-civil",
-            "bgColor": "background",
-            "blocks": ["title", "address", "button"],
-            "data": {
-                "title": "Civil",
-                "address": "Registro Civil",
-                "button": {
-                    "text": "Cómo llegar",
-                    "url": "",
-                    "variant": "primary"
-                }
-            }
-        },
-        {
-            "// --- UBICACION: IGLESIA ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "enabled": false,
-            "id": "location-discurso",
-            "bgColor": "background",
-            "blocks": ["title", "address", "button"],
-            "data": {
-                "title": "Iglesia",
-                "address": "Parroquia, Ramírez 276",
-                "button": {
-                    "text": "Cómo llegar",
-                    "url": "",
-                    "variant": "primary"
-                }
-            }
-        },
-        {
-            "// --- UBICACION: RECEPCION ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "enabled": false,
-            "id": "location-recepcion",
-            "bgColor": "primary",
-            "blocks": ["title", "address", "button"],
-            "data": {
-                "title": "Recepción",
-                "address": "Club Jubilados Jeppener",
-                "button": {
-                    "text": "Cómo llegar",
-                    "url": "",
-                    "variant": "background"
-                }
             }
         },
 
@@ -252,6 +200,62 @@
             }
         },
         {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/priscila-agustin/images/galeria3.jpeg"
+                ]
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "A veces el amor no es un camino perfecto, pero cuando es verdadero siempre encuentra la forma de seguir adelante.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- NUESTRA HISTORIA ---": "",
+            "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/clientes/[tipo]/[slug]/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
+            "type": "ourStory",
+            "id": "our-story",
+            "bgColor": "background",
+            "blocks": ["title", "moments"],
+            "data": {
+                "aspectRatio": "1/1",
+                "title": "Nuestra historia",
+                "moments": [
+                    {
+                        "image": "/clientes/boda/priscila-agustin/images/historia1.jpeg",
+                        "title": "Donde todo empezó",
+                        "text": "Nos conocimos siendo muy jóvenes, casi sin imaginar todo lo que la vida tenía preparado para nosotros. Desde ese primer momento empezó una historia llena de emociones, aprendizajes y momentos que nos fueron uniendo cada vez más."
+                    },
+                    {
+                        "image": "/clientes/boda/priscila-agustin/images/historia2.jpeg",
+                        "title": "El camino juntos",
+                        "text": "Con el tiempo entendimos que amar también es acompañarse en cada paso. La vida nos puso desafíos, subidas y bajadas, pero siempre elegimos seguir adelante juntos, apoyándonos y encontrando fuerzas el uno en el otro."
+                    },
+                    {
+                        "image": "/clientes/boda/priscila-agustin/images/historia3.jpeg",
+                        "title": "Una historia que continúa",
+                        "text": "Hoy, después de 11 años compartidos, con dos hijos hermosos que llenan nuestra vida de amor, miramos hacia atrás y entendemos que cada momento vivido nos trajo hasta acá. Y con el mismo amor que nos unió desde el principio, elegimos seguir caminando juntos para siempre."
+                    }
+                ]
+            }
+        },
+        {
             "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "honeymoon",
@@ -261,6 +265,7 @@
                 "icon": "",
                 "title": "Regalos",
                 "description": "Tu presencia es el mejor regalo que podríamos recibir. Si querés hacernos un obsequio, preferimos que sea en un SOBRE el día de la fiesta.",
+                "showButton": false,
                 "button": {
                     "text": "Ver datos",
                     "url": "#",
@@ -281,26 +286,15 @@
         },
 
         {
-            "// --- FRASE EMOTIVA ---": "",
-            "_comment": "Fondo verde. Solo texto centrado.",
-            "type": "emotionalQuote",
-            "id": "emotional-quote",
-            "bgColor": "background",
-            "blocks": ["text"],
-            "data": {
-                "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
-            }
-        },
-        {
             "// --- FORMULARIO RSVP ---": "",
             "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
             "type": "rsvp",
             "id": "rsvp-form",
-            "bgColor": "primary",
+            "bgColor": "background",
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 15 de Julio",
+                "deadline": "Antes del 20 de Agosto",
                 "guestCountLabel": "Número de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
@@ -327,6 +321,19 @@
             }
         },
         {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Hoy celebramos nuestra historia, nuestra familia y el amor que nos trajo hasta acá. Nos haría muy felices compartir este día tan especial con vos.",
+                "author": "Pri & Agus",
+                "decorativeLines": true
+            }
+        },
+        {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
@@ -334,7 +341,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/anto-walter/images/final.jpg"
+                "image": "/clientes/boda/priscila-agustin/images/final.jpeg"
             }
         },
         {

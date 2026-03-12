@@ -212,8 +212,8 @@
             "data": {
                 "icons": ["gem"],
                 "title": "Vestimenta",
-                "subtitle": "Elegante",
-                "description": "Por favor, evitar los siguientes colores (dorado, rosa, azul)",
+                "subtitle": "Evitar los siguientes colores (dorado, rosa, azul)",
+                "description": "",
                 "showButton": false,
                 "colorSwatches": {
                     "enabled": true,
