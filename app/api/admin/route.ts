@@ -33,12 +33,17 @@ async function detectProjects(): Promise<DetectedProject[]> {
                     const name = json.meta?.coupleNames
                         ? `${json.meta.coupleNames.brideName} y ${json.meta.coupleNames.groomName}`
                         : slug
+                    // Extraer fecha del evento desde hero.eventDate
+                    const eventDate = json.hero?.eventDate 
+                        ? json.hero.eventDate.split("T")[0] 
+                        : ""
                     projects.push({
                         tipo: "boda",
                         slug,
                         name,
                         realLink: `/boda/${slug}`,
                         sampleLink: `/m/boda/${slug}`,
+                        eventDate,
                     })
                 }
             }
@@ -57,12 +62,17 @@ async function detectProjects(): Promise<DetectedProject[]> {
                     const content = await fs.readFile(filePath, "utf-8")
                     const json = JSON.parse(content)
                     const name = json.meta?.coupleNames?.brideName || slug
+                    // Extraer fecha del evento desde hero.eventDate
+                    const eventDate = json.hero?.eventDate 
+                        ? json.hero.eventDate.split("T")[0] 
+                        : ""
                     projects.push({
                         tipo: "xv",
                         slug,
                         name,
                         realLink: `/xv/${slug}`,
                         sampleLink: `/m/xv/${slug}`,
+                        eventDate,
                     })
                 }
             }

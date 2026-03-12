@@ -118,46 +118,45 @@ export default function AdminPage() {
 
     if (loading) {
         return (
-            <div className="flex min-h-screen items-center justify-center">
-                <div className="text-lg text-gray-500">Cargando...</div>
+            <div className="flex min-h-screen items-center justify-center bg-neutral-50">
+                <div className="text-sm text-neutral-400">Cargando...</div>
             </div>
         )
     }
 
     const tabs = [
-        { id: "dashboard" as const, label: "Dashboard" },
+        { id: "dashboard" as const, label: "Inicio" },
         { id: "clients" as const, label: "Clientes" },
-        { id: "quick" as const, label: "Acceso Rápido" },
+        { id: "quick" as const, label: "Links" },
         { id: "ads" as const, label: "Anuncios" },
     ]
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-neutral-50">
             {/* Header */}
-            <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
-                <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white">
+                <div className="mx-auto max-w-5xl px-4 py-4">
+                    <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-xl font-semibold text-gray-900">Panel de Administración</h1>
-                            <p className="text-sm text-gray-500">Momento Único</p>
+                            <h1 className="text-sm font-medium uppercase tracking-widest text-neutral-900">Admin</h1>
                         </div>
                         <ExcelActions data={data} onImport={handleImport} />
                     </div>
                 </div>
             </header>
 
-            {/* Navigation Tabs */}
-            <nav className="border-b border-gray-200 bg-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                    <div className="flex gap-1 overflow-x-auto">
+            {/* Navigation */}
+            <nav className="border-b border-neutral-100 bg-white">
+                <div className="mx-auto max-w-5xl px-4">
+                    <div className="flex gap-1">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`whitespace-nowrap px-4 py-3 text-sm font-medium transition-colors ${
+                                className={`px-4 py-3 text-xs font-medium uppercase tracking-wider transition-colors ${
                                     activeTab === tab.id
-                                        ? "border-b-2 border-gray-900 text-gray-900"
-                                        : "text-gray-500 hover:text-gray-700"
+                                        ? "border-b-2 border-neutral-900 text-neutral-900"
+                                        : "text-neutral-400 hover:text-neutral-600"
                                 }`}
                             >
                                 {tab.label}
@@ -168,7 +167,7 @@ export default function AdminPage() {
             </nav>
 
             {/* Content */}
-            <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+            <main className="mx-auto max-w-5xl px-4 py-8">
                 {activeTab === "dashboard" && data && (
                     <MetricsCards clients={data.clients} ads={data.ads} />
                 )}

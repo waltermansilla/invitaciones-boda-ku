@@ -13,6 +13,7 @@
             "projectStatus": "Terminado",
             "startDate": "2024-12-01",
             "deliveryDate": "2025-01-15",
+            "eventDate": "2026-02-17",
             "realInvitationLink": "/boda/anto-walter",
             "sampleInvitationLink": "/m/boda/anto-walter",
             "notes": "Primera invitación del proyecto"
@@ -29,6 +30,7 @@
             "projectStatus": "Terminado",
             "startDate": "2025-01-10",
             "deliveryDate": "2025-02-01",
+            "eventDate": "2026-09-19",
             "realInvitationLink": "/xv/valentina",
             "sampleInvitationLink": "/m/xv/valentina",
             "notes": "Invitación de muestra para XV"
@@ -45,6 +47,7 @@
             "projectStatus": "En proceso",
             "startDate": "2025-03-01",
             "deliveryDate": "2025-04-15",
+            "eventDate": "2026-05-23",
             "realInvitationLink": "/boda/meliza-ivan",
             "sampleInvitationLink": "/m/boda/meliza-ivan",
             "notes": ""

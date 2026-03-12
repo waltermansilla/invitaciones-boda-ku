@@ -10,12 +10,12 @@ export interface Client {
     plan: PlanType
     totalPrice: number
     depositPaid: number
-    // remaining se calcula automaticamente
     estimatedPaymentDate: string
     paymentStatus: PaymentStatus
     projectStatus: ProjectStatus
     startDate: string
     deliveryDate: string
+    eventDate: string // Fecha del evento (sacada del JSON del cliente)
     realInvitationLink: string
     sampleInvitationLink: string
     notes: string
@@ -39,6 +39,7 @@ export interface DetectedProject {
     name: string
     realLink: string
     sampleLink: string
+    eventDate?: string // Fecha del evento desde el JSON
 }
 
 export interface AdminData {
@@ -49,12 +50,12 @@ export interface AdminData {
 
 export interface Metrics {
     totalRevenue: number
-    totalDeposits: number
-    totalPending: number
+    totalCollected: number // Lo que efectivamente se cobro
     totalAdSpent: number
     grossProfit: number
     averageTicket: number
     costPerClient: number
+    adPercentage: number // Porcentaje de anuncios sobre ganancia
     totalClients: number
     inProgressCount: number
     completedCount: number
@@ -62,23 +63,31 @@ export interface Metrics {
 
 export function calculateMetrics(clients: Client[], ads: Ad[]): Metrics {
     const totalRevenue = clients.reduce((sum, c) => sum + c.totalPrice, 0)
-    const totalDeposits = clients.reduce((sum, c) => sum + c.depositPaid, 0)
-    const totalPending = clients.reduce((sum, c) => sum + (c.totalPrice - c.depositPaid), 0)
+    
+    // Lo cobrado: si es "Pagado completo" se cuenta el total, sino solo la seña
+    const totalCollected = clients.reduce((sum, c) => {
+        if (c.paymentStatus === "Pagado completo") {
+            return sum + c.totalPrice
+        }
+        return sum + c.depositPaid
+    }, 0)
+    
     const totalAdSpent = ads.reduce((sum, a) => sum + a.actualSpent, 0)
-    const grossProfit = totalRevenue - totalAdSpent
+    const grossProfit = totalCollected - totalAdSpent
     const averageTicket = clients.length > 0 ? totalRevenue / clients.length : 0
     const costPerClient = clients.length > 0 ? totalAdSpent / clients.length : 0
+    const adPercentage = totalCollected > 0 ? (totalAdSpent / totalCollected) * 100 : 0
     const inProgressCount = clients.filter(c => c.projectStatus === "En proceso").length
     const completedCount = clients.filter(c => c.projectStatus === "Terminado").length
 
     return {
         totalRevenue,
-        totalDeposits,
-        totalPending,
+        totalCollected,
         totalAdSpent,
         grossProfit,
         averageTicket,
         costPerClient,
+        adPercentage,
         totalClients: clients.length,
         inProgressCount,
         completedCount,
@@ -86,5 +95,9 @@ export function calculateMetrics(clients: Client[], ads: Ad[]): Metrics {
 }
 
 export function calculateRemaining(client: Client): number {
+    // Si esta pagado completo, no hay restante
+    if (client.paymentStatus === "Pagado completo") {
+        return 0
+    }
     return client.totalPrice - client.depositPaid
 }

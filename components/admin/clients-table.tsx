@@ -4,8 +4,6 @@ import { useState } from "react"
 import { 
     type Client, 
     type DetectedProject,
-    type EventType, 
-    type PlanType, 
     type PaymentStatus, 
     type ProjectStatus,
     calculateRemaining 
@@ -21,16 +19,16 @@ interface ClientsTableProps {
     onDelete: (id: number) => void
 }
 
-const paymentStatusColors: Record<PaymentStatus, string> = {
-    "Pendiente": "bg-red-100 text-red-700",
-    "Señado": "bg-amber-100 text-amber-700",
-    "Pagado completo": "bg-green-100 text-green-700",
+const paymentStatusStyles: Record<PaymentStatus, string> = {
+    "Pendiente": "text-red-600",
+    "Señado": "text-amber-600",
+    "Pagado completo": "text-green-600",
 }
 
-const projectStatusColors: Record<ProjectStatus, string> = {
-    "En proceso": "bg-blue-100 text-blue-700",
-    "Terminado": "bg-green-100 text-green-700",
-    "Terminado con detalles pendientes": "bg-amber-100 text-amber-700",
+const projectStatusStyles: Record<ProjectStatus, string> = {
+    "En proceso": "text-blue-600",
+    "Terminado": "text-green-600",
+    "Terminado con detalles pendientes": "text-amber-600",
 }
 
 function formatCurrency(value: number): string {
@@ -43,7 +41,11 @@ function formatCurrency(value: number): string {
 
 function formatDate(dateStr: string): string {
     if (!dateStr) return "-"
-    return new Date(dateStr).toLocaleDateString("es-AR")
+    return new Date(dateStr).toLocaleDateString("es-AR", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    })
 }
 
 export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDelete }: ClientsTableProps) {
@@ -51,7 +53,7 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
     const [isAdding, setIsAdding] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
 
-    // Ordenar: En proceso primero, luego por ID desc
+    // Ordenar: En proceso primero, luego por fecha de evento (mas cercano primero), luego por ID desc
     const sortedClients = [...clients].sort((a, b) => {
         const statusOrder: Record<ProjectStatus, number> = {
             "En proceso": 0,
@@ -60,6 +62,12 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
         }
         const statusDiff = statusOrder[a.projectStatus] - statusOrder[b.projectStatus]
         if (statusDiff !== 0) return statusDiff
+        
+        // Si ambos tienen fecha de evento, ordenar por fecha
+        if (a.eventDate && b.eventDate) {
+            return new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime()
+        }
+        
         return b.id - a.id
     })
 
@@ -93,9 +101,10 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
             projectStatus: "En proceso",
             startDate: new Date().toISOString().split("T")[0],
             deliveryDate: "",
+            eventDate: project.eventDate || "",
             realInvitationLink: project.realLink,
             sampleInvitationLink: project.sampleLink,
-            notes: "Agregado automaticamente desde archivos detectados",
+            notes: "",
         }
         onAdd(newClient)
     }
@@ -103,31 +112,31 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
     return (
         <div className="space-y-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <h2 className="text-lg font-semibold text-gray-900">Clientes / Invitaciones</h2>
+                <h2 className="text-xs font-medium uppercase tracking-widest text-neutral-500">Clientes</h2>
                 <button
                     onClick={() => setIsAdding(true)}
-                    className="inline-flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+                    className="inline-flex items-center gap-2 rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800"
                 >
                     <Plus className="h-4 w-4" />
-                    Nuevo Cliente
+                    Nuevo
                 </button>
             </div>
 
             {/* Proyectos detectados no registrados */}
             {unregisteredProjects.length > 0 && (
-                <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                    <p className="mb-2 text-sm font-medium text-blue-800">
-                        Proyectos detectados sin registrar ({unregisteredProjects.length}):
+                <div className="rounded border border-neutral-200 bg-neutral-50 p-4">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-neutral-500">
+                        Proyectos sin registrar ({unregisteredProjects.length})
                     </p>
                     <div className="flex flex-wrap gap-2">
                         {unregisteredProjects.map((project) => (
                             <button
                                 key={project.slug}
                                 onClick={() => handleAddFromDetected(project)}
-                                className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200"
+                                className="inline-flex items-center gap-1 rounded border border-neutral-200 bg-white px-3 py-1 text-xs font-medium text-neutral-600 hover:bg-neutral-100"
                             >
                                 <Plus className="h-3 w-3" />
-                                {project.name} ({project.tipo})
+                                {project.name}
                             </button>
                         ))}
                     </div>
@@ -135,51 +144,46 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
             )}
 
             {/* Tabla */}
-            <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">ID</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Proyecto</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Plan</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Precio</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Seña</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Restante</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Pago</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Estado</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Links</th>
-                            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Acciones</th>
+            <div className="overflow-x-auto rounded border border-neutral-200 bg-white">
+                <table className="min-w-full divide-y divide-neutral-100">
+                    <thead>
+                        <tr className="bg-neutral-50">
+                            <th className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-neutral-400">ID</th>
+                            <th className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-neutral-400">Proyecto</th>
+                            <th className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-neutral-400">Evento</th>
+                            <th className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-neutral-400">Precio</th>
+                            <th className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-neutral-400">Restante</th>
+                            <th className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-neutral-400">Pago</th>
+                            <th className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-neutral-400">Estado</th>
+                            <th className="px-4 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-neutral-400"></th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-neutral-50">
                         {sortedClients.map((client) => (
-                            <tr key={client.id} className="hover:bg-gray-50">
-                                <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-500">
+                            <tr key={client.id} className="hover:bg-neutral-50">
+                                <td className="whitespace-nowrap px-4 py-3 text-xs text-neutral-400">
                                     {client.id}
                                 </td>
                                 <td className="px-4 py-3">
-                                    <div className="text-sm font-medium text-gray-900">{client.projectName}</div>
-                                    <div className="text-xs text-gray-500">{client.eventType}</div>
+                                    <div className="text-sm text-neutral-900">{client.projectName}</div>
+                                    <div className="text-[10px] text-neutral-400">{client.eventType} · {client.plan}</div>
                                 </td>
-                                <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
-                                    {client.plan}
+                                <td className="whitespace-nowrap px-4 py-3 text-xs text-neutral-600">
+                                    {formatDate(client.eventDate)}
                                 </td>
-                                <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
+                                <td className="whitespace-nowrap px-4 py-3 text-sm text-neutral-900">
                                     {formatCurrency(client.totalPrice)}
                                 </td>
-                                <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-900">
-                                    {formatCurrency(client.depositPaid)}
-                                </td>
-                                <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-amber-600">
+                                <td className="whitespace-nowrap px-4 py-3 text-sm text-neutral-500">
                                     {formatCurrency(calculateRemaining(client))}
                                 </td>
                                 <td className="whitespace-nowrap px-4 py-3">
-                                    <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${paymentStatusColors[client.paymentStatus]}`}>
+                                    <span className={`text-xs font-medium ${paymentStatusStyles[client.paymentStatus]}`}>
                                         {client.paymentStatus}
                                     </span>
                                 </td>
                                 <td className="whitespace-nowrap px-4 py-3">
-                                    <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${projectStatusColors[client.projectStatus]}`}>
+                                    <span className={`text-xs ${projectStatusStyles[client.projectStatus]}`}>
                                         {client.projectStatus === "Terminado con detalles pendientes" ? "Con detalles" : client.projectStatus}
                                     </span>
                                 </td>
@@ -190,20 +194,14 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
                                                 href={client.realInvitationLink}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                                                title="Ver invitación real"
+                                                className="rounded p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600"
                                             >
                                                 <ExternalLink className="h-4 w-4" />
                                             </a>
                                         )}
-                                    </div>
-                                </td>
-                                <td className="whitespace-nowrap px-4 py-3">
-                                    <div className="flex gap-1">
                                         <button
                                             onClick={() => setEditingClient(client)}
-                                            className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                                            title="Editar"
+                                            className="rounded p-1 text-neutral-400 hover:bg-neutral-100 hover:text-neutral-600"
                                         >
                                             <Pencil className="h-4 w-4" />
                                         </button>
@@ -213,16 +211,14 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
                                                     onDelete(client.id)
                                                     setConfirmDelete(null)
                                                 }}
-                                                className="rounded p-1 text-red-600 hover:bg-red-50"
-                                                title="Confirmar eliminación"
+                                                className="rounded p-1 text-red-500 hover:bg-red-50"
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => setConfirmDelete(client.id)}
-                                                className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-red-500"
-                                                title="Eliminar"
+                                                className="rounded p-1 text-neutral-300 hover:bg-neutral-100 hover:text-red-500"
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </button>

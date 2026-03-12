@@ -16,7 +16,6 @@ export function ExcelActions({ data, onImport }: ExcelActionsProps) {
     const handleExport = () => {
         if (!data) return
 
-        // Crear workbook
         const wb = XLSX.utils.book_new()
 
         // Hoja de Clientes
@@ -27,10 +26,9 @@ export function ExcelActions({ data, onImport }: ExcelActionsProps) {
             Plan: c.plan,
             "Precio Total": c.totalPrice,
             "Seña Pagada": c.depositPaid,
-            Restante: c.totalPrice - c.depositPaid,
-            "Fecha Est. Pago": c.estimatedPaymentDate,
             "Estado Pago": c.paymentStatus,
             "Estado Proyecto": c.projectStatus,
+            "Fecha Evento": c.eventDate || "",
             "Fecha Inicio": c.startDate,
             "Fecha Entrega": c.deliveryDate,
             "Link Real": c.realInvitationLink,
@@ -45,18 +43,17 @@ export function ExcelActions({ data, onImport }: ExcelActionsProps) {
             ID: a.id,
             "Fecha Inicio": a.startDate,
             "Fecha Fin": a.endDate,
-            "Presupuesto Planeado": a.plannedBudget,
-            "Dinero Gastado": a.actualSpent,
+            "Presupuesto": a.plannedBudget,
+            "Gastado": a.actualSpent,
             Vistas: a.views,
             Consultas: a.inquiries,
-            "Ventas Generadas": a.salesGenerated,
+            Ventas: a.salesGenerated,
             Notas: a.notes,
         }))
         const adsSheet = XLSX.utils.json_to_sheet(adsData)
         XLSX.utils.book_append_sheet(wb, adsSheet, "Anuncios")
 
-        // Descargar
-        const fileName = `momento-unico-admin-${new Date().toISOString().split("T")[0]}.xlsx`
+        const fileName = `admin-${new Date().toISOString().split("T")[0]}.xlsx`
         XLSX.writeFile(wb, fileName)
     }
 
@@ -70,7 +67,6 @@ export function ExcelActions({ data, onImport }: ExcelActionsProps) {
                 const data = event.target?.result
                 const wb = XLSX.read(data, { type: "binary" })
 
-                // Leer hoja de Clientes
                 const clientsSheet = wb.Sheets["Clientes"]
                 const clientsRaw = XLSX.utils.sheet_to_json<Record<string, unknown>>(clientsSheet)
                 const clients: Client[] = clientsRaw.map((row) => ({
@@ -85,36 +81,35 @@ export function ExcelActions({ data, onImport }: ExcelActionsProps) {
                     projectStatus: (row["Estado Proyecto"] as Client["projectStatus"]) || "En proceso",
                     startDate: String(row["Fecha Inicio"] || ""),
                     deliveryDate: String(row["Fecha Entrega"] || ""),
+                    eventDate: String(row["Fecha Evento"] || ""),
                     realInvitationLink: String(row["Link Real"] || ""),
                     sampleInvitationLink: String(row["Link Muestra"] || ""),
                     notes: String(row["Notas"] || ""),
                 }))
 
-                // Leer hoja de Anuncios
                 const adsSheet = wb.Sheets["Anuncios"]
                 const adsRaw = XLSX.utils.sheet_to_json<Record<string, unknown>>(adsSheet)
                 const ads: Ad[] = adsRaw.map((row) => ({
                     id: Number(row["ID"]) || 0,
                     startDate: String(row["Fecha Inicio"] || ""),
                     endDate: String(row["Fecha Fin"] || ""),
-                    plannedBudget: Number(row["Presupuesto Planeado"]) || 0,
-                    actualSpent: Number(row["Dinero Gastado"]) || 0,
+                    plannedBudget: Number(row["Presupuesto"]) || 0,
+                    actualSpent: Number(row["Gastado"]) || 0,
                     views: Number(row["Vistas"]) || 0,
                     inquiries: Number(row["Consultas"]) || 0,
-                    salesGenerated: Number(row["Ventas Generadas"]) || 0,
+                    salesGenerated: Number(row["Ventas"]) || 0,
                     notes: String(row["Notas"] || ""),
                 }))
 
                 onImport({ clients, ads })
-                alert("Datos importados correctamente")
+                alert("Importado correctamente")
             } catch (error) {
                 console.error("Error importing Excel:", error)
-                alert("Error al importar el archivo. Verifica que el formato sea correcto.")
+                alert("Error al importar")
             }
         }
         reader.readAsBinaryString(file)
 
-        // Reset input
         if (fileInputRef.current) {
             fileInputRef.current.value = ""
         }
@@ -125,17 +120,15 @@ export function ExcelActions({ data, onImport }: ExcelActionsProps) {
             <button
                 onClick={handleExport}
                 disabled={!data}
-                className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded border border-neutral-200 bg-white px-3 py-2 text-xs font-medium text-neutral-600 hover:bg-neutral-50 disabled:opacity-50"
             >
-                <Download className="h-4 w-4" />
-                <span className="hidden sm:inline">Exportar Excel</span>
-                <span className="sm:hidden">Exportar</span>
+                <Download className="h-3 w-3" />
+                Excel
             </button>
 
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                <Upload className="h-4 w-4" />
-                <span className="hidden sm:inline">Importar Excel</span>
-                <span className="sm:hidden">Importar</span>
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded border border-neutral-200 bg-white px-3 py-2 text-xs font-medium text-neutral-600 hover:bg-neutral-50">
+                <Upload className="h-3 w-3" />
+                Importar
                 <input
                     ref={fileInputRef}
                     type="file"
