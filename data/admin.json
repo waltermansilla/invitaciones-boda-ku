@@ -1,0 +1,66 @@
+{
+    "_comment": "Datos del panel administrativo. clients = clientes/invitaciones. ads = campañas de anuncios.",
+    "clients": [
+        {
+            "id": 1,
+            "eventType": "Boda",
+            "projectName": "Anto y Walter",
+            "plan": "Premium",
+            "totalPrice": 50000,
+            "depositPaid": 25000,
+            "estimatedPaymentDate": "2025-02-01",
+            "paymentStatus": "Señado",
+            "projectStatus": "Terminado",
+            "startDate": "2024-12-01",
+            "deliveryDate": "2025-01-15",
+            "realInvitationLink": "/boda/anto-walter",
+            "sampleInvitationLink": "/m/boda/anto-walter",
+            "notes": "Primera invitación del proyecto"
+        },
+        {
+            "id": 2,
+            "eventType": "XV",
+            "projectName": "Valentina",
+            "plan": "Premium",
+            "totalPrice": 45000,
+            "depositPaid": 22500,
+            "estimatedPaymentDate": "2025-09-01",
+            "paymentStatus": "Señado",
+            "projectStatus": "Terminado",
+            "startDate": "2025-01-10",
+            "deliveryDate": "2025-02-01",
+            "realInvitationLink": "/xv/valentina",
+            "sampleInvitationLink": "/m/xv/valentina",
+            "notes": "Invitación de muestra para XV"
+        },
+        {
+            "id": 3,
+            "eventType": "Boda",
+            "projectName": "Meliza e Ivan",
+            "plan": "Esencial",
+            "totalPrice": 35000,
+            "depositPaid": 17500,
+            "estimatedPaymentDate": "2026-05-01",
+            "paymentStatus": "Señado",
+            "projectStatus": "En proceso",
+            "startDate": "2025-03-01",
+            "deliveryDate": "2025-04-15",
+            "realInvitationLink": "/boda/meliza-ivan",
+            "sampleInvitationLink": "/m/boda/meliza-ivan",
+            "notes": ""
+        }
+    ],
+    "ads": [
+        {
+            "id": 1,
+            "startDate": "2025-01-01",
+            "endDate": "2025-01-31",
+            "plannedBudget": 10000,
+            "actualSpent": 8500,
+            "views": 15000,
+            "inquiries": 25,
+            "salesGenerated": 2,
+            "notes": "Campaña de lanzamiento"
+        }
+    ]
+}
