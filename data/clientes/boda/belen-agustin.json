@@ -18,10 +18,10 @@
     "// ==========================================..": "",
     "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. verde grisaceo: 59695c, marron: 735751, gris oscuro 333",
     "theme": {
-        "primaryColor": "#222",
-        "backgroundColor": "#FAF8F5",
-        "textColor": "#777",
-        "lightBgTextColor": "#777",
+        "primaryColor": "#607119",
+        "backgroundColor": "#fff",
+        "textColor": "#607119",
+        "lightBgTextColor": "#607119",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
@@ -119,7 +119,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/meliza-ivan/images/galeria-1.jpeg"]
+                "images": ["/clientes/boda/belen-agustin/images/galeria1.jpeg"]
             }
         },
 
@@ -301,8 +301,8 @@
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
-                    "/clientes/boda/meliza-ivan/images/galeria-2.jpeg",
-                    "/clientes/boda/meliza-ivan/images/galeria-3.jpeg"
+                    "/clientes/boda/belen-agustin/images/galeria2.jpeg",
+                    "/clientes/boda/belen-agustin/images/galeria3.jpeg"
                 ]
             }
         },
@@ -387,7 +387,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/meliza-ivan/images/final.jpeg"
+                "image": "/clientes/boda/belen-agustin/images/final.jpeg"
             }
         },
         {
