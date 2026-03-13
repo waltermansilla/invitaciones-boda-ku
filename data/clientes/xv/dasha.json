@@ -23,7 +23,7 @@
     "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
     "theme": {
         "primaryColor": "#191919",
-        "backgroundColor": "#fff",
+        "backgroundColor": "#eee",
         "textColor": "#3A3A3A",
         "lightBgTextColor": "#333",
         "darkBgTextColor": "#FFFFFF",
@@ -41,7 +41,7 @@
 
     "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "Una noche mágica está por comenzar",
         "buttonText": "Ingresar"
     },
@@ -75,9 +75,25 @@
             "style": "normal",
             "color": "rgba(255,255,255,0.9)",
             "decorativeLines": false,
-            "logo": ""
+            "logo": "",
+            "texts": [
+                {
+                    "text": "Mis XV",
+                    "font": "",
+                    "weight": "100",
+                    "size": "sm",
+                    "style": "normal"
+                },
+                {
+                    "text": "Dasha",
+                    "font": "",
+                    "weight": "200",
+                    "size": "lg",
+                    "style": "normal"
+                }
+            ]
         },
-        "countdownPrefix": "Faltan",
+        "countdownPrefix": "",
         "eventDate": "2026-04-11T21:00:00",
         "countdownLabels": {
             "days": "Días",
@@ -86,8 +102,10 @@
             "seconds": "Segundos"
         },
         "countdownStyle": {
-            "background": "none",
-            "shape": "rounded"
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
         }
     },
 
@@ -162,7 +180,7 @@
             "type": "dressCode",
             "id": "dress-code",
             "enabled": true,
-            "bgColor": "background",
+            "bgColor": "primary",
             "blocks": [
                 "title",
                 "subtitle",
@@ -219,7 +237,7 @@
                 "description": "Si sacás fotos o videos durante la fiesta, podés subirlos acá para que juntos guardemos los mejores momentos de esta noche.",
                 "button": {
                     "text": "Subir fotos",
-                    "url": "https://photos.google.com",
+                    "url": "https://drive.google.com/drive/folders/1hjcoR8H0Kxyn_okmM0v10_eM3_pH346T",
                     "variant": "background"
                 }
             }
