@@ -43,6 +43,7 @@ interface HeroSectionProps {
     background: "none" | "background" | "primary" | "secondary" | string
     shape: "rounded" | "circle" | "square" | "pill"
     layout?: "inline" | "overlay"
+    overlayStyle?: "card" | "floating"
   }
   countdownAreaBg?: "primary" | "background" | string
 }
@@ -143,7 +144,9 @@ export default function HeroSection({
   const cdBg = countdownStyle?.background || "none"
   const cdShape = countdownStyle?.shape || "rounded"
   const cdLayout = countdownStyle?.layout || "inline"
+  const cdOverlayStyle = countdownStyle?.overlayStyle || "card"
   const isOverlayLayout = cdLayout === "overlay"
+  const isFloatingOverlay = isOverlayLayout && cdOverlayStyle === "floating"
   const hasBg = cdBg !== "none"
 
   // Countdown area background
@@ -175,13 +178,11 @@ export default function HeroSection({
   // Build countdown ITEM style (individual boxes)
   const getCountdownItemStyle = (): React.CSSProperties => {
     if (cdBg === "none") {
-      // No background requested - use subtle border to show shape
       return { border: `1px solid ${primaryColor}20` }
     }
     if (cdBg === "background") return { backgroundColor: backgroundColor, border: `1px solid ${primaryColor}30` }
     if (cdBg === "primary") return { backgroundColor: primaryColor, color: "#fff" }
     if (cdBg === "secondary") return { backgroundColor: `${primaryColor}15`, border: `1px solid ${primaryColor}30` }
-    // Custom hex color
     return { backgroundColor: cdBg, color: "#fff" }
   }
 
@@ -219,10 +220,9 @@ export default function HeroSection({
   const NamesOverlay = () => {
     if (!shouldShowNames) return null
 
-    // Calculate position - more padding at bottom when overlay layout is active
     const getPositionClass = () => {
       if (namesPosition === "top") return "top-0 pt-10"
-      return isOverlayLayout ? "bottom-0 pb-24" : "bottom-0 pb-10"
+      return isFloatingOverlay ? "bottom-0 pb-20" : isOverlayLayout ? "bottom-0 pb-24" : "bottom-0 pb-10"
     }
 
     if (namesLogo) {
@@ -253,7 +253,6 @@ export default function HeroSection({
       )
     }
 
-    // Legacy format
     const resolvedWeight = weightMap[legacyWeight] || legacyWeight
     const sizeClass = sizeMap[legacySize] || sizeMap.lg
     const namesFontStyle: React.CSSProperties = {
@@ -274,73 +273,64 @@ export default function HeroSection({
     )
   }
 
-  // Countdown component
-  const CountdownContent = ({ overlayMode = false }: { overlayMode?: boolean }) => {
+  // Countdown items component (shared between styles)
+  const CountdownItems = ({ overlayMode = false }: { overlayMode?: boolean }) => {
     const isPrimaryBg = cdBg === "primary" || (hasBg && cdBg !== "background" && cdBg !== "secondary" && cdBg !== "none")
     const shapeClass = getShapeClass()
     const itemSizeClass = getItemSizeClass()
     const itemStyle = getCountdownItemStyle()
     
-    // In overlay mode, always show styled items. In inline mode with background "none" and shape "rounded", show classic style
+    // In overlay mode (both card and floating), always show styled items
+    // In inline mode with background "none" and shape "rounded", show classic style
     const showClassicStyle = !overlayMode && cdBg === "none" && cdShape === "rounded"
     
     return (
-      <div className="flex flex-col items-center" style={{ color: textColor }}>
-        {countdownPrefix && !overlayMode && (
-          <p className="mb-4 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
-            {countdownPrefix}
-          </p>
-        )}
-
-        <div className={`flex items-start justify-center ${showClassicStyle ? "gap-2" : "gap-3 sm:gap-4"}`} aria-live="polite">
-          {items.map((item, i) => (
-            <div key={item.label} className="flex items-start gap-2">
-              {showClassicStyle ? (
-                // Classic style - no boxes, just numbers with colons
-                <>
-                  <div className="flex flex-col items-center">
-                    <span
-                      className="tabular-nums leading-none text-4xl font-extralight sm:text-5xl md:text-6xl text-inherit"
-                      suppressHydrationWarning
-                    >
-                      {time
-                        ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
-                        : "--"}
-                    </span>
-                    <span className="mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs opacity-50">
-                      {item.label}
-                    </span>
-                  </div>
-                  {i < 3 && (
-                    <span className="mt-1 font-light opacity-40 text-4xl md:text-5xl">:</span>
-                  )}
-                </>
-              ) : (
-                // Styled items - individual boxes with shape
-                <div 
-                  className={`flex flex-col items-center justify-center ${itemSizeClass} ${shapeClass}`}
-                  style={itemStyle}
-                >
+      <div className={`flex items-center justify-center ${showClassicStyle ? "gap-2" : "gap-3 sm:gap-4"}`} aria-live="polite">
+        {items.map((item, i) => (
+          <div key={item.label} className="flex items-center gap-2">
+            {showClassicStyle ? (
+              <>
+                <div className="flex flex-col items-center">
                   <span
-                    className={`tabular-nums leading-none ${
-                      overlayMode 
-                        ? "text-3xl font-light sm:text-4xl" 
-                        : "text-4xl font-extralight sm:text-5xl md:text-6xl"
-                    } ${isPrimaryBg ? "text-white" : "text-inherit"}`}
+                    className="tabular-nums leading-none text-4xl font-extralight sm:text-5xl md:text-6xl text-inherit"
                     suppressHydrationWarning
                   >
                     {time
                       ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
                       : "--"}
                   </span>
-                  <span className={`mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs ${isPrimaryBg ? "text-white/70" : "opacity-50"}`}>
+                  <span className="mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs opacity-50">
                     {item.label}
                   </span>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
+                {i < 3 && (
+                  <span className="mt-1 font-light opacity-40 text-4xl md:text-5xl">:</span>
+                )}
+              </>
+            ) : (
+              <div 
+                className={`flex flex-col items-center justify-center ${itemSizeClass} ${shapeClass}`}
+                style={itemStyle}
+              >
+                <span
+                  className={`tabular-nums leading-none ${
+                    overlayMode 
+                      ? "text-2xl font-light sm:text-3xl" 
+                      : "text-4xl font-extralight sm:text-5xl md:text-6xl"
+                  } ${isPrimaryBg ? "text-white" : "text-inherit"}`}
+                  suppressHydrationWarning
+                >
+                  {time
+                    ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
+                    : "--"}
+                </span>
+                <span className={`mt-1 text-[9px] font-medium tracking-[0.1em] uppercase sm:text-[10px] ${isPrimaryBg ? "text-white/70" : "opacity-50"}`}>
+                  {item.label}
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     )
   }
@@ -382,22 +372,48 @@ export default function HeroSection({
         )}
       </div>
 
-      {/* Countdown */}
+      {/* Countdown - different layouts */}
       {isOverlayLayout ? (
-        <div className="relative z-10 -mt-14 mb-4">
+        isFloatingOverlay ? (
+          // Floating style - items directly on the transition line, no card wrapper
           <div 
-            className="rounded-2xl px-6 py-5 shadow-lg"
-            style={{ backgroundColor: backgroundColor }}
+            className="relative z-10 -mt-10 mb-4 flex justify-center"
+            style={{ color: textColor }}
           >
-            <CountdownContent overlayMode />
+            <CountdownItems overlayMode />
           </div>
-        </div>
+        ) : (
+          // Card style - items wrapped in a card
+          <div className="relative z-10 -mt-14 mb-4">
+            <div 
+              className="rounded-2xl px-6 py-5 shadow-lg"
+              style={{ backgroundColor: backgroundColor }}
+            >
+              <div className="flex flex-col items-center" style={{ color: textColor }}>
+                {countdownPrefix && (
+                  <p className="mb-3 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
+                    {countdownPrefix}
+                  </p>
+                )}
+                <CountdownItems overlayMode />
+              </div>
+            </div>
+          </div>
+        )
       ) : (
+        // Inline style - below hero with headline
         <div className="flex w-full flex-col items-center px-6 pt-10 pb-10" style={getAreaBgStyle()}>
           <h1 className="mb-8 text-center text-3xl font-light tracking-wide uppercase text-inherit md:text-4xl">
             {headline}
           </h1>
-          <CountdownContent />
+          <div className="flex flex-col items-center" style={{ color: textColor }}>
+            {countdownPrefix && (
+              <p className="mb-4 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
+                {countdownPrefix}
+              </p>
+            )}
+            <CountdownItems />
+          </div>
         </div>
       )}
     </section>

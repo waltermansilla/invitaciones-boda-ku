@@ -81,11 +81,12 @@
         "_comment_countdownAreaBg": "FONDO DEL AREA DEL COUNTDOWN. Opciones: 'background', 'primary', o un hex.",
         "countdownAreaBg": "background",
 
-        "_comment_countdownStyle": "ESTILO DE CADA NUMERO. background: 'none'/'background'/'primary'/'secondary' o hex. shape: 'rounded'/'circle'/'square'/'pill'. layout: 'inline' (normal) o 'overlay' (superpuesto en transicion hero-seccion).",
+        "_comment_countdownStyle": "ESTILO DE CADA NUMERO. background: 'none'/'background'/'primary'/'secondary' o hex. shape: 'rounded'/'circle'/'square'/'pill'. layout: 'inline' (normal) o 'overlay' (superpuesto). overlayStyle: 'card' (con caja + Faltan) o 'floating' (items sueltos sin caja ni Faltan).",
         "countdownStyle": {
             "background": "none",
             "shape": "rounded",
-            "layout": "inline"
+            "layout": "inline",
+            "overlayStyle": "card"
         }
     },
 

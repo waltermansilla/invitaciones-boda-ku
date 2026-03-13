@@ -70,6 +70,7 @@ export default function WeddingInvitation() {
                                 background: "none" | "background" | "primary" | "secondary" | string
                                 shape: "rounded" | "circle" | "square" | "pill"
                                 layout?: "inline" | "overlay"
+                                overlayStyle?: "card" | "floating"
                               }
                             | undefined
                     }
