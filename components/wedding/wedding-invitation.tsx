@@ -53,7 +53,8 @@ export default function WeddingInvitation() {
                                 style?: string
                                 color?: string
                                 decorativeLines?: boolean
-                                logo?: string 
+                                logo?: string
+                                texts?: { text: string; font?: string; weight?: string; size?: string; style?: string }[]
                               }
                             | undefined
                     }
@@ -66,9 +67,15 @@ export default function WeddingInvitation() {
                     countdownStyle={
                         (hero as Record<string, unknown>).countdownStyle as
                             | { 
-                                background: "none" | "background" | "primary" | "secondary"
-                                shape: "rounded" | "circle" | "square" | "pill" 
+                                background: "none" | "background" | "primary" | "secondary" | string
+                                shape: "rounded" | "circle" | "square" | "pill"
+                                layout?: "inline" | "overlay"
                               }
+                            | undefined
+                    }
+                    countdownAreaBg={
+                        (hero as Record<string, unknown>).countdownAreaBg as
+                            | "primary" | "background" | string
                             | undefined
                     }
                 />

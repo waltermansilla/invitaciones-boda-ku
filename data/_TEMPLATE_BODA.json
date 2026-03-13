@@ -48,18 +48,26 @@
         "coupleImage": "/clientes/boda/[slug]/hero.jpg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": true,
-        "_comment_namesDisplay": "CONTROLA LOS NOMBRES EN LA FOTO. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900' o 'light','normal','bold'. size: 'sm','base','lg','xl','2xl','3xl','4xl'. style: 'normal'/'italic'. color: hex (default blanco). decorativeLines: true/false para lineas. logo: ruta a imagen en vez de texto.",
+
+        "_comment_namesDisplay": "NOMBRES EN LA FOTO. enabled: true/false. position: 'top'/'bottom'. color: hex (compartido). decorativeLines: lineas decorativas. logo: ruta imagen (reemplaza textos). TEXTOS SEPARADOS: usar 'texts' array con 2 items, cada uno con text/font/weight/size/style propios.",
         "namesDisplay": {
             "enabled": true,
             "position": "bottom",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": "",
+            "_comment_texts": "OPCIONAL: Para 2 textos con estilos distintos. Si no usas esto, usa font/weight/size/style afuera para ambos nombres.",
+            "texts": [
+                { "text": "María", "font": "", "weight": "300", "size": "xl", "style": "normal" },
+                { "text": "Juan", "font": "", "weight": "300", "size": "xl", "style": "normal" }
+            ],
+            "_comment_legacy": "Si no usas 'texts', estos valores se aplican a ambos nombres (toma brideName y groomName de meta):",
             "font": "",
             "weight": "300",
             "size": "lg",
-            "style": "normal",
-            "color": "rgba(255,255,255,0.9)",
-            "decorativeLines": false,
-            "logo": ""
+            "style": "normal"
         },
+
         "countdownPrefix": "Faltan",
         "eventDate": "2027-01-01T21:00:00",
         "countdownLabels": {
@@ -68,10 +76,15 @@
             "minutes": "Minutos",
             "seconds": "Segundos"
         },
-        "_comment_countdownStyle": "ESTILO DEL COUNTDOWN. background: 'none' (sin fondo), 'background' (fondo claro con borde), 'primary' (fondo color principal), 'secondary' (fondo suave). shape: 'rounded' (redondeado), 'circle' (circulo), 'square' (cuadrado), 'pill' (pastilla).",
+
+        "_comment_countdownAreaBg": "FONDO DEL AREA DEL COUNTDOWN (donde esta headline + contador). Opciones: 'background' (claro), 'primary' (color principal), o un hex como '#F5E6D3'.",
+        "countdownAreaBg": "background",
+
+        "_comment_countdownStyle": "ESTILO DE CADA NUMERO. background: 'none'/'background'/'primary'/'secondary' o hex. shape: 'rounded'/'circle'/'square'/'pill' (circle ahora con tamaños iguales). layout: 'inline' (normal debajo del hero) o 'overlay' (superpuesto en la transicion entre hero y siguiente seccion, sin headline).",
         "countdownStyle": {
             "background": "none",
-            "shape": "rounded"
+            "shape": "rounded",
+            "layout": "inline"
         }
     },
 
@@ -263,13 +276,14 @@
         },
 
         {
-            "_comment": "PHOTOS: Invitar a subir fotos al album compartido.",
+            "_comment": "PHOTOS: Invitar a subir fotos al album compartido. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
             "type": "photos",
             "id": "shared-photos",
             "enabled": true,
             "bgColor": "primary",
             "blocks": ["icon", "title", "description", "button"],
             "data": {
+                "icon": "camera",
                 "title": "Subi tus fotos",
                 "description": "Comparti los momentos de la fiesta!",
                 "button": { "text": "Ir al album", "url": "https://photos.google.com", "variant": "background" }
