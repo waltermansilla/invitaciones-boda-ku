@@ -4,28 +4,6 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useConfig } from "@/lib/config-context"
 
-/**
- * Hero Section - Portada principal de la invitacion
- * 
- * NOMBRES SOBRE LA FOTO (namesDisplay):
- *   enabled: boolean         -> true para mostrar, false para ocultar
- *   position: "top" | "bottom" -> arriba o abajo de la imagen
- *   texts: array con 2 items -> cada texto con su propia fuente/weight/size/style
- *     [0] = primer texto (ej: "Mis XV" o nombre novia)
- *     [1] = segundo texto (ej: "Valentina" o nombre novio)
- *   color: string            -> color compartido para ambos textos
- *   decorativeLines: boolean -> lineas decorativas arriba/abajo
- *   logo: string             -> ruta a imagen de logo (reemplaza textos)
- * 
- * ESTILO DEL COUNTDOWN (countdownStyle):
- *   background: "none" | "background" | "primary" | "secondary" | "#hexcolor"
- *   shape: "rounded" | "circle" | "square" | "pill"
- *   layout: "inline" (debajo del hero) | "overlay" (superpuesto en transicion)
- * 
- * FONDO DEL AREA COUNTDOWN (countdownAreaBg):
- *   "primary" | "background" | "#hexcolor"
- */
-
 interface NamesText {
   text: string
   font?: string
@@ -41,11 +19,10 @@ interface HeroSectionProps {
   groomName: string
   brideName: string
   separator: string
-  showNamesOnPhoto?: boolean // backward compatibility
+  showNamesOnPhoto?: boolean
   namesDisplay?: {
     enabled: boolean
     position: "top" | "bottom"
-    // Legacy single font support
     font?: string
     weight?: string
     size?: string
@@ -53,7 +30,6 @@ interface HeroSectionProps {
     color?: string
     decorativeLines?: boolean
     logo?: string
-    // New: two separate texts with own styles
     texts?: NamesText[]
   }
   countdownPrefix?: string
@@ -81,7 +57,6 @@ function getTimeRemaining(targetDate: string) {
   return { days, hours, minutes, seconds }
 }
 
-// Map size names to Tailwind classes
 const sizeMap: Record<string, string> = {
   xs: "text-lg sm:text-xl",
   sm: "text-xl sm:text-2xl",
@@ -94,7 +69,6 @@ const sizeMap: Record<string, string> = {
   "5xl": "text-7xl sm:text-8xl md:text-9xl",
 }
 
-// Map weight names to CSS values
 const weightMap: Record<string, string> = {
   thin: "100",
   extralight: "200",
@@ -142,17 +116,15 @@ export default function HeroSection({
     return () => clearInterval(interval)
   }, [eventDate])
 
-  // Determine if names should show (support both old and new format)
+  // Determine if names should show
   const shouldShowNames = namesDisplay?.enabled ?? showNamesOnPhoto
   const namesPosition = namesDisplay?.position || "bottom"
   const namesLogo = namesDisplay?.logo
   const namesColor = namesDisplay?.color || "rgba(255,255,255,0.9)"
   const showDecorativeLines = namesDisplay?.decorativeLines ?? false
-
-  // Check if using new texts array format
   const useTextsArray = namesDisplay?.texts && namesDisplay.texts.length >= 2
 
-  // Legacy single style (for backward compatibility)
+  // Legacy single style
   const legacyFont = namesDisplay?.font
   const legacyWeight = namesDisplay?.weight || "300"
   const legacySize = namesDisplay?.size || "lg"
@@ -171,23 +143,22 @@ export default function HeroSection({
   const cdBg = countdownStyle?.background || "none"
   const cdShape = countdownStyle?.shape || "rounded"
   const cdLayout = countdownStyle?.layout || "inline"
+  const isOverlayLayout = cdLayout === "overlay"
 
   // Countdown area background
   const getAreaBgStyle = (): React.CSSProperties => {
     if (!countdownAreaBg) return { backgroundColor: backgroundColor, color: textColor }
     if (countdownAreaBg === "primary") return { backgroundColor: primaryColor, color: "#fff" }
     if (countdownAreaBg === "background") return { backgroundColor: backgroundColor, color: textColor }
-    // Custom hex color
     return { backgroundColor: countdownAreaBg, color: textColor }
   }
 
-  // Build countdown item background style
-  const getCountdownBgStyle = (): React.CSSProperties => {
+  // Build countdown ITEM background style (individual boxes)
+  const getCountdownItemBgStyle = (): React.CSSProperties => {
     if (cdBg === "none") return {}
     if (cdBg === "background") return { backgroundColor: backgroundColor, border: `1px solid ${primaryColor}30` }
     if (cdBg === "primary") return { backgroundColor: primaryColor, color: "#fff" }
     if (cdBg === "secondary") return { backgroundColor: `${primaryColor}15`, border: `1px solid ${primaryColor}30` }
-    // Custom hex color
     return { backgroundColor: cdBg, color: "#fff" }
   }
 
@@ -196,15 +167,15 @@ export default function HeroSection({
     switch (cdShape) {
       case "circle": return "rounded-full"
       case "square": return "rounded-none"
-      case "pill": return "rounded-full"
+      case "pill": return "rounded-full px-4"
       case "rounded":
       default: return "rounded-lg"
     }
   }
 
-  // For circle shape, use fixed equal sizes
+  // For circle shape, use fixed EQUAL sizes
   const isCircle = cdShape === "circle" && cdBg !== "none"
-  const circleSize = "w-16 h-16 sm:w-20 sm:h-20"
+  const circleSize = "w-[72px] h-[72px] sm:w-[80px] sm:h-[80px]"
 
   const items = [
     { value: time?.days ?? 0, label: countdownLabels.days },
@@ -240,10 +211,15 @@ export default function HeroSection({
   const NamesOverlay = () => {
     if (!shouldShowNames) return null
 
-    // If logo is provided, show logo instead of names
+    // Calculate position - more padding at bottom when overlay layout is active
+    const getPositionClass = () => {
+      if (namesPosition === "top") return "top-0 pt-10"
+      return isOverlayLayout ? "bottom-0 pb-24" : "bottom-0 pb-10"
+    }
+
     if (namesLogo) {
       return (
-        <div className={`absolute inset-x-0 ${namesPosition === "top" ? "top-0 pt-10" : "bottom-0 pb-10"} flex flex-col items-center`}>
+        <div className={`absolute inset-x-0 ${getPositionClass()} flex flex-col items-center`}>
           <Image
             src={namesLogo}
             alt="Logo"
@@ -255,28 +231,21 @@ export default function HeroSection({
       )
     }
 
-    // Using new texts array format
     if (useTextsArray && namesDisplay?.texts) {
       return (
-        <div 
-          className={`absolute inset-x-0 ${namesPosition === "top" ? "top-0 pt-10" : "bottom-0 pb-10"} flex flex-col items-center`}
-        >
-          {showDecorativeLines && (
-            <div className="mb-3 h-px w-12 bg-white/40" />
-          )}
+        <div className={`absolute inset-x-0 ${getPositionClass()} flex flex-col items-center`}>
+          {showDecorativeLines && <div className="mb-3 h-px w-12 bg-white/40" />}
           {renderNameText(namesDisplay.texts[0], legacyFont, legacyWeight, legacySize, legacyStyle)}
           <span className="my-1 text-lg font-extralight tracking-[0.3em] sm:text-xl md:text-2xl" style={{ color: namesColor, opacity: 0.6 }}>
             {separator}
           </span>
           {renderNameText(namesDisplay.texts[1], legacyFont, legacyWeight, legacySize, legacyStyle)}
-          {showDecorativeLines && (
-            <div className="mt-3 h-px w-12 bg-white/40" />
-          )}
+          {showDecorativeLines && <div className="mt-3 h-px w-12 bg-white/40" />}
         </div>
       )
     }
 
-    // Legacy format: use brideName and groomName with shared styling
+    // Legacy format
     const resolvedWeight = weightMap[legacyWeight] || legacyWeight
     const sizeClass = sizeMap[legacySize] || sizeMap.lg
     const namesFontStyle: React.CSSProperties = {
@@ -287,73 +256,59 @@ export default function HeroSection({
     }
 
     return (
-      <div 
-        className={`absolute inset-x-0 ${namesPosition === "top" ? "top-0 pt-10" : "bottom-0 pb-10"} flex flex-col items-center`}
-        style={namesFontStyle}
-      >
-        {showDecorativeLines && (
-          <div className="mb-3 h-px w-12 bg-current opacity-40" />
-        )}
-        <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`}>
-          {brideName}
-        </p>
-        <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">
-          {separator}
-        </span>
-        <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`}>
-          {groomName}
-        </p>
-        {showDecorativeLines && (
-          <div className="mt-3 h-px w-12 bg-current opacity-40" />
-        )}
+      <div className={`absolute inset-x-0 ${getPositionClass()} flex flex-col items-center`} style={namesFontStyle}>
+        {showDecorativeLines && <div className="mb-3 h-px w-12 bg-current opacity-40" />}
+        <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`}>{brideName}</p>
+        <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">{separator}</span>
+        <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`}>{groomName}</p>
+        {showDecorativeLines && <div className="mt-3 h-px w-12 bg-current opacity-40" />}
       </div>
     )
   }
 
   // Countdown component
   const CountdownContent = ({ overlayMode = false }: { overlayMode?: boolean }) => {
-    const textColorStyle = overlayMode && cdBg !== "none" ? {} : { color: textColor }
+    const hasBg = cdBg !== "none"
+    const isPrimaryBg = cdBg === "primary" || (hasBg && cdBg !== "background" && cdBg !== "secondary")
     
     return (
-      <div className="flex flex-col items-center" style={overlayMode ? { color: textColor } : textColorStyle}>
-        {/* Countdown prefix */}
+      <div className="flex flex-col items-center" style={{ color: textColor }}>
         {countdownPrefix && (
-          <p className="mb-4 text-[10px] font-medium tracking-[0.2em] uppercase text-inherit/60">
+          <p className="mb-4 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
             {countdownPrefix}
           </p>
         )}
 
-        {/* Countdown */}
-        <div className="flex items-start justify-center gap-2" aria-live="polite">
+        <div className={`flex items-start justify-center ${hasBg ? "gap-3" : "gap-2"}`} aria-live="polite">
           {items.map((item, i) => {
-            const bgStyle = getCountdownBgStyle()
-            const isPrimary = cdBg === "primary" || (cdBg !== "none" && cdBg !== "background" && cdBg !== "secondary")
+            const itemBgStyle = getCountdownItemBgStyle()
             
             return (
               <div key={item.label} className="flex items-start gap-2">
                 <div 
                   className={`flex flex-col items-center justify-center ${
-                    cdBg !== "none" ? (isCircle ? circleSize : "px-3 py-2 min-w-[60px]") : ""
+                    hasBg ? (isCircle ? circleSize : "px-3 py-2 min-w-[60px] sm:min-w-[70px]") : ""
                   } ${getCountdownShapeClass()}`}
-                  style={bgStyle}
+                  style={itemBgStyle}
                 >
                   <span
-                    className={`text-3xl font-light tabular-nums sm:text-4xl ${isCircle ? "" : "md:text-5xl"} ${isPrimary ? "text-white" : "text-inherit"}`}
+                    className={`tabular-nums ${
+                      overlayMode 
+                        ? "text-3xl font-light sm:text-4xl" 
+                        : "text-4xl font-extralight sm:text-5xl md:text-6xl"
+                    } ${isPrimaryBg && hasBg ? "text-white" : "text-inherit"}`}
                     suppressHydrationWarning
                   >
                     {time
-                      ? String(item.value).padStart(
-                          item.label === countdownLabels.days ? 1 : 2,
-                          "0"
-                        )
+                      ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
                       : "--"}
                   </span>
-                  <span className={`mt-0.5 text-[8px] font-medium tracking-[0.1em] uppercase ${isPrimary ? "text-white/70" : "text-inherit/50"}`}>
+                  <span className={`mt-0.5 text-[8px] font-medium tracking-[0.1em] uppercase ${isPrimaryBg && hasBg ? "text-white/70" : "opacity-50"}`}>
                     {item.label}
                   </span>
                 </div>
-                {i < 3 && cdBg === "none" && (
-                  <span className="mt-1 text-3xl font-light text-inherit/40 md:text-4xl">
+                {i < 3 && !hasBg && (
+                  <span className={`mt-1 font-light opacity-40 ${overlayMode ? "text-3xl" : "text-4xl md:text-5xl"}`}>
                     :
                   </span>
                 )}
@@ -365,11 +320,8 @@ export default function HeroSection({
     )
   }
 
-  const isOverlay = cdLayout === "overlay"
-
   return (
     <section className="flex flex-col items-center bg-background">
-      {/* Load custom fonts if specified */}
       {fontsToLoad.length > 0 && (
         <>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -384,8 +336,8 @@ export default function HeroSection({
         </>
       )}
 
-      {/* Couple photo with names overlaid */}
-      <div className={`relative aspect-[3/4] w-full sm:aspect-[4/5] ${isOverlay ? "mb-0" : ""}`}>
+      {/* Hero image with names */}
+      <div className={`relative aspect-[3/4] w-full sm:aspect-[4/5] ${isOverlayLayout ? "mb-0" : ""}`}>
         <Image
           src={coupleImage}
           alt="Foto de la pareja"
@@ -395,7 +347,6 @@ export default function HeroSection({
         />
         {shouldShowNames && (
           <>
-            {/* Subtle gradient overlay for text contrast */}
             <div className={`absolute inset-0 ${
               namesPosition === "top" 
                 ? "bg-gradient-to-b from-black/50 via-black/10 to-transparent" 
@@ -406,8 +357,8 @@ export default function HeroSection({
         )}
       </div>
 
-      {/* Overlay countdown - positioned to overlap between hero and next section */}
-      {isOverlay ? (
+      {/* Countdown */}
+      {isOverlayLayout ? (
         <div className="relative z-10 -mt-14 mb-4">
           <div 
             className="rounded-2xl px-6 py-5 shadow-lg"
@@ -417,7 +368,6 @@ export default function HeroSection({
           </div>
         </div>
       ) : (
-        /* Inline countdown - standard layout below photo */
         <div className="flex w-full flex-col items-center px-6 pt-10 pb-10" style={getAreaBgStyle()}>
           <h1 className="mb-8 text-center text-3xl font-light tracking-wide uppercase text-inherit md:text-4xl">
             {headline}
