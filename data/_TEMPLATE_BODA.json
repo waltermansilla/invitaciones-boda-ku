@@ -326,29 +326,42 @@
         },
 
         {
-            "_comment": "HONEYMOON: Luna de miel. showButton: true/false para mostrar/ocultar boton. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.",
             "type": "honeymoon",
             "id": "honeymoon",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": ["icon", "title", "description", "button", "modals"],
             "data": {
                 "icon": "plane",
                 "title": "Luna de miel",
                 "description": "Si queres ayudarnos con nuestra luna de miel, te dejamos los datos.",
                 "showButton": true,
-                "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
-                "modal": {
-                    "title": "Datos para la luna de miel",
-                    "description": "Cualquier aporte nos ayuda a cumplir nuestro sueno.",
-                    "bankData": [
-                        { "label": "Alias", "value": "LUNA.DE.MIEL" },
-                        { "label": "CBU", "value": "0000000000000000000000" },
-                        { "label": "Titular", "value": "Nombre Completo" },
-                        { "label": "Banco", "value": "Nombre del Banco" }
-                    ],
-                    "thankYouText": "Gracias por ayudarnos a cumplir nuestro sueno!"
-                }
+                "button": { "text": "Ver datos", "url": "#", "variant": "secondary", "action": "modal" },
+                "_comment_action": "action: 'modal' abre modal, 'url' abre el link directo en button.url",
+                "modalMode": "combined",
+                "_comment_modalMode": "combined = ambos modales juntos. sequential = primero uno, boton para ir al otro.",
+                "modals": [
+                    {
+                        "type": "bank",
+                        "title": "Datos de transferencia",
+                        "description": "Cualquier aporte nos ayuda a cumplir nuestro sueno.",
+                        "bankData": [
+                            { "label": "Alias", "value": "LUNA.DE.MIEL" },
+                            { "label": "CBU", "value": "0000000000000000000000" },
+                            { "label": "Titular", "value": "Nombre Completo" },
+                            { "label": "Banco", "value": "Nombre del Banco" }
+                        ],
+                        "thankYouText": "Gracias por tu aporte!"
+                    },
+                    {
+                        "type": "address",
+                        "title": "Regalos fisicos",
+                        "subtitle": "Nuestra direccion",
+                        "address": "Calle Ejemplo 123, Ciudad, Provincia",
+                        "button": { "text": "Como llegar", "url": "https://maps.google.com/?q=..." }
+                    }
+                ]
             }
         },
 

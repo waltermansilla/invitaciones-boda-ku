@@ -297,26 +297,37 @@
         },
 
         {
-            "_comment": "HONEYMOON: Regalos / alcancia. showButton: true/false para mostrar/ocultar boton. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "_comment": "HONEYMOON: Regalos. OPCIONES: button.action = 'modal' (abre modal) o 'url' (abre link). MODALES MULTIPLES: usar 'modals' (array), type: 'bank' o 'address'. modalMode: 'combined' o 'sequential'.",
             "type": "honeymoon",
             "id": "dream-trip",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": ["icon", "title", "description", "button", "modals"],
             "data": {
                 "icon": "gift",
                 "title": "Regalos",
                 "description": "Tu presencia es el mejor regalo. Pero si queres tener un detalle, aca te dejo mis datos.",
                 "showButton": true,
-                "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
-                "modal": {
-                    "title": "Datos para regalos",
-                    "description": "Muchas gracias!",
-                    "bankData": [
-                        { "label": "Alias", "value": "MI.ALIAS" },
-                        { "label": "CBU", "value": "0000000000000000000000" }
-                    ]
-                }
+                "button": { "text": "Ver datos", "url": "#", "variant": "secondary", "action": "modal" },
+                "modalMode": "combined",
+                "modals": [
+                    {
+                        "type": "bank",
+                        "title": "Datos de transferencia",
+                        "description": "Muchas gracias!",
+                        "bankData": [
+                            { "label": "Alias", "value": "MI.ALIAS" },
+                            { "label": "CBU", "value": "0000000000000000000000" }
+                        ]
+                    },
+                    {
+                        "type": "address",
+                        "title": "Regalos fisicos",
+                        "subtitle": "Mi direccion",
+                        "address": "Calle Ejemplo 123, Ciudad",
+                        "button": { "text": "Como llegar", "url": "https://maps.google.com/?q=..." }
+                    }
+                ]
             }
         },
 

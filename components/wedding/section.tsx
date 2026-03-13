@@ -158,8 +158,10 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
             title={data.title as string}
             description={data.description as string}
             showButton={data.showButton as boolean | undefined}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
-            modal={data.modal as { title: string; description: string; bankData: { label: string; value: string }[]; thankYouText?: string }}
+            button={data.button as { text: string; url: string; variant: "primary" | "secondary"; action?: "modal" | "url" }}
+            modal={data.modal as { title: string; description: string; bankData: { label: string; value: string }[]; thankYouText?: string } | undefined}
+            modals={data.modals as Array<{ type: "bank" | "address"; title: string; subtitle?: string; description?: string; address?: string; bankData?: { label: string; value: string }[]; thankYouText?: string; button?: { text: string; url: string } }> | undefined}
+            modalMode={data.modalMode as "combined" | "sequential" | undefined}
           />
         )
 
