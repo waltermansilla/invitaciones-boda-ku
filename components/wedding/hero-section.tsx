@@ -144,6 +144,7 @@ export default function HeroSection({
   const cdShape = countdownStyle?.shape || "rounded"
   const cdLayout = countdownStyle?.layout || "inline"
   const isOverlayLayout = cdLayout === "overlay"
+  const hasBg = cdBg !== "none"
 
   // Countdown area background
   const getAreaBgStyle = (): React.CSSProperties => {
@@ -162,20 +163,25 @@ export default function HeroSection({
     return { backgroundColor: cdBg, color: "#fff" }
   }
 
-  const getCountdownShapeClass = () => {
-    if (cdBg === "none") return ""
+  // Shape class for individual countdown items
+  const getShapeClass = () => {
+    if (!hasBg) return ""
     switch (cdShape) {
       case "circle": return "rounded-full"
       case "square": return "rounded-none"
-      case "pill": return "rounded-full px-4"
+      case "pill": return "rounded-full"
       case "rounded":
       default: return "rounded-lg"
     }
   }
 
-  // For circle shape, use fixed EQUAL sizes
-  const isCircle = cdShape === "circle" && cdBg !== "none"
-  const circleSize = "w-[72px] h-[72px] sm:w-[80px] sm:h-[80px]"
+  // Size class for individual countdown items with background
+  const getItemSizeClass = () => {
+    if (!hasBg) return ""
+    if (cdShape === "circle") return "w-[70px] h-[70px] sm:w-[80px] sm:h-[80px]"
+    if (cdShape === "pill") return "px-4 py-3"
+    return "px-3 py-3 min-w-[65px] sm:min-w-[75px]"
+  }
 
   const items = [
     { value: time?.days ?? 0, label: countdownLabels.days },
@@ -268,8 +274,10 @@ export default function HeroSection({
 
   // Countdown component
   const CountdownContent = ({ overlayMode = false }: { overlayMode?: boolean }) => {
-    const hasBg = cdBg !== "none"
-    const isPrimaryBg = cdBg === "primary" || (hasBg && cdBg !== "background" && cdBg !== "secondary")
+    const isPrimaryBg = cdBg === "primary" || (hasBg && cdBg !== "background" && cdBg !== "secondary" && cdBg !== "none")
+    const shapeClass = getShapeClass()
+    const itemSizeClass = getItemSizeClass()
+    const itemBgStyle = hasBg ? getCountdownItemBgStyle() : {}
     
     return (
       <div className="flex flex-col items-center" style={{ color: textColor }}>
@@ -279,42 +287,36 @@ export default function HeroSection({
           </p>
         )}
 
-        <div className={`flex items-start justify-center ${hasBg ? "gap-3" : "gap-2"}`} aria-live="polite">
-          {items.map((item, i) => {
-            const itemBgStyle = getCountdownItemBgStyle()
-            
-            return (
-              <div key={item.label} className="flex items-start gap-2">
-                <div 
-                  className={`flex flex-col items-center justify-center ${
-                    hasBg ? (isCircle ? circleSize : "px-3 py-2 min-w-[60px] sm:min-w-[70px]") : ""
-                  } ${getCountdownShapeClass()}`}
-                  style={itemBgStyle}
+        <div className={`flex items-start justify-center ${hasBg ? "gap-3 sm:gap-4" : "gap-2"}`} aria-live="polite">
+          {items.map((item, i) => (
+            <div key={item.label} className="flex items-start gap-2">
+              <div 
+                className={`flex flex-col items-center justify-center ${itemSizeClass} ${shapeClass}`}
+                style={itemBgStyle}
+              >
+                <span
+                  className={`tabular-nums leading-none ${
+                    overlayMode 
+                      ? "text-3xl font-light sm:text-4xl" 
+                      : "text-4xl font-extralight sm:text-5xl md:text-6xl"
+                  } ${isPrimaryBg && hasBg ? "text-white" : "text-inherit"}`}
+                  suppressHydrationWarning
                 >
-                  <span
-                    className={`tabular-nums ${
-                      overlayMode 
-                        ? "text-3xl font-light sm:text-4xl" 
-                        : "text-4xl font-extralight sm:text-5xl md:text-6xl"
-                    } ${isPrimaryBg && hasBg ? "text-white" : "text-inherit"}`}
-                    suppressHydrationWarning
-                  >
-                    {time
-                      ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
-                      : "--"}
-                  </span>
-                  <span className={`mt-0.5 text-[8px] font-medium tracking-[0.1em] uppercase ${isPrimaryBg && hasBg ? "text-white/70" : "opacity-50"}`}>
-                    {item.label}
-                  </span>
-                </div>
-                {i < 3 && !hasBg && (
-                  <span className={`mt-1 font-light opacity-40 ${overlayMode ? "text-3xl" : "text-4xl md:text-5xl"}`}>
-                    :
-                  </span>
-                )}
+                  {time
+                    ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
+                    : "--"}
+                </span>
+                <span className={`mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs ${isPrimaryBg && hasBg ? "text-white/70" : "opacity-50"}`}>
+                  {item.label}
+                </span>
               </div>
-            )
-          })}
+              {i < 3 && !hasBg && (
+                <span className={`mt-1 font-light opacity-40 ${overlayMode ? "text-3xl" : "text-4xl md:text-5xl"}`}>
+                  :
+                </span>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     )
