@@ -127,6 +127,7 @@
             "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
+            "enabled": false,
             "id": "location-ceremonia",
             "bgColor": "background",
             "blocks": ["title", "address", "button"],
@@ -144,6 +145,7 @@
             "// --- UBICACION: CIVIL y RECEPCION ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
+            "enabled": false,
             "id": "location-recepcion",
             "bgColor": "primary",
             "blocks": ["title", "address", "button"],
@@ -158,16 +160,61 @@
             }
         },
         {
-            "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
-            "type": "gallery",
-            "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
             "data": {
-                "aspectRatio": "3/4",
-                "images": [
-                    "/clientes/boda/meliza-ivan/images/galeria-2.jpeg",
-                    "/clientes/boda/meliza-ivan/images/galeria-3.jpeg"
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia religiosa",
+                        "address": "Parroquia San Pedro y San Pablo",
+                        "time": "20:30 hs",
+
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/f5c2xKsVRKJgitNC9",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "pin",
+                        "name": "Recepción",
+                        "address": "Salón de eventos 'San Cayetano'",
+                        "time": "21:45 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/s3hhbVMq5JojVsRU6",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "heart",
+                        "name": "Ceremonia civil",
+                        "time": "22:00 hs"
+                    },
+                    { "icon": "utensils", "name": "Cena", "time": "22:30 hs" },
+                    {
+                        "icon": "sparkles",
+                        "name": "Primer baile de los recién casados",
+
+                        "time": "01:00 hs"
+                    },
+                    {
+                        "icon": "party",
+                        "name": "Fiesta",
+                        "time": "01:10 hs"
+                    },
+
+                    {
+                        "icon": "clock",
+                        "name": "Fin",
+                        "time": "06:00 hs"
+                    }
                 ]
             }
         },
@@ -216,6 +263,70 @@
                         }
                     ]
                 }
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modals"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Si querés regalarnos algo más que tu presencia...",
+                "showButton": true,
+                "button": {
+                    "text": "Ver más",
+                    "url": "#",
+                    "variant": "secondary",
+                    "action": "modal"
+                },
+                "_comment_action": "action: 'modal' abre modal, 'url' abre el link directo en button.url",
+                "modalMode": "combined",
+                "_comment_modalMode": "combined = ambos modales juntos. sequential = primero uno, boton para ir al otro.",
+                "modals": [
+                    {
+                        "type": "address",
+                        "title": "Regalos físicos",
+                        "subtitle": "Nuestra dirección",
+                        "address": "Agustina de Libarona 364, Bº Juan XXIII, Quimili, Santiago del Estero",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/Jf5ncz5qcWEWUM4i7?g_st=iw"
+                        }
+                    },
+                    {
+                        "type": "bank",
+                        "title": "Transferencias",
+                        "description": "",
+                        "bankData": [
+                            { "label": "Alias", "value": "BODAIVANYMELI" },
+
+                            {
+                                "label": "Titular",
+                                "value": "Iván Francisco Coronel"
+                            }
+                        ],
+                        "thankYouText": "¡Muchas gracias!"
+                    }
+                ]
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/meliza-ivan/images/galeria-2.jpeg",
+                    "/clientes/boda/meliza-ivan/images/galeria-3.jpeg"
+                ]
             }
         },
 
@@ -277,6 +388,20 @@
                 "message": "Hola Iván y Meliza! Confirmo mi asistencia a tu boda. Ya aboné el valor de la tarjeta. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗"
             }
         },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Esta invitación es personal. Te pedimos amablemente no reenviarla ni compartirla en redes sociales. ¡Te esperamos para compartir una noche inolvidable!",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
         {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
