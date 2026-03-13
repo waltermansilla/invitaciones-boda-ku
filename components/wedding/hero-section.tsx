@@ -154,18 +154,8 @@ export default function HeroSection({
     return { backgroundColor: countdownAreaBg, color: textColor }
   }
 
-  // Build countdown ITEM background style (individual boxes)
-  const getCountdownItemBgStyle = (): React.CSSProperties => {
-    if (cdBg === "none") return {}
-    if (cdBg === "background") return { backgroundColor: backgroundColor, border: `1px solid ${primaryColor}30` }
-    if (cdBg === "primary") return { backgroundColor: primaryColor, color: "#fff" }
-    if (cdBg === "secondary") return { backgroundColor: `${primaryColor}15`, border: `1px solid ${primaryColor}30` }
-    return { backgroundColor: cdBg, color: "#fff" }
-  }
-
   // Shape class for individual countdown items
   const getShapeClass = () => {
-    if (!hasBg) return ""
     switch (cdShape) {
       case "circle": return "rounded-full"
       case "square": return "rounded-none"
@@ -175,12 +165,24 @@ export default function HeroSection({
     }
   }
 
-  // Size class for individual countdown items with background
+  // Size class for individual countdown items
   const getItemSizeClass = () => {
-    if (!hasBg) return ""
     if (cdShape === "circle") return "w-[70px] h-[70px] sm:w-[80px] sm:h-[80px]"
-    if (cdShape === "pill") return "px-4 py-3"
+    if (cdShape === "pill") return "px-4 py-3 min-w-[65px]"
     return "px-3 py-3 min-w-[65px] sm:min-w-[75px]"
+  }
+
+  // Build countdown ITEM style (individual boxes)
+  const getCountdownItemStyle = (): React.CSSProperties => {
+    if (cdBg === "none") {
+      // No background requested - use subtle border to show shape
+      return { border: `1px solid ${primaryColor}20` }
+    }
+    if (cdBg === "background") return { backgroundColor: backgroundColor, border: `1px solid ${primaryColor}30` }
+    if (cdBg === "primary") return { backgroundColor: primaryColor, color: "#fff" }
+    if (cdBg === "secondary") return { backgroundColor: `${primaryColor}15`, border: `1px solid ${primaryColor}30` }
+    // Custom hex color
+    return { backgroundColor: cdBg, color: "#fff" }
   }
 
   const items = [
@@ -277,43 +279,64 @@ export default function HeroSection({
     const isPrimaryBg = cdBg === "primary" || (hasBg && cdBg !== "background" && cdBg !== "secondary" && cdBg !== "none")
     const shapeClass = getShapeClass()
     const itemSizeClass = getItemSizeClass()
-    const itemBgStyle = hasBg ? getCountdownItemBgStyle() : {}
+    const itemStyle = getCountdownItemStyle()
+    
+    // In overlay mode, always show styled items. In inline mode with background "none" and shape "rounded", show classic style
+    const showClassicStyle = !overlayMode && cdBg === "none" && cdShape === "rounded"
     
     return (
       <div className="flex flex-col items-center" style={{ color: textColor }}>
-        {countdownPrefix && (
+        {countdownPrefix && !overlayMode && (
           <p className="mb-4 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
             {countdownPrefix}
           </p>
         )}
 
-        <div className={`flex items-start justify-center ${hasBg ? "gap-3 sm:gap-4" : "gap-2"}`} aria-live="polite">
+        <div className={`flex items-start justify-center ${showClassicStyle ? "gap-2" : "gap-3 sm:gap-4"}`} aria-live="polite">
           {items.map((item, i) => (
             <div key={item.label} className="flex items-start gap-2">
-              <div 
-                className={`flex flex-col items-center justify-center ${itemSizeClass} ${shapeClass}`}
-                style={itemBgStyle}
-              >
-                <span
-                  className={`tabular-nums leading-none ${
-                    overlayMode 
-                      ? "text-3xl font-light sm:text-4xl" 
-                      : "text-4xl font-extralight sm:text-5xl md:text-6xl"
-                  } ${isPrimaryBg && hasBg ? "text-white" : "text-inherit"}`}
-                  suppressHydrationWarning
+              {showClassicStyle ? (
+                // Classic style - no boxes, just numbers with colons
+                <>
+                  <div className="flex flex-col items-center">
+                    <span
+                      className="tabular-nums leading-none text-4xl font-extralight sm:text-5xl md:text-6xl text-inherit"
+                      suppressHydrationWarning
+                    >
+                      {time
+                        ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
+                        : "--"}
+                    </span>
+                    <span className="mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs opacity-50">
+                      {item.label}
+                    </span>
+                  </div>
+                  {i < 3 && (
+                    <span className="mt-1 font-light opacity-40 text-4xl md:text-5xl">:</span>
+                  )}
+                </>
+              ) : (
+                // Styled items - individual boxes with shape
+                <div 
+                  className={`flex flex-col items-center justify-center ${itemSizeClass} ${shapeClass}`}
+                  style={itemStyle}
                 >
-                  {time
-                    ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
-                    : "--"}
-                </span>
-                <span className={`mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs ${isPrimaryBg && hasBg ? "text-white/70" : "opacity-50"}`}>
-                  {item.label}
-                </span>
-              </div>
-              {i < 3 && !hasBg && (
-                <span className={`mt-1 font-light opacity-40 ${overlayMode ? "text-3xl" : "text-4xl md:text-5xl"}`}>
-                  :
-                </span>
+                  <span
+                    className={`tabular-nums leading-none ${
+                      overlayMode 
+                        ? "text-3xl font-light sm:text-4xl" 
+                        : "text-4xl font-extralight sm:text-5xl md:text-6xl"
+                    } ${isPrimaryBg ? "text-white" : "text-inherit"}`}
+                    suppressHydrationWarning
+                  >
+                    {time
+                      ? String(item.value).padStart(item.label === countdownLabels.days ? 1 : 2, "0")
+                      : "--"}
+                  </span>
+                  <span className={`mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs ${isPrimaryBg ? "text-white/70" : "opacity-50"}`}>
+                    {item.label}
+                  </span>
+                </div>
               )}
             </div>
           ))}
