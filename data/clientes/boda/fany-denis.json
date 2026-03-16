@@ -35,7 +35,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar"
     },
@@ -253,7 +253,7 @@
                 "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
                 "button": {
                     "text": "Ir al album",
-                    "url": "https://photos.google.com",
+                    "url": "https://drive.google.com/drive/folders/1hKjjgQgLON0NP4xIvgDlxeXWgotSEytc",
                     "variant": "primary"
                 }
             }
@@ -328,7 +328,7 @@
             "blocks": ["text", "author"],
             "data": {
                 "text": "UNA NUEVA ETAPA COMIENZA… Y QUEREMOS COMPARTIRLA CON VOS. GRACIAS POR ESTAR",
-                "author": "Fany y Denis",
+                "author": "Fany & Denis",
                 "decorativeLines": false
             }
         },
