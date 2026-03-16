@@ -35,7 +35,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "",
         "buttonText": "Ingresar"
     },
@@ -94,7 +94,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Si recibiste esta invitación, es porque queremos que estés con nosotros en uno de los días más importantes de nuestras vidas. Tu presencia haría este momento aún más especial.",
+                "text": "Los momentos más importantes de la vida se vuelven aún más especiales cuando se comparten con quienes más queremos. Por eso nos encantaría que seas parte de este día tan importante para nosotros.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -211,20 +211,14 @@
             ],
             "data": {
                 "icons": ["gem"],
-                "title": "Código de vestimenta",
-                "subtitle": "Elegante",
-                "description": "Te pedimos amablemente evitar colores de la siguiente paleta de colores",
+                "title": "Vestimenta",
+                "subtitle": "Los colores BLANCO y CREMA son exclusivos de la novia",
+                "description": "Por favor, evitar esos colores. Los hombres sí pueden traer camisa blanca.",
                 "showButton": false,
                 "colorSwatches": {
                     "enabled": true,
-                    "shape": "square",
-                    "colors": [
-                        "#d9d9de",
-                        "#fff",
-                        "#bce9c8",
-                        "#2c6b46",
-                        "#1a3a26"
-                    ]
+                    "shape": "circle",
+                    "colors": ["#fff", "#fdecda"]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -243,55 +237,6 @@
             }
         },
 
-        {
-            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
-            "type": "honeymoon",
-            "id": "honeymoon",
-            "enabled": true,
-            "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modals"],
-            "data": {
-                "icon": "gift",
-                "title": "Regalos",
-                "description": "Si querés regalarnos algo más que tu presencia...",
-                "showButton": true,
-                "button": {
-                    "text": "Ver más",
-                    "url": "#",
-                    "variant": "secondary",
-                    "action": "modal"
-                },
-                "_comment_action": "action: 'modal' abre modal, 'url' abre el link directo en button.url",
-                "modalMode": "combined",
-                "_comment_modalMode": "combined = ambos modales juntos. sequential = primero uno, boton para ir al otro.",
-                "modals": [
-                    {
-                        "type": "address",
-                        "title": "Regalos físicos",
-                        "subtitle": "Nuestra dirección",
-                        "address": "Agustina de Libarona 364, Bº Juan XXIII, Quimili, Santiago del Estero",
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/Jf5ncz5qcWEWUM4i7?g_st=iw"
-                        }
-                    },
-                    {
-                        "type": "bank",
-                        "title": "Transferencias",
-                        "description": "",
-                        "bankData": [
-                            { "label": "Alias", "value": "BODAIVANYMELI" },
-
-                            {
-                                "label": "Titular",
-                                "value": "Iván Francisco Coronel"
-                            }
-                        ],
-                        "thankYouText": "¡Muchas gracias!"
-                    }
-                ]
-            }
-        },
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
@@ -315,8 +260,8 @@
             "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
-                "author": "Meliza & Iván",
+                "text": "Hoy comenzamos el capítulo más importante de nuestra historia. Con amor, ilusión y felicidad, los invitamos a compartir con nosotros este momento que recordaremos para siempre.",
+                "author": "Belén & Agustín",
                 "decorativeLines": true
             }
         },
@@ -329,7 +274,7 @@
             "data": {
                 "icon": "heart",
                 "title": "Valor Tarjeta",
-                "description": "Agradecemos que confirmes tu asistencia antes del 23 de Abril.",
+                "description": "Agradecemos que confirmes tu asistencia antes del 31 de Agosto",
                 "button": {
                     "text": "Ver datos",
                     "url": "#",
@@ -337,16 +282,14 @@
                 },
                 "modal": {
                     "title": "Datos de transferencia",
-                    "suggestedValue": "$65.000",
-                    "description": "No olvides enviarnos el comprobante.",
+                    "suggestedValue": "$75.000",
+                    "description": "Te recomendamos abonar antes de Agosto para mantener el valor indicado. Luego de esa fecha, la tarjeta tendrá un nuevo valor.",
                     "transferData": [
-                        { "label": "Alias", "value": "BODAIVANYMELI" },
+                        { "label": "Alias", "value": "belen35" },
                         {
                             "label": "Titular",
-                            "value": "Iván Francisco Coronel"
-                        },
-                        { "label": "Banco", "value": "Nación Argentina" },
-                        { "label": "Cuit", "value": "20-38736617-3" }
+                            "value": "Belén Guadalupe Guidi"
+                        }
                     ]
                 }
             }
@@ -361,21 +304,8 @@
                 "title": "Confirmar asistencia",
                 "subtitle": "",
                 "buttonText": "Voy a asistir!",
-                "whatsappNumber": "543815993451",
-                "message": "Hola Iván y Meliza! Confirmo mi asistencia a tu boda. Ya aboné el valor de la tarjeta. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗"
-            }
-        },
-        {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-final2",
-            "bgColor": "background",
-            "blocks": ["text", "author"],
-            "data": {
-                "text": "Esta invitación es personal. Te pedimos amablemente no reenviarla ni compartirla en redes sociales. ¡Te esperamos para compartir una noche inolvidable!",
-                "author": "",
-                "decorativeLines": true
+                "whatsappNumber": "543424620848",
+                "message": "Hola Belén y Agustín! Confirmo mi asistencia a su boda. Ya aboné el valor de la tarjeta. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗"
             }
         },
 

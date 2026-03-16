@@ -1,6 +1,6 @@
 {
     "_comment": "Toda la landing se configura desde este archivo. Colores, textos, precios, FAQ, botones, etc.",
-    
+
     "_comment_brand": "MARCA: Configura el nombre, fuente y estilo que aparece en el footer de TODAS las invitaciones y en la landing. name = nombre de la marca. font = 'font-serif' (cursiva), 'font-sans' (recta), 'font-mono' (monoespaciada). size = 'text-sm', 'text-base', 'text-lg', 'text-xl'. style = 'italic' o 'normal'. icon = null o URL de imagen de logo. socialLinks = array de redes sociales.",
     "brand": {
         "name": "Momento Único",
@@ -10,8 +10,16 @@
         "icon": null,
         "iconSize": 30,
         "socialLinks": [
-            { "icon": "instagram", "url": "https://instagram.com/waltermansilla.web", "label": "Instagram" },
-            { "icon": "whatsapp", "url": "https://wa.me/3456023759", "label": "WhatsApp" }
+            {
+                "icon": "instagram",
+                "url": "https://instagram.com/waltermansilla.web",
+                "label": "Instagram"
+            },
+            {
+                "icon": "whatsapp",
+                "url": "https://wa.me/3456023759",
+                "label": "WhatsApp"
+            }
         ]
     },
 
@@ -82,6 +90,21 @@
                     "titulo": "Anto & Walter",
                     "etiqueta": "Boda",
                     "accentColor": "#D4A373"
+                },
+                {
+                    "tipo": "boda",
+                    "slug": "meliza-ivan",
+                    "titulo": "Meliza & Iván",
+                    "etiqueta": "Boda",
+                    "accentColor": "#D4A373"
+                },
+
+                {
+                    "tipo": "xv",
+                    "slug": "dasha",
+                    "titulo": "Dasha",
+                    "etiqueta": "XV",
+                    "accentColor": "#C4788A"
                 },
 
                 {
