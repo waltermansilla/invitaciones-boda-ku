@@ -16,12 +16,12 @@
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
-    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. verde grisaceo: 59695c, marron: 735751, gris oscuro 333",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. verde grisaceo: 59695c, marron: 735751, gris oscuro 333, verde oliva 607119",
     "theme": {
-        "primaryColor": "#607119",
-        "backgroundColor": "#fff",
-        "textColor": "#607119",
-        "lightBgTextColor": "#607119",
+        "primaryColor": "#5b6d5b",
+        "backgroundColor": "#f2f4ee",
+        "textColor": "#4a5d4e",
+        "lightBgTextColor": "#5b6d5b",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
@@ -58,7 +58,7 @@
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
         "namesDisplay": {
-            "enabled": true,
+            "enabled": false,
             "position": "bottom",
             "font": "",
             "weight": "300",
@@ -77,8 +77,10 @@
             "seconds": "Segundos"
         },
         "countdownStyle": {
-            "background": "none",
-            "shape": "rounded"
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
         }
     },
     "// ==========================================+": "",
@@ -119,7 +121,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/belen-agustin/images/galeria1.jpeg"]
+                "images": ["/clientes/boda/belen-agustin/images/fija.jpeg"]
             }
         },
 
@@ -246,8 +248,9 @@
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
-                    "/clientes/boda/belen-agustin/images/galeria2.jpeg",
-                    "/clientes/boda/belen-agustin/images/galeria3.jpeg"
+                    "/clientes/boda/belen-agustin/images/galeria-1.jpeg",
+                    "/clientes/boda/belen-agustin/images/galeria-2.jpeg",
+                    "/clientes/boda/belen-agustin/images/galeria-3.jpeg"
                 ]
             }
         },
@@ -260,8 +263,8 @@
             "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Hoy comenzamos el capítulo más importante de nuestra historia. Con amor, ilusión y felicidad, los invitamos a compartir con nosotros este momento que recordaremos para siempre.",
-                "author": "Belén & Agustín",
+                "text": "Hoy comenzamos el capítulo más importante de nuestra historia.",
+                "author": "",
                 "decorativeLines": true
             }
         },
@@ -306,6 +309,20 @@
                 "buttonText": "Voy a asistir!",
                 "whatsappNumber": "543424620848",
                 "message": "Hola Belén y Agustín! Confirmo mi asistencia a su boda. Ya aboné el valor de la tarjeta. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗"
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Con amor, ilusión y felicidad, los invitamos a compartir con nosotros este momento que recordaremos para siempre.",
+                "author": "Belén & Agustín",
+                "decorativeLines": true
             }
         },
 
