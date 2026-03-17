@@ -85,11 +85,6 @@
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
-        },
-        "_comment_countdownStyle": "ESTILO DEL COUNTDOWN. background: 'none' (sin fondo), 'background' (fondo claro con borde), 'primary' (fondo color principal), 'secondary' (fondo suave). shape: 'rounded' (redondeado), 'circle' (circulo), 'square' (cuadrado), 'pill' (pastilla).",
-        "countdownStyle": {
-            "background": "none",
-            "shape": "pill"
         }
     },
 

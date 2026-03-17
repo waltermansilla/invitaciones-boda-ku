@@ -112,7 +112,9 @@
                 "aspectRatio": "1/1",
                 "images": [
                     "/clientes/boda/quique-vero/images/galeria1.jpg",
-                    "/clientes/boda/quique-vero/images/galeria2.jpg"
+                    "/clientes/boda/quique-vero/images/galeria2.jpg",
+                    "/clientes/boda/quique-vero/images/vertical1.jpeg",
+                    "/clientes/boda/quique-vero/images/vertical2.jpeg"
                 ]
             }
         },
@@ -214,7 +216,10 @@
                 "aspectRatio": "1/1",
                 "images": [
                     "/clientes/boda/quique-vero/images/galeria3.jpg",
-                    "/clientes/boda/quique-vero/images/galeria4.jpg"
+                    "/clientes/boda/quique-vero/images/galeria4.jpg",
+                    "/clientes/boda/quique-vero/images/family1.jpeg",
+                    "/clientes/boda/quique-vero/images/vertical3.jpeg",
+                    "/clientes/boda/quique-vero/images/family2.jpeg"
                 ]
             }
         },
