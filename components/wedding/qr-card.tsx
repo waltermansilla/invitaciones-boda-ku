@@ -61,11 +61,10 @@ export default function QRCard({
     try {
       const html2canvas = (await import("html2canvas")).default
       const canvas = await html2canvas(cardRef.current, {
-        scale: 2,
+        scale: 4,
         backgroundColor: bgColor,
         useCORS: true,
         onclone: (_doc, element) => {
-          // Fix all text colors to avoid oklab issues
           element.style.color = textColor
           const allEls = element.querySelectorAll("*")
           allEls.forEach((el) => {
@@ -80,10 +79,13 @@ export default function QRCard({
         },
       })
       
+      const dataUrl = canvas.toDataURL("image/png", 1.0)
       const link = document.createElement("a")
       link.download = `qr-${names.name1}-${names.name2}.png`
-      link.href = canvas.toDataURL("image/png")
+      link.href = dataUrl
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
     } catch (e) {
       console.error("PNG error:", e)
     }
@@ -96,10 +98,11 @@ export default function QRCard({
     
     try {
       const html2canvas = (await import("html2canvas")).default
-      const jspdf = await import("jspdf")
+      const jsPDFModule = await import("jspdf")
+      const jsPDF = jsPDFModule.default
       
       const canvas = await html2canvas(cardRef.current, {
-        scale: 2,
+        scale: 4,
         backgroundColor: bgColor,
         useCORS: true,
         onclone: (_doc, element) => {
@@ -117,13 +120,14 @@ export default function QRCard({
         },
       })
       
-      const pdf = new jspdf.jsPDF({
+      const imgData = canvas.toDataURL("image/png", 1.0)
+      const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: [90, 120],
       })
       
-      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 90, 120)
+      pdf.addImage(imgData, "PNG", 0, 0, 90, 120)
       pdf.save(`qr-${names.name1}-${names.name2}.pdf`)
     } catch (e) {
       console.error("PDF error:", e)
@@ -132,7 +136,7 @@ export default function QRCard({
   }
 
   const CameraIcon = () => (
-    <svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke={textColor} strokeWidth="1.2" style={{ opacity: 0.55 }}>
+    <svg width="48" height="48" viewBox="0 0 52 52" fill="none" stroke={textColor} strokeWidth="1.2" style={{ opacity: 0.55 }}>
       <rect x="6" y="16" width="40" height="28" rx="4" />
       <circle cx="26" cy="30" r="9" />
       <circle cx="26" cy="30" r="5" />
@@ -141,39 +145,41 @@ export default function QRCard({
     </svg>
   )
 
+  // Leaves positioned inside the card bounds
   const LeafBranch = ({ side }: { side: "left" | "right" }) => (
     <svg
-      width="55"
-      height="320"
-      viewBox="0 0 55 320"
+      width="40"
+      height="380"
+      viewBox="0 0 40 380"
       fill="none"
       style={{
         position: "absolute",
         top: "50%",
         transform: `translateY(-50%) ${side === "right" ? "scaleX(-1)" : ""}`,
-        left: side === "left" ? 0 : undefined,
-        right: side === "right" ? 0 : undefined,
+        left: side === "left" ? "5px" : undefined,
+        right: side === "right" ? "5px" : undefined,
+        overflow: "visible",
       }}
     >
       <path
-        d="M45 30 Q30 70 35 110 Q40 150 32 190 Q24 230 35 270 Q42 300 30 310"
+        d="M30 40 Q18 90 22 140 Q26 190 20 240 Q14 290 22 340 Q26 360 18 370"
         stroke={leafColor}
         strokeWidth="1"
         fill="none"
         opacity="0.6"
       />
-      {[45, 70, 95, 120, 145, 170, 195, 220, 245, 270, 290].map((cy, i) => (
+      {[50, 80, 110, 140, 170, 200, 230, 260, 290, 320, 350].map((cy, i) => (
         <ellipse
           key={i}
-          cx={35 + (i % 2) * 5}
+          cx={22 + (i % 2) * 4}
           cy={cy}
-          rx="15"
-          ry="6"
+          rx="12"
+          ry="5"
           fill="none"
           stroke={leafColor}
           strokeWidth="0.8"
           opacity="0.5"
-          transform={`rotate(${i % 2 === 0 ? -35 : 35} ${35 + (i % 2) * 5} ${cy})`}
+          transform={`rotate(${i % 2 === 0 ? -35 : 35} ${22 + (i % 2) * 4} ${cy})`}
         />
       ))}
     </svg>
@@ -181,7 +187,7 @@ export default function QRCard({
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px", padding: "24px", backgroundColor: "#e5e5e5" }}>
-      {/* Card */}
+      {/* Card - proporcion 3:4 ajustada */}
       <div
         ref={cardRef}
         style={{
@@ -191,7 +197,7 @@ export default function QRCard({
           alignItems: "center",
           overflow: "hidden",
           width: "320px",
-          height: "427px",
+          height: "460px",
           backgroundColor: bgColor,
           color: textColor,
         }}
@@ -200,34 +206,34 @@ export default function QRCard({
         <LeafBranch side="right" />
 
         {/* Hearts decoration */}
-        <Heart style={{ position: "absolute", left: "20px", top: "30%", width: "12px", height: "12px", color: accentColor, opacity: 0.45, fill: accentColor }} />
-        <Heart style={{ position: "absolute", right: "28px", top: "24%", width: "10px", height: "10px", color: accentColor, opacity: 0.35, fill: accentColor }} />
-        <Heart style={{ position: "absolute", left: "32px", bottom: "14%", width: "10px", height: "10px", color: accentColor, opacity: 0.4, fill: accentColor }} />
-        <Heart style={{ position: "absolute", right: "20px", bottom: "10%", width: "12px", height: "12px", color: accentColor, opacity: 0.45, fill: accentColor }} />
+        <Heart style={{ position: "absolute", left: "50px", top: "28%", width: "10px", height: "10px", color: accentColor, opacity: 0.4, fill: accentColor }} />
+        <Heart style={{ position: "absolute", right: "55px", top: "22%", width: "8px", height: "8px", color: accentColor, opacity: 0.3, fill: accentColor }} />
+        <Heart style={{ position: "absolute", left: "55px", bottom: "15%", width: "8px", height: "8px", color: accentColor, opacity: 0.35, fill: accentColor }} />
+        <Heart style={{ position: "absolute", right: "50px", bottom: "12%", width: "10px", height: "10px", color: accentColor, opacity: 0.4, fill: accentColor }} />
 
         {/* Content */}
-        <div style={{ position: "relative", zIndex: 10, display: "flex", height: "100%", width: "100%", flexDirection: "column", alignItems: "center", padding: "28px 32px" }}>
+        <div style={{ position: "relative", zIndex: 10, display: "flex", height: "100%", width: "100%", flexDirection: "column", alignItems: "center", padding: "32px 45px 24px 45px" }}>
           {/* Names */}
-          <div style={{ marginBottom: "16px", display: "flex", alignItems: "center", fontSize: "28px", fontFamily: names.font || "'Great Vibes', cursive", color: textColor }}>
+          <div style={{ marginBottom: "20px", display: "flex", alignItems: "center", fontSize: "28px", fontFamily: names.font || "'Great Vibes', cursive", color: textColor }}>
             <span>{names.name1}</span>
-            <Heart style={{ margin: "0 4px", width: "18px", height: "18px", color: accentColor, fill: accentColor }} />
+            <Heart style={{ margin: "0 6px", width: "16px", height: "16px", color: accentColor, fill: accentColor }} />
             <span>{names.name2}</span>
           </div>
 
           {/* Icon */}
           {icon && icon !== "none" && (
-            <div style={{ marginBottom: "12px" }}>
+            <div style={{ marginBottom: "14px" }}>
               <CameraIcon />
             </div>
           )}
 
           {/* Title */}
-          <h1 style={{ marginBottom: "6px", textAlign: "center", fontSize: "24px", fontWeight: 600, fontFamily: "'Cormorant Garamond', serif", color: textColor }}>
+          <h1 style={{ marginBottom: "8px", textAlign: "center", fontSize: "24px", fontWeight: 600, fontFamily: "'Cormorant Garamond', serif", color: textColor }}>
             {title}
           </h1>
 
           {/* Description */}
-          <p style={{ marginBottom: "16px", maxWidth: "230px", textAlign: "center", fontSize: "13px", lineHeight: 1.55, opacity: 0.7, color: textColor }}>
+          <p style={{ marginBottom: "18px", maxWidth: "210px", textAlign: "center", fontSize: "12.5px", lineHeight: 1.55, opacity: 0.7, color: textColor }}>
             {description}
           </p>
 
@@ -235,31 +241,31 @@ export default function QRCard({
           <div style={{ borderRadius: "10px", padding: "8px", backgroundColor: "rgba(255,255,255,0.6)" }}>
             <QRCodeCanvas
               value={qrUrl}
-              size={125}
+              size={120}
               fgColor={qrFgColor}
               bgColor={qrBgColor}
               level="M"
             />
           </div>
 
-          {/* Brand */}
-          <div style={{ marginTop: "auto", paddingTop: "16px" }}>
+          {/* Brand - siempre visible */}
+          <div style={{ marginTop: "auto", paddingTop: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {brand?.type === "instagram" && brand.instagramHandle && (
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: textColor, opacity: 0.7 }}>
-                <Instagram style={{ width: "20px", height: "20px" }} />
-                <span style={{ fontSize: "14px" }}>{brand.instagramHandle}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: textColor, opacity: 0.65 }}>
+                <Instagram style={{ width: "18px", height: "18px" }} />
+                <span style={{ fontSize: "13px" }}>{brand.instagramHandle}</span>
               </div>
             )}
             {brand?.type === "text" && brand.text && (
-              <span style={{ fontSize: "14px", letterSpacing: "0.05em", color: textColor, opacity: 0.7 }}>
+              <span style={{ fontSize: "13px", letterSpacing: "0.05em", color: textColor, opacity: 0.65 }}>
                 {brand.text}
               </span>
             )}
             {brand?.type === "logo" && brand.logoUrl && (
-              <img src={brand.logoUrl} alt="Logo" style={{ height: "40px", width: "auto", opacity: 0.8 }} />
+              <img src={brand.logoUrl} alt="Logo" style={{ height: "36px", width: "auto", opacity: 0.8 }} crossOrigin="anonymous" />
             )}
             {(!brand || brand.type === "none") && (
-              <span style={{ fontSize: "13px", letterSpacing: "0.05em", color: textColor, opacity: 0.5 }}>
+              <span style={{ fontSize: "12px", letterSpacing: "0.05em", color: textColor, opacity: 0.5 }}>
                 momentounico.com.ar
               </span>
             )}
@@ -272,7 +278,7 @@ export default function QRCard({
         <button
           onClick={downloadPNG}
           disabled={downloading !== null}
-          style={{ display: "flex", alignItems: "center", gap: "8px", borderRadius: "8px", backgroundColor: "#262626", padding: "10px 20px", fontSize: "14px", fontWeight: 500, color: "#fff", border: "none", cursor: "pointer", opacity: downloading ? 0.5 : 1 }}
+          style={{ display: "flex", alignItems: "center", gap: "8px", borderRadius: "8px", backgroundColor: "#262626", padding: "10px 20px", fontSize: "14px", fontWeight: 500, color: "#fff", border: "none", cursor: downloading ? "wait" : "pointer", opacity: downloading ? 0.6 : 1 }}
         >
           {downloading === "png" ? <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} /> : <Download style={{ width: "16px", height: "16px" }} />}
           Descargar PNG
@@ -280,12 +286,19 @@ export default function QRCard({
         <button
           onClick={downloadPDF}
           disabled={downloading !== null}
-          style={{ display: "flex", alignItems: "center", gap: "8px", borderRadius: "8px", backgroundColor: "#fff", padding: "10px 20px", fontSize: "14px", fontWeight: 500, color: "#262626", border: "1px solid #d4d4d4", cursor: "pointer", opacity: downloading ? 0.5 : 1 }}
+          style={{ display: "flex", alignItems: "center", gap: "8px", borderRadius: "8px", backgroundColor: "#fff", padding: "10px 20px", fontSize: "14px", fontWeight: 500, color: "#262626", border: "1px solid #d4d4d4", cursor: downloading ? "wait" : "pointer", opacity: downloading ? 0.6 : 1 }}
         >
           {downloading === "pdf" ? <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} /> : <Download style={{ width: "16px", height: "16px" }} />}
           Descargar PDF
         </button>
       </div>
+
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   )
 }
