@@ -1,49 +1,34 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { QRCodeSVG } from "qrcode.react"
-import { Camera, Instagram, Sparkles, Heart, Star, PartyPopper, Download, Crown } from "lucide-react"
+import { Instagram, Sparkles, Star, Download, Loader2 } from "lucide-react"
 import html2canvas from "html2canvas"
 import { jsPDF } from "jspdf"
 
-// Icon map
-const iconMap: Record<string, React.ReactNode> = {
-  camera: <Camera className="h-10 w-10" strokeWidth={1} />,
-  sparkles: <Sparkles className="h-10 w-10" strokeWidth={1} />,
-  heart: <Heart className="h-10 w-10" strokeWidth={1} />,
-  star: <Star className="h-10 w-10" strokeWidth={1} />,
-  party: <PartyPopper className="h-10 w-10" strokeWidth={1} />,
-  crown: <Crown className="h-10 w-10" strokeWidth={1} />,
-}
-
 interface QRCardXVProps {
-  // Names config - XV has 2 texts with different fonts (e.g., "Mis XV" + "Valentina")
   names: {
     text1: string // e.g., "Mis XV"
     text2: string // e.g., "Valentina"
     font1?: string
     font2?: string
   }
-  // Content
   icon?: string
   title: string
   description: string
   qrUrl: string
-  // QR Style
   qrStyle?: {
     fgColor?: string
     bgColor?: string
     cornerStyle?: "square" | "rounded"
   }
-  // Card style
   cardStyle?: {
     bgColor?: string
     textColor?: string
     accentColor?: string
   }
-  // Brand at bottom
   brand?: {
-    type: "text" | "logo" | "instagram"
+    type: "text" | "logo" | "instagram" | "none"
     text?: string
     logoUrl?: string
     instagramHandle?: string
@@ -63,168 +48,238 @@ export default function QRCardXV({
   primaryColor = "#D4A5A5",
 }: QRCardXVProps) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const [downloading, setDownloading] = useState<"png" | "pdf" | null>(null)
 
-  // Default styles
+  // Colors
   const bgColor = cardStyle?.bgColor || "#FDF8F3"
-  const textColor = cardStyle?.textColor || "#3D3D3D"
+  const textColor = cardStyle?.textColor || "#4A4A4A"
   const accentColor = cardStyle?.accentColor || primaryColor
 
-  // QR defaults
+  // QR
   const qrFgColor = qrStyle?.fgColor || "#3D3D3D"
   const qrBgColor = qrStyle?.bgColor || "transparent"
 
-  // Download as PNG
+  // Download PNG
   const downloadPNG = async () => {
     if (!cardRef.current) return
-    const canvas = await html2canvas(cardRef.current, {
-      scale: 3,
-      backgroundColor: null,
-      useCORS: true,
-    })
-    const link = document.createElement("a")
-    link.download = `qr-${names.text2}.png`
-    link.href = canvas.toDataURL("image/png")
-    link.click()
+    setDownloading("png")
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        scale: 4,
+        backgroundColor: bgColor,
+        useCORS: true,
+        logging: false,
+      })
+      const link = document.createElement("a")
+      link.download = `qr-${names.text2}.png`
+      link.href = canvas.toDataURL("image/png", 1.0)
+      link.click()
+    } finally {
+      setDownloading(null)
+    }
   }
 
-  // Download as PDF
+  // Download PDF
   const downloadPDF = async () => {
     if (!cardRef.current) return
-    const canvas = await html2canvas(cardRef.current, {
-      scale: 3,
-      backgroundColor: null,
-      useCORS: true,
-    })
-    const imgData = canvas.toDataURL("image/png")
-    
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: [105, 148],
-    })
-    
-    pdf.addImage(imgData, "PNG", 0, 0, 105, 148)
-    pdf.save(`qr-${names.text2}.pdf`)
+    setDownloading("pdf")
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        scale: 4,
+        backgroundColor: bgColor,
+        useCORS: true,
+        logging: false,
+      })
+      const imgData = canvas.toDataURL("image/png", 1.0)
+      
+      // 3:4 ratio
+      const pdfWidth = 90
+      const pdfHeight = 120
+      
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: [pdfWidth, pdfHeight],
+      })
+      
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight)
+      pdf.save(`qr-${names.text2}.pdf`)
+    } finally {
+      setDownloading(null)
+    }
   }
 
+  // Camera icon for XV (same style)
+  const CameraIcon = () => (
+    <svg width="48" height="48" viewBox="0 0 52 52" fill="none" stroke={textColor} strokeWidth="1.2" style={{ opacity: 0.5 }}>
+      <rect x="6" y="16" width="40" height="28" rx="4" />
+      <circle cx="26" cy="30" r="9" />
+      <circle cx="26" cy="30" r="5" />
+      <path d="M16 16V13a2 2 0 012-2h16a2 2 0 012 2v3" />
+      <circle cx="38" cy="22" r="2" fill={textColor} />
+    </svg>
+  )
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-neutral-100 p-4">
-      {/* Card */}
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-neutral-200 p-6">
+      {/* Card - 3:4 aspect ratio */}
       <div
         ref={cardRef}
-        className="relative flex w-[315px] flex-col items-center overflow-hidden px-8 py-10"
-        style={{ 
+        className="relative flex flex-col items-center overflow-hidden"
+        style={{
+          width: "320px",
+          height: "427px",
           backgroundColor: bgColor,
           color: textColor,
-          aspectRatio: "105/148",
         }}
       >
-        {/* Decorative stars/sparkles - scattered */}
-        <div className="pointer-events-none absolute inset-0">
-          {/* Top left cluster */}
-          <Sparkles className="absolute left-6 top-8 h-4 w-4 opacity-20" style={{ color: accentColor }} />
-          <Star className="absolute left-12 top-14 h-3 w-3 fill-current opacity-15" style={{ color: accentColor }} />
-          
-          {/* Top right cluster */}
-          <Sparkles className="absolute right-8 top-10 h-3 w-3 opacity-20" style={{ color: accentColor }} />
-          <Star className="absolute right-14 top-16 h-2.5 w-2.5 fill-current opacity-15" style={{ color: accentColor }} />
-          
-          {/* Bottom corners */}
-          <Sparkles className="absolute left-8 bottom-24 h-3 w-3 opacity-20" style={{ color: accentColor }} />
-          <Star className="absolute left-16 bottom-16 h-2 w-2 fill-current opacity-15" style={{ color: accentColor }} />
-          <Sparkles className="absolute right-10 bottom-20 h-4 w-4 opacity-20" style={{ color: accentColor }} />
-          <Star className="absolute right-6 bottom-28 h-2.5 w-2.5 fill-current opacity-15" style={{ color: accentColor }} />
-        </div>
-
-        {/* Decorative frame - elegant border */}
-        <div 
-          className="pointer-events-none absolute inset-4 rounded-lg border opacity-20"
-          style={{ borderColor: accentColor }}
+        {/* Decorative stars scattered */}
+        <Sparkles 
+          className="absolute left-5 top-8 h-5 w-5" 
+          style={{ color: accentColor, opacity: 0.25 }} 
         />
-        <div 
-          className="pointer-events-none absolute inset-6 rounded border opacity-10"
-          style={{ borderColor: accentColor }}
+        <Star 
+          className="absolute left-12 top-16 h-3 w-3 fill-current" 
+          style={{ color: accentColor, opacity: 0.2 }} 
+        />
+        <Sparkles 
+          className="absolute right-6 top-10 h-4 w-4" 
+          style={{ color: accentColor, opacity: 0.2 }} 
+        />
+        <Star 
+          className="absolute right-14 top-20 h-2.5 w-2.5 fill-current" 
+          style={{ color: accentColor, opacity: 0.18 }} 
+        />
+        <Sparkles 
+          className="absolute left-7 bottom-[18%] h-4 w-4" 
+          style={{ color: accentColor, opacity: 0.22 }} 
+        />
+        <Star 
+          className="absolute left-16 bottom-[12%] h-2.5 w-2.5 fill-current" 
+          style={{ color: accentColor, opacity: 0.18 }} 
+        />
+        <Sparkles 
+          className="absolute right-8 bottom-[15%] h-5 w-5" 
+          style={{ color: accentColor, opacity: 0.25 }} 
+        />
+        <Star 
+          className="absolute right-5 bottom-[22%] h-3 w-3 fill-current" 
+          style={{ color: accentColor, opacity: 0.2 }} 
         />
 
-        {/* Names - stacked with different fonts */}
-        <div className="z-10 mb-6 flex flex-col items-center">
-          <span 
-            className="text-sm font-light uppercase tracking-[0.3em] opacity-70"
-            style={{ fontFamily: names.font1 || "'Cormorant Garamond', serif" }}
-          >
-            {names.text1}
-          </span>
-          <span 
-            className="mt-1 text-3xl"
-            style={{ fontFamily: names.font2 || "'Great Vibes', cursive" }}
-          >
-            {names.text2}
-          </span>
-          {/* Decorative line */}
-          <div className="mt-2 flex items-center gap-2">
-            <div className="h-px w-8 opacity-30" style={{ backgroundColor: accentColor }} />
-            <Star className="h-2.5 w-2.5 fill-current opacity-40" style={{ color: accentColor }} />
-            <div className="h-px w-8 opacity-30" style={{ backgroundColor: accentColor }} />
+        {/* Elegant frame border */}
+        <div 
+          className="pointer-events-none absolute inset-5 rounded-lg border"
+          style={{ borderColor: accentColor, opacity: 0.15 }}
+        />
+
+        {/* Content */}
+        <div className="z-10 flex h-full w-full flex-col items-center px-8 py-7">
+          {/* Names - stacked */}
+          <div className="mb-4 flex flex-col items-center">
+            <span 
+              className="text-sm font-light uppercase tracking-[0.25em]"
+              style={{ 
+                fontFamily: names.font1 || "'Cormorant Garamond', serif",
+                opacity: 0.65
+              }}
+            >
+              {names.text1}
+            </span>
+            <span 
+              className="mt-0.5 text-[30px]"
+              style={{ fontFamily: names.font2 || "'Great Vibes', cursive" }}
+            >
+              {names.text2}
+            </span>
+            {/* Decorative line with star */}
+            <div className="mt-2 flex items-center gap-2">
+              <div className="h-px w-10" style={{ backgroundColor: accentColor, opacity: 0.3 }} />
+              <Star className="h-2.5 w-2.5 fill-current" style={{ color: accentColor, opacity: 0.4 }} />
+              <div className="h-px w-10" style={{ backgroundColor: accentColor, opacity: 0.3 }} />
+            </div>
           </div>
-        </div>
 
-        {/* Icon */}
-        {icon && iconMap[icon] && (
-          <div className="z-10 mb-3 opacity-50" style={{ color: accentColor }}>
-            {iconMap[icon]}
-          </div>
-        )}
-
-        {/* Title */}
-        <h1 className="z-10 mb-2 text-center text-xl font-medium tracking-tight">
-          {title}
-        </h1>
-
-        {/* Description */}
-        <p className="z-10 mb-5 max-w-[200px] text-center text-xs leading-relaxed opacity-60">
-          {description}
-        </p>
-
-        {/* QR Code with decorative frame */}
-        <div className="relative z-10">
-          {/* Corner decorations */}
-          <div className="absolute -left-2 -top-2 h-4 w-4 border-l-2 border-t-2 opacity-30" style={{ borderColor: accentColor }} />
-          <div className="absolute -right-2 -top-2 h-4 w-4 border-r-2 border-t-2 opacity-30" style={{ borderColor: accentColor }} />
-          <div className="absolute -bottom-2 -left-2 h-4 w-4 border-b-2 border-l-2 opacity-30" style={{ borderColor: accentColor }} />
-          <div className="absolute -bottom-2 -right-2 h-4 w-4 border-b-2 border-r-2 opacity-30" style={{ borderColor: accentColor }} />
-          
-          <div 
-            className="rounded-lg bg-white/70 p-3"
-            style={{ 
-              borderRadius: qrStyle?.cornerStyle === "square" ? "4px" : "12px",
-            }}
-          >
-            <QRCodeSVG
-              value={qrUrl}
-              size={130}
-              fgColor={qrFgColor}
-              bgColor={qrBgColor}
-              level="M"
-            />
-          </div>
-        </div>
-
-        {/* Brand */}
-        <div className="z-10 mt-auto pt-5">
-          {brand?.type === "instagram" && brand.instagramHandle && (
-            <div className="flex items-center gap-2 opacity-50">
-              <Instagram className="h-3.5 w-3.5" />
-              <span className="text-xs tracking-wide">{brand.instagramHandle}</span>
+          {/* Icon */}
+          {icon && icon !== "none" && (
+            <div className="mb-3">
+              <CameraIcon />
             </div>
           )}
-          {brand?.type === "text" && brand.text && (
-            <span className="text-xs font-medium tracking-wider opacity-50">
-              {brand.text}
-            </span>
-          )}
-          {brand?.type === "logo" && brand.logoUrl && (
-            <img src={brand.logoUrl} alt="Logo" className="h-6 w-auto opacity-60" />
-          )}
+
+          {/* Title */}
+          <h1 
+            className="mb-1.5 text-center text-[22px] font-semibold"
+            style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: "-0.01em" }}
+          >
+            {title}
+          </h1>
+
+          {/* Description */}
+          <p 
+            className="mb-4 max-w-[220px] text-center text-[12px] leading-[1.6]"
+            style={{ opacity: 0.65 }}
+          >
+            {description}
+          </p>
+
+          {/* QR Code with corner decorations */}
+          <div className="relative">
+            {/* Corner brackets */}
+            <div 
+              className="absolute -left-2 -top-2 h-4 w-4 border-l-2 border-t-2" 
+              style={{ borderColor: accentColor, opacity: 0.3 }} 
+            />
+            <div 
+              className="absolute -right-2 -top-2 h-4 w-4 border-r-2 border-t-2" 
+              style={{ borderColor: accentColor, opacity: 0.3 }} 
+            />
+            <div 
+              className="absolute -bottom-2 -left-2 h-4 w-4 border-b-2 border-l-2" 
+              style={{ borderColor: accentColor, opacity: 0.3 }} 
+            />
+            <div 
+              className="absolute -bottom-2 -right-2 h-4 w-4 border-b-2 border-r-2" 
+              style={{ borderColor: accentColor, opacity: 0.3 }} 
+            />
+            
+            <div 
+              className="bg-white/60 p-2"
+              style={{ borderRadius: "8px" }}
+            >
+              <QRCodeSVG
+                value={qrUrl}
+                size={120}
+                fgColor={qrFgColor}
+                bgColor={qrBgColor}
+                level="M"
+              />
+            </div>
+          </div>
+
+          {/* Brand at bottom */}
+          <div className="mt-auto pt-5">
+            {brand?.type === "instagram" && brand.instagramHandle && (
+              <div className="flex items-center gap-2" style={{ opacity: 0.5 }}>
+                <Instagram className="h-3.5 w-3.5" />
+                <span className="text-[12px]">{brand.instagramHandle}</span>
+              </div>
+            )}
+            {brand?.type === "text" && brand.text && (
+              <span className="text-[12px] tracking-wide" style={{ opacity: 0.5 }}>
+                {brand.text}
+              </span>
+            )}
+            {brand?.type === "logo" && brand.logoUrl && (
+              <img 
+                src={brand.logoUrl} 
+                alt="Logo" 
+                className="h-7 w-auto" 
+                style={{ opacity: 0.6 }}
+                crossOrigin="anonymous"
+              />
+            )}
+          </div>
         </div>
       </div>
 
@@ -232,16 +287,26 @@ export default function QRCardXV({
       <div className="flex gap-3">
         <button
           onClick={downloadPNG}
-          className="flex items-center gap-2 rounded-lg bg-neutral-800 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-700"
+          disabled={downloading !== null}
+          className="flex items-center gap-2 rounded-lg bg-neutral-800 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-700 disabled:opacity-50"
         >
-          <Download className="h-4 w-4" />
+          {downloading === "png" ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Download className="h-4 w-4" />
+          )}
           Descargar PNG
         </button>
         <button
           onClick={downloadPDF}
-          className="flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-50"
+          disabled={downloading !== null}
+          className="flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50"
         >
-          <Download className="h-4 w-4" />
+          {downloading === "pdf" ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Download className="h-4 w-4" />
+          )}
           Descargar PDF
         </button>
       </div>

@@ -44,43 +44,37 @@
         "autoplay": false
     },
 
-    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /boda/[slug]/qr. Genera QR para compartir fotos.",
+    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /boda/[slug]/qr. Descarga PNG o PDF para imprimir.",
     "qrCard": {
         "names": {
             "name1": "Nombre",
             "name2": "Nombre",
-            "separator": "heart",
-            "_comment_separator": "Separador: 'heart' (corazon), 'and' (&), 'ampersand', 'none' (sin separador)",
-            "font": "'Great Vibes', cursive",
-            "_comment_font": "Fuente de Google Fonts para los nombres"
+            "font": "'Great Vibes', cursive"
         },
         "icon": "camera",
         "_comment_icon": "Icono: 'camera', 'images', 'upload', 'qr', 'heart', 'none'",
-        "title": "Comparti tus fotos",
-        "description": "Subi tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
+        "title": "Compartí tus fotos",
+        "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
         "qrUrl": "",
-        "_comment_qrUrl": "URL que genera el QR. Dejar vacio para usar la URL de la invitacion automaticamente.",
+        "_comment_qrUrl": "URL del QR. Dejar vacio = usa URL de la invitacion automaticamente.",
         "qrStyle": {
             "fgColor": "#3D3D3D",
             "bgColor": "transparent",
-            "cornerStyle": "rounded",
-            "_comment_cornerStyle": "Estilo de esquinas del QR: 'rounded', 'square', 'dots'"
+            "cornerStyle": "rounded"
         },
         "cardStyle": {
-            "bgColor": "#FBF8F4",
-            "textColor": "#3D3D3D",
+            "bgColor": "#F8F4EE",
+            "textColor": "#4A4A4A",
             "accentColor": "#8B7355",
-            "_comment": "accentColor se usa para el corazon, decoraciones, etc. Por defecto toma el primaryColor del theme."
+            "leafColor": "#9CAF88",
+            "_comment": "accentColor = corazon y detalles. leafColor = hojas decorativas."
         },
         "brand": {
             "type": "instagram",
-            "_comment_type": "Tipo de marca abajo: 'instagram', 'text', 'logo', 'none'",
+            "_comment_type": "'instagram', 'text', 'logo', 'none'",
             "text": "Momento Unico Invitaciones",
-            "_comment_text": "Solo si type es 'text'",
             "logoUrl": "",
-            "_comment_logoUrl": "Solo si type es 'logo'. Ruta a tu logo.",
-            "instagramHandle": "@momentounico_invitaciones",
-            "_comment_instagramHandle": "Solo si type es 'instagram'"
+            "instagramHandle": "@momentounico_invitaciones"
         }
     },
 

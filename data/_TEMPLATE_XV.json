@@ -45,21 +45,21 @@
         "autoplay": false
     },
 
-    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /xv/[slug]/qr. Para compartir fotos de la fiesta.",
+    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /xv/[slug]/qr. Descarga PNG o PDF para imprimir.",
     "qrCard": {
         "names": {
             "text1": "Mis XV",
             "text2": "Valentina",
-            "_comment": "text1 es el titulo chico (ej: Mis XV), text2 es el nombre grande",
             "font1": "'Cormorant Garamond', serif",
-            "font2": "'Great Vibes', cursive"
+            "font2": "'Great Vibes', cursive",
+            "_comment": "text1 = titulo chico arriba. text2 = nombre grande."
         },
-        "icon": "sparkles",
-        "_comment_icon": "Icono: 'sparkles', 'camera', 'crown', 'star', 'heart', 'none'",
-        "title": "Comparti tus fotos",
-        "description": "Subi tus fotos de la fiesta y ayudame a guardar los recuerdos de este dia tan especial",
+        "icon": "camera",
+        "_comment_icon": "Icono: 'camera', 'sparkles', 'crown', 'star', 'heart', 'none'",
+        "title": "Compartí tus fotos",
+        "description": "Subí tus fotos de la fiesta y ayudame a guardar los recuerdos de este día tan especial",
         "qrUrl": "",
-        "_comment_qrUrl": "URL del QR. Dejar vacio para usar la URL de la invitacion.",
+        "_comment_qrUrl": "URL del QR. Dejar vacio = usa URL de la invitacion.",
         "qrStyle": {
             "fgColor": "#3D3D3D",
             "bgColor": "transparent",
@@ -67,9 +67,9 @@
         },
         "cardStyle": {
             "bgColor": "#FDF8F3",
-            "textColor": "#3D3D3D",
+            "textColor": "#4A4A4A",
             "accentColor": "#D4A5A5",
-            "_comment": "accentColor para estrellas y decoraciones. Por defecto toma primaryColor."
+            "_comment": "accentColor = estrellas y detalles."
         },
         "brand": {
             "type": "instagram",

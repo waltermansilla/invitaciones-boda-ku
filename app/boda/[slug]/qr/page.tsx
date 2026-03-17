@@ -30,27 +30,26 @@ export default async function QRPage({ params }: PageProps) {
 
   return (
     <QRCard
-      type="boda"
       names={{
-        text1: qrConfig.names?.text1 || meta.coupleNames?.brideName || "Novia",
-        text2: qrConfig.names?.text2 || meta.coupleNames?.groomName || "Novio",
+        name1: qrConfig.names?.name1 || meta.coupleNames?.brideName || "Novia",
+        name2: qrConfig.names?.name2 || meta.coupleNames?.groomName || "Novio",
         separator: qrConfig.names?.separator || "heart",
         font: qrConfig.names?.font || "'Great Vibes', cursive",
       }}
       icon={qrConfig.icon || "camera"}
-      title={qrConfig.title || "Comparti tus fotos"}
-      description={qrConfig.description || "Subi tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial"}
+      title={qrConfig.title || "Compartí tus fotos"}
+      description={qrConfig.description || "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial"}
       qrUrl={invitationUrl}
       qrStyle={{
         fgColor: qrConfig.qrStyle?.fgColor || "#3D3D3D",
         bgColor: qrConfig.qrStyle?.bgColor || "transparent",
-        style: qrConfig.qrStyle?.style || "squares",
         cornerStyle: qrConfig.qrStyle?.cornerStyle || "rounded",
       }}
       cardStyle={{
-        bgColor: qrConfig.cardStyle?.bgColor || "#F5F0E8",
-        textColor: qrConfig.cardStyle?.textColor || "#3D3D3D",
+        bgColor: qrConfig.cardStyle?.bgColor || "#F8F4EE",
+        textColor: qrConfig.cardStyle?.textColor || "#4A4A4A",
         accentColor: qrConfig.cardStyle?.accentColor || design.colors?.primary || "#8B7355",
+        leafColor: qrConfig.cardStyle?.leafColor || "#9CAF88",
       }}
       brand={{
         type: qrConfig.brand?.type || "instagram",
