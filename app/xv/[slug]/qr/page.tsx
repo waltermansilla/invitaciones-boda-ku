@@ -1,10 +1,14 @@
-import { notFound } from "next/navigation"
 import fs from "fs"
 import path from "path"
 import QRCardXV from "@/components/wedding/qr-card-xv"
 
 interface PageProps {
   params: Promise<{ slug: string }>
+}
+
+// Blank page component
+function BlankPage() {
+  return <div style={{ width: "100vw", height: "100dvh", backgroundColor: "#fff" }} />
 }
 
 export default async function QRPage({ params }: PageProps) {
@@ -14,19 +18,19 @@ export default async function QRPage({ params }: PageProps) {
   const filePath = path.join(process.cwd(), "data", "clientes", "xv", `${slug}.json`)
   
   if (!fs.existsSync(filePath)) {
-    notFound()
+    return <BlankPage />
   }
 
   const data = JSON.parse(fs.readFileSync(filePath, "utf-8"))
   
-  // Get QR config from JSON (or use defaults)
-  const qrConfig = data.qrCard || {}
+  // Get QR config from JSON
+  const qrConfig = data.qrCard
   const meta = data.meta || {}
   const design = data.design || {}
   
-  // Check if QR page is enabled (default: true)
-  if (qrConfig.enabled === false) {
-    notFound()
+  // If qrCard doesn't exist or is disabled, show blank page
+  if (!qrConfig || qrConfig.enabled === false) {
+    return <BlankPage />
   }
 
   // Build invitation URL
