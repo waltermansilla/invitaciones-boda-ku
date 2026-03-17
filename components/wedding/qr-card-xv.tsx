@@ -3,13 +3,11 @@
 import { useRef, useState } from "react"
 import { QRCodeSVG } from "qrcode.react"
 import { Instagram, Sparkles, Star, Download, Loader2 } from "lucide-react"
-import html2canvas from "html2canvas"
-import { jsPDF } from "jspdf"
 
 interface QRCardXVProps {
   names: {
-    text1: string // e.g., "Mis XV"
-    text2: string // e.g., "Valentina"
+    text1: string
+    text2: string
     font1?: string
     font2?: string
   }
@@ -20,7 +18,6 @@ interface QRCardXVProps {
   qrStyle?: {
     fgColor?: string
     bgColor?: string
-    cornerStyle?: "square" | "rounded"
   }
   cardStyle?: {
     bgColor?: string
@@ -38,7 +35,7 @@ interface QRCardXVProps {
 
 export default function QRCardXV({
   names,
-  icon = "sparkles",
+  icon = "camera",
   title,
   description,
   qrUrl,
@@ -63,17 +60,27 @@ export default function QRCardXV({
   const downloadPNG = async () => {
     if (!cardRef.current) return
     setDownloading("png")
+    
     try {
+      const html2canvas = (await import("html2canvas")).default
+      
       const canvas = await html2canvas(cardRef.current, {
-        scale: 4,
+        scale: 3,
         backgroundColor: bgColor,
         useCORS: true,
-        logging: false,
+        allowTaint: true,
       })
+      
+      const dataUrl = canvas.toDataURL("image/png", 1.0)
       const link = document.createElement("a")
       link.download = `qr-${names.text2}.png`
-      link.href = canvas.toDataURL("image/png", 1.0)
+      link.href = dataUrl
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
+    } catch (err) {
+      console.error("PNG export error:", err)
+      alert("Error al generar PNG. Intenta de nuevo.")
     } finally {
       setDownloading(null)
     }
@@ -83,16 +90,20 @@ export default function QRCardXV({
   const downloadPDF = async () => {
     if (!cardRef.current) return
     setDownloading("pdf")
+    
     try {
+      const html2canvas = (await import("html2canvas")).default
+      const { jsPDF } = await import("jspdf")
+      
       const canvas = await html2canvas(cardRef.current, {
-        scale: 4,
+        scale: 3,
         backgroundColor: bgColor,
         useCORS: true,
-        logging: false,
+        allowTaint: true,
       })
+      
       const imgData = canvas.toDataURL("image/png", 1.0)
       
-      // 3:4 ratio
       const pdfWidth = 90
       const pdfHeight = 120
       
@@ -104,12 +115,15 @@ export default function QRCardXV({
       
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight)
       pdf.save(`qr-${names.text2}.pdf`)
+    } catch (err) {
+      console.error("PDF export error:", err)
+      alert("Error al generar PDF. Intenta de nuevo.")
     } finally {
       setDownloading(null)
     }
   }
 
-  // Camera icon for XV (same style)
+  // Camera icon
   const CameraIcon = () => (
     <svg width="48" height="48" viewBox="0 0 52 52" fill="none" stroke={textColor} strokeWidth="1.2" style={{ opacity: 0.5 }}>
       <rect x="6" y="16" width="40" height="28" rx="4" />
@@ -133,7 +147,7 @@ export default function QRCardXV({
           color: textColor,
         }}
       >
-        {/* Decorative stars scattered */}
+        {/* Decorative stars */}
         <Sparkles 
           className="absolute left-5 top-8 h-5 w-5" 
           style={{ color: accentColor, opacity: 0.25 }} 
@@ -225,7 +239,6 @@ export default function QRCardXV({
 
           {/* QR Code with corner decorations */}
           <div className="relative">
-            {/* Corner brackets */}
             <div 
               className="absolute -left-2 -top-2 h-4 w-4 border-l-2 border-t-2" 
               style={{ borderColor: accentColor, opacity: 0.3 }} 
@@ -257,16 +270,16 @@ export default function QRCardXV({
             </div>
           </div>
 
-          {/* Brand at bottom */}
-          <div className="mt-auto pt-5">
+          {/* Brand at bottom - VISIBLE */}
+          <div className="mt-auto pt-4">
             {brand?.type === "instagram" && brand.instagramHandle && (
-              <div className="flex items-center gap-2" style={{ opacity: 0.5 }}>
-                <Instagram className="h-3.5 w-3.5" />
-                <span className="text-[12px]">{brand.instagramHandle}</span>
+              <div className="flex items-center gap-2" style={{ color: textColor, opacity: 0.65 }}>
+                <Instagram className="h-4 w-4" />
+                <span className="text-[13px]">{brand.instagramHandle}</span>
               </div>
             )}
             {brand?.type === "text" && brand.text && (
-              <span className="text-[12px] tracking-wide" style={{ opacity: 0.5 }}>
+              <span className="text-[13px] tracking-wide" style={{ color: textColor, opacity: 0.65 }}>
                 {brand.text}
               </span>
             )}
@@ -274,10 +287,15 @@ export default function QRCardXV({
               <img 
                 src={brand.logoUrl} 
                 alt="Logo" 
-                className="h-7 w-auto" 
-                style={{ opacity: 0.6 }}
+                className="h-8 w-auto" 
+                style={{ opacity: 0.7 }}
                 crossOrigin="anonymous"
               />
+            )}
+            {(!brand || brand.type === "none") && (
+              <span className="text-[12px] tracking-wide" style={{ color: textColor, opacity: 0.45 }}>
+                momentounico.com.ar
+              </span>
             )}
           </div>
         </div>

@@ -3,14 +3,11 @@
 import { useRef, useState } from "react"
 import { QRCodeSVG } from "qrcode.react"
 import { Instagram, Heart, Download, Loader2 } from "lucide-react"
-import html2canvas from "html2canvas"
-import { jsPDF } from "jspdf"
 
 interface QRCardProps {
   names: {
     name1: string
     name2: string
-    separator?: string
     font?: string
   }
   icon?: string
@@ -20,7 +17,6 @@ interface QRCardProps {
   qrStyle?: {
     fgColor?: string
     bgColor?: string
-    cornerStyle?: "rounded" | "square" | "dots"
   }
   cardStyle?: {
     bgColor?: string
@@ -61,21 +57,32 @@ export default function QRCard({
   const qrFgColor = qrStyle?.fgColor || "#3D3D3D"
   const qrBgColor = qrStyle?.bgColor || "transparent"
 
-  // Download PNG
+  // Download PNG using canvas
   const downloadPNG = async () => {
     if (!cardRef.current) return
     setDownloading("png")
+    
     try {
+      // Dynamic import to avoid SSR issues
+      const html2canvas = (await import("html2canvas")).default
+      
       const canvas = await html2canvas(cardRef.current, {
-        scale: 4,
+        scale: 3,
         backgroundColor: bgColor,
         useCORS: true,
-        logging: false,
+        allowTaint: true,
       })
+      
+      const dataUrl = canvas.toDataURL("image/png", 1.0)
       const link = document.createElement("a")
       link.download = `qr-${names.name1}-${names.name2}.png`
-      link.href = canvas.toDataURL("image/png", 1.0)
+      link.href = dataUrl
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
+    } catch (err) {
+      console.error("PNG export error:", err)
+      alert("Error al generar PNG. Intenta de nuevo.")
     } finally {
       setDownloading(null)
     }
@@ -85,16 +92,22 @@ export default function QRCard({
   const downloadPDF = async () => {
     if (!cardRef.current) return
     setDownloading("pdf")
+    
     try {
+      // Dynamic imports
+      const html2canvas = (await import("html2canvas")).default
+      const { jsPDF } = await import("jspdf")
+      
       const canvas = await html2canvas(cardRef.current, {
-        scale: 4,
+        scale: 3,
         backgroundColor: bgColor,
         useCORS: true,
-        logging: false,
+        allowTaint: true,
       })
+      
       const imgData = canvas.toDataURL("image/png", 1.0)
       
-      // Card aspect ratio 3:4
+      // 3:4 aspect ratio in mm
       const pdfWidth = 90
       const pdfHeight = 120
       
@@ -106,12 +119,15 @@ export default function QRCard({
       
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight)
       pdf.save(`qr-${names.name1}-${names.name2}.pdf`)
+    } catch (err) {
+      console.error("PDF export error:", err)
+      alert("Error al generar PDF. Intenta de nuevo.")
     } finally {
       setDownloading(null)
     }
   }
 
-  // Camera icon SVG - exact style from reference
+  // Camera icon SVG
   const CameraIcon = () => (
     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" stroke={textColor} strokeWidth="1.2" style={{ opacity: 0.55 }}>
       <rect x="6" y="16" width="40" height="28" rx="4" />
@@ -122,7 +138,7 @@ export default function QRCard({
     </svg>
   )
 
-  // Decorative leaf branch - exact style from reference
+  // Decorative leaf branch
   const LeafBranch = ({ side }: { side: "left" | "right" }) => {
     const isLeft = side === "left"
     return (
@@ -133,7 +149,6 @@ export default function QRCard({
         fill="none"
         className={`absolute ${isLeft ? "left-0" : "right-0 scale-x-[-1]"} top-1/2 -translate-y-1/2`}
       >
-        {/* Main stem */}
         <path
           d="M45 30 Q30 70 35 110 Q40 150 32 190 Q24 230 35 270 Q42 300 30 310"
           stroke={leafColor}
@@ -141,7 +156,6 @@ export default function QRCard({
           fill="none"
           opacity="0.6"
         />
-        {/* Leaves along the branch */}
         {[
           { cx: 40, cy: 45, angle: -35 },
           { cx: 34, cy: 70, angle: 40 },
@@ -268,16 +282,16 @@ export default function QRCard({
             />
           </div>
 
-          {/* Brand at bottom */}
-          <div className="mt-auto pt-5">
+          {/* Brand at bottom - VISIBLE IN CARD */}
+          <div className="mt-auto pt-4">
             {brand?.type === "instagram" && brand.instagramHandle && (
-              <div className="flex items-center gap-2" style={{ opacity: 0.55 }}>
-                <Instagram className="h-4 w-4" />
-                <span className="text-[13px]">{brand.instagramHandle}</span>
+              <div className="flex items-center gap-2" style={{ color: textColor, opacity: 0.7 }}>
+                <Instagram className="h-5 w-5" />
+                <span className="text-[14px]">{brand.instagramHandle}</span>
               </div>
             )}
             {brand?.type === "text" && brand.text && (
-              <span className="text-[13px] tracking-wide" style={{ opacity: 0.55 }}>
+              <span className="text-[14px] tracking-wide" style={{ color: textColor, opacity: 0.7 }}>
                 {brand.text}
               </span>
             )}
@@ -285,10 +299,15 @@ export default function QRCard({
               <img 
                 src={brand.logoUrl} 
                 alt="Logo" 
-                className="h-8 w-auto" 
-                style={{ opacity: 0.65 }}
+                className="h-10 w-auto" 
+                style={{ opacity: 0.8 }}
                 crossOrigin="anonymous"
               />
+            )}
+            {(!brand || brand.type === "none") && (
+              <span className="text-[13px] tracking-wide" style={{ color: textColor, opacity: 0.5 }}>
+                momentounico.com.ar
+              </span>
             )}
           </div>
         </div>
