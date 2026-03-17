@@ -58,48 +58,70 @@ export default function QRCardXV({
 
   // Download PNG
   const downloadPNG = async () => {
-    if (!cardRef.current) return
+    const card = cardRef.current
+    if (!card) {
+      alert("Error: No se encontró la tarjeta")
+      return
+    }
     setDownloading("png")
     
     try {
-      const html2canvas = (await import("html2canvas")).default
+      const html2canvasModule = await import("html2canvas")
+      const html2canvas = html2canvasModule.default
       
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 3,
+      const canvas = await html2canvas(card, {
+        scale: 2,
         backgroundColor: bgColor,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
+        logging: false,
+        width: card.offsetWidth,
+        height: card.offsetHeight,
       })
       
-      const dataUrl = canvas.toDataURL("image/png", 1.0)
-      const link = document.createElement("a")
-      link.download = `qr-${names.text2}.png`
-      link.href = dataUrl
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement("a")
+          a.href = url
+          a.download = `qr-${names.text2}.png`
+          a.click()
+          URL.revokeObjectURL(url)
+        } else {
+          alert("Error al generar imagen")
+        }
+        setDownloading(null)
+      }, "image/png", 1.0)
     } catch (err) {
-      console.error("PNG export error:", err)
-      alert("Error al generar PNG. Intenta de nuevo.")
-    } finally {
+      console.error("PNG error:", err)
+      alert("Error al generar PNG: " + (err as Error).message)
       setDownloading(null)
     }
   }
 
   // Download PDF
   const downloadPDF = async () => {
-    if (!cardRef.current) return
+    const card = cardRef.current
+    if (!card) {
+      alert("Error: No se encontró la tarjeta")
+      return
+    }
     setDownloading("pdf")
     
     try {
-      const html2canvas = (await import("html2canvas")).default
-      const { jsPDF } = await import("jspdf")
+      const html2canvasModule = await import("html2canvas")
+      const html2canvas = html2canvasModule.default
+      const jspdfModule = await import("jspdf")
+      const jsPDF = jspdfModule.jsPDF
       
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 3,
+      const canvas = await html2canvas(card, {
+        scale: 2,
         backgroundColor: bgColor,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
+        logging: false,
+        width: card.offsetWidth,
+        height: card.offsetHeight,
       })
       
       const imgData = canvas.toDataURL("image/png", 1.0)
@@ -116,8 +138,8 @@ export default function QRCardXV({
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight)
       pdf.save(`qr-${names.text2}.pdf`)
     } catch (err) {
-      console.error("PDF export error:", err)
-      alert("Error al generar PDF. Intenta de nuevo.")
+      console.error("PDF error:", err)
+      alert("Error al generar PDF: " + (err as Error).message)
     } finally {
       setDownloading(null)
     }
