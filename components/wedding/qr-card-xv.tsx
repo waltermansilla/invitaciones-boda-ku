@@ -1,8 +1,10 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { QRCodeCanvas } from "qrcode.react"
 import { Instagram, Sparkles, Download, Loader2 } from "lucide-react"
+import { jsPDF } from "jspdf"
+import html2canvas from "html2canvas"
 
 interface QRCardXVProps {
   names: {
@@ -53,38 +55,31 @@ export default function QRCardXV({
   const qrFgColor = qrStyle?.fgColor || "#3D3D3D"
   const qrBgColor = qrStyle?.bgColor || "transparent"
 
+  // Load Google Fonts
+  useEffect(() => {
+    const link = document.createElement("link")
+    link.href = "https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:wght@400;600&display=swap"
+    link.rel = "stylesheet"
+    document.head.appendChild(link)
+    return () => { document.head.removeChild(link) }
+  }, [])
+
   const downloadPNG = async () => {
     if (!cardRef.current) return
     setDownloading("png")
     
     try {
-      const html2canvas = (await import("html2canvas")).default
       const canvas = await html2canvas(cardRef.current, {
-        scale: 4,
+        scale: 3,
         backgroundColor: bgColor,
         useCORS: true,
-        onclone: (_doc, element) => {
-          element.style.color = textColor
-          const allEls = element.querySelectorAll("*")
-          allEls.forEach((el) => {
-            const htmlEl = el as HTMLElement
-            if (htmlEl.style) {
-              const cs = getComputedStyle(htmlEl)
-              if (cs.color.includes("oklab") || cs.color.includes("color(")) {
-                htmlEl.style.color = textColor
-              }
-            }
-          })
-        },
+        allowTaint: true,
       })
       
-      const dataUrl = canvas.toDataURL("image/png", 1.0)
       const link = document.createElement("a")
       link.download = `qr-${names.text2}.png`
-      link.href = dataUrl
-      document.body.appendChild(link)
+      link.href = canvas.toDataURL("image/png", 1.0)
       link.click()
-      document.body.removeChild(link)
     } catch (e) {
       console.error("PNG error:", e)
     }
@@ -96,27 +91,11 @@ export default function QRCardXV({
     setDownloading("pdf")
     
     try {
-      const html2canvas = (await import("html2canvas")).default
-      const jsPDFModule = await import("jspdf")
-      const jsPDF = jsPDFModule.default
-      
       const canvas = await html2canvas(cardRef.current, {
-        scale: 4,
+        scale: 3,
         backgroundColor: bgColor,
         useCORS: true,
-        onclone: (_doc, element) => {
-          element.style.color = textColor
-          const allEls = element.querySelectorAll("*")
-          allEls.forEach((el) => {
-            const htmlEl = el as HTMLElement
-            if (htmlEl.style) {
-              const cs = getComputedStyle(htmlEl)
-              if (cs.color.includes("oklab") || cs.color.includes("color(")) {
-                htmlEl.style.color = textColor
-              }
-            }
-          })
-        },
+        allowTaint: true,
       })
       
       const imgData = canvas.toDataURL("image/png", 1.0)
