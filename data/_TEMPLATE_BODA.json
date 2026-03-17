@@ -44,12 +44,15 @@
         "autoplay": false
     },
 
-    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /boda/[slug]/qr. Descarga PNG o PDF para imprimir.",
+    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /boda/[slug]/qr para captura de pantalla.",
     "qrCard": {
+        "enabled": true,
+        "_comment_enabled": "true = pagina /qr existe. false = pagina desactivada (404).",
+        "variant": "classic",
+        "_comment_variant": "Estilo de tarjeta: 'classic' (hojas y corazon), 'romantic' (mas decoracion, letra tierna, corazon rojo enlazando), 'minimal' (fondo blanco, elegante minimalista).",
         "names": {
             "name1": "Nombre",
-            "name2": "Nombre",
-            "font": "'Great Vibes', cursive"
+            "name2": "Nombre"
         },
         "icon": "camera",
         "_comment_icon": "Icono: 'camera', 'images', 'upload', 'qr', 'heart', 'none'",
@@ -59,15 +62,14 @@
         "_comment_qrUrl": "URL del QR. Dejar vacio = usa URL de la invitacion automaticamente.",
         "qrStyle": {
             "fgColor": "#3D3D3D",
-            "bgColor": "transparent",
-            "cornerStyle": "rounded"
+            "bgColor": "transparent"
         },
         "cardStyle": {
             "bgColor": "#F8F4EE",
             "textColor": "#4A4A4A",
             "accentColor": "#8B7355",
             "leafColor": "#9CAF88",
-            "_comment": "accentColor = corazon y detalles. leafColor = hojas decorativas."
+            "_comment": "accentColor = corazon y detalles. leafColor = hojas (classic/romantic)."
         },
         "brand": {
             "type": "instagram",

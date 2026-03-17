@@ -24,6 +24,11 @@ export default async function QRPage({ params }: PageProps) {
   const meta = data.meta || {}
   const design = data.design || {}
   
+  // Check if QR page is enabled (default: true)
+  if (qrConfig.enabled === false) {
+    notFound()
+  }
+
   // Build invitation URL
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://momentounico.com.ar"
   const invitationUrl = qrConfig.qrUrl || `${baseUrl}/xv/${slug}`

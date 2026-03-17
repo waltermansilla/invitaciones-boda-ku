@@ -24,6 +24,11 @@ export default async function QRPage({ params }: PageProps) {
   const meta = data.meta || {}
   const design = data.design || {}
   
+  // Check if QR page is enabled (default: true)
+  if (qrConfig.enabled === false) {
+    notFound()
+  }
+
   // Build invitation URL
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://momentounico.com.ar"
   const invitationUrl = qrConfig.qrUrl || `${baseUrl}/boda/${slug}`
@@ -33,8 +38,7 @@ export default async function QRPage({ params }: PageProps) {
       names={{
         name1: qrConfig.names?.name1 || meta.coupleNames?.brideName || "Novia",
         name2: qrConfig.names?.name2 || meta.coupleNames?.groomName || "Novio",
-        separator: qrConfig.names?.separator || "heart",
-        font: qrConfig.names?.font || "'Great Vibes', cursive",
+        font: qrConfig.names?.font,
       }}
       icon={qrConfig.icon || "camera"}
       title={qrConfig.title || "Compartí tus fotos"}
@@ -43,13 +47,12 @@ export default async function QRPage({ params }: PageProps) {
       qrStyle={{
         fgColor: qrConfig.qrStyle?.fgColor || "#3D3D3D",
         bgColor: qrConfig.qrStyle?.bgColor || "transparent",
-        cornerStyle: qrConfig.qrStyle?.cornerStyle || "rounded",
       }}
       cardStyle={{
-        bgColor: qrConfig.cardStyle?.bgColor || "#F8F4EE",
-        textColor: qrConfig.cardStyle?.textColor || "#4A4A4A",
-        accentColor: qrConfig.cardStyle?.accentColor || design.colors?.primary || "#8B7355",
-        leafColor: qrConfig.cardStyle?.leafColor || "#9CAF88",
+        bgColor: qrConfig.cardStyle?.bgColor,
+        textColor: qrConfig.cardStyle?.textColor,
+        accentColor: qrConfig.cardStyle?.accentColor || design.colors?.primary,
+        leafColor: qrConfig.cardStyle?.leafColor,
       }}
       brand={{
         type: qrConfig.brand?.type || "instagram",
@@ -58,6 +61,7 @@ export default async function QRPage({ params }: PageProps) {
         instagramHandle: qrConfig.brand?.instagramHandle || "@momentounico_invitaciones",
       }}
       primaryColor={design.colors?.primary || "#8B7355"}
+      variant={qrConfig.variant || "classic"}
     />
   )
 }

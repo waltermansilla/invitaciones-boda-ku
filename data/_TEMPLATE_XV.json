@@ -45,13 +45,13 @@
         "autoplay": false
     },
 
-    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /xv/[slug]/qr. Descarga PNG o PDF para imprimir.",
+    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /xv/[slug]/qr para captura de pantalla.",
     "qrCard": {
+        "enabled": true,
+        "_comment_enabled": "true = pagina /qr existe. false = pagina desactivada (404).",
         "names": {
             "text1": "Mis XV",
             "text2": "Valentina",
-            "font1": "'Cormorant Garamond', serif",
-            "font2": "'Great Vibes', cursive",
             "_comment": "text1 = titulo chico arriba. text2 = nombre grande."
         },
         "icon": "camera",
@@ -62,8 +62,7 @@
         "_comment_qrUrl": "URL del QR. Dejar vacio = usa URL de la invitacion.",
         "qrStyle": {
             "fgColor": "#3D3D3D",
-            "bgColor": "transparent",
-            "cornerStyle": "rounded"
+            "bgColor": "transparent"
         },
         "cardStyle": {
             "bgColor": "#FDF8F3",
