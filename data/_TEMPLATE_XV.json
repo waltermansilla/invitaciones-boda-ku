@@ -45,6 +45,41 @@
         "autoplay": false
     },
 
+    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /xv/[slug]/qr. Para compartir fotos de la fiesta.",
+    "qrCard": {
+        "names": {
+            "text1": "Mis XV",
+            "text2": "Valentina",
+            "_comment": "text1 es el titulo chico (ej: Mis XV), text2 es el nombre grande",
+            "font1": "'Cormorant Garamond', serif",
+            "font2": "'Great Vibes', cursive"
+        },
+        "icon": "sparkles",
+        "_comment_icon": "Icono: 'sparkles', 'camera', 'crown', 'star', 'heart', 'none'",
+        "title": "Comparti tus fotos",
+        "description": "Subi tus fotos de la fiesta y ayudame a guardar los recuerdos de este dia tan especial",
+        "qrUrl": "",
+        "_comment_qrUrl": "URL del QR. Dejar vacio para usar la URL de la invitacion.",
+        "qrStyle": {
+            "fgColor": "#3D3D3D",
+            "bgColor": "transparent",
+            "cornerStyle": "rounded"
+        },
+        "cardStyle": {
+            "bgColor": "#FDF8F3",
+            "textColor": "#3D3D3D",
+            "accentColor": "#D4A5A5",
+            "_comment": "accentColor para estrellas y decoraciones. Por defecto toma primaryColor."
+        },
+        "brand": {
+            "type": "instagram",
+            "_comment_type": "'instagram', 'text', 'logo', 'none'",
+            "text": "Momento Unico Invitaciones",
+            "logoUrl": "",
+            "instagramHandle": "@momentounico_invitaciones"
+        }
+    },
+
     "hero": {
         "coupleImage": "/clientes/xv/[slug]/hero.jpg",
         "headline": "Mis 15!",
