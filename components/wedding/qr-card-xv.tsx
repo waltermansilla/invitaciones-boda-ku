@@ -62,6 +62,20 @@ export default function QRCardXV({
       const canvas = await html2canvas(cardRef.current, {
         scale: 2,
         backgroundColor: bgColor,
+        useCORS: true,
+        onclone: (_doc, element) => {
+          element.style.color = textColor
+          const allEls = element.querySelectorAll("*")
+          allEls.forEach((el) => {
+            const htmlEl = el as HTMLElement
+            if (htmlEl.style) {
+              const cs = getComputedStyle(htmlEl)
+              if (cs.color.includes("oklab") || cs.color.includes("color(")) {
+                htmlEl.style.color = textColor
+              }
+            }
+          })
+        },
       })
       
       const link = document.createElement("a")
@@ -69,7 +83,7 @@ export default function QRCardXV({
       link.href = canvas.toDataURL("image/png")
       link.click()
     } catch (e) {
-      console.error(e)
+      console.error("PNG error:", e)
     }
     setDownloading(null)
   }
@@ -85,6 +99,20 @@ export default function QRCardXV({
       const canvas = await html2canvas(cardRef.current, {
         scale: 2,
         backgroundColor: bgColor,
+        useCORS: true,
+        onclone: (_doc, element) => {
+          element.style.color = textColor
+          const allEls = element.querySelectorAll("*")
+          allEls.forEach((el) => {
+            const htmlEl = el as HTMLElement
+            if (htmlEl.style) {
+              const cs = getComputedStyle(htmlEl)
+              if (cs.color.includes("oklab") || cs.color.includes("color(")) {
+                htmlEl.style.color = textColor
+              }
+            }
+          })
+        },
       })
       
       const pdf = new jspdf.jsPDF({
@@ -96,7 +124,7 @@ export default function QRCardXV({
       pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 90, 120)
       pdf.save(`qr-${names.text2}.pdf`)
     } catch (e) {
-      console.error(e)
+      console.error("PDF error:", e)
     }
     setDownloading(null)
   }
@@ -112,11 +140,16 @@ export default function QRCardXV({
   )
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-neutral-200 p-6">
+    <div style={{ display: "flex", minHeight: "100vh", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px", padding: "24px", backgroundColor: "#e5e5e5" }}>
+      {/* Card */}
       <div
         ref={cardRef}
-        className="relative flex flex-col items-center overflow-hidden"
         style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          overflow: "hidden",
           width: "320px",
           height: "427px",
           backgroundColor: bgColor,
@@ -124,48 +157,44 @@ export default function QRCardXV({
         }}
       >
         {/* Sparkles decoration */}
-        <Sparkles className="absolute left-6 top-[18%] h-4 w-4" style={{ color: accentColor, opacity: 0.5 }} />
-        <Sparkles className="absolute right-8 top-[22%] h-3 w-3" style={{ color: accentColor, opacity: 0.4 }} />
-        <Sparkles className="absolute left-10 bottom-[20%] h-3 w-3" style={{ color: accentColor, opacity: 0.35 }} />
-        <Sparkles className="absolute right-6 bottom-[15%] h-4 w-4" style={{ color: accentColor, opacity: 0.5 }} />
-        <Sparkles className="absolute left-[20%] top-[12%] h-2.5 w-2.5" style={{ color: accentColor, opacity: 0.3 }} />
-        <Sparkles className="absolute right-[25%] bottom-[8%] h-2.5 w-2.5" style={{ color: accentColor, opacity: 0.3 }} />
+        <Sparkles style={{ position: "absolute", left: "24px", top: "18%", width: "16px", height: "16px", color: accentColor, opacity: 0.5 }} />
+        <Sparkles style={{ position: "absolute", right: "32px", top: "22%", width: "12px", height: "12px", color: accentColor, opacity: 0.4 }} />
+        <Sparkles style={{ position: "absolute", left: "40px", bottom: "20%", width: "12px", height: "12px", color: accentColor, opacity: 0.35 }} />
+        <Sparkles style={{ position: "absolute", right: "24px", bottom: "15%", width: "16px", height: "16px", color: accentColor, opacity: 0.5 }} />
+        <Sparkles style={{ position: "absolute", left: "20%", top: "12%", width: "10px", height: "10px", color: accentColor, opacity: 0.3 }} />
+        <Sparkles style={{ position: "absolute", right: "25%", bottom: "8%", width: "10px", height: "10px", color: accentColor, opacity: 0.3 }} />
 
-        <div className="z-10 flex h-full w-full flex-col items-center px-8 py-7">
+        {/* Content */}
+        <div style={{ position: "relative", zIndex: 10, display: "flex", height: "100%", width: "100%", flexDirection: "column", alignItems: "center", padding: "28px 32px" }}>
           {/* Names - two lines */}
-          <div className="mb-4 flex flex-col items-center">
-            <span 
-              className="text-[16px] tracking-[0.15em] uppercase"
-              style={{ fontFamily: names.font1 || "'Cormorant Garamond', serif", opacity: 0.7 }}
-            >
+          <div style={{ marginBottom: "16px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <span style={{ fontSize: "16px", letterSpacing: "0.15em", textTransform: "uppercase", fontFamily: names.font1 || "'Cormorant Garamond', serif", opacity: 0.7, color: textColor }}>
               {names.text1}
             </span>
-            <span 
-              className="text-[36px]"
-              style={{ fontFamily: names.font2 || "'Great Vibes', cursive" }}
-            >
+            <span style={{ fontSize: "36px", fontFamily: names.font2 || "'Great Vibes', cursive", color: textColor }}>
               {names.text2}
             </span>
           </div>
 
+          {/* Icon */}
           {icon && icon !== "none" && (
-            <div className="mb-3">
+            <div style={{ marginBottom: "12px" }}>
               <CameraIcon />
             </div>
           )}
 
-          <h1 
-            className="mb-1.5 text-center text-[24px] font-semibold"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
+          {/* Title */}
+          <h1 style={{ marginBottom: "6px", textAlign: "center", fontSize: "24px", fontWeight: 600, fontFamily: "'Cormorant Garamond', serif", color: textColor }}>
             {title}
           </h1>
 
-          <p className="mb-4 max-w-[230px] text-center text-[13px] leading-[1.55]" style={{ opacity: 0.7 }}>
+          {/* Description */}
+          <p style={{ marginBottom: "16px", maxWidth: "230px", textAlign: "center", fontSize: "13px", lineHeight: 1.55, opacity: 0.7, color: textColor }}>
             {description}
           </p>
 
-          <div className="rounded-[10px] bg-white/60 p-2">
+          {/* QR */}
+          <div style={{ borderRadius: "10px", padding: "8px", backgroundColor: "rgba(255,255,255,0.6)" }}>
             <QRCodeCanvas
               value={qrUrl}
               size={125}
@@ -175,23 +204,24 @@ export default function QRCardXV({
             />
           </div>
 
-          <div className="mt-auto pt-4">
+          {/* Brand */}
+          <div style={{ marginTop: "auto", paddingTop: "16px" }}>
             {brand?.type === "instagram" && brand.instagramHandle && (
-              <div className="flex items-center gap-2" style={{ color: textColor, opacity: 0.65 }}>
-                <Instagram className="h-5 w-5" />
-                <span className="text-[14px]">{brand.instagramHandle}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: textColor, opacity: 0.65 }}>
+                <Instagram style={{ width: "20px", height: "20px" }} />
+                <span style={{ fontSize: "14px" }}>{brand.instagramHandle}</span>
               </div>
             )}
             {brand?.type === "text" && brand.text && (
-              <span className="text-[14px] tracking-wide" style={{ color: textColor, opacity: 0.65 }}>
+              <span style={{ fontSize: "14px", letterSpacing: "0.05em", color: textColor, opacity: 0.65 }}>
                 {brand.text}
               </span>
             )}
             {brand?.type === "logo" && brand.logoUrl && (
-              <img src={brand.logoUrl} alt="Logo" className="h-10 w-auto" style={{ opacity: 0.8 }} />
+              <img src={brand.logoUrl} alt="Logo" style={{ height: "40px", width: "auto", opacity: 0.8 }} />
             )}
             {(!brand || brand.type === "none") && (
-              <span className="text-[13px] tracking-wide" style={{ color: textColor, opacity: 0.5 }}>
+              <span style={{ fontSize: "13px", letterSpacing: "0.05em", color: textColor, opacity: 0.5 }}>
                 momentounico.com.ar
               </span>
             )}
@@ -199,21 +229,22 @@ export default function QRCardXV({
         </div>
       </div>
 
-      <div className="flex gap-3">
+      {/* Buttons */}
+      <div style={{ display: "flex", gap: "12px" }}>
         <button
           onClick={downloadPNG}
           disabled={downloading !== null}
-          className="flex items-center gap-2 rounded-lg bg-neutral-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-700 disabled:opacity-50"
+          style={{ display: "flex", alignItems: "center", gap: "8px", borderRadius: "8px", backgroundColor: "#262626", padding: "10px 20px", fontSize: "14px", fontWeight: 500, color: "#fff", border: "none", cursor: "pointer", opacity: downloading ? 0.5 : 1 }}
         >
-          {downloading === "png" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {downloading === "png" ? <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} /> : <Download style={{ width: "16px", height: "16px" }} />}
           Descargar PNG
         </button>
         <button
           onClick={downloadPDF}
           disabled={downloading !== null}
-          className="flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-medium text-neutral-800 hover:bg-neutral-50 disabled:opacity-50"
+          style={{ display: "flex", alignItems: "center", gap: "8px", borderRadius: "8px", backgroundColor: "#fff", padding: "10px 20px", fontSize: "14px", fontWeight: 500, color: "#262626", border: "1px solid #d4d4d4", cursor: "pointer", opacity: downloading ? 0.5 : 1 }}
         >
-          {downloading === "pdf" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {downloading === "pdf" ? <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} /> : <Download style={{ width: "16px", height: "16px" }} />}
           Descargar PDF
         </button>
       </div>

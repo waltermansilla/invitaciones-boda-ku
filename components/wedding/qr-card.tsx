@@ -63,6 +63,21 @@ export default function QRCard({
       const canvas = await html2canvas(cardRef.current, {
         scale: 2,
         backgroundColor: bgColor,
+        useCORS: true,
+        onclone: (_doc, element) => {
+          // Fix all text colors to avoid oklab issues
+          element.style.color = textColor
+          const allEls = element.querySelectorAll("*")
+          allEls.forEach((el) => {
+            const htmlEl = el as HTMLElement
+            if (htmlEl.style) {
+              const cs = getComputedStyle(htmlEl)
+              if (cs.color.includes("oklab") || cs.color.includes("color(")) {
+                htmlEl.style.color = textColor
+              }
+            }
+          })
+        },
       })
       
       const link = document.createElement("a")
@@ -70,7 +85,7 @@ export default function QRCard({
       link.href = canvas.toDataURL("image/png")
       link.click()
     } catch (e) {
-      console.error(e)
+      console.error("PNG error:", e)
     }
     setDownloading(null)
   }
@@ -86,6 +101,20 @@ export default function QRCard({
       const canvas = await html2canvas(cardRef.current, {
         scale: 2,
         backgroundColor: bgColor,
+        useCORS: true,
+        onclone: (_doc, element) => {
+          element.style.color = textColor
+          const allEls = element.querySelectorAll("*")
+          allEls.forEach((el) => {
+            const htmlEl = el as HTMLElement
+            if (htmlEl.style) {
+              const cs = getComputedStyle(htmlEl)
+              if (cs.color.includes("oklab") || cs.color.includes("color(")) {
+                htmlEl.style.color = textColor
+              }
+            }
+          })
+        },
       })
       
       const pdf = new jspdf.jsPDF({
@@ -97,7 +126,7 @@ export default function QRCard({
       pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 90, 120)
       pdf.save(`qr-${names.name1}-${names.name2}.pdf`)
     } catch (e) {
-      console.error(e)
+      console.error("PDF error:", e)
     }
     setDownloading(null)
   }
@@ -118,7 +147,13 @@ export default function QRCard({
       height="320"
       viewBox="0 0 55 320"
       fill="none"
-      className={`absolute ${side === "left" ? "left-0" : "right-0 scale-x-[-1]"} top-1/2 -translate-y-1/2`}
+      style={{
+        position: "absolute",
+        top: "50%",
+        transform: `translateY(-50%) ${side === "right" ? "scaleX(-1)" : ""}`,
+        left: side === "left" ? 0 : undefined,
+        right: side === "right" ? 0 : undefined,
+      }}
     >
       <path
         d="M45 30 Q30 70 35 110 Q40 150 32 190 Q24 230 35 270 Q42 300 30 310"
@@ -145,11 +180,16 @@ export default function QRCard({
   )
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-neutral-200 p-6">
+    <div style={{ display: "flex", minHeight: "100vh", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "24px", padding: "24px", backgroundColor: "#e5e5e5" }}>
+      {/* Card */}
       <div
         ref={cardRef}
-        className="relative flex flex-col items-center overflow-hidden"
         style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          overflow: "hidden",
           width: "320px",
           height: "427px",
           backgroundColor: bgColor,
@@ -159,39 +199,40 @@ export default function QRCard({
         <LeafBranch side="left" />
         <LeafBranch side="right" />
 
-        <Heart className="absolute left-5 top-[30%] h-3 w-3 fill-current" style={{ color: accentColor, opacity: 0.45 }} />
-        <Heart className="absolute right-7 top-[24%] h-2.5 w-2.5 fill-current" style={{ color: accentColor, opacity: 0.35 }} />
-        <Heart className="absolute left-8 bottom-[14%] h-2.5 w-2.5 fill-current" style={{ color: accentColor, opacity: 0.4 }} />
-        <Heart className="absolute right-5 bottom-[10%] h-3 w-3 fill-current" style={{ color: accentColor, opacity: 0.45 }} />
+        {/* Hearts decoration */}
+        <Heart style={{ position: "absolute", left: "20px", top: "30%", width: "12px", height: "12px", color: accentColor, opacity: 0.45, fill: accentColor }} />
+        <Heart style={{ position: "absolute", right: "28px", top: "24%", width: "10px", height: "10px", color: accentColor, opacity: 0.35, fill: accentColor }} />
+        <Heart style={{ position: "absolute", left: "32px", bottom: "14%", width: "10px", height: "10px", color: accentColor, opacity: 0.4, fill: accentColor }} />
+        <Heart style={{ position: "absolute", right: "20px", bottom: "10%", width: "12px", height: "12px", color: accentColor, opacity: 0.45, fill: accentColor }} />
 
-        <div className="z-10 flex h-full w-full flex-col items-center px-8 py-7">
-          <div 
-            className="mb-4 flex items-center text-[28px]"
-            style={{ fontFamily: names.font || "'Great Vibes', cursive" }}
-          >
+        {/* Content */}
+        <div style={{ position: "relative", zIndex: 10, display: "flex", height: "100%", width: "100%", flexDirection: "column", alignItems: "center", padding: "28px 32px" }}>
+          {/* Names */}
+          <div style={{ marginBottom: "16px", display: "flex", alignItems: "center", fontSize: "28px", fontFamily: names.font || "'Great Vibes', cursive", color: textColor }}>
             <span>{names.name1}</span>
-            <Heart className="mx-1 h-[18px] w-[18px] fill-current" style={{ color: accentColor }} />
+            <Heart style={{ margin: "0 4px", width: "18px", height: "18px", color: accentColor, fill: accentColor }} />
             <span>{names.name2}</span>
           </div>
 
+          {/* Icon */}
           {icon && icon !== "none" && (
-            <div className="mb-3">
+            <div style={{ marginBottom: "12px" }}>
               <CameraIcon />
             </div>
           )}
 
-          <h1 
-            className="mb-1.5 text-center text-[24px] font-semibold"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
-          >
+          {/* Title */}
+          <h1 style={{ marginBottom: "6px", textAlign: "center", fontSize: "24px", fontWeight: 600, fontFamily: "'Cormorant Garamond', serif", color: textColor }}>
             {title}
           </h1>
 
-          <p className="mb-4 max-w-[230px] text-center text-[13px] leading-[1.55]" style={{ opacity: 0.7 }}>
+          {/* Description */}
+          <p style={{ marginBottom: "16px", maxWidth: "230px", textAlign: "center", fontSize: "13px", lineHeight: 1.55, opacity: 0.7, color: textColor }}>
             {description}
           </p>
 
-          <div className="rounded-[10px] bg-white/60 p-2">
+          {/* QR */}
+          <div style={{ borderRadius: "10px", padding: "8px", backgroundColor: "rgba(255,255,255,0.6)" }}>
             <QRCodeCanvas
               value={qrUrl}
               size={125}
@@ -201,23 +242,24 @@ export default function QRCard({
             />
           </div>
 
-          <div className="mt-auto pt-4">
+          {/* Brand */}
+          <div style={{ marginTop: "auto", paddingTop: "16px" }}>
             {brand?.type === "instagram" && brand.instagramHandle && (
-              <div className="flex items-center gap-2" style={{ color: textColor, opacity: 0.7 }}>
-                <Instagram className="h-5 w-5" />
-                <span className="text-[14px]">{brand.instagramHandle}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", color: textColor, opacity: 0.7 }}>
+                <Instagram style={{ width: "20px", height: "20px" }} />
+                <span style={{ fontSize: "14px" }}>{brand.instagramHandle}</span>
               </div>
             )}
             {brand?.type === "text" && brand.text && (
-              <span className="text-[14px] tracking-wide" style={{ color: textColor, opacity: 0.7 }}>
+              <span style={{ fontSize: "14px", letterSpacing: "0.05em", color: textColor, opacity: 0.7 }}>
                 {brand.text}
               </span>
             )}
             {brand?.type === "logo" && brand.logoUrl && (
-              <img src={brand.logoUrl} alt="Logo" className="h-10 w-auto" style={{ opacity: 0.8 }} />
+              <img src={brand.logoUrl} alt="Logo" style={{ height: "40px", width: "auto", opacity: 0.8 }} />
             )}
             {(!brand || brand.type === "none") && (
-              <span className="text-[13px] tracking-wide" style={{ color: textColor, opacity: 0.5 }}>
+              <span style={{ fontSize: "13px", letterSpacing: "0.05em", color: textColor, opacity: 0.5 }}>
                 momentounico.com.ar
               </span>
             )}
@@ -225,21 +267,22 @@ export default function QRCard({
         </div>
       </div>
 
-      <div className="flex gap-3">
+      {/* Buttons */}
+      <div style={{ display: "flex", gap: "12px" }}>
         <button
           onClick={downloadPNG}
           disabled={downloading !== null}
-          className="flex items-center gap-2 rounded-lg bg-neutral-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-neutral-700 disabled:opacity-50"
+          style={{ display: "flex", alignItems: "center", gap: "8px", borderRadius: "8px", backgroundColor: "#262626", padding: "10px 20px", fontSize: "14px", fontWeight: 500, color: "#fff", border: "none", cursor: "pointer", opacity: downloading ? 0.5 : 1 }}
         >
-          {downloading === "png" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {downloading === "png" ? <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} /> : <Download style={{ width: "16px", height: "16px" }} />}
           Descargar PNG
         </button>
         <button
           onClick={downloadPDF}
           disabled={downloading !== null}
-          className="flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-medium text-neutral-800 hover:bg-neutral-50 disabled:opacity-50"
+          style={{ display: "flex", alignItems: "center", gap: "8px", borderRadius: "8px", backgroundColor: "#fff", padding: "10px 20px", fontSize: "14px", fontWeight: 500, color: "#262626", border: "1px solid #d4d4d4", cursor: "pointer", opacity: downloading ? 0.5 : 1 }}
         >
-          {downloading === "pdf" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {downloading === "pdf" ? <Loader2 style={{ width: "16px", height: "16px", animation: "spin 1s linear infinite" }} /> : <Download style={{ width: "16px", height: "16px" }} />}
           Descargar PDF
         </button>
       </div>
