@@ -259,6 +259,48 @@
             }
         },
         {
+            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modals"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Mi regalo más preciado es tu presencia, pero si deseás tener un detalle conmigo, te doy esta opción:",
+                "showButton": true,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary",
+                    "action": "modal"
+                },
+                "_comment_action": "action: 'modal' abre modal, 'url' abre el link directo en button.url",
+                "modalMode": "combined",
+                "_comment_modalMode": "combined = ambos modales juntos. sequential = primero uno, boton para ir al otro.",
+                "modals": [
+                    {
+                        "type": "bank",
+                        "title": "Datos bancarios",
+                        "description": "Gracias por tu cariño y por ser parte de este momento tan importante para mí.",
+                        "bankData": [
+                            {
+                                "label": "Alias",
+                                "value": "biann.sosa"
+                            },
+
+                            {
+                                "label": "Cbu",
+                                "value": "3840200500000016419942"
+                            }
+                        ],
+                        "thankYouText": "¡Muchas gracias!"
+                    }
+                ]
+            }
+        },
+        {
             "// --- TRIVIA / JUEGO (con modal) ---": "",
             "_comment": "Al presionar el boton se abre modal con preguntas. Cada pregunta: question, options (2-4), correctIndex (0=primera), explanation. finishTitle y finishText = pantalla final.",
             "type": "trivia",

@@ -1,0 +1,333 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Nuestra Boda - Anto & Maca",
+        "description": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Maca",
+            "brideName": "Anto",
+            "separator": "&"
+        }
+    },
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. celeste1 5b9ef2",
+    "theme": {
+        "primaryColor": "#74acf7",
+        "backgroundColor": "#fff",
+        "textColor": "#888",
+        "lightBgTextColor": "#74acf7",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#EDF2E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "'El amor es nuestro lugar seguro'",
+        "buttonText": "Ingresar"
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": false
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "hero": {
+        "coupleImage": "/clientes/boda/anto-maca/images/img-hero.jpeg",
+        "headline": "¡Nos casamos!",
+        "showNamesOnPhoto": false,
+        "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
+        "namesDisplay": {
+            "enabled": false,
+            "position": "top",
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-09-11T12:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Un día cualquiera nos encontramos, un día especial nos elegimos para siempre.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "11 de Septiembre 2026"
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/anto-maca/images/galeria1.jpeg"]
+            }
+        },
+
+        {
+            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Horarios",
+                "events": [
+                    {
+                        "icon": "civil",
+                        "name": "Civil",
+                        "address": "Registro Civil, 1 y 60, La Plata",
+                        "time": "12:00 hs",
+
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/kNgCdYMEh8EZrKwY9?g_st=iw",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "party",
+                        "name": "Celebración",
+                        "address": "Av. Almirante Brown 1824, Punta Lara",
+                        "time": "13:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/FdNc3zobQ4iYAY7JA?g_st=iw",
+                            "variant": "primary"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
+            "type": "dressCode",
+            "id": "dress-code",
+            "bgColor": "background",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Vestimenta",
+                "subtitle": "Elegante Sport de día",
+                "description": "Un estilo relajado y elegante, sin necesidad de algo formal. Te pedimos amablemente evitar el BLANCO o colores similares",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": false,
+                    "shape": "square",
+                    "colors": [
+                        "#d9d9de",
+                        "#fff",
+                        "#bce9c8",
+                        "#2c6b46",
+                        "#1a3a26"
+                    ]
+                },
+                "button": {
+                    "text": "Ver consejos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Consejos de vestimenta",
+                    "sections": [
+                        {
+                            "heading": "Color de vestimenta",
+                            "text": "Te pedimos amablemente evitar los colores BLANCO y VERDE"
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modals"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Tu presencia es el mejor regalo. Pero si desean hacernos un presente, pueden hacerlo a través de los siguientes datos:",
+                "showButton": true,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary",
+                    "action": "modal"
+                },
+                "_comment_action": "action: 'modal' abre modal, 'url' abre el link directo en button.url",
+                "modalMode": "combined",
+                "_comment_modalMode": "combined = ambos modales juntos. sequential = primero uno, boton para ir al otro.",
+                "modals": [
+                    {
+                        "type": "bank",
+                        "title": "Datos de transferencia",
+                        "description": "Se puede enviar a cualquiera de los dos CBU",
+                        "bankData": [
+                            {
+                                "label": "Cbu 1",
+                                "value": "0110030330003024458247"
+                            },
+
+                            {
+                                "label": "Cbu 2",
+                                "value": "0110030331003026109670"
+                            },
+                            {
+                                "label": "Titular",
+                                "value": "Antonella Filipin"
+                            },
+                            { "label": "Banco", "value": "Nación" }
+                        ],
+                        "thankYouText": "¡Muchas gracias!"
+                    }
+                ]
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/anto-maca/images/galeria2.jpeg",
+                    "/clientes/boda/anto-maca/images/galeria3.jpeg"
+                ]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Queremos compartir un medio día simple, sin protocolos ni formalidades. Solo amor, abrazos y celebración.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "primary",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "subtitle": "Antes del 3 de Agosto",
+                "buttonText": "Voy a asistir!",
+                "whatsappNumber": "542914390163",
+                "message": "Hola Anto y Maca! 🤗 Confirmo mi asistencia a su boda. Quiero formar parte de este momento tan especial para ustedes 🫶🏼"
+            }
+        },
+
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/boda/anto-maca/images/final.jpeg"
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}
