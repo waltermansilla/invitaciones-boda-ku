@@ -44,9 +44,9 @@
     "// ==========================================....": "",
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
-        "enabled": false,
-        "src": "",
-        "autoplay": false
+        "enabled": true,
+        "src": "/clientes/boda/anto-maca/music/milo.mp3",
+        "autoplay": true
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
@@ -137,7 +137,7 @@
                         "icon": "civil",
                         "name": "Civil",
                         "address": "Registro Civil, 1 y 60, La Plata",
-                        "time": "12:00 hs",
+                        "time": "11:30 hs",
 
                         "button": {
                             "text": "Cómo llegar",
@@ -232,15 +232,15 @@
                     {
                         "type": "bank",
                         "title": "Datos de transferencia",
-                        "description": "Se puede enviar a cualquiera de los dos CBU",
+                        "description": "Podés realizar tu aporte en pesos o en dólares en las siguientes cuentas:",
                         "bankData": [
                             {
-                                "label": "Cbu 1",
+                                "label": "Cbu Pesos",
                                 "value": "0110030330003024458247"
                             },
 
                             {
-                                "label": "Cbu 2",
+                                "label": "Cbu Dólares",
                                 "value": "0110030331003026109670"
                             },
                             {
