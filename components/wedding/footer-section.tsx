@@ -11,15 +11,21 @@ import landingConfig from "@/data/landing.json";
  * ─────────────────────────────────────────────── */
 
 // Leer configuracion de marca desde landing.json
-const brandConfig = (landingConfig as Record<string, unknown>).brand as {
-    name: string;
-    font: string;
-    size: string;
-    style: string;
-    icon: string | null;
-    socialLinks: { icon: "instagram" | "whatsapp"; url: string; label: string }[];
-    iconSize: number;
-} | undefined;
+const brandConfig = (landingConfig as Record<string, unknown>).brand as
+    | {
+          name: string;
+          font: string;
+          size: string;
+          style: string;
+          icon: string | null;
+          socialLinks: {
+              icon: "instagram" | "whatsapp";
+              url: string;
+              label: string;
+          }[];
+          iconSize: number;
+      }
+    | undefined;
 
 // Fallback values si no existe la config en landing.json
 const BRAND_NAME = brandConfig?.name || "Momento Único";
@@ -32,10 +38,14 @@ const ICON_SIZE = brandConfig?.iconSize || 30;
 const SOCIAL_LINKS = brandConfig?.socialLinks || [
     {
         icon: "instagram" as const,
-        url: "https://instagram.com/waltermansilla.web",
+        url: "https://www.instagram.com/momentounico_invitaciones?igsh=MWJwNmM0ODZsdzNrdQ%3D%3D&utm_source=qr",
         label: "Instagram",
     },
-    { icon: "whatsapp" as const, url: "https://wa.me/3456023759", label: "WhatsApp" },
+    {
+        icon: "whatsapp" as const,
+        url: "https://wa.me/543456023759",
+        label: "WhatsApp",
+    },
 ];
 /* ─────────────────────────────────────────────── */
 
