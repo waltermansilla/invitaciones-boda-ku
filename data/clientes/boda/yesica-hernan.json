@@ -37,9 +37,13 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
-        "buttonText": "Ingresar"
+        "buttonText": "Ingresar",
+        "bgImage": "/clientes/boda/yesica-hernan/background/welcome.jpg",
+        "showNames": false,
+        "showPhrase": false,
+        "buttonPosition": "40"
     },
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
@@ -85,6 +89,7 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
+            "bgImage": "primaryImage",
             "blocks": ["text", "author"],
             "data": {
                 "text": "Nuestra historia nos trajo hasta acá… y queremos compartir este momento con vos.",
@@ -191,11 +196,42 @@
         },
 
         {
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["icon", "title", "description", "modal"],
+            "data": {
+                "icon": "",
+                "title": "Regalos",
+                "description": "Tu presencia en este día es lo más importante para nosotros. Pero si además querés hacernos un regalo, podés acompañarnos con un aporte para nuestros proyectos futuros",
+                "showButton": true,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos bancarios",
+                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
+                    "bankData": [
+                        { "label": "Alias", "value": "hernandariofalcone" },
+                        { "label": "CVU", "value": "0000003100097882232195" },
+                        { "label": "Titular", "value": "Hernán Darío Falcone" }
+                    ],
+                    "thankYouText": "¡Gracias de corazón!"
+                }
+            }
+        },
+
+        {
             "// --- NUESTRA HISTORIA ---": "",
             "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/clientes/[tipo]/[slug]/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
+            "bgImage": "",
             "blocks": ["title", "moments"],
             "data": {
                 "aspectRatio": "1/1",
@@ -225,6 +261,7 @@
             "id": "shared-photos",
             "enabled": true,
             "bgColor": "background",
+            "bgImage": "backgroundImage",
             "blocks": ["icon", "title", "description", "button"],
             "data": {
                 "icon": "camera",
@@ -234,34 +271,6 @@
                     "text": "Ir al álbum",
                     "url": "https://drive.google.com/drive/folders/1JhRAsVxVJGlBepH2EdWlEgakZFjpTdX4",
                     "variant": "primary"
-                }
-            }
-        },
-        {
-            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
-            "type": "honeymoon",
-            "id": "honeymoon",
-            "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "modal"],
-            "data": {
-                "icon": "",
-                "title": "Regalos",
-                "description": "Tu presencia en este día es lo más importante para nosotros. Pero si además querés hacernos un regalo, podés acompañarnos con un aporte para nuestros proyectos futuros",
-                "showButton": true,
-                "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Datos bancarios",
-                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
-                    "bankData": [
-                        { "label": "Alias", "value": "hernandariofalcone" },
-                        { "label": "CVU", "value": "0000003100097882232195" },
-                        { "label": "Titular", "value": "Hernán Darío Falcone" }
-                    ],
-                    "thankYouText": "¡Gracias de corazón!"
                 }
             }
         },
@@ -283,6 +292,7 @@
             "type": "quote",
             "id": "quote-welcome2",
             "bgColor": "primary",
+            "bgImage": "primaryImage",
             "blocks": ["text", "author"],
             "data": {
                 "text": "En sus risas encontramos nuestro hogar, y en sus pequeños abrazos… el amor más grande que alguna vez imaginamos.",
@@ -332,6 +342,7 @@
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "primary",
+            "bgImage": "primaryImage",
             "blocks": ["text", "author"],
             "data": {
                 "text": "Gracias por acompañarnos, por ser parte de nuestra historia y por estar en uno de los días más importantes de nuestras vidas. Tenerlos cerca hace que este momento sea aún más especial.",
