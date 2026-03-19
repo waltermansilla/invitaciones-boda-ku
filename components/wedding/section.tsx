@@ -32,6 +32,7 @@ export interface SectionConfig {
   blocks: string[]
   data: Record<string, unknown>
   bgColor?: string
+  bgImage?: string // imagen de fondo en vez de color
   textColor?: string
   enabled?: boolean // true por defecto si no se especifica
 }
@@ -44,17 +45,26 @@ interface SectionProps {
     separator: string
   }
   prevBgColor?: string
+  prevBgImage?: string
 }
 
-export default function Section({ section, coupleNames, prevBgColor }: SectionProps) {
+export default function Section({ section, coupleNames, prevBgColor, prevBgImage }: SectionProps) {
   const config = useConfig()
-  const { type, id, data, bgColor, textColor, enabled = true } = section
+  const { type, id, data, bgColor, bgImage, textColor, enabled = true } = section
+  const theme = config.theme as Record<string, unknown>
 
   // Si enabled es false, no renderizar la seccion
   if (enabled === false) return null
 
+  // Resolve background image from theme if using keywords
+  let resolvedBgImage = bgImage
+  if (bgImage === "backgroundImage") {
+    resolvedBgImage = (theme.backgroundImage as string) || undefined
+  } else if (bgImage === "primaryImage") {
+    resolvedBgImage = (theme.primaryImage as string) || undefined
+  }
+
   // Determine bg + text color from theme
-  const theme = config.theme as Record<string, unknown>
   const bg = bgColor === "primary" ? "bg-primary" : "bg-background"
   let resolvedTextColor: string
   if (textColor) {
@@ -66,12 +76,23 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
   }
   const colors = { bg, resolvedTextColor }
 
+  // Check if this section continues the same background image as previous
+  const continuesBgImage = resolvedBgImage && prevBgImage === resolvedBgImage
+
   // Show a subtle divider line when this section has the same bgColor as the previous one
   const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
   const skipWrapper = selfStyledTypes.includes(type)
   const effectiveBg = skipWrapper ? null : (bgColor || "background")
   const prevEffective = prevBgColor || null
-  const showDivider = !skipWrapper && effectiveBg && prevEffective && effectiveBg === prevEffective
+  const showDivider = !skipWrapper && effectiveBg && prevEffective && effectiveBg === prevEffective && !resolvedBgImage
+
+  // Background image styles
+  const bgImageStyle: React.CSSProperties = resolvedBgImage ? {
+    backgroundImage: `url(${resolvedBgImage})`,
+    backgroundRepeat: "repeat-y",
+    backgroundSize: "100% auto",
+    backgroundPosition: continuesBgImage ? "top" : "top",
+  } : {}
 
   const renderContent = () => {
     switch (type) {
@@ -333,7 +354,7 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
     <AnimatedSection id={id}>
       {/* Subtle divider between consecutive sections with same background color */}
       {showDivider && (
-        <div className={colors.bg}>
+        <div className={colors.bg} style={bgImageStyle}>
           <div className="mx-auto w-16 border-t" style={{ borderColor: colors.resolvedTextColor, opacity: 0.12 }} />
         </div>
       )}
@@ -341,8 +362,11 @@ export default function Section({ section, coupleNames, prevBgColor }: SectionPr
         renderContent()
       ) : (
         <div
-          className={colors.bg}
-          style={{ color: colors.resolvedTextColor }}
+          className={resolvedBgImage ? "" : colors.bg}
+          style={{ 
+            color: colors.resolvedTextColor,
+            ...bgImageStyle,
+          }}
         >
           {renderContent()}
         </div>

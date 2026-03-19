@@ -26,6 +26,12 @@ export default function WeddingInvitation() {
                         separator={meta.coupleNames.separator}
                         phrase={overlay.phrase}
                         buttonText={overlay.buttonText}
+                        bgColor={(overlay as Record<string, unknown>).bgColor as string | undefined}
+                        bgImage={(overlay as Record<string, unknown>).bgImage as string | undefined}
+                        showNames={(overlay as Record<string, unknown>).showNames as boolean | undefined}
+                        showPhrase={(overlay as Record<string, unknown>).showPhrase as boolean | undefined}
+                        nameStyle={(overlay as Record<string, unknown>).nameStyle as { font?: string; size?: string; weight?: string; color?: string } | undefined}
+                        buttonPosition={(overlay as Record<string, unknown>).buttonPosition as "center" | "top" | "bottom" | number | undefined}
                     />
                 )}
 
@@ -86,12 +92,14 @@ export default function WeddingInvitation() {
                     const prev = sections[index - 1]
                     const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
                     const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
+                    const prevBgImg = prev && !selfStyledTypes.includes(prev.type) ? prev.bgImage : undefined
                     return (
                         <Section
                             key={section.id}
                             section={section}
                             coupleNames={meta.coupleNames}
                             prevBgColor={prevBg}
+                            prevBgImage={prevBgImg}
                         />
                     )
                 })}

@@ -19,9 +19,12 @@
         }
     },
 
+    "_comment_theme": "COLORES Y TIPOGRAFIA. backgroundImage/primaryImage: imagenes de fondo alternativas a los colores (opcional).",
     "theme": {
         "primaryColor": "#C4788A",
         "backgroundColor": "#FFF9F7",
+        "backgroundImage": "",
+        "primaryImage": "",
         "textColor": "#3A3A3A",
         "lightBgTextColor": "#C4788A",
         "darkBgTextColor": "#FFFFFF",
@@ -33,10 +36,22 @@
         }
     },
 
+    "_comment_overlay": "PANTALLA DE BIENVENIDA. bgColor/bgImage: fondo. showNames/showPhrase: mostrar u ocultar. nameStyle: tipografia. buttonPosition: posicion del boton.",
     "overlay": {
         "enabled": true,
         "phrase": "Mis 15!",
-        "buttonText": "Abrir invitacion"
+        "buttonText": "Abrir invitacion",
+        "bgColor": "",
+        "bgImage": "",
+        "showNames": true,
+        "showPhrase": true,
+        "nameStyle": {
+            "font": "",
+            "size": "4xl",
+            "weight": "200",
+            "color": ""
+        },
+        "buttonPosition": "center"
     },
 
     "music": {

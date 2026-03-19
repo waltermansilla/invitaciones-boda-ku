@@ -18,9 +18,14 @@
         }
     },
 
+    "_comment_theme": "COLORES Y TIPOGRAFIA. backgroundImage/primaryImage: imagenes de fondo alternativas a los colores (opcional). Las secciones pueden usar 'backgroundImage' o 'primaryImage' como valor de bgImage.",
     "theme": {
         "primaryColor": "#6B7F5E",
         "backgroundColor": "#FAF8F5",
+        "backgroundImage": "",
+        "_comment_backgroundImage": "Imagen de fondo alternativa al color. Dejar vacio para usar backgroundColor. Ej: '/clientes/boda/[slug]/fondo-claro.jpg'",
+        "primaryImage": "",
+        "_comment_primaryImage": "Imagen de fondo alternativa al primaryColor. Dejar vacio para usar primaryColor. Ej: '/clientes/boda/[slug]/fondo-oscuro.jpg'",
         "textColor": "#3A3A3A",
         "lightBgTextColor": "#4A5A3F",
         "darkBgTextColor": "#FFFFFF",
@@ -32,10 +37,30 @@
         }
     },
 
+    "_comment_overlay": "PANTALLA DE BIENVENIDA. bgColor/bgImage: fondo personalizado. showNames/showPhrase: ocultar nombres o frase. nameStyle: personalizar tipografia. buttonPosition: 'center'/'top'/'bottom' o numero 0-100 (% desde arriba).",
     "overlay": {
         "enabled": true,
         "phrase": "Nos casamos!",
-        "buttonText": "Abrir invitacion"
+        "buttonText": "Abrir invitacion",
+        "bgColor": "",
+        "_comment_bgColor": "Color de fondo personalizado. Dejar vacio para usar el backgroundColor del theme. Ej: '#F5E6D3'",
+        "bgImage": "",
+        "_comment_bgImage": "Imagen de fondo. Dejar vacio para usar color. Ej: '/clientes/boda/[slug]/overlay-bg.jpg'",
+        "showNames": true,
+        "_comment_showNames": "true = muestra los nombres. false = oculta los nombres.",
+        "showPhrase": true,
+        "_comment_showPhrase": "true = muestra la frase. false = oculta la frase.",
+        "nameStyle": {
+            "font": "",
+            "_comment_font": "Fuente de Google Fonts para los nombres. Dejar vacio para usar la del theme. Ej: 'Great Vibes', 'Tangerine', 'Alex Brush'",
+            "size": "4xl",
+            "_comment_size": "Tamanio: 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl'",
+            "weight": "200",
+            "_comment_weight": "Grosor: '100' (thin), '200' (extralight), '300' (light), '400' (normal), '500' (medium), '600' (semibold), '700' (bold)",
+            "color": ""
+        },
+        "buttonPosition": "center",
+        "_comment_buttonPosition": "'center' = centrado. 'top' = arriba. 'bottom' = abajo. Numero 0-100 = porcentaje desde arriba (ej: 75 = 75% desde arriba, util si ocultas nombres y queres el boton mas abajo)."
     },
 
     "music": {
@@ -125,16 +150,18 @@
         }
     },
 
-    "_comment_sections": "El orden de los objetos define el orden visual en la pagina. enabled: true/false para activar/desactivar cada seccion (true por defecto). bgColor: 'primary' = fondo color principal, 'background' = fondo claro (default si no se pone).",
+    "_comment_sections": "El orden define el orden visual. enabled: true/false. bgColor: 'primary'/'background'. bgImage: 'backgroundImage'/'primaryImage' (usa las del theme) o ruta directa '/clientes/boda/[slug]/fondo.jpg'. Si secciones consecutivas tienen el MISMO bgImage, la imagen continua sin cortarse. Si la seccion es mas larga que la imagen, la imagen se repite verticalmente.",
 
     "sections": [
 
         {
-            "_comment": "QUOTE: Frase de bienvenida. decorativeLines: true/false para lineas arriba y abajo.",
+            "_comment": "QUOTE: Frase de bienvenida. decorativeLines: true/false para lineas arriba y abajo. bgImage: usar imagen de fondo en vez de color.",
             "type": "quote",
             "id": "quote-welcome",
             "enabled": true,
             "bgColor": "primary",
+            "bgImage": "",
+            "_comment_bgImage_quote": "Dejar vacio para usar bgColor. Opciones: 'primaryImage' (usa theme.primaryImage), 'backgroundImage' (usa theme.backgroundImage), o ruta directa '/clientes/boda/[slug]/fondo.jpg'",
             "blocks": ["text", "author"],
             "data": {
                 "text": "El amor no se mira, se siente, y aun mas cuando ella esta junto a mi.",
@@ -539,7 +566,7 @@
         },
 
         {
-            "_comment": "CLOSING IMAGE: Foto de cierre con nombres superpuestos. namesDisplay: enabled (true/false), font, weight, size, style, color, decorativeLines, logo, copyFromHero (copia estilos del hero).",
+            "_comment": "CLOSING IMAGE: Foto de cierre con nombres. copyFromOverlay: copia el estilo de nombres de la pantalla de bienvenida (overlay). copyFromHero: copia del hero. Si ambos son true, overlay tiene prioridad.",
             "type": "closingImage",
             "id": "closing-image",
             "enabled": true,
@@ -556,7 +583,9 @@
                     "color": "",
                     "decorativeLines": true,
                     "logo": "",
-                    "copyFromHero": false
+                    "copyFromHero": false,
+                    "copyFromOverlay": true,
+                    "_comment_copy": "copyFromOverlay: copia font/size/weight/color del overlay.nameStyle. copyFromHero: copia del hero.namesDisplay. Si usas copyFromOverlay=true, los nombres del cierre tendran el mismo estilo que la pantalla de bienvenida."
                 }
             }
         },

@@ -34,6 +34,7 @@ interface ClosingSectionProps {
     decorativeLines?: boolean
     logo?: string
     copyFromHero?: boolean
+    copyFromOverlay?: boolean
   }
 }
 
@@ -69,29 +70,39 @@ export default function ClosingSection({
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
   const hero = config.hero as Record<string, unknown> | undefined
+  const overlay = config.overlay as Record<string, unknown> | undefined
   const defaultTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
 
   // If copyFromHero is true, get settings from hero.namesDisplay
   const heroNamesDisplay = hero?.namesDisplay as Record<string, unknown> | undefined
+  // If copyFromOverlay is true, get settings from overlay.nameStyle
+  const overlayNameStyle = overlay?.nameStyle as Record<string, unknown> | undefined
+  
   const shouldCopyFromHero = namesDisplay?.copyFromHero ?? false
+  const shouldCopyFromOverlay = namesDisplay?.copyFromOverlay ?? false
 
   const isEnabled = namesDisplay?.enabled ?? true
-  const namesFont = shouldCopyFromHero 
-    ? (heroNamesDisplay?.font as string) || namesDisplay?.font 
-    : namesDisplay?.font
-  const namesLogo = shouldCopyFromHero 
-    ? (heroNamesDisplay?.logo as string) || namesDisplay?.logo 
-    : namesDisplay?.logo
-  const namesWeight = shouldCopyFromHero 
-    ? (heroNamesDisplay?.weight as string) || namesDisplay?.weight || "300" 
-    : namesDisplay?.weight || "300"
-  const namesSize = shouldCopyFromHero 
-    ? (heroNamesDisplay?.size as string) || namesDisplay?.size || "lg" 
-    : namesDisplay?.size || "lg"
-  const namesStyle = shouldCopyFromHero 
-    ? (heroNamesDisplay?.style as string) || namesDisplay?.style || "normal" 
-    : namesDisplay?.style || "normal"
-  const namesColor = namesDisplay?.color // No copiar color del hero, usar el del closing o default
+  
+  // Priority: copyFromOverlay > copyFromHero > namesDisplay defaults
+  let namesFont = namesDisplay?.font
+  let namesWeight = namesDisplay?.weight || "300"
+  let namesSize = namesDisplay?.size || "lg"
+  let namesStyle = namesDisplay?.style || "normal"
+  let namesColor = namesDisplay?.color
+  const namesLogo = namesDisplay?.logo
+  
+  if (shouldCopyFromOverlay && overlayNameStyle) {
+    namesFont = (overlayNameStyle.font as string) || namesFont
+    namesWeight = (overlayNameStyle.weight as string) || namesWeight
+    namesSize = (overlayNameStyle.size as string) || namesSize
+    namesColor = (overlayNameStyle.color as string) || namesColor
+  } else if (shouldCopyFromHero && heroNamesDisplay) {
+    namesFont = (heroNamesDisplay.font as string) || namesFont
+    namesWeight = (heroNamesDisplay.weight as string) || namesWeight
+    namesSize = (heroNamesDisplay.size as string) || namesSize
+    namesStyle = (heroNamesDisplay.style as string) || namesStyle
+  }
+  
   const showDecorativeLines = namesDisplay?.decorativeLines ?? true
 
   // Resolve weight value
