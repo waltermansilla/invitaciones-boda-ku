@@ -47,19 +47,24 @@ export default function HeroOverlay({
 
   if (!visible) return null
 
-  // Resolve button position
+  // Resolve button position - accept string or number
   let justifyClass = "justify-center"
   let buttonStyle: React.CSSProperties = {}
   
-  if (buttonPosition === "top") {
+  // Convert string number to actual number (e.g. "40" -> 40)
+  const numPosition = typeof buttonPosition === "string" && !isNaN(Number(buttonPosition)) 
+    ? Number(buttonPosition) 
+    : buttonPosition
+  
+  if (numPosition === "top") {
     justifyClass = "justify-start pt-20"
-  } else if (buttonPosition === "bottom") {
+  } else if (numPosition === "bottom") {
     justifyClass = "justify-end pb-20"
-  } else if (typeof buttonPosition === "number") {
+  } else if (typeof numPosition === "number") {
     justifyClass = ""
     buttonStyle = { 
       position: "absolute",
-      top: `${buttonPosition}%`,
+      top: `${numPosition}%`,
       left: "50%",
       transform: "translateX(-50%)"
     }
@@ -114,7 +119,7 @@ export default function HeroOverlay({
       aria-live="polite"
     >
       {/* Content wrapper - only show if names or phrase enabled */}
-      {(showNames || showPhrase) && typeof buttonPosition !== "number" && (
+      {(showNames || showPhrase) && typeof numPosition !== "number" && (
         <div className="flex flex-col items-center">
           {showNames && (
             <>
@@ -161,7 +166,7 @@ export default function HeroOverlay({
       {/* Enter button */}
       <button
         onClick={handleEnter}
-        className={`${typeof buttonPosition === "number" ? "" : "mt-14"} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
+        className={`${typeof numPosition === "number" ? "" : "mt-14"} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
         style={buttonStyle}
         aria-label={buttonText}
       >
