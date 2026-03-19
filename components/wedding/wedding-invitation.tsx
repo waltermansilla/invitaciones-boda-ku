@@ -21,6 +21,24 @@ export default function WeddingInvitation() {
 
     return (
         <ModalProvider>
+            {/* Fullscreen entry overlay - OUTSIDE main so it's always visible */}
+            {overlay.enabled && (
+                <HeroOverlay
+                    onDismiss={() => setOverlayDismissed(true)}
+                    groomName={meta.coupleNames.groomName}
+                    brideName={meta.coupleNames.brideName}
+                    separator={meta.coupleNames.separator}
+                    phrase={overlay.phrase}
+                    buttonText={overlay.buttonText}
+                    bgColor={(overlay as Record<string, unknown>).bgColor as string | undefined}
+                    bgImage={(overlay as Record<string, unknown>).bgImage as string | undefined}
+                    showNames={(overlay as Record<string, unknown>).showNames as boolean | undefined}
+                    showPhrase={(overlay as Record<string, unknown>).showPhrase as boolean | undefined}
+                    nameStyle={(overlay as Record<string, unknown>).nameStyle as { font?: string; size?: string; weight?: string; color?: string } | undefined}
+                    buttonPosition={(overlay as Record<string, unknown>).buttonPosition as "center" | "top" | "bottom" | number | undefined}
+                />
+            )}
+
             {/* Hide main content until overlay is dismissed */}
             <main 
                 className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl"
@@ -29,24 +47,6 @@ export default function WeddingInvitation() {
                     opacity: overlay.enabled && !overlayDismissed ? 0 : 1,
                 }}
             >
-                {/* Fullscreen entry overlay */}
-                {overlay.enabled && (
-                    <HeroOverlay
-                        onDismiss={() => setOverlayDismissed(true)}
-                        groomName={meta.coupleNames.groomName}
-                        brideName={meta.coupleNames.brideName}
-                        separator={meta.coupleNames.separator}
-                        phrase={overlay.phrase}
-                        buttonText={overlay.buttonText}
-                        bgColor={(overlay as Record<string, unknown>).bgColor as string | undefined}
-                        bgImage={(overlay as Record<string, unknown>).bgImage as string | undefined}
-                        showNames={(overlay as Record<string, unknown>).showNames as boolean | undefined}
-                        showPhrase={(overlay as Record<string, unknown>).showPhrase as boolean | undefined}
-                        nameStyle={(overlay as Record<string, unknown>).nameStyle as { font?: string; size?: string; weight?: string; color?: string } | undefined}
-                        buttonPosition={(overlay as Record<string, unknown>).buttonPosition as "center" | "top" | "bottom" | number | undefined}
-                    />
-                )}
-
                 {/* Hero is always rendered first */}
                 <HeroSection
                     coupleImage={hero.coupleImage}
