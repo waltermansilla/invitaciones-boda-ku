@@ -23,7 +23,7 @@
         "primaryImage": "/clientes/boda/yesica-hernan/background/primary.PNG",
         "backgroundImage": "/clientes/boda/yesica-hernan/background/background.PNG",
         "textColor": "#777",
-        "lightBgTextColor": "#709775",
+        "lightBgTextColor": "#c5a059",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
@@ -64,7 +64,7 @@
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
         "namesDisplay": {
-            "enabled": true,
+            "enabled": false,
             "position": "bottom",
             "font": "Cinzel",
             "logo": ""
@@ -76,6 +76,12 @@
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
         }
     },
     "// ==========================================+": "",
@@ -92,7 +98,7 @@
             "bgImage": "primaryImage",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Nuestra historia nos trajo hasta acá… y queremos compartir este momento con vos.",
+                "text": "¡Con mucha alegría te invitamos a festejar nuestra boda!",
                 "author": "",
                 "decorativeLines": true
             }
@@ -245,7 +251,7 @@
                     {
                         "image": "/clientes/boda/yesica-hernan/images/historia-2.jpeg",
                         "title": "Nuestro mayor regalo",
-                        "text": "No siempre fue fácil, pero nunca dejamos de tomarnos de la mano. Crecimos, aprendimos, nos volvimos a elegir… una y otra vez. Y en medio de ese amor, llegaron Lara e Isabella. Ellas nos enseñaron lo que realmente significa el amor más puro e inocente. Nos regalaron lo más hermoso que tenemos: nuestra familia."
+                        "text": "No siempre fue fácil, pero nunca dejamos de tomarnos de la mano. Crecimos, aprendimos, nos volvimos a elegir… una y otra vez. Y en medio de ese amor, llegaron Lara e Isabella. Ellas nos enseñaron lo que realmente significa el amor más puro e inocente. Nos regalaron lo más hermoso que tenemos: NUESTRA FAMILIA."
                     },
                     {
                         "image": "/clientes/boda/yesica-hernan/images/historia-3.jpeg",
