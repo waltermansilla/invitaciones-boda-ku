@@ -20,6 +20,8 @@
     "theme": {
         "primaryColor": "#709775",
         "backgroundColor": "#fff",
+        "primaryImage": "/clientes/boda/yesica-hernan/background/primary.PNG",
+        "backgroundImage": "/clientes/boda/yesica-hernan/background/BACKGROUND.PNG",
         "textColor": "#777",
         "lightBgTextColor": "#709775",
         "darkBgTextColor": "#FFFFFF",
@@ -35,7 +37,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": true,
+        "enabled": false,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar"
     },
@@ -119,6 +121,7 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
+            "bgImage": "backgroundImage",
             "blocks": ["title", "timeline"],
             "data": {
                 "title": "Horarios",
@@ -154,6 +157,7 @@
             "type": "dressCode",
             "id": "dress-code",
             "bgColor": "background",
+            "bgImage": "backgroundImage",
             "blocks": [
                 "title",
                 "subtitle",
