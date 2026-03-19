@@ -28,7 +28,7 @@
         "_comment_icon": "Icono: 'camera', 'images', 'upload', 'qr', 'heart', 'none'",
         "title": "Compartí tus fotos",
         "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
-        "qrUrl": "https://drive.google.com/drive/folders/170IvXDCau4314nO7_pySlJPm07_jDVru",
+        "qrUrl": "momentounico.com.ar/m/boda/anto-walter",
         "_comment_qrUrl": "URL del QR. Dejar vacio = usa URL de la invitacion automaticamente.",
         "qrStyle": {
             "fgColor": "#3D3D3D",

@@ -4,12 +4,12 @@
     "// ==========================================.": "",
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
     "meta": {
-        "title": "Nuestra Boda - Yesi & Hernán",
+        "title": "Nuestra Boda - Yesica & Hernán",
         "description": "Estamos felices de invitarte a celebrar nuestro amor.",
         "lang": "es",
         "coupleNames": {
             "groomName": "Hernán",
-            "brideName": "Yesi",
+            "brideName": "Yesica",
             "separator": "&"
         }
     },
@@ -45,15 +45,15 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/boda/yesi-hernan/music/ladygaga.mp3",
-        "autoplay": true
+        "src": "/clientes/boda/yesica-hernan/music/ladygaga.mp3",
+        "autoplay": false
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/yesi-hernan/images/img-hero.jpeg",
+        "coupleImage": "/clientes/boda/yesica-hernan/images/img-hero.jpeg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
@@ -110,7 +110,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/yesi-hernan/images/img-1.JPG"]
+                "images": ["/clientes/boda/yesica-hernan/images/img-1.PNG"]
             }
         },
         {
@@ -198,17 +198,17 @@
                 "title": "Nuestra historia",
                 "moments": [
                     {
-                        "image": "/clientes/boda/yesi-hernan/images/historia-1.jpg",
+                        "image": "/clientes/boda/yesica-hernan/images/historia-1.jpg",
                         "title": "Nos elegimos",
                         "text": "Nos encontramos sin saber que ese momento iba a cambiarlo todo. En una mirada, en algo simple… sentimos que había algo distinto. Y sin entender mucho cómo, empezamos a elegirnos."
                     },
                     {
-                        "image": "/clientes/boda/yesi-hernan/images/historia-2.jpeg",
+                        "image": "/clientes/boda/yesica-hernan/images/historia-2.jpeg",
                         "title": "Nuestro mayor regalo",
                         "text": "No siempre fue fácil, pero nunca dejamos de tomarnos de la mano. Crecimos, aprendimos, nos volvimos a elegir… una y otra vez. Y en medio de ese amor, llegaron Lara e Isabella. Ellas nos enseñaron lo que realmente significa el amor más puro e inocente. Nos regalaron lo más hermoso que tenemos: nuestra familia."
                     },
                     {
-                        "image": "/clientes/boda/yesi-hernan/images/historia-3.jpeg",
+                        "image": "/clientes/boda/yesica-hernan/images/historia-3.jpeg",
                         "title": "Nuestro sí",
                         "text": "Hoy nos miramos, después de todo lo vivido… y sabemos que volveríamos a elegirnos en cada paso. Porque este amor nos transformó, nos hizo más fuertes, más unidos… más nosotros. Y ahora queremos decir “sí”, para seguir caminando juntos, para siempre."
                     }
@@ -270,7 +270,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/yesi-hernan/images/img-2.jpeg"]
+                "images": ["/clientes/boda/yesica-hernan/images/img-2.jpeg"]
             }
         },
         {
@@ -318,7 +318,7 @@
                 },
                 "whatsapp": {
                     "number": "541166678476",
-                    "messageTemplate": "Hola Yesi & Hernán! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
+                    "messageTemplate": "Hola Yesica & Hernán! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
                 }
             }
         },
@@ -343,7 +343,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/yesi-hernan/images/img-hero.jpeg"
+                "image": "/clientes/boda/yesica-hernan/images/img-hero.jpeg"
             }
         },
         {

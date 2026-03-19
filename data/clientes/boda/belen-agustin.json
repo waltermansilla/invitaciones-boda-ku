@@ -288,7 +288,7 @@
                     "suggestedValue": "$75.000",
                     "description": "Te recomendamos abonar antes de Agosto para mantener el valor indicado. Luego de esa fecha, la tarjeta tendrá un nuevo valor.",
                     "transferData": [
-                        { "label": "Alias", "value": "belen35" },
+                        { "label": "Alias", "value": "belen35." },
                         {
                             "label": "Titular",
                             "value": "Belén Guadalupe Guidi"
