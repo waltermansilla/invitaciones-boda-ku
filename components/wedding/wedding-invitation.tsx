@@ -88,21 +88,79 @@ export default function WeddingInvitation() {
                 />
 
                 {/* Dynamic sections: order controlled by array position in JSON */}
-                {sections.map((section, index) => {
-                    const prev = sections[index - 1]
-                    const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
-                    const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
-                    const prevBgImg = prev && !selfStyledTypes.includes(prev.type) ? prev.bgImage : undefined
-                    return (
-                        <Section
-                            key={section.id}
-                            section={section}
-                            coupleNames={meta.coupleNames}
-                            prevBgColor={prevBg}
-                            prevBgImage={prevBgImg}
-                        />
-                    )
-                })}
+                {/* Group consecutive sections with same bgImage */}
+                {(() => {
+                    const theme = config.theme as Record<string, unknown>
+                    const groups: { bgImage: string | null; sections: typeof sections }[] = []
+                    
+                    sections.forEach((section) => {
+                        let resolvedBgImage = section.bgImage
+                        if (section.bgImage === "backgroundImage") {
+                            resolvedBgImage = (theme.backgroundImage as string) || undefined
+                        } else if (section.bgImage === "primaryImage") {
+                            resolvedBgImage = (theme.primaryImage as string) || undefined
+                        }
+                        
+                        const lastGroup = groups[groups.length - 1]
+                        if (lastGroup && lastGroup.bgImage && lastGroup.bgImage === resolvedBgImage) {
+                            // Continue same group
+                            lastGroup.sections.push(section)
+                        } else {
+                            // Start new group
+                            groups.push({ bgImage: resolvedBgImage || null, sections: [section] })
+                        }
+                    })
+                    
+                    return groups.map((group, groupIndex) => {
+                        if (group.bgImage && group.sections.length > 1) {
+                            // Render grouped sections with shared background
+                            return (
+                                <div
+                                    key={`group-${groupIndex}`}
+                                    style={{
+                                        backgroundImage: `url(${group.bgImage})`,
+                                        backgroundRepeat: "repeat",
+                                        backgroundSize: "100% auto",
+                                        backgroundPosition: "top center",
+                                    }}
+                                >
+                                    {group.sections.map((section, index) => {
+                                        const prev = group.sections[index - 1]
+                                        const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
+                                        const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
+                                        return (
+                                            <Section
+                                                key={section.id}
+                                                section={{ ...section, bgImage: undefined }} // Remove bgImage since parent has it
+                                                coupleNames={meta.coupleNames}
+                                                prevBgColor={prevBg}
+                                                prevBgImage={undefined}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                            )
+                        } else {
+                            // Single section or no bgImage
+                            return group.sections.map((section, index) => {
+                                const globalIndex = sections.indexOf(section)
+                                const prev = sections[globalIndex - 1]
+                                const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
+                                const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
+                                const prevBgImg = prev && !selfStyledTypes.includes(prev.type) ? prev.bgImage : undefined
+                                return (
+                                    <Section
+                                        key={section.id}
+                                        section={section}
+                                        coupleNames={meta.coupleNames}
+                                        prevBgColor={prevBg}
+                                        prevBgImage={prevBgImg}
+                                    />
+                                )
+                            })
+                        }
+                    })
+                })()}
 
                 {music.enabled && (
                     <MusicPlayer src={music.src} autoplay={music.autoplay} />

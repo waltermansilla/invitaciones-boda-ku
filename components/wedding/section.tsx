@@ -77,7 +77,8 @@ export default function Section({ section, coupleNames, prevBgColor, prevBgImage
   const colors = { bg, resolvedTextColor }
 
   // Check if this section continues the same background image as previous
-  const continuesBgImage = resolvedBgImage && prevBgImage === resolvedBgImage
+  // Compare using original bgImage keywords (e.g. "backgroundImage") not resolved URLs
+  const continuesBgImage = resolvedBgImage && bgImage && prevBgImage === bgImage
 
   // Show a subtle divider line when this section has the same bgColor as the previous one
   const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
@@ -87,11 +88,14 @@ export default function Section({ section, coupleNames, prevBgColor, prevBgImage
   const showDivider = !skipWrapper && effectiveBg && prevEffective && effectiveBg === prevEffective && !resolvedBgImage
 
   // Background image styles
+  // When continuing from previous section, use attachment: local so image scrolls with content
   const bgImageStyle: React.CSSProperties = resolvedBgImage ? {
     backgroundImage: `url(${resolvedBgImage})`,
-    backgroundRepeat: "repeat-y",
+    backgroundRepeat: "repeat",
     backgroundSize: "100% auto",
-    backgroundPosition: continuesBgImage ? "top" : "top",
+    backgroundPosition: "top center",
+    // Hide the top of the image by a small amount when continuing, creating seamless flow
+    ...(continuesBgImage ? { backgroundAttachment: "local" } : {}),
   } : {}
 
   const renderContent = () => {
