@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useConfig } from "@/lib/config-context";
 import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
@@ -14,13 +15,24 @@ export default function WeddingInvitation() {
     const meta = config.meta;
     const music = config.music;
     const overlay = config.overlay;
+    
+    // Track if overlay has been dismissed
+    const [overlayDismissed, setOverlayDismissed] = useState(false);
 
     return (
         <ModalProvider>
-            <main className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl">
+            {/* Hide main content until overlay is dismissed */}
+            <main 
+                className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl"
+                style={{ 
+                    visibility: overlay.enabled && !overlayDismissed ? "hidden" : "visible",
+                    opacity: overlay.enabled && !overlayDismissed ? 0 : 1,
+                }}
+            >
                 {/* Fullscreen entry overlay */}
                 {overlay.enabled && (
                     <HeroOverlay
+                        onDismiss={() => setOverlayDismissed(true)}
                         groomName={meta.coupleNames.groomName}
                         brideName={meta.coupleNames.brideName}
                         separator={meta.coupleNames.separator}

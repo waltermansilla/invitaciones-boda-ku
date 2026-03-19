@@ -22,6 +22,7 @@ interface HeroOverlayProps {
   showPhrase?: boolean
   nameStyle?: NameStyle
   buttonPosition?: "center" | "top" | "bottom" | number // number = percentage from top (0-100)
+  onDismiss?: () => void // callback when overlay is dismissed
 }
 
 export default function HeroOverlay({
@@ -36,12 +37,15 @@ export default function HeroOverlay({
   showPhrase = true,
   nameStyle,
   buttonPosition = "center",
+  onDismiss,
 }: HeroOverlayProps) {
   const [visible, setVisible] = useState(true)
   const [exiting, setExiting] = useState(false)
 
   function handleEnter() {
     setExiting(true)
+    // Notify parent that overlay is being dismissed (show content behind)
+    onDismiss?.()
     setTimeout(() => setVisible(false), 1200)
   }
 
