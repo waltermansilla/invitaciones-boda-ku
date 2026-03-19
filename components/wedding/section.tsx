@@ -65,7 +65,7 @@ export default function Section({ section, coupleNames, prevBgColor, prevBgImage
   }
 
   // Determine bg + text color from theme
-  const bg = bgColor === "primary" ? "bg-primary" : "bg-background"
+  const bg = bgColor === "primary" ? "bg-primary" : bgColor === "transparent" ? "bg-transparent" : "bg-background"
   let resolvedTextColor: string
   if (textColor) {
     resolvedTextColor = textColor

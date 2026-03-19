@@ -131,7 +131,7 @@ export default function WeddingInvitation() {
                                         return (
                                             <Section
                                                 key={section.id}
-                                                section={{ ...section, bgImage: undefined }} // Remove bgImage since parent has it
+                                                section={{ ...section, bgImage: undefined, bgColor: "transparent" }} // Remove bgImage and make transparent since parent has bg
                                                 coupleNames={meta.coupleNames}
                                                 prevBgColor={prevBg}
                                                 prevBgImage={undefined}
