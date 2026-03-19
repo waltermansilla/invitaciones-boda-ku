@@ -46,7 +46,7 @@
     "music": {
         "enabled": true,
         "src": "/clientes/boda/anto-maca/music/milo.mp3",
-        "autoplay": true
+        "autoplay": false
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",

@@ -69,7 +69,7 @@
             "logo": ""
         },
         "countdownPrefix": "Faltan",
-        "eventDate": "2026-11-21T21:00:00",
+        "eventDate": "2026-11-21T20:00:00",
         "countdownLabels": {
             "days": "Dias",
             "hours": "Horas",
@@ -175,7 +175,7 @@
                         "icon": "church",
                         "name": "Ceremonia religiosa",
                         "address": "Colegio Don Bosco",
-                        "time": "Horario a definir",
+                        "time": "20:00 hs",
 
                         "button": {
                             "text": "Cómo llegar",

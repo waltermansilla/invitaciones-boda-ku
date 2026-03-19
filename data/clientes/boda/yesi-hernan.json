@@ -1,0 +1,370 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Nuestra Boda - Yesi & Hernán",
+        "description": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Hernán",
+            "brideName": "Yesi",
+            "separator": "&"
+        }
+    },
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Azul q le pase al msj 003049",
+    "theme": {
+        "primaryColor": "#709775",
+        "backgroundColor": "#fff",
+        "textColor": "#777",
+        "lightBgTextColor": "#709775",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#EDF2E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
+        "buttonText": "Ingresar"
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/boda/yesi-hernan/music/ladygaga.mp3",
+        "autoplay": true
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "hero": {
+        "coupleImage": "/clientes/boda/yesi-hernan/images/img-hero.jpeg",
+        "headline": "Nos casamos!",
+        "showNamesOnPhoto": false,
+        "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
+        "namesDisplay": {
+            "enabled": true,
+            "position": "bottom",
+            "font": "",
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-10-24T19:20:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Nuestra historia nos trajo hasta acá… y queremos compartir este momento con vos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "24 de Octubre 2026"
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/yesi-hernan/images/img-1.jpg"]
+            }
+        },
+        {
+            "_comment": "ITINERARY: Linea de tiempo con iconos, fechas opcionales y botones opcionales. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Horarios",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia religiosa",
+                        "time": "19:20 hs",
+                        "address": "Parroquia Nuestra Sra. de Loreto, Castellanos 56, Ezeiza",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.google.com/maps/place//data=!4m2!3m1!1s0x95bcd03ae16aaaab:0x65e12b9f1d7193b1?entry=s&sa=X&ved=2ahUKEwj8x-Xl0aqTAxUCq5UCHQNPICkQ4kB6BAgUEAA",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "party",
+                        "name": "¡Fiesta!",
+                        "time": "21:30 hs",
+                        "address": "Lorenza Zenavilla 443, Canning",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/8hCUH1WG93P5dDXH6?g_st=ic",
+                            "variant": "primary"
+                        }
+                    }
+                ]
+            }
+        },
+
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
+            "type": "dressCode",
+            "id": "dress-code",
+            "bgColor": "background",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Vestimenta",
+                "subtitle": "Elegante",
+                "description": "",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": false,
+                    "shape": "square",
+                    "colors": ["#012a4a", "#013a63", "#01497c", "#2a6f97"]
+                },
+                "button": {
+                    "text": "Ver consejos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Consejos de vestimenta",
+                    "sections": []
+                }
+            }
+        },
+
+        {
+            "// --- NUESTRA HISTORIA ---": "",
+            "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/clientes/[tipo]/[slug]/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
+            "type": "ourStory",
+            "id": "our-story",
+            "bgColor": "background",
+            "blocks": ["title", "moments"],
+            "data": {
+                "aspectRatio": "1/1",
+                "title": "Nuestra historia",
+                "moments": [
+                    {
+                        "image": "/clientes/boda/yesi-hernan/images/historia-1.jpg",
+                        "title": "Nos elegimos",
+                        "text": "Nos encontramos sin saber que ese momento iba a cambiarlo todo. En una mirada, en algo simple… sentimos que había algo distinto. Y sin entender mucho cómo, empezamos a elegirnos."
+                    },
+                    {
+                        "image": "/clientes/boda/yesi-hernan/images/historia-2.jpeg",
+                        "title": "Nuestro mayor regalo",
+                        "text": "No siempre fue fácil, pero nunca dejamos de tomarnos de la mano. Crecimos, aprendimos, nos volvimos a elegir… una y otra vez. Y en medio de ese amor, llegaron Lara e Isabella. Ellas nos enseñaron lo que realmente significa el amor más puro e inocente. Nos regalaron lo más hermoso que tenemos: nuestra familia."
+                    },
+                    {
+                        "image": "/clientes/boda/yesi-hernan/images/historia-3.jpeg",
+                        "title": "Nuestro sí",
+                        "text": "Hoy nos miramos, después de todo lo vivido… y sabemos que volveríamos a elegirnos en cada paso. Porque este amor nos transformó, nos hizo más fuertes, más unidos… más nosotros. Y ahora queremos decir “sí”, para seguir caminando juntos, para siempre."
+                    }
+                ]
+            }
+        },
+        {
+            "_comment": "PHOTOS: Invitar a subir fotos al album compartido. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
+                "button": {
+                    "text": "Ir al álbum",
+                    "url": "https://drive.google.com/drive/folders/1JhRAsVxVJGlBepH2EdWlEgakZFjpTdX4",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "modal"],
+            "data": {
+                "icon": "",
+                "title": "Regalos",
+                "description": "Tu presencia en este día es lo más importante para nosotros. Pero si además querés hacernos un regalo, podés acompañarnos con un aporte para nuestros proyectos futuros",
+                "showButton": true,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos bancarios",
+                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
+                    "bankData": [
+                        { "label": "Alias", "value": "hernandariofalcone" },
+                        { "label": "CVU", "value": "0000003100097882232195" },
+                        { "label": "Titular", "value": "Hernán Darío Falcone" }
+                    ],
+                    "thankYouText": "¡Gracias de corazón!"
+                }
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/yesi-hernan/images/img-2.jpeg"]
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "En sus risas encontramos nuestro hogar, y en sus pequeños abrazos… el amor más grande que alguna vez imaginamos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- FORMULARIO RSVP ---": "",
+            "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "background",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 31 de Julio",
+                "guestCountLabel": "Número de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "Confirmás tu asistencia?",
+                    "attendanceYes": "Confirmo!",
+                    "attendanceNo": "No podré asistir",
+                    "dietary": "¿Alguna limitación en la alimentación?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celíaco",
+                        "Otro"
+                    ],
+                    "songRequest": "Que canción no puede faltar?",
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "541166678476",
+                    "messageTemplate": "Hola Yesi & Hernán! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
+                }
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por acompañarnos, por ser parte de nuestra historia y por estar en uno de los días más importantes de nuestras vidas. Tenerlos cerca hace que este momento sea aún más especial.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/boda/yesi-hernan/images/img-hero.jpeg"
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}
