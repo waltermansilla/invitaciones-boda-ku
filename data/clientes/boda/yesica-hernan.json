@@ -64,9 +64,9 @@
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
         "namesDisplay": {
-            "enabled": false,
+            "enabled": true,
             "position": "bottom",
-            "font": "",
+            "font": "Cinzel",
             "logo": ""
         },
         "countdownPrefix": "Faltan",
