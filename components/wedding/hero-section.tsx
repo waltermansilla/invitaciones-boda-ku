@@ -23,6 +23,8 @@ interface HeroSectionProps {
   namesDisplay?: {
     enabled: boolean
     position: "top" | "bottom"
+    positionX?: number // porcentaje horizontal 0-100 (50 = centrado)
+    positionY?: number // porcentaje vertical 0-100 (0 = arriba, 100 = abajo)
     font?: string
     weight?: string
     size?: string
@@ -121,6 +123,9 @@ export default function HeroSection({
   // Determine if names should show
   const shouldShowNames = namesDisplay?.enabled ?? showNamesOnPhoto
   const namesPosition = namesDisplay?.position || "bottom"
+  const namesPositionX = namesDisplay?.positionX // undefined = centrado (50%)
+  const namesPositionY = namesDisplay?.positionY // undefined = usa position (top/bottom)
+  const useCustomPosition = namesPositionX !== undefined || namesPositionY !== undefined
   const namesLogo = namesDisplay?.logo
   const namesColor = namesDisplay?.color || "rgba(255,255,255,0.9)"
   const showDecorativeLines = namesDisplay?.decorativeLines ?? false
@@ -222,14 +227,28 @@ export default function HeroSection({
   const NamesOverlay = () => {
     if (!shouldShowNames) return null
 
+    // Custom positioning with percentages
+    const getPositionStyle = (): React.CSSProperties => {
+      if (useCustomPosition) {
+        return {
+          position: "absolute",
+          top: namesPositionY !== undefined ? `${namesPositionY}%` : "50%",
+          left: namesPositionX !== undefined ? `${namesPositionX}%` : "50%",
+          transform: `translate(-50%, -50%)`,
+        }
+      }
+      return {}
+    }
+
     const getPositionClass = () => {
-      if (namesPosition === "top") return "top-0 pt-10"
-      return isFloatingOverlay ? "bottom-0 pb-20" : isOverlayLayout ? "bottom-0 pb-24" : "bottom-0 pb-10"
+      if (useCustomPosition) return "" // No class, use inline style
+      if (namesPosition === "top") return "absolute inset-x-0 top-0 pt-10"
+      return isFloatingOverlay ? "absolute inset-x-0 bottom-0 pb-20" : isOverlayLayout ? "absolute inset-x-0 bottom-0 pb-24" : "absolute inset-x-0 bottom-0 pb-10"
     }
 
     if (namesLogo) {
       return (
-        <div className={`absolute inset-x-0 ${getPositionClass()} flex flex-col items-center`}>
+        <div className={`${getPositionClass()} flex flex-col items-center`} style={getPositionStyle()}>
           <Image
             src={namesLogo}
             alt="Logo"
@@ -243,7 +262,7 @@ export default function HeroSection({
 
     if (useTextsArray && namesDisplay?.texts) {
       return (
-        <div className={`absolute inset-x-0 ${getPositionClass()} flex flex-col items-center`}>
+        <div className={`${getPositionClass()} flex flex-col items-center`} style={getPositionStyle()}>
           {showDecorativeLines && <div className="mb-3 h-px w-12 bg-white/40" />}
           {renderNameText(namesDisplay.texts[0], legacyFont, legacyWeight, legacySize, legacyStyle)}
           <span className="my-1 text-lg font-extralight tracking-[0.3em] sm:text-xl md:text-2xl" style={{ color: namesColor, opacity: 0.6 }}>
@@ -263,10 +282,11 @@ export default function HeroSection({
       fontStyle: legacyStyle,
       color: namesColor,
       textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
+      ...getPositionStyle(),
     }
 
     return (
-      <div className={`absolute inset-x-0 ${getPositionClass()} flex flex-col items-center`} style={namesFontStyle}>
+      <div className={`${getPositionClass()} flex flex-col items-center`} style={namesFontStyle}>
         {showDecorativeLines && <div className="mb-3 h-px w-12 bg-current opacity-40" />}
         <p className={`text-center tracking-[0.2em] ${sizeClass}`}>{brideName}</p>
         <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">{separator}</span>

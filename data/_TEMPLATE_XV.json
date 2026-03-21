@@ -57,7 +57,9 @@
     "music": {
         "enabled": true,
         "src": "/music/background.mp3",
-        "autoplay": false
+        "autoplay": false,
+        "startTime": 0,
+        "_comment_startTime": "Segundos desde donde empieza la cancion. Ej: 15 = salta intro. Default: 0."
     },
 
     "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /xv/[slug]/qr para captura de pantalla.",
@@ -99,10 +101,13 @@
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
 
-        "_comment_namesDisplay": "NOMBRES EN LA FOTO. enabled: true/false. position: 'top'/'bottom'. color: hex (compartido). decorativeLines: lineas decorativas. logo: ruta imagen. TEXTOS SEPARADOS: usar 'texts' array con 2 items (ej: 'Mis XV' y 'Valentina'), cada uno con text/font/weight/size/style propios.",
+        "_comment_namesDisplay": "NOMBRES EN LA FOTO. position: 'top'/'bottom'. positionX/positionY: 0-100 para posicion exacta. color: hex. decorativeLines: lineas. logo: imagen.",
         "namesDisplay": {
             "enabled": true,
             "position": "bottom",
+            "positionX": null,
+            "positionY": null,
+            "_comment_position": "positionX: 0-100 (0=izquierda, 50=centro, 100=derecha). positionY: 0-100 (0=arriba, 100=abajo). Si usas estos, se ignora position.",
             "color": "rgba(255,255,255,0.9)",
             "decorativeLines": false,
             "logo": "",

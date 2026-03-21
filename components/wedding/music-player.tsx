@@ -6,21 +6,31 @@ import { Volume2, VolumeX } from "lucide-react"
 interface MusicPlayerProps {
   src: string
   autoplay?: boolean
+  startTime?: number // segundos desde donde empieza la cancion (default: 0)
 }
 
-export default function MusicPlayer({ src, autoplay = false }: MusicPlayerProps) {
+export default function MusicPlayer({ src, autoplay = false, startTime = 0 }: MusicPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
+    if (audioRef.current && startTime > 0) {
+      audioRef.current.currentTime = startTime
+    }
+  }, [startTime])
+
+  useEffect(() => {
     if (autoplay && audioRef.current) {
+      if (startTime > 0) {
+        audioRef.current.currentTime = startTime
+      }
       audioRef.current.play().then(() => {
         setIsPlaying(true)
       }).catch(() => {
         setIsPlaying(false)
       })
     }
-  }, [autoplay])
+  }, [autoplay, startTime])
 
   const togglePlay = () => {
     if (!audioRef.current) return
@@ -28,6 +38,10 @@ export default function MusicPlayer({ src, autoplay = false }: MusicPlayerProps)
       audioRef.current.pause()
       setIsPlaying(false)
     } else {
+      // Si esta al inicio y hay startTime, saltar a ese punto
+      if (audioRef.current.currentTime === 0 && startTime > 0) {
+        audioRef.current.currentTime = startTime
+      }
       audioRef.current.play()
       setIsPlaying(true)
     }
