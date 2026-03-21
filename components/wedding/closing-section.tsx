@@ -162,7 +162,7 @@ export default function ClosingSection({
           ) : (
             // Show names as text
             <div style={namesFontStyle}>
-              <p className={`text-center tracking-[0.2em] uppercase ${sizeClass}`}>
+              <p className={`text-center tracking-[0.15em] ${sizeClass}`}>
                 {coupleNames.brideName}
               </p>
               {coupleNames.separator && (
@@ -171,7 +171,7 @@ export default function ClosingSection({
                 </span>
               )}
               {coupleNames.groomName && (
-                <p className={`text-center tracking-[0.2em] uppercase ${sizeClass}`}>
+                <p className={`text-center tracking-[0.15em] ${sizeClass}`}>
                   {coupleNames.groomName}
                 </p>
               )}

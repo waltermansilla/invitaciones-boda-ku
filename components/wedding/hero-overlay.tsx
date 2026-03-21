@@ -132,7 +132,7 @@ export default function HeroOverlay({
 
               {/* Couple names */}
               <h1 
-                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.25em] uppercase ${nameColor ? "" : "text-foreground"}`}
+                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.15em] ${nameColor ? "" : "text-foreground"}`}
                 style={{ 
                   fontFamily: nameFontFamily,
                   color: nameColor,
@@ -144,7 +144,7 @@ export default function HeroOverlay({
                 {separator}
               </span>
               <h1 
-                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.25em] uppercase ${nameColor ? "" : "text-foreground"}`}
+                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.15em] ${nameColor ? "" : "text-foreground"}`}
                 style={{ 
                   fontFamily: nameFontFamily,
                   color: nameColor,

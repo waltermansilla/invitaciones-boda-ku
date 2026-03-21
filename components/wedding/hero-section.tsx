@@ -210,7 +210,7 @@ export default function HeroSection({
     }
 
     return (
-      <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`} style={textStyle}>
+      <p className={`text-center tracking-[0.15em] ${sizeClass}`} style={textStyle}>
         {textConfig.text}
       </p>
     )
@@ -265,9 +265,9 @@ export default function HeroSection({
     return (
       <div className={`absolute inset-x-0 ${getPositionClass()} flex flex-col items-center`} style={namesFontStyle}>
         {showDecorativeLines && <div className="mb-3 h-px w-12 bg-current opacity-40" />}
-        <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`}>{brideName}</p>
+        <p className={`text-center tracking-[0.15em] ${sizeClass}`}>{brideName}</p>
         <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">{separator}</span>
-        <p className={`text-center tracking-[0.25em] uppercase ${sizeClass}`}>{groomName}</p>
+        <p className={`text-center tracking-[0.15em] ${sizeClass}`}>{groomName}</p>
         {showDecorativeLines && <div className="mt-3 h-px w-12 bg-current opacity-40" />}
       </div>
     )
