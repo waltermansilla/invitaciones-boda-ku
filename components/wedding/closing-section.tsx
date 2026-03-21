@@ -35,6 +35,7 @@ interface ClosingSectionProps {
     logo?: string
     copyFromHero?: boolean
     copyFromOverlay?: boolean
+    lowercase?: boolean // true = respeta mayusculas/minusculas, false/undefined = uppercase
   }
 }
 
@@ -108,12 +109,17 @@ export default function ClosingSection({
   // Resolve weight value
   const resolvedWeight = weightMap[namesWeight] || namesWeight
 
+  // Check lowercase from overlay if copying
+  const shouldLowercase = namesDisplay?.lowercase ?? 
+    (shouldCopyFromOverlay && overlayNameStyle ? (overlayNameStyle.lowercase as boolean) : false)
+
   // Build font family style if custom font specified
   const namesFontStyle: React.CSSProperties = {
     ...(namesFont ? { fontFamily: `'${namesFont}', cursive` } : {}),
     fontWeight: resolvedWeight,
     fontStyle: namesStyle,
     color: namesColor || defaultTextColor,
+    textTransform: shouldLowercase ? "none" : "uppercase",
   }
 
   // Get size class
@@ -162,7 +168,7 @@ export default function ClosingSection({
           ) : (
             // Show names as text
             <div style={namesFontStyle}>
-              <p className={`text-center tracking-[0.15em] ${sizeClass}`}>
+              <p className={`text-center tracking-[0.2em] ${sizeClass}`}>
                 {coupleNames.brideName}
               </p>
               {coupleNames.separator && (
@@ -171,7 +177,7 @@ export default function ClosingSection({
                 </span>
               )}
               {coupleNames.groomName && (
-                <p className={`text-center tracking-[0.15em] ${sizeClass}`}>
+                <p className={`text-center tracking-[0.2em] ${sizeClass}`}>
                   {coupleNames.groomName}
                 </p>
               )}

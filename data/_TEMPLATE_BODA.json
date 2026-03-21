@@ -57,7 +57,9 @@
             "_comment_size": "Tamanio: 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl'",
             "weight": "200",
             "_comment_weight": "Grosor: '100' (thin), '200' (extralight), '300' (light), '400' (normal), '500' (medium), '600' (semibold), '700' (bold)",
-            "color": ""
+            "color": "",
+            "lowercase": false,
+            "_comment_lowercase": "false (default) = nombres en MAYUSCULAS. true = respeta mayusculas/minusculas como escribis en el JSON."
         },
         "buttonPosition": "center",
         "_comment_buttonPosition": "'center' = centrado. 'top' = arriba. 'bottom' = abajo. Numero 0-100 = porcentaje desde arriba (ej: 75 = 75% desde arriba, util si ocultas nombres y queres el boton mas abajo)."
@@ -126,7 +128,9 @@
             "font": "",
             "weight": "300",
             "size": "lg",
-            "style": "normal"
+            "style": "normal",
+            "lowercase": false,
+            "_comment_lowercase": "false (default) = MAYUSCULAS. true = respeta como escribis en meta.coupleNames."
         },
 
         "countdownPrefix": "Faltan",
@@ -585,7 +589,9 @@
                     "logo": "",
                     "copyFromHero": false,
                     "copyFromOverlay": true,
-                    "_comment_copy": "copyFromOverlay: copia font/size/weight/color del overlay.nameStyle. copyFromHero: copia del hero.namesDisplay. Si usas copyFromOverlay=true, los nombres del cierre tendran el mismo estilo que la pantalla de bienvenida."
+                    "lowercase": false,
+                    "_comment_lowercase": "false = MAYUSCULAS. true = respeta como escribis. Si usas copyFromOverlay=true tambien copia el lowercase del overlay.",
+                    "_comment_copy": "copyFromOverlay: copia font/size/weight/color/lowercase del overlay.nameStyle. copyFromHero: copia del hero.namesDisplay."
                 }
             }
         },

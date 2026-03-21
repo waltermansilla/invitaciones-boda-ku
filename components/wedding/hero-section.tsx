@@ -31,6 +31,7 @@ interface HeroSectionProps {
     decorativeLines?: boolean
     logo?: string
     texts?: NamesText[]
+    lowercase?: boolean // true = respeta mayusculas/minusculas, false/undefined = uppercase
   }
   countdownPrefix?: string
   countdownLabels: {
@@ -207,10 +208,11 @@ export default function HeroSection({
       fontWeight: resolvedWeight,
       fontStyle: style,
       color: namesColor,
+      textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
     }
 
     return (
-      <p className={`text-center tracking-[0.15em] ${sizeClass}`} style={textStyle}>
+      <p className={`text-center tracking-[0.2em] ${sizeClass}`} style={textStyle}>
         {textConfig.text}
       </p>
     )
@@ -260,14 +262,15 @@ export default function HeroSection({
       fontWeight: resolvedWeight,
       fontStyle: legacyStyle,
       color: namesColor,
+      textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
     }
 
     return (
       <div className={`absolute inset-x-0 ${getPositionClass()} flex flex-col items-center`} style={namesFontStyle}>
         {showDecorativeLines && <div className="mb-3 h-px w-12 bg-current opacity-40" />}
-        <p className={`text-center tracking-[0.15em] ${sizeClass}`}>{brideName}</p>
+        <p className={`text-center tracking-[0.2em] ${sizeClass}`}>{brideName}</p>
         <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">{separator}</span>
-        <p className={`text-center tracking-[0.15em] ${sizeClass}`}>{groomName}</p>
+        <p className={`text-center tracking-[0.2em] ${sizeClass}`}>{groomName}</p>
         {showDecorativeLines && <div className="mt-3 h-px w-12 bg-current opacity-40" />}
       </div>
     )

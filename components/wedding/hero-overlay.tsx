@@ -7,6 +7,7 @@ interface NameStyle {
   size?: string
   weight?: string
   color?: string
+  lowercase?: boolean // true = respeta mayusculas/minusculas del JSON, false/undefined = todo mayusculas
 }
 
 interface HeroOverlayProps {
@@ -132,10 +133,11 @@ export default function HeroOverlay({
 
               {/* Couple names */}
               <h1 
-                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.15em] ${nameColor ? "" : "text-foreground"}`}
+                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.2em] ${nameColor ? "" : "text-foreground"}`}
                 style={{ 
                   fontFamily: nameFontFamily,
                   color: nameColor,
+                  textTransform: nameStyle?.lowercase ? "none" : "uppercase",
                 }}
               >
                 {brideName}
@@ -144,10 +146,11 @@ export default function HeroOverlay({
                 {separator}
               </span>
               <h1 
-                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.15em] ${nameColor ? "" : "text-foreground"}`}
+                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.2em] ${nameColor ? "" : "text-foreground"}`}
                 style={{ 
                   fontFamily: nameFontFamily,
                   color: nameColor,
+                  textTransform: nameStyle?.lowercase ? "none" : "uppercase",
                 }}
               >
                 {groomName}
