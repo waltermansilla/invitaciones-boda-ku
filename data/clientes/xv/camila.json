@@ -90,12 +90,13 @@
                 },
                 {
                     "text": "Camila",
-                    "font": "Wildcard",
+                    "font": "Dancing Script",
                     "weight": "600",
                     "size": "3xl",
                     "style": "normal"
                 }
-            ]
+            ],
+            "letterSpacing": "none"
         },
         "countdownPrefix": "",
         "eventDate": "2026-04-17T21:45:00",
@@ -267,7 +268,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/xv/camila/images/5.jpg"]
+                "images": ["/clientes/xv/camila/images/5.png"]
             }
         },
 
@@ -369,7 +370,7 @@
             "data": {
                 "icon": "gift",
                 "title": "Regalo",
-                "description": "Nada es más importante que tu presencia, pero si deseás hacerme un regalo podés hacerlo a través de este alias:",
+                "description": "Nada es más importante que tu presencia. Si deseas hacerme un regalo, podrás hacerlo el día del evento en el buzón de regalos o, si lo preferís, a través de este alias:",
                 "button": {
                     "text": "Ver",
                     "url": "#",
@@ -379,7 +380,7 @@
                     "title": "Mis datos",
                     "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para mí.",
                     "bankData": [
-                        { "label": "Alias", "value": "camiyasmin.vx" },
+                        { "label": "Alias", "value": "camiyasmin.xv" },
                         { "label": "CVU", "value": "0000003100035948810163" },
                         {
                             "label": "Titular",
@@ -400,7 +401,7 @@
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 10 de Abril",
+                "deadline": "Antes del 5 de Abril",
                 "guestCountLabel": "Numero de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 "fields": {
@@ -421,7 +422,7 @@
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "542262336872",
+                    "number": "541139394315",
                     "messageTemplate": "Hola Camila! Confirmo asistencia para tus XV:\n\n{resumen}\n\nGracias por la invitación a este momento tan especial! 🫶🏼🤗"
                 }
             }
