@@ -36,6 +36,7 @@ interface ClosingSectionProps {
     copyFromHero?: boolean
     copyFromOverlay?: boolean
     lowercase?: boolean // true = respeta mayusculas/minusculas, false/undefined = uppercase
+    letterSpacing?: string // "none", "normal", "wide" (default)
   }
 }
 
@@ -113,6 +114,20 @@ export default function ClosingSection({
   const shouldLowercase = namesDisplay?.lowercase ?? 
     (shouldCopyFromOverlay && overlayNameStyle ? (overlayNameStyle.lowercase as boolean) : false)
 
+  // Letter spacing: "none" = 0, "normal" = 0.1em, "wide" = 0.2em (default)
+  const letterSpacingMap: Record<string, string> = {
+    "none": "0",
+    "normal": "0.1em", 
+    "wide": "0.2em",
+  }
+  let namesLetterSpacing = namesDisplay?.letterSpacing || "wide"
+  if (shouldCopyFromOverlay && overlayNameStyle?.letterSpacing) {
+    namesLetterSpacing = overlayNameStyle.letterSpacing as string
+  } else if (shouldCopyFromHero && heroNamesDisplay?.letterSpacing) {
+    namesLetterSpacing = heroNamesDisplay.letterSpacing as string
+  }
+  const resolvedLetterSpacing = letterSpacingMap[namesLetterSpacing] || "0.2em"
+
   // Build font family style if custom font specified
   const namesFontStyle: React.CSSProperties = {
     ...(namesFont ? { fontFamily: `'${namesFont}', cursive` } : {}),
@@ -120,6 +135,7 @@ export default function ClosingSection({
     fontStyle: namesStyle,
     color: namesColor || defaultTextColor,
     textTransform: shouldLowercase ? "none" : "uppercase",
+    letterSpacing: resolvedLetterSpacing,
   }
 
   // Get size class
@@ -168,7 +184,7 @@ export default function ClosingSection({
           ) : (
             // Show names as text
             <div style={namesFontStyle}>
-              <p className={`text-center tracking-[0.2em] ${sizeClass}`}>
+              <p className={`text-center ${sizeClass}`}>
                 {coupleNames.brideName}
               </p>
               {coupleNames.separator && (
@@ -177,7 +193,7 @@ export default function ClosingSection({
                 </span>
               )}
               {coupleNames.groomName && (
-                <p className={`text-center tracking-[0.2em] ${sizeClass}`}>
+                <p className={`text-center ${sizeClass}`}>
                   {coupleNames.groomName}
                 </p>
               )}

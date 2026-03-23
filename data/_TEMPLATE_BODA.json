@@ -59,7 +59,9 @@
             "_comment_weight": "Grosor: '100' (thin), '200' (extralight), '300' (light), '400' (normal), '500' (medium), '600' (semibold), '700' (bold)",
             "color": "",
             "lowercase": false,
-            "_comment_lowercase": "false (default) = nombres en MAYUSCULAS. true = respeta mayusculas/minusculas como escribis en el JSON."
+            "_comment_lowercase": "false (default) = nombres en MAYUSCULAS. true = respeta mayusculas/minusculas como escribis en el JSON.",
+            "letterSpacing": "wide",
+            "_comment_letterSpacing": "'none' = sin espaciado (letras cursivas se conectan). 'normal' = poco espaciado. 'wide' (default) = espaciado amplio."
         },
         "buttonPosition": "center",
         "_comment_buttonPosition": "'center' = centrado. 'top' = arriba. 'bottom' = abajo. Numero 0-100 = porcentaje desde arriba (ej: 75 = 75% desde arriba, util si ocultas nombres y queres el boton mas abajo)."
@@ -135,7 +137,9 @@
             "size": "lg",
             "style": "normal",
             "lowercase": false,
-            "_comment_lowercase": "false (default) = MAYUSCULAS. true = respeta como escribis en meta.coupleNames."
+            "_comment_lowercase": "false (default) = MAYUSCULAS. true = respeta como escribis en meta.coupleNames.",
+            "letterSpacing": "wide",
+            "_comment_letterSpacing": "'none' = sin espaciado (cursivas se conectan). 'normal' = poco. 'wide' (default) = amplio."
         },
 
         "countdownPrefix": "Faltan",
@@ -595,8 +599,9 @@
                     "copyFromHero": false,
                     "copyFromOverlay": true,
                     "lowercase": false,
-                    "_comment_lowercase": "false = MAYUSCULAS. true = respeta como escribis. Si usas copyFromOverlay=true tambien copia el lowercase del overlay.",
-                    "_comment_copy": "copyFromOverlay: copia font/size/weight/color/lowercase del overlay.nameStyle. copyFromHero: copia del hero.namesDisplay."
+                    "letterSpacing": "wide",
+                    "_comment_letterSpacing": "'none'/'normal'/'wide'. Si usas copyFromOverlay=true, tambien copia el letterSpacing del overlay.",
+                    "_comment_copy": "copyFromOverlay: copia font/size/weight/color/lowercase/letterSpacing del overlay. copyFromHero: copia del hero."
                 }
             }
         },

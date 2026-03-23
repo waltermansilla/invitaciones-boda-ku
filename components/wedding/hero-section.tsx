@@ -34,6 +34,7 @@ interface HeroSectionProps {
     logo?: string
     texts?: NamesText[]
     lowercase?: boolean // true = respeta mayusculas/minusculas, false/undefined = uppercase
+    letterSpacing?: string // "none", "normal", "wide" (default)
   }
   countdownPrefix?: string
   countdownLabels: {
@@ -136,6 +137,14 @@ export default function HeroSection({
   const legacyWeight = namesDisplay?.weight || "300"
   const legacySize = namesDisplay?.size || "lg"
   const legacyStyle = namesDisplay?.style || "normal"
+  
+  // Letter spacing: "none" = 0, "normal" = 0.1em, "wide" = 0.2em (default)
+  const letterSpacingMap: Record<string, string> = {
+    "none": "0",
+    "normal": "0.1em", 
+    "wide": "0.2em",
+  }
+  const namesLetterSpacing = letterSpacingMap[namesDisplay?.letterSpacing || "wide"] || "0.2em"
 
   // Get fonts to preload
   const fontsToLoad: string[] = []
@@ -214,10 +223,11 @@ export default function HeroSection({
       fontStyle: style,
       color: namesColor,
       textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
+      letterSpacing: namesLetterSpacing,
     }
 
     return (
-      <p className={`text-center tracking-[0.2em] ${sizeClass}`} style={textStyle}>
+      <p className={`text-center ${sizeClass}`} style={textStyle}>
         {textConfig.text}
       </p>
     )
@@ -282,15 +292,16 @@ export default function HeroSection({
       fontStyle: legacyStyle,
       color: namesColor,
       textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
+      letterSpacing: namesLetterSpacing,
       ...getPositionStyle(),
     }
 
     return (
       <div className={`${getPositionClass()} flex flex-col items-center`} style={namesFontStyle}>
         {showDecorativeLines && <div className="mb-3 h-px w-12 bg-current opacity-40" />}
-        <p className={`text-center tracking-[0.2em] ${sizeClass}`}>{brideName}</p>
+        <p className={`text-center ${sizeClass}`}>{brideName}</p>
         <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">{separator}</span>
-        <p className={`text-center tracking-[0.2em] ${sizeClass}`}>{groomName}</p>
+        <p className={`text-center ${sizeClass}`}>{groomName}</p>
         {showDecorativeLines && <div className="mt-3 h-px w-12 bg-current opacity-40" />}
       </div>
     )

@@ -49,7 +49,10 @@
             "font": "",
             "size": "4xl",
             "weight": "200",
-            "color": ""
+            "color": "",
+            "lowercase": false,
+            "letterSpacing": "wide",
+            "_comment_letterSpacing": "'none' = sin espaciado (cursivas conectan). 'normal' = poco. 'wide' (default) = amplio."
         },
         "buttonPosition": "center"
     },
@@ -120,7 +123,10 @@
             "font": "",
             "weight": "300",
             "size": "lg",
-            "style": "normal"
+            "style": "normal",
+            "lowercase": false,
+            "letterSpacing": "wide",
+            "_comment_letterSpacing": "'none'/'normal'/'wide'. 'none' = cursivas conectan."
         },
 
         "countdownPrefix": "Faltan",

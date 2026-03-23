@@ -8,6 +8,7 @@ interface NameStyle {
   weight?: string
   color?: string
   lowercase?: boolean // true = respeta mayusculas/minusculas del JSON, false/undefined = todo mayusculas
+  letterSpacing?: string // "none" = sin espaciado (cursivas conectan), "normal" = 0.1em, "wide" = 0.2em (default)
 }
 
 interface HeroOverlayProps {
@@ -80,6 +81,14 @@ export default function HeroOverlay({
   const nameSize = nameStyle?.size || "4xl"
   const nameWeight = nameStyle?.weight || "200"
   const nameColor = nameStyle?.color || undefined
+  
+  // Letter spacing: "none" = 0, "normal" = 0.1em, "wide" = 0.2em (default)
+  const letterSpacingMap: Record<string, string> = {
+    "none": "0",
+    "normal": "0.1em", 
+    "wide": "0.2em",
+  }
+  const nameLetterSpacing = letterSpacingMap[nameStyle?.letterSpacing || "wide"] || "0.2em"
 
   // Map size to tailwind classes
   const sizeClasses: Record<string, string> = {
@@ -133,11 +142,12 @@ export default function HeroOverlay({
 
               {/* Couple names */}
               <h1 
-                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.2em] ${nameColor ? "" : "text-foreground"}`}
+                className={`text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
                 style={{ 
                   fontFamily: nameFontFamily,
                   color: nameColor,
                   textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                  letterSpacing: nameLetterSpacing,
                 }}
               >
                 {brideName}
@@ -146,11 +156,12 @@ export default function HeroOverlay({
                 {separator}
               </span>
               <h1 
-                className={`text-center ${nameSizeClass} ${nameWeightClass} tracking-[0.2em] ${nameColor ? "" : "text-foreground"}`}
+                className={`text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
                 style={{ 
                   fontFamily: nameFontFamily,
                   color: nameColor,
                   textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                  letterSpacing: nameLetterSpacing,
                 }}
               >
                 {groomName}
