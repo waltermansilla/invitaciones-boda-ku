@@ -114,11 +114,12 @@
             "color": "rgba(255,255,255,0.9)",
             "decorativeLines": false,
             "logo": "",
-            "_comment_texts": "OPCIONAL: Para 2 textos con estilos distintos (ej: 'Mis XV' en una fuente y 'Valentina' en otra).",
+            "_comment_texts": "OPCIONAL: Para 2 textos con estilos distintos. Cada uno puede tener su propio letterSpacing.",
             "texts": [
-                { "text": "Mis XV", "font": "", "weight": "200", "size": "base", "style": "normal" },
-                { "text": "Valentina", "font": "", "weight": "300", "size": "2xl", "style": "normal" }
+                { "text": "Mis XV", "font": "", "weight": "200", "size": "base", "style": "normal", "letterSpacing": "wide" },
+                { "text": "Valentina", "font": "", "weight": "300", "size": "2xl", "style": "normal", "letterSpacing": "none" }
             ],
+            "_comment_texts_letterSpacing": "letterSpacing individual: 'none' (cursivas conectan), 'normal', 'wide'. Si no pones, usa el global.",
             "_comment_legacy": "Si no usas 'texts', estos valores se aplican:",
             "font": "",
             "weight": "300",

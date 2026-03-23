@@ -10,6 +10,7 @@ interface NamesText {
   weight?: string
   size?: string
   style?: string
+  letterSpacing?: string // "none", "normal", "wide"
 }
 
 interface HeroSectionProps {
@@ -216,6 +217,10 @@ export default function HeroSection({
     const style = textConfig.style || fallbackStyle || "normal"
     const resolvedWeight = weightMap[weight] || weight
     const sizeClass = sizeMap[size] || sizeMap.lg
+    // Use individual letterSpacing if provided, otherwise fall back to global
+    const textLetterSpacing = textConfig.letterSpacing 
+      ? (letterSpacingMap[textConfig.letterSpacing] || "0.2em")
+      : namesLetterSpacing
 
     const textStyle: React.CSSProperties = {
       ...(font ? { fontFamily: `'${font}', cursive` } : {}),
@@ -223,7 +228,7 @@ export default function HeroSection({
       fontStyle: style,
       color: namesColor,
       textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
-      letterSpacing: namesLetterSpacing,
+      letterSpacing: textLetterSpacing,
     }
 
     return (

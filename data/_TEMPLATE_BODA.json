@@ -126,11 +126,12 @@
             "color": "rgba(255,255,255,0.9)",
             "decorativeLines": false,
             "logo": "",
-            "_comment_texts": "OPCIONAL: Para 2 textos con estilos distintos. Si no usas esto, usa font/weight/size/style afuera para ambos nombres.",
+            "_comment_texts": "OPCIONAL: Para 2 textos con estilos distintos. Cada uno puede tener su propio letterSpacing.",
             "texts": [
-                { "text": "María", "font": "", "weight": "300", "size": "xl", "style": "normal" },
-                { "text": "Juan", "font": "", "weight": "300", "size": "xl", "style": "normal" }
+                { "text": "María", "font": "", "weight": "300", "size": "xl", "style": "normal", "letterSpacing": "wide" },
+                { "text": "Juan", "font": "", "weight": "300", "size": "xl", "style": "normal", "letterSpacing": "wide" }
             ],
+            "_comment_texts_letterSpacing": "letterSpacing en cada texto: 'none' (cursivas conectan), 'normal', 'wide' (default). Si no pones letterSpacing usa el global de abajo.",
             "_comment_legacy": "Si no usas 'texts', estos valores se aplican a ambos nombres (toma brideName y groomName de meta):",
             "font": "",
             "weight": "300",
