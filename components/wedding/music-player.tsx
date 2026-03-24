@@ -5,32 +5,33 @@ import { Volume2, VolumeX } from "lucide-react"
 
 interface MusicPlayerProps {
   src: string
-  autoplay?: boolean
   startTime?: number // segundos desde donde empieza la cancion (default: 0)
+  triggerPlay?: boolean // cuando cambia a true, activa la musica (como si tocaran el boton)
 }
 
-export default function MusicPlayer({ src, autoplay = false, startTime = 0 }: MusicPlayerProps) {
+export default function MusicPlayer({ src, startTime = 0, triggerPlay = false }: MusicPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const hasTriggered = useRef(false)
 
+  // Cuando triggerPlay cambia a true, cambiar el boton a "sonido" inmediatamente y luego reproducir
   useEffect(() => {
-    if (audioRef.current && startTime > 0) {
-      audioRef.current.currentTime = startTime
-    }
-  }, [startTime])
-
-  useEffect(() => {
-    if (autoplay && audioRef.current) {
-      if (startTime > 0) {
-        audioRef.current.currentTime = startTime
+    if (triggerPlay && !hasTriggered.current) {
+      hasTriggered.current = true
+      // Cambiar el icono a "sonido" inmediatamente (sin esperar que cargue el audio)
+      setIsPlaying(true)
+      
+      // Luego intentar reproducir el audio
+      if (audioRef.current) {
+        if (startTime > 0) {
+          audioRef.current.currentTime = startTime
+        }
+        audioRef.current.play().catch(() => {
+          // Si falla, el boton ya esta en modo "sonido", el usuario puede reintentarlo
+        })
       }
-      audioRef.current.play().then(() => {
-        setIsPlaying(true)
-      }).catch(() => {
-        setIsPlaying(false)
-      })
     }
-  }, [autoplay, startTime])
+  }, [triggerPlay, startTime])
 
   const togglePlay = () => {
     if (!audioRef.current) return
@@ -38,8 +39,7 @@ export default function MusicPlayer({ src, autoplay = false, startTime = 0 }: Mu
       audioRef.current.pause()
       setIsPlaying(false)
     } else {
-      // Si esta al inicio y hay startTime, saltar a ese punto
-      if (audioRef.current.currentTime === 0 && startTime > 0) {
+      if (startTime > 0 && audioRef.current.currentTime === 0) {
         audioRef.current.currentTime = startTime
       }
       audioRef.current.play()

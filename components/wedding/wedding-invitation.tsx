@@ -18,13 +18,24 @@ export default function WeddingInvitation() {
     
     // Track if overlay has been dismissed
     const [overlayDismissed, setOverlayDismissed] = useState(false);
+    
+    // Track if music should start (triggered by overlay dismiss when autoplay is true)
+    const [shouldPlayMusic, setShouldPlayMusic] = useState(false);
+    
+    // Handle overlay dismiss - start music if autoplay is enabled
+    const handleOverlayDismiss = () => {
+        setOverlayDismissed(true);
+        if (music.autoplay) {
+            setShouldPlayMusic(true);
+        }
+    };
 
     return (
         <ModalProvider>
             {/* Fullscreen entry overlay - OUTSIDE main so it's always visible */}
             {overlay.enabled && (
                 <HeroOverlay
-                    onDismiss={() => setOverlayDismissed(true)}
+                    onDismiss={handleOverlayDismiss}
                     groomName={meta.coupleNames.groomName}
                     brideName={meta.coupleNames.brideName}
                     separator={meta.coupleNames.separator}
@@ -177,8 +188,8 @@ export default function WeddingInvitation() {
                 {music.enabled && (
                     <MusicPlayer 
                         src={music.src} 
-                        autoplay={music.autoplay} 
                         startTime={(music as Record<string, unknown>).startTime as number | undefined}
+                        triggerPlay={shouldPlayMusic}
                     />
                 )}
             </main>
