@@ -98,8 +98,8 @@ export default function HeroOverlay({
     "xl": "text-4xl sm:text-5xl md:text-6xl",
     "2xl": "text-5xl sm:text-6xl md:text-7xl",
     "3xl": "text-6xl sm:text-7xl md:text-8xl",
-    "4xl": "text-7xl sm:text-8xl md:text-9xl",
-    "5xl": "text-8xl sm:text-9xl",
+    "4xl": "text-4xl sm:text-5xl md:text-6xl lg:text-7xl",
+    "5xl": "text-5xl sm:text-6xl md:text-7xl lg:text-8xl",
   }
   // Check if size is a pixel value (e.g. "48px", "60px")
   const isPixelSize = nameSize.endsWith("px")
@@ -141,8 +141,8 @@ export default function HeroOverlay({
         <div className="flex flex-col items-center">
           {showNames && (
             <div className="flex flex-col items-center justify-center">
-              {/* Decorative thin line */}
-              <div className="mb-8 h-px w-12 bg-primary/30" />
+              {/* Decorative thin line - same margin top/bottom for centering */}
+              <div className="my-8 h-px w-12 bg-primary/30" />
 
               {/* Couple names */}
               <h1 
@@ -157,24 +157,28 @@ export default function HeroOverlay({
               >
                 {brideName}
               </h1>
-              <span className="my-3 text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl md:text-4xl">
-                {separator}
-              </span>
-              <h1 
-                className={`text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
-                style={{ 
-                  fontFamily: nameFontFamily,
-                  color: nameColor,
-                  textTransform: nameStyle?.lowercase ? "none" : "uppercase",
-                  letterSpacing: nameLetterSpacing,
-                  ...nameSizeStyle,
-                }}
-              >
-                {groomName}
-              </h1>
+              {separator && (
+                <span className="my-3 text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl md:text-4xl">
+                  {separator}
+                </span>
+              )}
+              {groomName && (
+                <h1 
+                  className={`text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                  style={{ 
+                    fontFamily: nameFontFamily,
+                    color: nameColor,
+                    textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                    letterSpacing: nameLetterSpacing,
+                    ...nameSizeStyle,
+                  }}
+                >
+                  {groomName}
+                </h1>
+              )}
 
-              {/* Decorative thin line */}
-              <div className="mt-8 mb-10 h-px w-12 bg-primary/30" />
+              {/* Decorative thin line - same margin top/bottom for centering */}
+              <div className="my-8 h-px w-12 bg-primary/30" />
             </div>
           )}
 
