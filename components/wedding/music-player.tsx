@@ -14,19 +14,22 @@ export default function MusicPlayer({ src, startTime = 0, triggerPlay = false }:
   const [isPlaying, setIsPlaying] = useState(false)
   const hasTriggered = useRef(false)
 
-  // Cuando triggerPlay cambia a true, activar la musica (como si tocaran el boton)
+  // Cuando triggerPlay cambia a true, cambiar el boton a "sonido" inmediatamente y luego reproducir
   useEffect(() => {
-    if (triggerPlay && !hasTriggered.current && audioRef.current) {
+    if (triggerPlay && !hasTriggered.current) {
       hasTriggered.current = true
-      if (startTime > 0) {
-        audioRef.current.currentTime = startTime
+      // Cambiar el icono a "sonido" inmediatamente (sin esperar que cargue el audio)
+      setIsPlaying(true)
+      
+      // Luego intentar reproducir el audio
+      if (audioRef.current) {
+        if (startTime > 0) {
+          audioRef.current.currentTime = startTime
+        }
+        audioRef.current.play().catch(() => {
+          // Si falla, el boton ya esta en modo "sonido", el usuario puede reintentarlo
+        })
       }
-      audioRef.current.play().then(() => {
-        setIsPlaying(true)
-      }).catch(() => {
-        // Si falla, al menos el estado queda en "playing" visualmente
-        setIsPlaying(true)
-      })
     }
   }, [triggerPlay, startTime])
 
