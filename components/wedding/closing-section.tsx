@@ -130,6 +130,11 @@ export default function ClosingSection({
   }
   const resolvedLetterSpacing = letterSpacingMap[namesLetterSpacing] || "0.2em"
 
+  // Get size class - support pixel values like "48px"
+  const isPixelSize = namesSize.endsWith("px")
+  const sizeClass = isPixelSize ? "" : (sizeMap[namesSize] || sizeMap.lg)
+  const pixelSizeStyle: React.CSSProperties = isPixelSize ? { fontSize: namesSize } : {}
+
   // Build font family style if custom font specified
   const namesFontStyle: React.CSSProperties = {
     ...(namesFont ? { fontFamily: `'${namesFont}', cursive` } : {}),
@@ -140,11 +145,6 @@ export default function ClosingSection({
     letterSpacing: resolvedLetterSpacing,
     ...pixelSizeStyle,
   }
-
-  // Get size class - support pixel values like "48px"
-  const isPixelSize = namesSize.endsWith("px")
-  const sizeClass = isPixelSize ? "" : (sizeMap[namesSize] || sizeMap.lg)
-  const pixelSizeStyle: React.CSSProperties = isPixelSize ? { fontSize: namesSize } : {}
 
   return (
     <section className="bg-background" style={{ color: defaultTextColor }}>
