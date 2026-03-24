@@ -140,6 +140,7 @@ export default function Section({ section, coupleNames, prevBgColor, prevBgImage
             icon={data.icon as string | undefined}
             showButton={data.showButton as boolean | undefined}
             datetime={data.datetime as { date?: string; time?: string } | undefined}
+            order={data.order as ("date" | "time" | "address")[] | undefined}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" | "background" }}
           />
         )

@@ -48,6 +48,8 @@ const sizeMap: Record<string, string> = {
   xl: "text-3xl sm:text-4xl md:text-5xl",
   "2xl": "text-4xl sm:text-5xl md:text-6xl",
   "3xl": "text-5xl sm:text-6xl md:text-7xl",
+  "4xl": "text-6xl sm:text-7xl md:text-8xl",
+  "5xl": "text-7xl sm:text-8xl md:text-9xl",
 }
 
 // Map weight names to CSS values
@@ -136,10 +138,13 @@ export default function ClosingSection({
     color: namesColor || defaultTextColor,
     textTransform: shouldLowercase ? "none" : "uppercase",
     letterSpacing: resolvedLetterSpacing,
+    ...pixelSizeStyle,
   }
 
-  // Get size class
-  const sizeClass = sizeMap[namesSize] || sizeMap.lg
+  // Get size class - support pixel values like "48px"
+  const isPixelSize = namesSize.endsWith("px")
+  const sizeClass = isPixelSize ? "" : (sizeMap[namesSize] || sizeMap.lg)
+  const pixelSizeStyle: React.CSSProperties = isPixelSize ? { fontSize: namesSize } : {}
 
   return (
     <section className="bg-background" style={{ color: defaultTextColor }}>

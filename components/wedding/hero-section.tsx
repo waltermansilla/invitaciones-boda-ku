@@ -75,6 +75,9 @@ const sizeMap: Record<string, string> = {
   "5xl": "text-7xl sm:text-8xl md:text-9xl",
 }
 
+// Helper to check if size is pixel value
+const isPixelSize = (size: string) => size.endsWith("px")
+
 const weightMap: Record<string, string> = {
   thin: "100",
   extralight: "200",
@@ -216,7 +219,8 @@ export default function HeroSection({
     const size = textConfig.size || fallbackSize || "lg"
     const style = textConfig.style || fallbackStyle || "normal"
     const resolvedWeight = weightMap[weight] || weight
-    const sizeClass = sizeMap[size] || sizeMap.lg
+    const usePixelSize = isPixelSize(size)
+    const sizeClass = usePixelSize ? "" : (sizeMap[size] || sizeMap.lg)
     // Use individual letterSpacing if provided, otherwise fall back to global
     const textLetterSpacing = textConfig.letterSpacing 
       ? (letterSpacingMap[textConfig.letterSpacing] || "0.2em")
@@ -229,6 +233,7 @@ export default function HeroSection({
       color: namesColor,
       textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
       letterSpacing: textLetterSpacing,
+      ...(usePixelSize ? { fontSize: size } : {}),
     }
 
     return (
@@ -290,7 +295,8 @@ export default function HeroSection({
     }
 
     const resolvedWeight = weightMap[legacyWeight] || legacyWeight
-    const sizeClass = sizeMap[legacySize] || sizeMap.lg
+    const usePixelSizeLegacy = isPixelSize(legacySize)
+    const sizeClass = usePixelSizeLegacy ? "" : (sizeMap[legacySize] || sizeMap.lg)
     const namesFontStyle: React.CSSProperties = {
       ...(legacyFont ? { fontFamily: `'${legacyFont}', cursive` } : {}),
       fontWeight: resolvedWeight,
@@ -298,6 +304,7 @@ export default function HeroSection({
       color: namesColor,
       textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
       letterSpacing: namesLetterSpacing,
+      ...(usePixelSizeLegacy ? { fontSize: legacySize } : {}),
       ...getPositionStyle(),
     }
 

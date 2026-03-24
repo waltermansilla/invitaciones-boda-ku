@@ -54,7 +54,7 @@
             "font": "",
             "_comment_font": "Fuente de Google Fonts para los nombres. Dejar vacio para usar la del theme. Ej: 'Great Vibes', 'Tangerine', 'Alex Brush'",
             "size": "4xl",
-            "_comment_size": "Tamanio: 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl'",
+            "_comment_size": "Tamanio: 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'. Tambien acepta pixeles: '48px', '60px', '72px', etc.",
             "weight": "200",
             "_comment_weight": "Grosor: '100' (thin), '200' (extralight), '300' (light), '400' (normal), '500' (medium), '600' (semibold), '700' (bold)",
             "color": "",
@@ -228,7 +228,7 @@
         },
 
         {
-            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. ICONOS: 'pin' (default), 'church', 'dinner', 'party', 'salon', 'book', 'podium', 'reception', 'ring', 'music', 'sparkles'. showButton: true/false. datetime: fecha y hora opcional.",
+            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. ICONOS: 'pin' (default), 'church', 'dinner', 'party', 'salon', 'book', 'podium', 'reception', 'ring', 'music', 'sparkles'. showButton: true/false. datetime: fecha y hora opcional. order: orden de elementos.",
             "type": "locationInfo",
             "id": "location-civil",
             "enabled": true,
@@ -243,6 +243,8 @@
                     "date": "Viernes 16 de Febrero",
                     "time": "11:00 hs"
                 },
+                "order": ["date", "time", "address"],
+                "_comment_order": "Orden de elementos: 'date', 'time', 'address'. Ej: ['address', 'date', 'time'] para mostrar direccion primero.",
                 "button": {
                     "text": "Como llegar",
                     "url": "https://maps.google.com",
@@ -267,6 +269,7 @@
                     "date": "Sabado 17 de Febrero",
                     "time": "21:00 hs"
                 },
+                "order": ["date", "time", "address"],
                 "button": {
                     "text": "Como llegar",
                     "url": "https://maps.google.com",

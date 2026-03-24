@@ -229,7 +229,7 @@
         },
 
         {
-            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. ICONOS: 'pin' (default), 'church', 'dinner', 'party', 'salon', 'book', 'podium', 'reception', 'ring', 'music', 'sparkles'. showButton: true/false. datetime: fecha y hora opcional.",
+            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. ICONOS: 'pin' (default), 'church', 'dinner', 'party', 'salon', 'book', 'podium', 'reception', 'ring', 'music', 'sparkles'. showButton: true/false. datetime: fecha y hora opcional. order: orden de elementos.",
             "type": "locationInfo",
             "id": "location-fiesta",
             "enabled": true,
@@ -244,6 +244,8 @@
                     "date": "Sabado 17 de Febrero",
                     "time": "21:00 hs"
                 },
+                "order": ["date", "time", "address"],
+                "_comment_order": "Orden: 'date', 'time', 'address'. Ej: ['address', 'date', 'time'].",
                 "button": { "text": "Como llegar", "url": "https://maps.google.com", "variant": "primary" }
             }
         },
