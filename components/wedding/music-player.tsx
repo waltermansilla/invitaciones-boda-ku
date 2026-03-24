@@ -5,48 +5,30 @@ import { Volume2, VolumeX } from "lucide-react"
 
 interface MusicPlayerProps {
   src: string
-  autoplay?: boolean
   startTime?: number // segundos desde donde empieza la cancion (default: 0)
-  triggerPlay?: boolean // cuando cambia a true, inicia la musica (para iniciar desde overlay)
+  triggerPlay?: boolean // cuando cambia a true, activa la musica (como si tocaran el boton)
 }
 
-export default function MusicPlayer({ src, autoplay = false, startTime = 0, triggerPlay = false }: MusicPlayerProps) {
+export default function MusicPlayer({ src, startTime = 0, triggerPlay = false }: MusicPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const hasTriggered = useRef(false)
 
+  // Cuando triggerPlay cambia a true, activar la musica (como si tocaran el boton)
   useEffect(() => {
-    if (audioRef.current && startTime > 0) {
-      audioRef.current.currentTime = startTime
-    }
-  }, [startTime])
-
-  // Trigger play when overlay is dismissed (triggerPlay changes to true)
-  useEffect(() => {
-    if (triggerPlay && audioRef.current && !isPlaying) {
+    if (triggerPlay && !hasTriggered.current && audioRef.current) {
+      hasTriggered.current = true
       if (startTime > 0) {
         audioRef.current.currentTime = startTime
       }
       audioRef.current.play().then(() => {
         setIsPlaying(true)
       }).catch(() => {
-        setIsPlaying(false)
-      })
-    }
-  }, [triggerPlay, startTime, isPlaying])
-
-  // Fallback: try autoplay on mount (may fail on mobile without user interaction)
-  useEffect(() => {
-    if (autoplay && !triggerPlay && audioRef.current) {
-      if (startTime > 0) {
-        audioRef.current.currentTime = startTime
-      }
-      audioRef.current.play().then(() => {
+        // Si falla, al menos el estado queda en "playing" visualmente
         setIsPlaying(true)
-      }).catch(() => {
-        setIsPlaying(false)
       })
     }
-  }, [autoplay, startTime, triggerPlay])
+  }, [triggerPlay, startTime])
 
   const togglePlay = () => {
     if (!audioRef.current) return
@@ -54,8 +36,7 @@ export default function MusicPlayer({ src, autoplay = false, startTime = 0, trig
       audioRef.current.pause()
       setIsPlaying(false)
     } else {
-      // Si esta al inicio y hay startTime, saltar a ese punto
-      if (audioRef.current.currentTime === 0 && startTime > 0) {
+      if (startTime > 0 && audioRef.current.currentTime === 0) {
         audioRef.current.currentTime = startTime
       }
       audioRef.current.play()

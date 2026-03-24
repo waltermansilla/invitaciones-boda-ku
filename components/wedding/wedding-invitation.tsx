@@ -188,7 +188,6 @@ export default function WeddingInvitation() {
                 {music.enabled && (
                     <MusicPlayer 
                         src={music.src} 
-                        autoplay={music.autoplay} 
                         startTime={(music as Record<string, unknown>).startTime as number | undefined}
                         triggerPlay={shouldPlayMusic}
                     />
