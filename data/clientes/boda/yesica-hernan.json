@@ -52,7 +52,7 @@
     "music": {
         "enabled": true,
         "src": "/clientes/boda/yesica-hernan/music/ladygaga.mp3",
-        "autoplay": false
+        "autoplay": true
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",

@@ -46,7 +46,7 @@
     "music": {
         "enabled": true,
         "src": "/clientes/boda/belen-agustin/music/perfect.mp3",
-        "autoplay": false
+        "autoplay": true
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
