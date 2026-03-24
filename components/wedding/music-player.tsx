@@ -7,9 +7,10 @@ interface MusicPlayerProps {
   src: string
   autoplay?: boolean
   startTime?: number // segundos desde donde empieza la cancion (default: 0)
+  triggerPlay?: boolean // cuando cambia a true, inicia la musica (para iniciar desde overlay)
 }
 
-export default function MusicPlayer({ src, autoplay = false, startTime = 0 }: MusicPlayerProps) {
+export default function MusicPlayer({ src, autoplay = false, startTime = 0, triggerPlay = false }: MusicPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -19,8 +20,9 @@ export default function MusicPlayer({ src, autoplay = false, startTime = 0 }: Mu
     }
   }, [startTime])
 
+  // Trigger play when overlay is dismissed (triggerPlay changes to true)
   useEffect(() => {
-    if (autoplay && audioRef.current) {
+    if (triggerPlay && audioRef.current && !isPlaying) {
       if (startTime > 0) {
         audioRef.current.currentTime = startTime
       }
@@ -30,7 +32,21 @@ export default function MusicPlayer({ src, autoplay = false, startTime = 0 }: Mu
         setIsPlaying(false)
       })
     }
-  }, [autoplay, startTime])
+  }, [triggerPlay, startTime, isPlaying])
+
+  // Fallback: try autoplay on mount (may fail on mobile without user interaction)
+  useEffect(() => {
+    if (autoplay && !triggerPlay && audioRef.current) {
+      if (startTime > 0) {
+        audioRef.current.currentTime = startTime
+      }
+      audioRef.current.play().then(() => {
+        setIsPlaying(true)
+      }).catch(() => {
+        setIsPlaying(false)
+      })
+    }
+  }, [autoplay, startTime, triggerPlay])
 
   const togglePlay = () => {
     if (!audioRef.current) return
