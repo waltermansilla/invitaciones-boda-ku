@@ -42,14 +42,14 @@
 
     "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "Se vienen mis XV. ¡Yo que vos no falto!",
         "buttonText": "Ingresar",
         "nameStyle": {
             "font": "Dancing Script",
-            "size": "3xl",
+            "size": "70px",
             "weight": "600",
-            "color": "#000",
+            "color": "#444",
             "lowercase": true,
             "letterSpacing": "none"
         }
@@ -63,7 +63,7 @@
     "music": {
         "enabled": true,
         "src": "/clientes/xv/camila/music/rihanna.mp3",
-        "autoplay": false,
+        "autoplay": true,
         "startTime": 16
     },
 
@@ -178,6 +178,7 @@
                 "title": "¿Dónde?",
                 "address": "'La Paloma Eventos', Calle 9 Nº 4608, Berazategui",
                 "showButton": true,
+                "order": ["address", "time"],
                 "datetime": {
                     "time": "21:45 hs"
                 },
@@ -397,7 +398,10 @@
                             "label": "Titular",
                             "value": "Camila Yasmín Kruckenberger"
                         },
-                        { "label": "Banco", "value": "Mercado Pago" }
+                        {
+                            "label": "Billetera virtual",
+                            "value": "Mercado Pago"
+                        }
                     ]
                 }
             }
