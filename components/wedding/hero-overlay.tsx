@@ -140,44 +140,42 @@ export default function HeroOverlay({
       {(showNames || showPhrase) && typeof numPosition !== "number" && (
         <div className="flex flex-col items-center">
           {showNames && (
-            <>
+            <div className="flex flex-col items-center justify-center">
               {/* Decorative thin line */}
               <div className="mb-8 h-px w-12 bg-primary/30" />
 
-              {/* Couple names - wrapped in flex container for proper vertical centering */}
-              <div className="flex flex-col items-center justify-center">
-                <h1 
-                  className={`text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
-                  style={{ 
-                    fontFamily: nameFontFamily,
-                    color: nameColor,
-                    textTransform: nameStyle?.lowercase ? "none" : "uppercase",
-                    letterSpacing: nameLetterSpacing,
-                    ...nameSizeStyle,
-                  }}
-                >
-                  {brideName}
-                </h1>
-                <span className="my-3 text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl md:text-4xl">
-                  {separator}
-                </span>
-                <h1 
-                  className={`text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
-                  style={{ 
-                    fontFamily: nameFontFamily,
-                    color: nameColor,
-                    textTransform: nameStyle?.lowercase ? "none" : "uppercase",
-                    letterSpacing: nameLetterSpacing,
-                    ...nameSizeStyle,
-                  }}
-                >
-                  {groomName}
-                </h1>
-              </div>
+              {/* Couple names */}
+              <h1 
+                className={`text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                style={{ 
+                  fontFamily: nameFontFamily,
+                  color: nameColor,
+                  textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                  letterSpacing: nameLetterSpacing,
+                  ...nameSizeStyle,
+                }}
+              >
+                {brideName}
+              </h1>
+              <span className="my-3 text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl md:text-4xl">
+                {separator}
+              </span>
+              <h1 
+                className={`text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                style={{ 
+                  fontFamily: nameFontFamily,
+                  color: nameColor,
+                  textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                  letterSpacing: nameLetterSpacing,
+                  ...nameSizeStyle,
+                }}
+              >
+                {groomName}
+              </h1>
 
               {/* Decorative thin line */}
               <div className="mt-8 mb-10 h-px w-12 bg-primary/30" />
-            </>
+            </div>
           )}
 
           {/* Romantic phrase */}
