@@ -1,11 +1,44 @@
 /**
- * Script para migrar imágenes de public/clientes a Vercel Blob
- * y actualizar los JSONs con las nuevas URLs
+ * ============================================================
+ * SCRIPT DE MIGRACION A VERCEL BLOB
+ * ============================================================
  * 
- * Ejecutar con: npx tsx scripts/migrate-to-blob.ts
+ * Este script sube las imagenes de public/clientes a Vercel Blob
+ * y actualiza automaticamente las URLs en los JSONs de invitaciones.
+ * 
+ * ES INCREMENTAL: solo sube archivos nuevos, no duplica los existentes.
+ * 
+ * ============================================================
+ * COMO EJECUTAR
+ * ============================================================
+ * 
+ * 1. Abri la terminal en la carpeta del proyecto
+ * 2. Asegurate de tener el token de Blob configurado:
+ *    export BLOB_READ_WRITE_TOKEN="tu_token_aqui"
+ * 3. Ejecuta:
+ *    npx tsx scripts/migrate-to-blob.ts
+ * 
+ * ============================================================
+ * QUE HACE
+ * ============================================================
+ * 
+ * 1. Busca todos los archivos en public/clientes/ (jpg, png, mp3, etc)
+ * 2. Consulta Blob para ver cuales ya estan subidos
+ * 3. Sube SOLO los archivos nuevos (no duplica)
+ * 4. Actualiza los JSONs con las nuevas URLs de Blob
+ * 5. Guarda un mapeo de URLs en scripts/url-mapping.json
+ * 
+ * ============================================================
+ * DESPUES DE EJECUTAR
+ * ============================================================
+ * 
+ * 1. Verifica que las invitaciones funcionen en localhost
+ * 2. Hace commit y push de los JSONs actualizados
+ * 3. (Opcional) Borra los archivos migrados de public/clientes/
+ * 
  */
 
-import { put } from '@vercel/blob';
+import { put, list } from '@vercel/blob';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -15,27 +48,43 @@ const DATA_DIR = path.join(process.cwd(), 'data');
 // Mapeo de rutas locales a URLs de blob
 const urlMapping: Record<string, string> = {};
 
+// Obtener todos los archivos ya subidos a Blob
+async function getExistingBlobFiles(): Promise<Map<string, string>> {
+  const existing = new Map<string, string>();
+  let cursor: string | undefined;
+  
+  console.log('Consultando archivos existentes en Blob...');
+  
+  do {
+    const result = await list({ cursor, limit: 1000 });
+    for (const blob of result.blobs) {
+      existing.set(blob.pathname, blob.url);
+    }
+    cursor = result.cursor;
+  } while (cursor);
+  
+  return existing;
+}
+
 async function uploadFile(localPath: string): Promise<string> {
   const relativePath = localPath.replace(PUBLIC_DIR + '/', '');
-  
-  // Leer el archivo
   const fileBuffer = fs.readFileSync(localPath);
-  const fileName = relativePath; // Mantener la estructura de carpetas
   
-  console.log(`Subiendo: ${relativePath}`);
+  console.log(`  Subiendo: ${relativePath}`);
   
-  // Subir a Vercel Blob
-  const blob = await put(fileName, fileBuffer, {
+  const blob = await put(relativePath, fileBuffer, {
     access: 'public',
   });
   
-  console.log(`  -> ${blob.url}`);
+  console.log(`    -> ${blob.url}`);
   
   return blob.url;
 }
 
 async function getAllFiles(dir: string): Promise<string[]> {
   const files: string[] = [];
+  
+  if (!fs.existsSync(dir)) return files;
   
   const items = fs.readdirSync(dir);
   for (const item of items) {
@@ -45,9 +94,8 @@ async function getAllFiles(dir: string): Promise<string[]> {
     if (stat.isDirectory()) {
       files.push(...await getAllFiles(fullPath));
     } else {
-      // Solo archivos de imagen y audio
       const ext = path.extname(item).toLowerCase();
-      if (['.jpg', '.jpeg', '.png', '.webp', '.gif', '.mp3', '.wav'].includes(ext)) {
+      if (['.jpg', '.jpeg', '.png', '.webp', '.gif', '.mp3', '.wav', '.mp4'].includes(ext)) {
         files.push(fullPath);
       }
     }
@@ -60,19 +108,16 @@ function updateJsonUrls(jsonPath: string) {
   let content = fs.readFileSync(jsonPath, 'utf-8');
   let updated = false;
   
-  // Reemplazar todas las rutas locales con URLs de blob
   for (const [localPath, blobUrl] of Object.entries(urlMapping)) {
-    // La ruta en el JSON puede ser "/clientes/..." o "clientes/..."
     const pathVariants = [
-      `/${localPath}`,
-      localPath,
       `"/${localPath}"`,
       `"${localPath}"`,
+      `/${localPath}`,
+      localPath,
     ];
     
     for (const variant of pathVariants) {
       if (content.includes(variant)) {
-        // Reemplazar manteniendo las comillas si las hay
         if (variant.startsWith('"') && variant.endsWith('"')) {
           content = content.split(variant).join(`"${blobUrl}"`);
         } else {
@@ -85,58 +130,123 @@ function updateJsonUrls(jsonPath: string) {
   
   if (updated) {
     fs.writeFileSync(jsonPath, content, 'utf-8');
-    console.log(`Actualizado: ${jsonPath}`);
+    console.log(`  Actualizado: ${path.basename(jsonPath)}`);
   }
 }
 
 async function main() {
-  console.log('=== Migración a Vercel Blob ===\n');
+  console.log('');
+  console.log('========================================');
+  console.log('   MIGRACION A VERCEL BLOB');
+  console.log('========================================');
+  console.log('');
   
-  // 1. Buscar todos los archivos en public/clientes
+  // 1. Obtener archivos existentes en Blob
+  const existingBlobs = await getExistingBlobFiles();
+  console.log(`Ya existen ${existingBlobs.size} archivos en Blob`);
+  console.log('');
+  
+  // 2. Buscar archivos locales
   const clientesDir = path.join(PUBLIC_DIR, 'clientes');
   
   if (!fs.existsSync(clientesDir)) {
-    console.log('No se encontró la carpeta public/clientes');
+    console.log('No se encontro la carpeta public/clientes');
+    console.log('No hay nada que migrar.');
     return;
   }
   
   const files = await getAllFiles(clientesDir);
-  console.log(`Encontrados ${files.length} archivos para migrar\n`);
+  console.log(`Encontrados ${files.length} archivos locales`);
+  console.log('');
   
-  // 2. Subir cada archivo a Vercel Blob
-  console.log('--- Subiendo archivos ---\n');
+  // 3. Subir solo los nuevos
+  console.log('--- SUBIENDO ARCHIVOS NUEVOS ---');
+  console.log('');
+  
+  let uploaded = 0;
+  let skipped = 0;
+  const filesToDelete: string[] = [];
   
   for (const file of files) {
+    const relativePath = file.replace(PUBLIC_DIR + '/', '');
+    
+    // Si ya existe en Blob, usar la URL existente
+    if (existingBlobs.has(relativePath)) {
+      urlMapping[relativePath] = existingBlobs.get(relativePath)!;
+      filesToDelete.push(file);
+      skipped++;
+      continue;
+    }
+    
+    // Subir archivo nuevo
     try {
-      const relativePath = file.replace(PUBLIC_DIR + '/', '');
       const blobUrl = await uploadFile(file);
       urlMapping[relativePath] = blobUrl;
+      filesToDelete.push(file);
+      uploaded++;
     } catch (error) {
-      console.error(`Error subiendo ${file}:`, error);
+      console.error(`  Error subiendo ${relativePath}:`, error);
     }
   }
   
-  // 3. Actualizar los JSONs
-  console.log('\n--- Actualizando JSONs ---\n');
+  console.log('');
+  console.log(`Subidos: ${uploaded} nuevos`);
+  console.log(`Saltados: ${skipped} (ya existian)`);
+  console.log('');
   
-  const jsonFiles = [
-    ...fs.readdirSync(path.join(DATA_DIR, 'clientes', 'boda')).map(f => path.join(DATA_DIR, 'clientes', 'boda', f)),
-    ...fs.readdirSync(path.join(DATA_DIR, 'clientes', 'xv')).map(f => path.join(DATA_DIR, 'clientes', 'xv', f)),
-  ].filter(f => f.endsWith('.json'));
+  // 4. Actualizar JSONs
+  console.log('--- ACTUALIZANDO JSONs ---');
+  console.log('');
+  
+  const bodaDir = path.join(DATA_DIR, 'clientes', 'boda');
+  const xvDir = path.join(DATA_DIR, 'clientes', 'xv');
+  
+  const jsonFiles: string[] = [];
+  
+  if (fs.existsSync(bodaDir)) {
+    jsonFiles.push(...fs.readdirSync(bodaDir)
+      .filter(f => f.endsWith('.json'))
+      .map(f => path.join(bodaDir, f)));
+  }
+  
+  if (fs.existsSync(xvDir)) {
+    jsonFiles.push(...fs.readdirSync(xvDir)
+      .filter(f => f.endsWith('.json'))
+      .map(f => path.join(xvDir, f)));
+  }
   
   for (const jsonFile of jsonFiles) {
     updateJsonUrls(jsonFile);
   }
   
-  // 4. Guardar el mapeo para referencia
+  // 5. Guardar mapeo
   const mappingPath = path.join(process.cwd(), 'scripts', 'url-mapping.json');
   fs.writeFileSync(mappingPath, JSON.stringify(urlMapping, null, 2), 'utf-8');
-  console.log(`\nMapeo guardado en: ${mappingPath}`);
   
-  console.log('\n=== Migración completada ===');
-  console.log(`\nPróximos pasos:`);
-  console.log('1. Verificar que las invitaciones funcionen correctamente');
-  console.log('2. Si todo está bien, eliminar la carpeta public/clientes');
+  console.log('');
+  console.log('========================================');
+  console.log('   MIGRACION COMPLETADA');
+  console.log('========================================');
+  console.log('');
+  console.log('Proximos pasos:');
+  console.log('1. Verifica que las invitaciones funcionen en localhost');
+  console.log('2. Hace commit y push:');
+  console.log('   git add .');
+  console.log('   git commit -m "Migrar imagenes a Blob"');
+  console.log('   git push');
+  console.log('');
+  
+  if (filesToDelete.length > 0) {
+    console.log('3. (Opcional) Podes borrar estos archivos ya migrados:');
+    for (const file of filesToDelete.slice(0, 10)) {
+      console.log(`   ${file.replace(process.cwd() + '/', '')}`);
+    }
+    if (filesToDelete.length > 10) {
+      console.log(`   ... y ${filesToDelete.length - 10} mas`);
+    }
+  }
+  
+  console.log('');
 }
 
 main().catch(console.error);
