@@ -237,16 +237,103 @@ async function main() {
   console.log('');
   
   if (filesToDelete.length > 0) {
-    console.log('3. (Opcional) Podes borrar estos archivos ya migrados:');
-    for (const file of filesToDelete.slice(0, 10)) {
+    console.log('========================================');
+    console.log('   ARCHIVOS QUE PODES BORRAR');
+    console.log('========================================');
+    console.log('');
+    console.log(`Total: ${filesToDelete.length} archivos ya estan en Blob`);
+    console.log('');
+    
+    for (const file of filesToDelete) {
       console.log(`   ${file.replace(process.cwd() + '/', '')}`);
     }
-    if (filesToDelete.length > 10) {
-      console.log(`   ... y ${filesToDelete.length - 10} mas`);
+    
+    console.log('');
+    console.log('Para borrarlos automaticamente, ejecuta:');
+    console.log('   npx tsx scripts/migrate-to-blob.ts --delete');
+    console.log('');
+  }
+}
+
+// Funcion para borrar archivos migrados
+async function deleteFiles(files: string[]) {
+  console.log('');
+  console.log('========================================');
+  console.log('   BORRANDO ARCHIVOS MIGRADOS');
+  console.log('========================================');
+  console.log('');
+  
+  let deleted = 0;
+  for (const file of files) {
+    try {
+      fs.unlinkSync(file);
+      console.log(`   Borrado: ${file.replace(process.cwd() + '/', '')}`);
+      deleted++;
+    } catch (error) {
+      console.error(`   Error borrando ${file}:`, error);
     }
   }
   
+  // Limpiar carpetas vacias
+  cleanEmptyDirs(path.join(PUBLIC_DIR, 'clientes'));
+  
+  console.log('');
+  console.log(`Borrados: ${deleted} archivos`);
   console.log('');
 }
 
-main().catch(console.error);
+// Funcion para limpiar carpetas vacias
+function cleanEmptyDirs(dir: string) {
+  if (!fs.existsSync(dir)) return;
+  
+  const items = fs.readdirSync(dir);
+  
+  for (const item of items) {
+    const fullPath = path.join(dir, item);
+    if (fs.statSync(fullPath).isDirectory()) {
+      cleanEmptyDirs(fullPath);
+    }
+  }
+  
+  // Si la carpeta quedo vacia, borrarla
+  const remaining = fs.readdirSync(dir);
+  if (remaining.length === 0) {
+    fs.rmdirSync(dir);
+    console.log(`   Carpeta vacia borrada: ${dir.replace(process.cwd() + '/', '')}`);
+  }
+}
+
+// Ejecutar
+const shouldDelete = process.argv.includes('--delete');
+
+if (shouldDelete) {
+  // Primero obtener la lista de archivos a borrar
+  (async () => {
+    const existingBlobs = await getExistingBlobFiles();
+    const clientesDir = path.join(PUBLIC_DIR, 'clientes');
+    
+    if (!fs.existsSync(clientesDir)) {
+      console.log('No hay archivos locales para borrar.');
+      return;
+    }
+    
+    const files = await getAllFiles(clientesDir);
+    const filesToDelete: string[] = [];
+    
+    for (const file of files) {
+      const relativePath = file.replace(PUBLIC_DIR + '/', '');
+      if (existingBlobs.has(relativePath)) {
+        filesToDelete.push(file);
+      }
+    }
+    
+    if (filesToDelete.length === 0) {
+      console.log('No hay archivos para borrar (ninguno esta en Blob).');
+      return;
+    }
+    
+    await deleteFiles(filesToDelete);
+  })().catch(console.error);
+} else {
+  main().catch(console.error);
+}
