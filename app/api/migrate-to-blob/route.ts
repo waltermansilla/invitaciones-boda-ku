@@ -1,4 +1,4 @@
-import { put } from '@vercel/blob';
+import { put, list } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -29,6 +29,23 @@ async function getAllFiles(dir: string): Promise<string[]> {
   return files;
 }
 
+// Obtener todos los archivos ya subidos a Blob
+async function getExistingBlobFiles(): Promise<Map<string, string>> {
+  const existing = new Map<string, string>();
+  let cursor: string | undefined;
+  
+  do {
+    const result = await list({ cursor, limit: 1000 });
+    for (const blob of result.blobs) {
+      // Guardamos pathname -> url
+      existing.set(blob.pathname, blob.url);
+    }
+    cursor = result.cursor;
+  } while (cursor);
+  
+  return existing;
+}
+
 export async function POST() {
   const logs: string[] = [];
   
@@ -41,15 +58,30 @@ export async function POST() {
       return NextResponse.json({ error: 'No se encontró public/clientes' }, { status: 404 });
     }
     
-    // 1. Obtener todos los archivos
-    const files = await getAllFiles(clientesDir);
-    logs.push(`Encontrados ${files.length} archivos`);
+    // 1. Obtener archivos ya subidos a Blob
+    const existingBlobs = await getExistingBlobFiles();
+    logs.push(`Ya existen ${existingBlobs.size} archivos en Blob`);
     
-    // 2. Subir cada archivo
+    // 2. Obtener todos los archivos locales
+    const files = await getAllFiles(clientesDir);
+    logs.push(`Encontrados ${files.length} archivos locales`);
+    
+    // 3. Subir solo los nuevos
+    let uploaded = 0;
+    let skipped = 0;
+    
     for (const file of files) {
       const relativePath = file.replace(publicDir + '/', '');
-      const fileBuffer = fs.readFileSync(file);
       
+      // Si ya existe en Blob, usar la URL existente
+      if (existingBlobs.has(relativePath)) {
+        urlMapping[relativePath] = existingBlobs.get(relativePath)!;
+        skipped++;
+        continue;
+      }
+      
+      // Subir archivo nuevo
+      const fileBuffer = fs.readFileSync(file);
       logs.push(`Subiendo: ${relativePath}`);
       
       const blob = await put(relativePath, fileBuffer, {
@@ -57,8 +89,11 @@ export async function POST() {
       });
       
       urlMapping[relativePath] = blob.url;
+      uploaded++;
       logs.push(`  -> ${blob.url}`);
     }
+    
+    logs.push(`Subidos: ${uploaded} nuevos, ${skipped} ya existían`)
     
     // 3. Actualizar JSONs
     const bodaDir = path.join(dataDir, 'clientes', 'boda');
@@ -98,8 +133,9 @@ export async function POST() {
     
     return NextResponse.json({ 
       success: true, 
-      filesUploaded: files.length,
-      urlMapping,
+      uploaded,
+      skipped,
+      totalLocal: files.length,
       logs 
     });
     
