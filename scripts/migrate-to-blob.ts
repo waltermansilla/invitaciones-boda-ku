@@ -237,20 +237,41 @@ async function main() {
   console.log('');
   
   if (filesToDelete.length > 0) {
+    // Agrupar por carpeta de cliente
+    const folderCounts: Record<string, number> = {};
+    for (const file of filesToDelete) {
+      const relativePath = file.replace(process.cwd() + '/public/', '');
+      // Extraer carpeta del cliente (ej: "clientes/boda/juan-maria")
+      const parts = relativePath.split('/');
+      if (parts.length >= 3) {
+        const folder = parts.slice(0, 3).join('/');
+        folderCounts[folder] = (folderCounts[folder] || 0) + 1;
+      }
+    }
+    
     console.log('========================================');
-    console.log('   ARCHIVOS QUE PODES BORRAR');
+    console.log('   CARPETAS QUE PODES BORRAR');
     console.log('========================================');
     console.log('');
-    console.log(`Total: ${filesToDelete.length} archivos ya estan en Blob`);
+    console.log(`Todas las imagenes de estas carpetas ya estan en Blob:`);
     console.log('');
     
-    for (const file of filesToDelete) {
-      console.log(`   ${file.replace(process.cwd() + '/', '')}`);
+    for (const [folder, count] of Object.entries(folderCounts).sort()) {
+      console.log(`   public/${folder}/  (${count} archivos)`);
     }
     
     console.log('');
-    console.log('Para borrarlos automaticamente, ejecuta:');
+    console.log(`Total: ${filesToDelete.length} archivos en ${Object.keys(folderCounts).length} carpetas`);
+    console.log('');
+    console.log('----------------------------------------');
+    console.log('OPCIONES PARA BORRAR:');
+    console.log('----------------------------------------');
+    console.log('');
+    console.log('Opcion 1 - Automatico (borra todo):');
     console.log('   npx tsx scripts/migrate-to-blob.ts --delete');
+    console.log('');
+    console.log('Opcion 2 - Manual (borrar carpetas especificas):');
+    console.log('   Borra las carpetas desde tu explorador de archivos');
     console.log('');
   }
 }
