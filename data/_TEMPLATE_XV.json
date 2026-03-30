@@ -475,7 +475,10 @@
             "// ----------------------------------------------------------------------": "",
             "// GIFT CARD - Tarjeta de regalo                                         ": "",
             "// ----------------------------------------------------------------------": "",
-            "// Ver opciones completas en template BODA                               ": "",
+            "// suggestedValue: UN solo valor. Ej: '$15.000'                           ": "",
+            "// suggestedValues: MULTIPLES valores (array, hasta 4). Usar UNO u OTRO  ": "",
+            "//   Ejemplo: [{ label: 'Mayores', value: '$68.000' }, { label: 'Menores', value: '$30.000' }]": "",
+            "// Ver mas opciones en template BODA                                     ": "",
             "// ----------------------------------------------------------------------": "",
             "type": "giftCard",
             "id": "gift-card",
@@ -488,7 +491,7 @@
                 "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos de transferencia",
-                    "suggestedValueLabel": "Valor tarjeta por persona",
+                    "suggestedValueLabel": "Valor tarjeta",
                     "suggestedValue": "$15.000",
                     "description": "Podes transferir el monto que quieras.",
                     "transferData": [
