@@ -306,7 +306,7 @@ function ServicioSection({
   const fade = useFadeIn()
 
   return (
-    <section className="px-6 py-20 md:py-28" style={{ background: theme.accent + "06" }}>
+    <section id="planes" className="px-6 py-20 md:py-28" style={{ background: theme.accent + "06" }}>
       <div ref={fade.ref} className={fade.className} style={fade.style}>
         <div className="mx-auto max-w-4xl">
           <div className="mb-14 text-center">
