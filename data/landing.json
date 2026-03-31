@@ -41,8 +41,8 @@
     "ctaButtons": {
         "heroPrimary": {
             "text": "Quiero mi invitación",
-            "type": "whatsapp",
-            "message": "Hola! Me interesa una invitación digital. Quiero saber más."
+            "type": "anchor",
+            "anchor": "#planes"
         },
         "heroSecondary": {
             "text": "Ver muestras",
@@ -86,16 +86,24 @@
             "items": [
                 {
                     "tipo": "boda",
-                    "slug": "anto-walter",
-                    "titulo": "Anto & Walter",
-                    "etiqueta": "Boda",
+                    "slug": "meliza-ivan",
+                    "titulo": "Meliza & Iván",
+                    "etiqueta": "Boda esencial",
                     "accentColor": "#D4A373"
                 },
                 {
                     "tipo": "boda",
-                    "slug": "meliza-ivan",
-                    "titulo": "Meliza & Iván",
-                    "etiqueta": "Boda",
+                    "slug": "anto-walter",
+                    "titulo": "Anto & Walter",
+                    "etiqueta": "Boda premium",
+                    "accentColor": "#D4A373"
+                },
+
+                {
+                    "tipo": "boda",
+                    "slug": "yesica-hernan",
+                    "titulo": "Yesica & Hernán",
+                    "etiqueta": "Boda premium",
                     "accentColor": "#D4A373"
                 },
 
@@ -103,7 +111,14 @@
                     "tipo": "xv",
                     "slug": "dasha",
                     "titulo": "Dasha",
-                    "etiqueta": "XV",
+                    "etiqueta": "XV premium",
+                    "accentColor": "#C4788A"
+                },
+                {
+                    "tipo": "xv",
+                    "slug": "camila",
+                    "titulo": "Camila",
+                    "etiqueta": "XV premium",
                     "accentColor": "#C4788A"
                 },
 
@@ -111,7 +126,7 @@
                     "tipo": "xv",
                     "slug": "valentina",
                     "titulo": "Valentina",
-                    "etiqueta": "XV",
+                    "etiqueta": "XV premium",
                     "accentColor": "#C4788A"
                 }
             ]
@@ -145,7 +160,7 @@
                         "Hasta 10 fotos personalizadas",
                         "Trivia interactiva",
                         "Secci\u00f3n de historias",
-                        "QR hacia \u00e1lbum privado en Drive"
+                        "Álbum compartido en Drive para subir fotos"
                     ]
                 }
             ],

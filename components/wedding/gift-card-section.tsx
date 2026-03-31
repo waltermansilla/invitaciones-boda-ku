@@ -74,7 +74,8 @@ interface GiftCardSectionProps {
     modal: {
         title: string;
         suggestedValueLabel?: string;
-        suggestedValue: string;
+        suggestedValue?: string; // Un solo valor (retrocompatible)
+        suggestedValues?: { label: string; value: string }[]; // Multiples valores (hasta 4)
         description: string;
         transferData: { label: string; value: string }[];
     };
@@ -100,13 +101,18 @@ export default function GiftCardSection({
               }))
             : modal.transferData;
 
+        // Determinar si usar valores multiples o valor simple
+        const hasMultipleValues = modal.suggestedValues && modal.suggestedValues.length > 0;
+        const hasSingleValue = modal.suggestedValue && !hasMultipleValues;
+
         openModal(
             <>
                 <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
                     {modal.title}
                 </h3>
-                {/* Valor sugerido: SOLO para giftCard, solo si tiene valor */}
-                {modal.suggestedValue && (
+                
+                {/* Valor simple (retrocompatible) */}
+                {hasSingleValue && (
                     <div className="mb-5 rounded-sm bg-primary-foreground/10 px-5 py-4 text-center">
                         <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
                             {modal.suggestedValueLabel || "Valor tarjeta por persona"}
@@ -114,6 +120,32 @@ export default function GiftCardSection({
                         <p className="mt-1 text-2xl font-light text-primary-foreground">
                             {isMuestra ? "$XX.XXX" : modal.suggestedValue}
                         </p>
+                    </div>
+                )}
+                
+                {/* Valores multiples (hasta 4) */}
+                {hasMultipleValues && (
+                    <div className="mb-5 rounded-sm bg-primary-foreground/10 px-4 py-3">
+                        {modal.suggestedValueLabel && (
+                            <p className="mb-2 text-center text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
+                                {modal.suggestedValueLabel}
+                            </p>
+                        )}
+                        <div className="space-y-1.5">
+                            {modal.suggestedValues!.map((item, index) => (
+                                <div 
+                                    key={index} 
+                                    className="flex items-center justify-between py-1"
+                                >
+                                    <span className="text-xs font-light text-primary-foreground/70">
+                                        {item.label}
+                                    </span>
+                                    <span className="text-sm font-medium text-primary-foreground">
+                                        {isMuestra ? "$XX.XXX" : item.value}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
                 <p className="mb-6 text-sm font-light leading-relaxed text-primary-foreground/80">

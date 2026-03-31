@@ -1,11 +1,27 @@
 {
-    "// ==========================================": "",
-    "// TEMPLATE XV - TODAS LAS SECCIONES         ": "",
-    "// ==========================================.": "",
-    "//": "",
-    "// NO se usa en la app. Solo de referencia.",
-    "// Para crear un nuevo XV: copiar a data/clientes/xv/[slug].json",
-    "// y borrar/editar lo que no necesites.",
+    "// ==========================================================================": "",
+    "// TEMPLATE XV - GUIA COMPLETA                                               ": "",
+    "// ==========================================================================": "",
+    "//                                                                            ": "",
+    "// Este archivo es SOLO DE REFERENCIA. No se usa en la app.                  ": "",
+    "// Para crear un XV: copiar a data/clientes/xv/[slug].json                   ": "",
+    "//                                                                            ": "",
+    "// MIGRACION DE IMAGENES A BLOB:                                             ": "",
+    "// 1. Trabaja con imagenes locales en public/clientes/xv/[slug]/             ": "",
+    "// 2. Cuando esten listas, ejecuta: npx tsx scripts/migrate-to-blob.ts       ": "",
+    "// 3. El script sube las imagenes y actualiza los JSONs automaticamente      ": "",
+    "// ==========================================================================": "",
+
+
+
+    "// ==========================================================================": "",
+    "// META - Informacion basica de la invitacion                                ": "",
+    "// ==========================================================================": "",
+    "// title: titulo de la pagina (SEO)                                          ": "",
+    "// description: descripcion para redes sociales                              ": "",
+    "// quinceaneraName: nombre de la quinceanera                                 ": "",
+    "// coupleNames: se usa internamente (brideName = nombre de la quinceanera)   ": "",
+    "// ==========================================================================": "",
 
     "meta": {
         "title": "XV de Nombre",
@@ -19,7 +35,22 @@
         }
     },
 
-    "_comment_theme": "COLORES Y TIPOGRAFIA. backgroundImage/primaryImage: imagenes de fondo alternativas a los colores (opcional).",
+
+
+    "// ==========================================================================": "",
+    "// THEME - Colores y tipografia                                              ": "",
+    "// ==========================================================================": "",
+    "// primaryColor: color principal (botones, fondos destacados)                ": "",
+    "// backgroundColor: fondo general claro                                      ": "",
+    "// backgroundImage: imagen de fondo alternativa (opcional)                   ": "",
+    "// primaryImage: imagen para secciones con fondo primary (opcional)          ": "",
+    "// textColor: color de texto general                                         ": "",
+    "// lightBgTextColor: texto sobre fondo claro                                 ": "",
+    "// darkBgTextColor: texto sobre fondo oscuro                                 ": "",
+    "// font.family: fuente de Google Fonts                                       ": "",
+    "// font.weights: pesos a cargar (separados por coma)                         ": "",
+    "// ==========================================================================": "",
+
     "theme": {
         "primaryColor": "#C4788A",
         "backgroundColor": "#FFF9F7",
@@ -36,7 +67,22 @@
         }
     },
 
-    "_comment_overlay": "PANTALLA DE BIENVENIDA. bgColor/bgImage: fondo. showNames/showPhrase: mostrar u ocultar. nameStyle: tipografia. buttonPosition: posicion del boton.",
+
+
+    "// ==========================================================================": "",
+    "// OVERLAY - Pantalla de bienvenida                                          ": "",
+    "// ==========================================================================": "",
+    "// enabled: true/false                                                       ": "",
+    "// phrase: frase de bienvenida (ej: 'Mis 15!')                               ": "",
+    "// buttonText: texto del boton de entrada                                    ": "",
+    "// bgColor: color de fondo personalizado (hex) o vacio para usar theme       ": "",
+    "// bgImage: imagen de fondo (ruta o vacio)                                   ": "",
+    "// showNames: true/false                                                     ": "",
+    "// showPhrase: true/false                                                    ": "",
+    "// buttonPosition: 'center', 'top', 'bottom', o numero 0-100                 ": "",
+    "// nameStyle: ver documentacion en template BODA                             ": "",
+    "// ==========================================================================": "",
+
     "overlay": {
         "enabled": true,
         "phrase": "Mis 15!",
@@ -51,35 +97,56 @@
             "weight": "200",
             "color": "",
             "lowercase": false,
-            "letterSpacing": "wide",
-            "_comment_letterSpacing": "'none' = sin espaciado (cursivas conectan). 'normal' = poco. 'wide' (default) = amplio."
+            "letterSpacing": "wide"
         },
         "buttonPosition": "center"
     },
+
+
+
+    "// ==========================================================================": "",
+    "// MUSIC - Musica de fondo                                                   ": "",
+    "// ==========================================================================": "",
+    "// enabled: true/false                                                       ": "",
+    "// src: ruta al archivo mp3                                                  ": "",
+    "// autoplay: true = inicia al tocar 'Ingresar', false = manual               ": "",
+    "// startTime: segundos desde donde empieza (0 = inicio)                      ": "",
+    "// ==========================================================================": "",
 
     "music": {
         "enabled": true,
         "src": "/music/background.mp3",
         "autoplay": false,
-        "startTime": 0,
-        "_comment_startTime": "Segundos desde donde empieza la cancion. Ej: 15 = salta intro. Default: 0."
+        "startTime": 0
     },
 
-    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /xv/[slug]/qr para captura de pantalla.",
+
+
+    "// ==========================================================================": "",
+    "// QR CARD - Tarjeta imprimible con QR                                       ": "",
+    "// ==========================================================================": "",
+    "// Accede en: /xv/[slug]/qr                                                  ": "",
+    "//                                                                            ": "",
+    "// enabled: true/false (false = pagina 404)                                  ": "",
+    "// names: text1 (titulo chico), text2 (nombre grande)                        ": "",
+    "// icon: 'camera','sparkles','crown','star','heart','none'                   ": "",
+    "// title/description: textos de la tarjeta                                   ": "",
+    "// qrUrl: URL del QR (vacio = usa URL de la invitacion)                      ": "",
+    "// qrStyle: fgColor (color QR), bgColor (fondo QR)                           ": "",
+    "// cardStyle: bgColor, textColor, accentColor                                ": "",
+    "// brand.type: 'instagram', 'text', 'logo', 'none'                           ": "",
+    "// ==========================================================================": "",
+
     "qrCard": {
         "enabled": true,
-        "_comment_enabled": "true = pagina /qr existe. false = pagina desactivada (404).",
         "names": {
             "text1": "Mis XV",
-            "text2": "Valentina",
-            "_comment": "text1 = titulo chico arriba. text2 = nombre grande."
+            "text2": "Valentina"
         },
         "icon": "camera",
-        "_comment_icon": "Icono: 'camera', 'sparkles', 'crown', 'star', 'heart', 'none'",
-        "title": "Compartí tus fotos",
-        "description": "Subí tus fotos de la fiesta y ayudame a guardar los recuerdos de este día tan especial",
+        "title": "Comparti tus fotos",
+        "description": "Subi tus fotos de la fiesta y ayudame a guardar los recuerdos de este dia tan especial",
         "qrUrl": "",
-        "_comment_qrUrl": "URL del QR. Dejar vacio = usa URL de la invitacion.",
         "qrStyle": {
             "fgColor": "#3D3D3D",
             "bgColor": "transparent"
@@ -87,49 +154,48 @@
         "cardStyle": {
             "bgColor": "#FDF8F3",
             "textColor": "#4A4A4A",
-            "accentColor": "#D4A5A5",
-            "_comment": "accentColor = estrellas y detalles."
+            "accentColor": "#D4A5A5"
         },
         "brand": {
             "type": "instagram",
-            "_comment_type": "'instagram', 'text', 'logo', 'none'",
             "text": "Momento Unico Invitaciones",
             "logoUrl": "",
             "instagramHandle": "@momentounico_invitaciones"
         }
     },
 
+
+
+    "// ==========================================================================": "",
+    "// HERO - Seccion principal con foto y countdown                             ": "",
+    "// ==========================================================================": "",
+    "// Ver documentacion completa en template BODA                               ": "",
+    "// La estructura es identica                                                 ": "",
+    "// ==========================================================================": "",
+
     "hero": {
         "coupleImage": "/clientes/xv/[slug]/hero.jpg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
-
-        "_comment_namesDisplay": "NOMBRES EN LA FOTO. position: 'top'/'bottom'. positionX/positionY: 0-100 para posicion exacta. color: hex. decorativeLines: lineas. logo: imagen.",
         "namesDisplay": {
             "enabled": true,
             "position": "bottom",
             "positionX": null,
             "positionY": null,
-            "_comment_position": "positionX: 0-100 (0=izquierda, 50=centro, 100=derecha). positionY: 0-100 (0=arriba, 100=abajo). Si usas estos, se ignora position.",
             "color": "rgba(255,255,255,0.9)",
             "decorativeLines": false,
             "logo": "",
-            "_comment_texts": "OPCIONAL: Para 2 textos con estilos distintos. Cada uno puede tener su propio letterSpacing.",
             "texts": [
                 { "text": "Mis XV", "font": "", "weight": "200", "size": "base", "style": "normal", "letterSpacing": "wide" },
                 { "text": "Valentina", "font": "", "weight": "300", "size": "2xl", "style": "normal", "letterSpacing": "none" }
             ],
-            "_comment_texts_letterSpacing": "letterSpacing individual: 'none' (cursivas conectan), 'normal', 'wide'. Si no pones, usa el global.",
-            "_comment_legacy": "Si no usas 'texts', estos valores se aplican:",
             "font": "",
             "weight": "300",
             "size": "lg",
             "style": "normal",
             "lowercase": false,
-            "letterSpacing": "wide",
-            "_comment_letterSpacing": "'none'/'normal'/'wide'. 'none' = cursivas conectan."
+            "letterSpacing": "wide"
         },
-
         "countdownPrefix": "Faltan",
         "eventDate": "2027-01-01T21:00:00",
         "countdownLabels": {
@@ -138,11 +204,7 @@
             "minutes": "Minutos",
             "seconds": "Segundos"
         },
-
-        "_comment_countdownAreaBg": "FONDO DEL AREA DEL COUNTDOWN. Opciones: 'background', 'primary', o un hex.",
         "countdownAreaBg": "background",
-
-        "_comment_countdownStyle": "ESTILO DE CADA NUMERO. background: 'none'/'background'/'primary'/'secondary' o hex. shape: 'rounded'/'circle'/'square'/'pill'. layout: 'inline' (normal) o 'overlay' (superpuesto). overlayStyle: 'card' (con caja + Faltan) o 'floating' (items sueltos sin caja ni Faltan).",
         "countdownStyle": {
             "background": "none",
             "shape": "rounded",
@@ -151,17 +213,31 @@
         }
     },
 
-    "_comment_sections": "El orden de los objetos define el orden visual en la pagina. enabled: true/false para activar/desactivar cada seccion (true por defecto). bgColor: 'primary' = fondo color principal, 'background' = fondo claro (default si no se pone).",
+
+
+    "// ==========================================================================": "",
+    "// SECTIONS - Secciones de contenido                                         ": "",
+    "// ==========================================================================": "",
+    "// El ORDEN en el array define el orden visual en la pagina.                 ": "",
+    "// Ver documentacion completa de cada tipo en template BODA.                 ": "",
+    "//                                                                            ": "",
+    "// TIPOS EXCLUSIVOS DE XV:                                                    ": "",
+    "//   presentation: foto + nombre + descripcion                               ": "",
+    "//   parents: nombre de los padres                                           ": "",
+    "// ==========================================================================": "",
 
     "sections": [
 
+
+
         {
-            "_comment": "QUOTE: Frase de bienvenida. decorativeLines: true/false para lineas arriba y abajo.",
+            "// ----------------------------------------------------------------------": "",
+            "// QUOTE - Frase de bienvenida                                           ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "quote",
             "id": "quote-welcome",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["text", "author"],
             "data": {
                 "text": "La vida es una fiesta, y hoy quiero celebrarla con vos.",
                 "author": "",
@@ -169,12 +245,20 @@
             }
         },
 
+
+
         {
-            "_comment": "PRESENTATION: Foto + nombre + descripcion. EXCLUSIVO DE XV.",
+            "// ----------------------------------------------------------------------": "",
+            "// PRESENTATION - Foto y presentacion (EXCLUSIVO XV)                     ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// image: foto de la quinceanera                                         ": "",
+            "// name: nombre                                                          ": "",
+            "// description: texto de presentacion                                    ": "",
+            "// aspectRatio: proporcion de la foto                                    ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "presentation",
             "id": "presentation",
             "enabled": true,
-            "blocks": ["image", "name", "description"],
             "data": {
                 "image": "/clientes/xv/[slug]/portrait.jpg",
                 "name": "Nombre",
@@ -183,13 +267,20 @@
             }
         },
 
+
+
         {
-            "_comment": "PARENTS: Nombre de los padres/padrinos. EXCLUSIVO DE XV.",
+            "// ----------------------------------------------------------------------": "",
+            "// PARENTS - Padres/Padrinos (EXCLUSIVO XV)                              ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// title: titulo de la seccion                                           ": "",
+            "// subtitle: subtitulo                                                   ": "",
+            "// parents: array de { name, role }                                      ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "parents",
             "id": "parents",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["title", "parents"],
             "data": {
                 "title": "Mis Padres",
                 "subtitle": "Con mucho amor me acompanan en este dia tan especial",
@@ -200,13 +291,16 @@
             }
         },
 
+
+
         {
-            "_comment": "OUR STORY: Momentos de crecimiento. Adaptado como 'Mi historia'.",
+            "// ----------------------------------------------------------------------": "",
+            "// OUR STORY - Momentos de crecimiento                                   ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "ourStory",
             "id": "my-story",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "moments"],
             "data": {
                 "aspectRatio": "3/4",
                 "title": "Mi historia",
@@ -218,23 +312,34 @@
             }
         },
 
+
+
         {
-            "_comment": "DATE INFO: Fecha del evento.",
+            "// ----------------------------------------------------------------------": "",
+            "// DATE INFO - Fecha del evento                                          ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "dateInfo",
             "id": "date-info",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "value"],
-            "data": { "title": "Cuando?", "value": "17 de Febrero 2027" }
+            "data": {
+                "title": "Cuando?",
+                "value": "17 de Febrero 2027"
+            }
         },
 
+
+
         {
-            "_comment": "LOCATION INFO: Ubicacion con boton de mapa. ICONOS: 'pin' (default), 'church', 'dinner', 'party', 'salon', 'book', 'podium', 'reception', 'ring', 'music', 'sparkles'. showButton: true/false. datetime: fecha y hora opcional. order: orden de elementos.",
+            "// ----------------------------------------------------------------------": "",
+            "// LOCATION INFO - Ubicacion con mapa                                    ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// Ver opciones de icon en template BODA                                 ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "locationInfo",
             "id": "location-fiesta",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
             "data": {
                 "icon": "party",
                 "title": "Salon de fiesta",
@@ -245,17 +350,19 @@
                     "time": "21:00 hs"
                 },
                 "order": ["date", "time", "address"],
-                "_comment_order": "Orden: 'date', 'time', 'address'. Ej: ['address', 'date', 'time'].",
                 "button": { "text": "Como llegar", "url": "https://maps.google.com", "variant": "primary" }
             }
         },
 
+
+
         {
-            "_comment": "GALLERY: Slider de fotos.",
+            "// ----------------------------------------------------------------------": "",
+            "// GALLERY - Slider de fotos                                             ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "gallery",
             "id": "gallery-photos",
             "enabled": true,
-            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -266,17 +373,22 @@
             }
         },
 
+
+
         {
-            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "// ----------------------------------------------------------------------": "",
+            "// ITINERARY - Linea de tiempo                                           ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// Ver lista de iconos en template BODA                                  ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "timeline"],
             "data": {
                 "title": "Itinerario",
                 "events": [
-                    { "icon": "sparkles", "name": "Recepcion", "address": "Salon de Eventos - Ruta 14 Km 5", "time": "20:00 hs" },
+                    { "icon": "sparkles", "name": "Recepcion", "address": "Salon de Eventos", "time": "20:00 hs" },
                     { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
                     { "icon": "heart", "name": "Vals con papa", "time": "22:00 hs" },
                     { "icon": "cake", "name": "Torta", "time": "23:00 hs" },
@@ -286,13 +398,18 @@
             }
         },
 
+
+
         {
-            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
+            "// ----------------------------------------------------------------------": "",
+            "// DRESS CODE - Codigo de vestimenta                                     ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// Ver opciones completas en template BODA                               ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "dressCode",
             "id": "dress-code",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "subtitle", "icons", "description", "colorSwatches", "button", "modal"],
             "data": {
                 "icons": ["dress", "suit", "gem"],
                 "title": "Vestimenta",
@@ -309,20 +426,22 @@
                     "title": "Consejos de vestimenta",
                     "sections": [
                         { "heading": "Chicas", "text": "Descripcion." },
-                        { "heading": "Chicos", "text": "Descripcion." },
-                        { "heading": "General", "text": "Descripcion." }
+                        { "heading": "Chicos", "text": "Descripcion." }
                     ]
                 }
             }
         },
 
+
+
         {
-            "_comment": "PHOTOS: Invitar a subir fotos. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
+            "// ----------------------------------------------------------------------": "",
+            "// PHOTOS - Invitacion a subir fotos                                     ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "photos",
             "id": "shared-photos",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button"],
             "data": {
                 "icon": "camera",
                 "title": "Subi tus fotos",
@@ -331,13 +450,16 @@
             }
         },
 
+
+
         {
-            "_comment": "TRUTHS: Juego A o B.",
+            "// ----------------------------------------------------------------------": "",
+            "// TRUTHS - Juego A o B                                                  ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "truths",
             "id": "truths-game",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["title", "questions"],
             "data": {
                 "title": "Cuanto me conoces?",
                 "finishText": "Me conoces mejor de lo que pensaba!",
@@ -347,13 +469,21 @@
             }
         },
 
+
+
         {
-            "_comment": "GIFT CARD: Tarjeta de regalo con modal. ICONOS: gift (caja regalo), creditCard (tarjeta), heart (corazon), star (estrella), sparkles (brillos), handHeart (mano corazon), dollar (signo pesos). suggestedValue = valor sugerido (dejar '' si no queres mostrar).",
+            "// ----------------------------------------------------------------------": "",
+            "// GIFT CARD - Tarjeta de regalo                                         ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// suggestedValue: UN solo valor. Ej: '$15.000'                           ": "",
+            "// suggestedValues: MULTIPLES valores (array, hasta 4). Usar UNO u OTRO  ": "",
+            "//   Ejemplo: [{ label: 'Mayores', value: '$68.000' }, { label: 'Menores', value: '$30.000' }]": "",
+            "// Ver mas opciones en template BODA                                     ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "giftCard",
             "id": "gift-card",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
             "data": {
                 "icon": "gift",
                 "title": "Valor Tarjeta",
@@ -361,7 +491,7 @@
                 "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
                 "modal": {
                     "title": "Datos de transferencia",
-                    "suggestedValueLabel": "Valor tarjeta por persona",
+                    "suggestedValueLabel": "Valor tarjeta",
                     "suggestedValue": "$15.000",
                     "description": "Podes transferir el monto que quieras.",
                     "transferData": [
@@ -374,13 +504,18 @@
             }
         },
 
+
+
         {
-            "_comment": "HONEYMOON: Regalos. OPCIONES: button.action = 'modal' (abre modal) o 'url' (abre link). MODALES MULTIPLES: usar 'modals' (array), type: 'bank' o 'address'. modalMode: 'combined' o 'sequential'.",
+            "// ----------------------------------------------------------------------": "",
+            "// HONEYMOON - Regalos con modal                                         ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// Ver opciones completas en template BODA                               ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "honeymoon",
-            "id": "dream-trip",
+            "id": "gifts",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modals"],
             "data": {
                 "icon": "gift",
                 "title": "Regalos",
@@ -409,22 +544,30 @@
             }
         },
 
+
+
         {
-            "_comment": "EMOTIONAL QUOTE: Frase emotiva centrada.",
+            "// ----------------------------------------------------------------------": "",
+            "// EMOTIONAL QUOTE - Frase emotiva simple                                ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "emotionalQuote",
             "id": "emotional-quote",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["text"],
-            "data": { "text": "Creciendo, sonando, brillando." }
+            "data": {
+                "text": "Creciendo, sonando, brillando."
+            }
         },
 
+
+
         {
-            "_comment": "TRIVIA: Juego de preguntas multiples en modal.",
+            "// ----------------------------------------------------------------------": "",
+            "// TRIVIA - Juego de preguntas multiples                                 ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "trivia",
-            "id": "trivia-game-modal",
+            "id": "trivia-game",
             "enabled": true,
-            "blocks": ["title", "subtitle", "button", "modal"],
             "data": {
                 "title": "Cuanto me conoces?",
                 "subtitle": "Jugamos?",
@@ -439,12 +582,15 @@
             }
         },
 
+
+
         {
-            "_comment": "PLAYLIST: Link a playlist de Spotify.",
+            "// ----------------------------------------------------------------------": "",
+            "// PLAYLIST - Link a Spotify                                             ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "playlist",
             "id": "playlist-suggestion",
             "enabled": true,
-            "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Arma la playlist",
                 "description": "Agrega tus canciones favoritas a la playlist de mi fiesta.",
@@ -452,13 +598,16 @@
             }
         },
 
+
+
         {
-            "_comment": "RSVP: Formulario de confirmacion. Al confirmar, envia datos por WhatsApp. messageTemplate usa {resumen} como placeholder.",
+            "// ----------------------------------------------------------------------": "",
+            "// RSVP - Formulario de confirmacion                                     ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "rsvp",
             "id": "rsvp-form",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["title", "form"],
             "data": {
                 "title": "Confirma tu asistencia",
                 "deadline": "Antes del 1 de septiembre",
@@ -482,13 +631,16 @@
             }
         },
 
+
+
         {
-            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple. subtitle: (opcional) texto entre titulo y boton.",
+            "// ----------------------------------------------------------------------": "",
+            "// CONFIRMAR WHATSAPP - Confirmacion simple (plan base)                  ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "confirmarWhatsapp",
             "id": "confirmar-whatsapp",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["title", "subtitle", "button"],
             "data": {
                 "title": "Confirmar asistencia",
                 "subtitle": "Antes del 15 de marzo",
@@ -498,13 +650,16 @@
             }
         },
 
+
+
         {
-            "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
+            "// ----------------------------------------------------------------------": "",
+            "// ADULTS ONLY - Evento solo para adultos                                ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "adultsOnly",
             "id": "adults-only",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["icon", "title", "description"],
             "data": {
                 "icon": "baby-strike",
                 "title": "Evento solo para adultos",
@@ -512,12 +667,15 @@
             }
         },
 
+
+
         {
-            "_comment": "SPECIAL MESSAGE: Mensaje personal. decorativeLines: true/false. EXCLUSIVO DE XV.",
+            "// ----------------------------------------------------------------------": "",
+            "// SPECIAL MESSAGE - Mensaje personal                                    ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "specialMessage",
             "id": "special-message",
             "enabled": true,
-            "blocks": ["title", "text"],
             "data": {
                 "title": "Gracias por estar",
                 "text": "Mensaje personal de la quinceanera para los invitados.",
@@ -526,12 +684,15 @@
             }
         },
 
+
+
         {
-            "_comment": "CLOSING IMAGE: Foto de cierre. namesDisplay: enabled (true/false), font, weight, size, style, color, decorativeLines, logo, copyFromHero (copia estilos del hero).",
+            "// ----------------------------------------------------------------------": "",
+            "// CLOSING IMAGE - Foto de cierre                                        ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "closingImage",
             "id": "closing-image",
             "enabled": true,
-            "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/xv/[slug]/cierre.jpg",
@@ -544,17 +705,23 @@
                     "color": "",
                     "decorativeLines": true,
                     "logo": "",
-                    "copyFromHero": false
+                    "copyFromHero": false,
+                    "copyFromOverlay": true,
+                    "lowercase": false,
+                    "letterSpacing": "wide"
                 }
             }
         },
 
+
+
         {
-            "_comment": "FOOTER: Pie de pagina con redes. La marca se configura en landing.json -> brand (igual en todas las invitaciones).",
+            "// ----------------------------------------------------------------------": "",
+            "// FOOTER - Pie de pagina                                                ": "",
+            "// ----------------------------------------------------------------------": "",
             "type": "footer",
             "id": "footer-credits",
             "enabled": true,
-            "blocks": ["socialLinks", "brandName"],
             "data": {}
         }
     ]
