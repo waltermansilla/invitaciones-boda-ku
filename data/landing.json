@@ -41,8 +41,8 @@
     "ctaButtons": {
         "heroPrimary": {
             "text": "Quiero mi invitación",
-            "type": "whatsapp",
-            "message": "Hola! Me interesa una invitación digital. Quiero saber más."
+            "type": "anchor",
+            "anchor": "#planes"
         },
         "heroSecondary": {
             "text": "Ver muestras",
