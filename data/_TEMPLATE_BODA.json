@@ -12,8 +12,6 @@
     "// 3. El script sube las imagenes y actualiza los JSONs automaticamente      ": "",
     "// ==========================================================================": "",
 
-
-
     "// ==========================================================================": "",
     "// META - Informacion basica de la invitacion                                ": "",
     "// ==========================================================================": "",
@@ -32,8 +30,6 @@
             "separator": "&"
         }
     },
-
-
 
     "// ==========================================================================": "",
     "// THEME - Colores y tipografia                                              ": "",
@@ -64,8 +60,6 @@
             "weights": "300,400,500,600,700"
         }
     },
-
-
 
     "// ==========================================================================": "",
     "// OVERLAY - Pantalla de bienvenida                                          ": "",
@@ -107,8 +101,6 @@
         "buttonPosition": "center"
     },
 
-
-
     "// ==========================================================================": "",
     "// MUSIC - Musica de fondo                                                   ": "",
     "// ==========================================================================": "",
@@ -124,8 +116,6 @@
         "autoplay": false,
         "startTime": 0
     },
-
-
 
     "// ==========================================================================": "",
     "// QR CARD - Tarjeta imprimible con QR                                       ": "",
@@ -172,8 +162,6 @@
         }
     },
 
-
-
     "// ==========================================================================": "",
     "// HERO - Seccion principal con foto y countdown                             ": "",
     "// ==========================================================================": "",
@@ -215,8 +203,22 @@
             "decorativeLines": false,
             "logo": "",
             "texts": [
-                { "text": "Maria", "font": "", "weight": "300", "size": "xl", "style": "normal", "letterSpacing": "wide" },
-                { "text": "Juan", "font": "", "weight": "300", "size": "xl", "style": "normal", "letterSpacing": "wide" }
+                {
+                    "text": "Maria",
+                    "font": "",
+                    "weight": "300",
+                    "size": "xl",
+                    "style": "normal",
+                    "letterSpacing": "wide"
+                },
+                {
+                    "text": "Juan",
+                    "font": "",
+                    "weight": "300",
+                    "size": "xl",
+                    "style": "normal",
+                    "letterSpacing": "wide"
+                }
             ],
             "font": "",
             "weight": "300",
@@ -242,8 +244,6 @@
         }
     },
 
-
-
     "// ==========================================================================": "",
     "// SECTIONS - Secciones de contenido                                         ": "",
     "// ==========================================================================": "",
@@ -265,9 +265,6 @@
     "// ==========================================================================": "",
 
     "sections": [
-
-
-
         {
             "// ----------------------------------------------------------------------": "",
             "// QUOTE - Frase de bienvenida                                           ": "",
@@ -288,8 +285,6 @@
             }
         },
 
-
-
         {
             "// ----------------------------------------------------------------------": "",
             "// OUR STORY - Momentos importantes con fotos                            ": "",
@@ -306,14 +301,24 @@
                 "aspectRatio": "3/4",
                 "title": "Nuestra historia",
                 "moments": [
-                    { "image": "/clientes/boda/[slug]/momento-1.jpg", "title": "Como nos conocimos", "text": "Descripcion del momento." },
-                    { "image": "/clientes/boda/[slug]/momento-2.jpg", "title": "Primera cita", "text": "Descripcion del momento." },
-                    { "image": "/clientes/boda/[slug]/momento-3.jpg", "title": "La propuesta", "text": "Descripcion del momento." }
+                    {
+                        "image": "/clientes/boda/[slug]/momento-1.jpg",
+                        "title": "Como nos conocimos",
+                        "text": "Descripcion del momento."
+                    },
+                    {
+                        "image": "/clientes/boda/[slug]/momento-2.jpg",
+                        "title": "Primera cita",
+                        "text": "Descripcion del momento."
+                    },
+                    {
+                        "image": "/clientes/boda/[slug]/momento-3.jpg",
+                        "title": "La propuesta",
+                        "text": "Descripcion del momento."
+                    }
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -331,8 +336,6 @@
                 "value": "17 de Febrero 2027"
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -361,11 +364,13 @@
                     "time": "11:00 hs"
                 },
                 "order": ["date", "time", "address"],
-                "button": { "text": "Como llegar", "url": "https://maps.google.com", "variant": "primary" }
+                "button": {
+                    "text": "Como llegar",
+                    "url": "https://maps.google.com",
+                    "variant": "primary"
+                }
             }
         },
-
-
 
         {
             "type": "locationInfo",
@@ -382,11 +387,13 @@
                     "time": "21:00 hs"
                 },
                 "order": ["date", "time", "address"],
-                "button": { "text": "Como llegar", "url": "https://maps.google.com", "variant": "primary" }
+                "button": {
+                    "text": "Como llegar",
+                    "url": "https://maps.google.com",
+                    "variant": "primary"
+                }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -407,8 +414,6 @@
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -435,18 +440,41 @@
             "data": {
                 "title": "Itinerario",
                 "events": [
-                    { "icon": "civil", "name": "Civil", "address": "Registro Civil", "time": "11:00 hs", "date": "Viernes 16/02" },
-                    { "icon": "church", "name": "Ceremonia", "address": "Parroquia San Jose", "time": "18:00 hs", "date": "Sabado 17/02" },
+                    {
+                        "icon": "civil",
+                        "name": "Civil",
+                        "address": "Registro Civil",
+                        "time": "11:00 hs",
+                        "date": "Viernes 16/02"
+                    },
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia",
+                        "address": "Parroquia San Jose",
+                        "time": "18:00 hs",
+                        "date": "Sabado 17/02"
+                    },
                     { "icon": "camera", "name": "Fotos", "time": "19:00 hs" },
-                    { "icon": "utensils", "name": "Cena", "address": "Salon de Eventos", "time": "21:00 hs" },
-                    { "icon": "tortaCasamiento", "name": "Torta", "time": "23:00 hs" },
+                    {
+                        "icon": "utensils",
+                        "name": "Cena",
+                        "address": "Salon de Eventos",
+                        "time": "21:00 hs"
+                    },
+                    {
+                        "icon": "tortaCasamiento",
+                        "name": "Torta",
+                        "time": "23:00 hs"
+                    },
                     { "icon": "music", "name": "Fiesta", "time": "00:00 hs" },
-                    { "icon": "fin", "name": "Fin de fiesta", "time": "05:00 hs" }
+                    {
+                        "icon": "fin",
+                        "name": "Fin de fiesta",
+                        "time": "05:00 hs"
+                    }
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -479,19 +507,30 @@
                     "shape": "circle",
                     "colors": ["#2C3E50", "#8E44AD", "#1ABC9C", "#E74C3C"]
                 },
-                "button": { "text": "Ver consejos", "url": "#", "variant": "secondary" },
+                "button": {
+                    "text": "Ver consejos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
                 "modal": {
                     "title": "Consejos de vestimenta",
                     "sections": [
-                        { "heading": "Hombres", "text": "Descripcion para hombres." },
-                        { "heading": "Mujeres", "text": "Descripcion para mujeres." },
-                        { "heading": "General", "text": "Se ruega no vestir de blanco." }
+                        {
+                            "heading": "Hombres",
+                            "text": "Descripcion para hombres."
+                        },
+                        {
+                            "heading": "Mujeres",
+                            "text": "Descripcion para mujeres."
+                        },
+                        {
+                            "heading": "General",
+                            "text": "Se ruega no vestir de blanco."
+                        }
                     ]
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -509,11 +548,13 @@
                 "icon": "camera",
                 "title": "Subi tus fotos",
                 "description": "Comparti los momentos de la fiesta!",
-                "button": { "text": "Ir al album", "url": "https://photos.google.com", "variant": "background" }
+                "button": {
+                    "text": "Ir al album",
+                    "url": "https://photos.google.com",
+                    "variant": "background"
+                }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -535,12 +576,16 @@
                 "title": "Pequenas verdades",
                 "finishText": "Nos conoces mejor de lo que pensabas!",
                 "questions": [
-                    { "question": "Quien dijo 'te amo' primero?", "optionA": "Ella", "optionB": "El", "correctOption": "A", "revealText": "Ella se animo primero." }
+                    {
+                        "question": "Quien dijo 'te amo' primero?",
+                        "optionA": "Ella",
+                        "optionB": "El",
+                        "correctOption": "A",
+                        "revealText": "Ella se animo primero."
+                    }
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -566,14 +611,18 @@
                 "icon": "gift",
                 "title": "Valor Tarjeta",
                 "description": "Si queres hacernos un regalo, podes contribuir con un valor para nuestra nueva vida juntos.",
-                "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
                 "modal": {
                     "title": "Datos de transferencia",
                     "suggestedValueLabel": "Valor tarjeta",
-                    
+
                     "_comment_opcion1": "OPCION 1: Un solo valor",
                     "suggestedValue": "$20.000",
-                    
+
                     "_comment_opcion2": "OPCION 2: Multiples valores (borrar suggestedValue si usas esto)",
                     "_suggestedValues_ejemplo": [
                         { "label": "Mayores", "value": "$68.000" },
@@ -581,7 +630,7 @@
                         { "label": "Despues de 0hs", "value": "$25.000" },
                         { "label": "Menores de 5", "value": "Sin cargo" }
                     ],
-                    
+
                     "description": "Podes transferir el monto que quieras.",
                     "transferData": [
                         { "label": "Alias", "value": "MI.ALIAS" },
@@ -592,8 +641,6 @@
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -617,7 +664,12 @@
                 "title": "Luna de miel",
                 "description": "Si queres ayudarnos con nuestra luna de miel, te dejamos los datos.",
                 "showButton": true,
-                "button": { "text": "Ver datos", "url": "#", "variant": "secondary", "action": "modal" },
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary",
+                    "action": "modal"
+                },
                 "modalMode": "combined",
                 "modals": [
                     {
@@ -626,7 +678,10 @@
                         "description": "Cualquier aporte nos ayuda a cumplir nuestro sueno.",
                         "bankData": [
                             { "label": "Alias", "value": "LUNA.DE.MIEL" },
-                            { "label": "CBU", "value": "0000000000000000000000" },
+                            {
+                                "label": "CBU",
+                                "value": "0000000000000000000000"
+                            },
                             { "label": "Titular", "value": "Nombre Completo" },
                             { "label": "Banco", "value": "Nombre del Banco" }
                         ],
@@ -637,13 +692,14 @@
                         "title": "Regalos fisicos",
                         "subtitle": "Nuestra direccion",
                         "address": "Calle Ejemplo 123, Ciudad, Provincia",
-                        "button": { "text": "Como llegar", "url": "https://maps.google.com/?q=..." }
+                        "button": {
+                            "text": "Como llegar",
+                            "url": "https://maps.google.com/?q=..."
+                        }
                     }
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -659,8 +715,6 @@
                 "text": "Lo mejor de la vida es compartirla con alguien especial."
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -687,13 +741,21 @@
                     "finishTitle": "Eso es todo!",
                     "finishText": "Gracias por jugar.",
                     "questions": [
-                        { "question": "Donde fue nuestra primera cita?", "options": ["Un bar", "El cine", "La playa", "Un parque"], "correctIndex": 0, "explanation": "Fue en un bar del centro!" }
+                        {
+                            "question": "Donde fue nuestra primera cita?",
+                            "options": [
+                                "Un bar",
+                                "El cine",
+                                "La playa",
+                                "Un parque"
+                            ],
+                            "correctIndex": 0,
+                            "explanation": "Fue en un bar del centro!"
+                        }
                     ]
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -708,11 +770,13 @@
             "data": {
                 "title": "Arma la playlist",
                 "description": "Agrega tus canciones favoritas a la playlist de la fiesta.",
-                "button": { "text": "Ir a la playlist", "url": "https://open.spotify.com", "variant": "primary" }
+                "button": {
+                    "text": "Ir a la playlist",
+                    "url": "https://open.spotify.com",
+                    "variant": "primary"
+                }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -743,7 +807,13 @@
                     "attendanceYes": "Confirmo!",
                     "attendanceNo": "No podre asistir",
                     "dietary": "Requerimiento alimentario?",
-                    "dietaryOptions": ["Ninguno", "Vegetariano", "Vegano", "Celiaco", "Otro"],
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celiaco",
+                        "Otro"
+                    ],
                     "songRequest": "Que cancion no puede faltar?",
                     "submitButton": "Confirmar"
                 },
@@ -753,8 +823,6 @@
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -775,11 +843,14 @@
                 "subtitle": "Antes del 15 de marzo",
                 "buttonText": "Confirmar por WhatsApp",
                 "whatsappNumber": "NUMERO_WHATSAPP_SIN_MAS",
-                "message": "Confirmo mi asistencia a la boda de NOMBRE & NOMBRE"
+                "message": "Confirmo mi asistencia a la boda de NOMBRE & NOMBRE",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Lamentablemente no podré asistir"
+                }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -800,8 +871,6 @@
             }
         },
 
-
-
         {
             "// ----------------------------------------------------------------------": "",
             "// SPECIAL MESSAGE - Mensaje personal                                    ": "",
@@ -821,8 +890,6 @@
                 "decorativeLines": true
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -861,8 +928,6 @@
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",

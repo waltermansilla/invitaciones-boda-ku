@@ -12,8 +12,6 @@
     "// 3. El script sube las imagenes y actualiza los JSONs automaticamente      ": "",
     "// ==========================================================================": "",
 
-
-
     "// ==========================================================================": "",
     "// META - Informacion basica de la invitacion                                ": "",
     "// ==========================================================================": "",
@@ -34,8 +32,6 @@
             "separator": ""
         }
     },
-
-
 
     "// ==========================================================================": "",
     "// THEME - Colores y tipografia                                              ": "",
@@ -66,8 +62,6 @@
             "weights": "100,200,300,400,500,600,700"
         }
     },
-
-
 
     "// ==========================================================================": "",
     "// OVERLAY - Pantalla de bienvenida                                          ": "",
@@ -102,8 +96,6 @@
         "buttonPosition": "center"
     },
 
-
-
     "// ==========================================================================": "",
     "// MUSIC - Musica de fondo                                                   ": "",
     "// ==========================================================================": "",
@@ -119,8 +111,6 @@
         "autoplay": false,
         "startTime": 0
     },
-
-
 
     "// ==========================================================================": "",
     "// QR CARD - Tarjeta imprimible con QR                                       ": "",
@@ -164,8 +154,6 @@
         }
     },
 
-
-
     "// ==========================================================================": "",
     "// HERO - Seccion principal con foto y countdown                             ": "",
     "// ==========================================================================": "",
@@ -186,8 +174,22 @@
             "decorativeLines": false,
             "logo": "",
             "texts": [
-                { "text": "Mis XV", "font": "", "weight": "200", "size": "base", "style": "normal", "letterSpacing": "wide" },
-                { "text": "Valentina", "font": "", "weight": "300", "size": "2xl", "style": "normal", "letterSpacing": "none" }
+                {
+                    "text": "Mis XV",
+                    "font": "",
+                    "weight": "200",
+                    "size": "base",
+                    "style": "normal",
+                    "letterSpacing": "wide"
+                },
+                {
+                    "text": "Valentina",
+                    "font": "",
+                    "weight": "300",
+                    "size": "2xl",
+                    "style": "normal",
+                    "letterSpacing": "none"
+                }
             ],
             "font": "",
             "weight": "300",
@@ -213,8 +215,6 @@
         }
     },
 
-
-
     "// ==========================================================================": "",
     "// SECTIONS - Secciones de contenido                                         ": "",
     "// ==========================================================================": "",
@@ -227,9 +227,6 @@
     "// ==========================================================================": "",
 
     "sections": [
-
-
-
         {
             "// ----------------------------------------------------------------------": "",
             "// QUOTE - Frase de bienvenida                                           ": "",
@@ -244,8 +241,6 @@
                 "decorativeLines": true
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -266,8 +261,6 @@
                 "aspectRatio": "3/4"
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -291,8 +284,6 @@
             }
         },
 
-
-
         {
             "// ----------------------------------------------------------------------": "",
             "// OUR STORY - Momentos de crecimiento                                   ": "",
@@ -305,14 +296,24 @@
                 "aspectRatio": "3/4",
                 "title": "Mi historia",
                 "moments": [
-                    { "image": "/clientes/xv/[slug]/momento-1.jpg", "title": "Mis primeros pasos", "text": "Descripcion." },
-                    { "image": "/clientes/xv/[slug]/momento-2.jpg", "title": "Creciendo", "text": "Descripcion." },
-                    { "image": "/clientes/xv/[slug]/momento-3.jpg", "title": "Hoy, mis 15", "text": "Descripcion." }
+                    {
+                        "image": "/clientes/xv/[slug]/momento-1.jpg",
+                        "title": "Mis primeros pasos",
+                        "text": "Descripcion."
+                    },
+                    {
+                        "image": "/clientes/xv/[slug]/momento-2.jpg",
+                        "title": "Creciendo",
+                        "text": "Descripcion."
+                    },
+                    {
+                        "image": "/clientes/xv/[slug]/momento-3.jpg",
+                        "title": "Hoy, mis 15",
+                        "text": "Descripcion."
+                    }
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -327,8 +328,6 @@
                 "value": "17 de Febrero 2027"
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -350,11 +349,13 @@
                     "time": "21:00 hs"
                 },
                 "order": ["date", "time", "address"],
-                "button": { "text": "Como llegar", "url": "https://maps.google.com", "variant": "primary" }
+                "button": {
+                    "text": "Como llegar",
+                    "url": "https://maps.google.com",
+                    "variant": "primary"
+                }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -373,8 +374,6 @@
             }
         },
 
-
-
         {
             "// ----------------------------------------------------------------------": "",
             "// ITINERARY - Linea de tiempo                                           ": "",
@@ -388,17 +387,28 @@
             "data": {
                 "title": "Itinerario",
                 "events": [
-                    { "icon": "sparkles", "name": "Recepcion", "address": "Salon de Eventos", "time": "20:00 hs" },
+                    {
+                        "icon": "sparkles",
+                        "name": "Recepcion",
+                        "address": "Salon de Eventos",
+                        "time": "20:00 hs"
+                    },
                     { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
-                    { "icon": "heart", "name": "Vals con papa", "time": "22:00 hs" },
+                    {
+                        "icon": "heart",
+                        "name": "Vals con papa",
+                        "time": "22:00 hs"
+                    },
                     { "icon": "cake", "name": "Torta", "time": "23:00 hs" },
                     { "icon": "music", "name": "Fiesta", "time": "00:00 hs" },
-                    { "icon": "fin", "name": "Fin de fiesta", "time": "05:00 hs" }
+                    {
+                        "icon": "fin",
+                        "name": "Fin de fiesta",
+                        "time": "05:00 hs"
+                    }
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -421,7 +431,11 @@
                     "shape": "circle",
                     "colors": []
                 },
-                "button": { "text": "Ver consejos", "url": "#", "variant": "secondary" },
+                "button": {
+                    "text": "Ver consejos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
                 "modal": {
                     "title": "Consejos de vestimenta",
                     "sections": [
@@ -431,8 +445,6 @@
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -446,11 +458,13 @@
                 "icon": "camera",
                 "title": "Subi tus fotos",
                 "description": "Comparti los momentos de la fiesta!",
-                "button": { "text": "Ir al album", "url": "https://photos.google.com", "variant": "background" }
+                "button": {
+                    "text": "Ir al album",
+                    "url": "https://photos.google.com",
+                    "variant": "background"
+                }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -464,12 +478,16 @@
                 "title": "Cuanto me conoces?",
                 "finishText": "Me conoces mejor de lo que pensaba!",
                 "questions": [
-                    { "question": "Que prefiero?", "optionA": "Playa", "optionB": "Montana", "correctOption": "A", "revealText": "Soy de playa total!" }
+                    {
+                        "question": "Que prefiero?",
+                        "optionA": "Playa",
+                        "optionB": "Montana",
+                        "correctOption": "A",
+                        "revealText": "Soy de playa total!"
+                    }
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -488,7 +506,11 @@
                 "icon": "gift",
                 "title": "Valor Tarjeta",
                 "description": "Si queres hacerme un regalo, podes contribuir con un valor para mi fiesta.",
-                "button": { "text": "Ver datos", "url": "#", "variant": "secondary" },
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
                 "modal": {
                     "title": "Datos de transferencia",
                     "suggestedValueLabel": "Valor tarjeta",
@@ -497,14 +519,15 @@
                     "transferData": [
                         { "label": "Alias", "value": "MI.ALIAS" },
                         { "label": "CBU", "value": "0000000000000000000000" },
-                        { "label": "Titular", "value": "Nombre del padre/madre" },
+                        {
+                            "label": "Titular",
+                            "value": "Nombre del padre/madre"
+                        },
                         { "label": "Banco", "value": "Nombre del Banco" }
                     ]
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -521,7 +544,12 @@
                 "title": "Regalos",
                 "description": "Tu presencia es el mejor regalo. Pero si queres tener un detalle, aca te dejo mis datos.",
                 "showButton": true,
-                "button": { "text": "Ver datos", "url": "#", "variant": "secondary", "action": "modal" },
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary",
+                    "action": "modal"
+                },
                 "modalMode": "combined",
                 "modals": [
                     {
@@ -530,7 +558,10 @@
                         "description": "Muchas gracias!",
                         "bankData": [
                             { "label": "Alias", "value": "MI.ALIAS" },
-                            { "label": "CBU", "value": "0000000000000000000000" }
+                            {
+                                "label": "CBU",
+                                "value": "0000000000000000000000"
+                            }
                         ]
                     },
                     {
@@ -538,13 +569,14 @@
                         "title": "Regalos fisicos",
                         "subtitle": "Mi direccion",
                         "address": "Calle Ejemplo 123, Ciudad",
-                        "button": { "text": "Como llegar", "url": "https://maps.google.com/?q=..." }
+                        "button": {
+                            "text": "Como llegar",
+                            "url": "https://maps.google.com/?q=..."
+                        }
                     }
                 ]
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -558,8 +590,6 @@
                 "text": "Creciendo, sonando, brillando."
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -576,13 +606,16 @@
                     "finishTitle": "Eso es todo!",
                     "finishText": "Gracias por jugar.",
                     "questions": [
-                        { "question": "Cual es mi comida favorita?", "options": ["Pizza", "Sushi", "Asado", "Pasta"], "correctIndex": 2, "explanation": "Asado siempre!" }
+                        {
+                            "question": "Cual es mi comida favorita?",
+                            "options": ["Pizza", "Sushi", "Asado", "Pasta"],
+                            "correctIndex": 2,
+                            "explanation": "Asado siempre!"
+                        }
                     ]
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -594,11 +627,13 @@
             "data": {
                 "title": "Arma la playlist",
                 "description": "Agrega tus canciones favoritas a la playlist de mi fiesta.",
-                "button": { "text": "Ir a la playlist", "url": "https://open.spotify.com", "variant": "primary" }
+                "button": {
+                    "text": "Ir a la playlist",
+                    "url": "https://open.spotify.com",
+                    "variant": "primary"
+                }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -620,7 +655,13 @@
                     "attendanceYes": "Confirmo!",
                     "attendanceNo": "No podre asistir",
                     "dietary": "Requerimiento alimentario?",
-                    "dietaryOptions": ["Ninguno", "Vegetariano", "Vegano", "Celiaco", "Otro"],
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celiaco",
+                        "Otro"
+                    ],
                     "songRequest": "Que cancion no puede faltar?",
                     "submitButton": "Confirmar"
                 },
@@ -630,8 +671,6 @@
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -646,11 +685,14 @@
                 "subtitle": "Antes del 15 de marzo",
                 "buttonText": "Confirmar por WhatsApp",
                 "whatsappNumber": "NUMERO_WHATSAPP_SIN_MAS",
-                "message": "Confirmo mi asistencia a los 15 de NOMBRE"
+                "message": "Confirmo mi asistencia a los 15 de NOMBRE",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Lamentablemente no podré asistir"
+                }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -667,8 +709,6 @@
             }
         },
 
-
-
         {
             "// ----------------------------------------------------------------------": "",
             "// SPECIAL MESSAGE - Mensaje personal                                    ": "",
@@ -683,8 +723,6 @@
                 "decorativeLines": true
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
@@ -712,8 +750,6 @@
                 }
             }
         },
-
-
 
         {
             "// ----------------------------------------------------------------------": "",
