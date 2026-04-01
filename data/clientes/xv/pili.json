@@ -1,0 +1,431 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Mis 15 - Dasha",
+        "description": "Estás invitado a celebrar los 15 de Dasha.",
+        "lang": "es",
+        "quinceaneraName": "Dasha",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Dasha",
+            "separator": ""
+        }
+    },
+
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+
+    "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
+    "theme": {
+        "primaryColor": "#191919",
+        "backgroundColor": "#eee",
+        "textColor": "#3A3A3A",
+        "lightBgTextColor": "#333",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#FDF0EE",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+
+    "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Una noche mágica está por comenzar",
+        "buttonText": "Ingresar"
+    },
+
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/xv/dasha/music/gimme.mp3",
+        "autoplay": true
+    },
+
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+
+    "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
+    "hero": {
+        "coupleImage": "/clientes/xv/dasha/images/img-hero.jpeg",
+        "headline": "Mis 15!",
+        "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": true,
+            "position": "bottom",
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": "",
+            "texts": [
+                {
+                    "text": "Mis XV",
+                    "font": "",
+                    "weight": "100",
+                    "size": "sm",
+                    "style": "normal"
+                },
+                {
+                    "text": "Dasha",
+                    "font": "",
+                    "weight": "200",
+                    "size": "lg",
+                    "style": "normal"
+                }
+            ]
+        },
+        "countdownPrefix": "",
+        "eventDate": "2026-04-11T21:00:00",
+        "countdownLabels": {
+            "days": "Días",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        }
+    },
+
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Una noche mágica está por comenzar… y me encantaría compartirla con vos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "11 de Abril 2026"
+            }
+        },
+
+        {
+            "// --- PRESENTACION DE LA QUINCEANERA ---": "",
+            "_comment": "Seccion para presentar a la quinceanera con una foto y un texto personal. image = foto en /public/images/. description = texto de presentacion.",
+            "type": "presentation",
+            "id": "presentation",
+            "blocks": ["image", "name", "description"],
+            "data": {
+                "image": "/clientes/xv/dasha/images/galeria-1.jpeg",
+                "name": "Dasha",
+                "description": "Mis 15 finalmente llegaron. Ésta es una noche única que quiero compartir con las personas que forman parte de mi vida.",
+                "aspectRatio": "4/3"
+            }
+        },
+        {
+            "// --- UBICACION: FIESTA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Club Del Valle",
+                "address": "Ruta 86 & Calle 66",
+                "showButton": true,
+                "datetime": {
+                    "time": "21:00 hs"
+                },
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/UL86WsAfPY7DADeC8?g_st=iw",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
+            "type": "dressCode",
+            "id": "dress-code",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Vestimenta",
+                "subtitle": "Elegante Sport",
+                "description": "",
+                "showButton": false
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/xv/dasha/images/galeria-2.jpeg"]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Hay momentos que parecen escritos en las estrellas, momentos únicos que llegan para recordarnos que la vida está hecha de sueños, recuerdos y personas especiales.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "_comment": "PHOTOS: Invitar a subir fotos.",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "title": "Compartí tus fotos",
+                "description": "Si sacás fotos o videos durante la fiesta, podés subirlos acá para que juntos guardemos los mejores momentos de esta noche.",
+                "button": {
+                    "text": "Subir fotos",
+                    "url": "https://drive.google.com/drive/folders/1hjcoR8H0Kxyn_okmM0v10_eM3_pH346T",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/xv/dasha/images/final.jpeg"]
+            }
+        },
+
+        {
+            "// --- TRIVIA / JUEGO (con modal) ---": "",
+            "_comment": "Al presionar el boton se abre modal con preguntas. Cada pregunta: question, options (2-4), correctIndex (0=primera), explanation. finishTitle y finishText = pantalla final.",
+            "type": "trivia",
+            "id": "trivia-game",
+            "blocks": ["title", "subtitle", "button", "modal"],
+            "data": {
+                "title": "\u00bfCu\u00e1nto me conoc\u00e9s?",
+                "subtitle": "\u00bfJugamos un poco?",
+                "button": {
+                    "text": "Iniciar Trivia",
+                    "variant": "primary"
+                },
+                "modal": {
+                    "finishTitle": "Respuestas correctas",
+                    "finishText": "¡Gracias por acompañarme en este pequeño juego! Espero que te haya gustado conocer un poquito más de mi historia. Nos vemos muy pronto para celebrar juntos mis XV",
+                    "questions": [
+                        {
+                            "question": "¿Cuál es mi color favorito?",
+                            "options": ["Rosa", "Turquesa", "Azul", "Violeta"],
+                            "correctIndex": 1,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué comida me gusta más?",
+                            "options": [
+                                "Pizza",
+                                "Sushi",
+                                "Hamburguesa",
+                                "Pasta"
+                            ],
+                            "correctIndex": 2,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿De qué color es el vestido de mis XV?",
+                            "options": ["Champagne", "Rosa", "Violeta", "Azul"],
+                            "correctIndex": 0,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué es más probable que haga en la fiesta?",
+                            "options": [
+                                "Bailar toda la noche",
+                                "Comer todo el candy bar",
+                                "Sacarme mil fotos",
+                                "Todo lo anterior"
+                            ],
+                            "correctIndex": 3,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué me gusta hacer más?",
+                            "options": [
+                                "Escuchar música",
+                                "Salir con amigos",
+                                "Ver series",
+                                "Dormir"
+                            ],
+                            "correctIndex": 1,
+                            "explanation": ""
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
+            "type": "honeymoon",
+            "id": "dream-trip",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Un pequeño aporte",
+                "description": "Lo más importante es compartir este momento juntos. Si querés hacerme un regalo, podés hacerlo a través de este alias.",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Mis datos",
+                    "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para mí.",
+                    "bankData": [{ "label": "Alias", "value": "dasha.cb" }]
+                }
+            }
+        },
+
+        {
+            "// --- FORMULARIO RSVP ---": "",
+            "_comment": "Fondo rosa. Formulario de confirmacion. Todos los labels, opciones y textos son editables.",
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "primary",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 6 de Abril",
+                "guestCountLabel": "Numero de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "Vas a poder venir?",
+                    "attendanceYes": "Ahi voy!",
+                    "attendanceNo": "No voy a poder",
+                    "dietary": "Algun requerimiento alimentario?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celiaco",
+                        "Otro"
+                    ],
+                    "songRequest": "Que cancion te gustaria que suene?",
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "542262336872",
+                    "messageTemplate": "Hola Dasha! Confirmo asistencia para tus XV:\n\n{resumen}\n\nGracias por la invitación a este momento tan especial! 🫶🏼🤗"
+                }
+            }
+        },
+
+        {
+            "// --- MENSAJE ESPECIAL ---": "",
+            "_comment": "Fondo rosa. Un mensaje personal de la quinceanera a los invitados.",
+            "type": "specialMessage",
+            "id": "special-message",
+            "blocks": ["title", "text"],
+            "data": {
+                "title": "Gracias por estar",
+                "text": "Este momento es muy especial para mí, y me haría muy feliz poder compartirlo con vos. Gracias por ser parte de mi vida y acompañarme en una noche que voy a recordar siempre.",
+                "signature": "Dasha",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombre debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "name"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/xv/dasha/images/img-hero.jpeg"
+            }
+        },
+
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": "https://wa.me/3456023759"
+                    }
+                ]
+            }
+        }
+    ]
+}
