@@ -260,7 +260,7 @@
             "data": {
                 "icon": "heart",
                 "title": "Valor Tarjeta",
-                "description": "",
+                "description": "Agradecemos que abones la tarjeta antes del 10 de Agosto.",
                 "button": {
                     "text": "Ver",
                     "url": "#",
@@ -295,7 +295,7 @@
             "bgColor": "primary",
             "data": {
                 "title": "Confirmar asistencia",
-                "subtitle": "Antes del 10 de Agosto",
+                "subtitle": "",
                 "buttonText": "¡Confirmo!",
                 "whatsappNumber": "543364663260",
                 "message": "Hola Carmela! Confirmo mi asistencia a tus 15 🫶🏼",
