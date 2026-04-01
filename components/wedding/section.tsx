@@ -251,6 +251,7 @@ export default function Section({ section, coupleNames, prevBgColor, prevBgImage
             buttonText={data.buttonText as string}
             whatsappNumber={data.whatsappNumber as string}
             message={data.message as string}
+            noAsiste={data.noAsiste as { enabled: boolean; buttonText: string; message: string } | undefined}
           />
         )
 
