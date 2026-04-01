@@ -86,16 +86,24 @@
             "items": [
                 {
                     "tipo": "boda",
-                    "slug": "anto-walter",
-                    "titulo": "Anto & Walter",
-                    "etiqueta": "Boda",
+                    "slug": "meliza-ivan",
+                    "titulo": "Meliza & Iván",
+                    "etiqueta": "Boda esencial",
                     "accentColor": "#D4A373"
                 },
                 {
                     "tipo": "boda",
-                    "slug": "meliza-ivan",
-                    "titulo": "Meliza & Iván",
-                    "etiqueta": "Boda",
+                    "slug": "anto-walter",
+                    "titulo": "Anto & Walter",
+                    "etiqueta": "Boda premium",
+                    "accentColor": "#D4A373"
+                },
+
+                {
+                    "tipo": "boda",
+                    "slug": "yesica-hernan",
+                    "titulo": "Yesica & Hernán",
+                    "etiqueta": "Boda premium",
                     "accentColor": "#D4A373"
                 },
 
@@ -103,7 +111,15 @@
                     "tipo": "xv",
                     "slug": "dasha",
                     "titulo": "Dasha",
-                    "etiqueta": "XV",
+                    "etiqueta": "XV premium",
+                    "accentColor": "#C4788A"
+                },
+
+                {
+                    "tipo": "xv",
+                    "slug": "camila",
+                    "titulo": "Camila",
+                    "etiqueta": "XV premium",
                     "accentColor": "#C4788A"
                 },
 
@@ -111,7 +127,7 @@
                     "tipo": "xv",
                     "slug": "valentina",
                     "titulo": "Valentina",
-                    "etiqueta": "XV",
+                    "etiqueta": "XV premium",
                     "accentColor": "#C4788A"
                 }
             ]

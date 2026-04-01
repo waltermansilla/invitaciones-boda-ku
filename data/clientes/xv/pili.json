@@ -5,13 +5,13 @@
 
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
     "meta": {
-        "title": "Mis 15 - Dasha",
-        "description": "Estás invitado a celebrar los 15 de Dasha.",
+        "title": "Mis 15 - Pili",
+        "description": "Estás invitado a celebrar los 15 de Pili.",
         "lang": "es",
-        "quinceaneraName": "Dasha",
+        "quinceaneraName": "Pili",
         "coupleNames": {
             "groomName": "",
-            "brideName": "Dasha",
+            "brideName": "Pili",
             "separator": ""
         }
     },
@@ -22,10 +22,11 @@
 
     "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
     "theme": {
-        "primaryColor": "#191919",
+        "primaryColor": "#a189bc",
         "backgroundColor": "#eee",
-        "textColor": "#3A3A3A",
-        "lightBgTextColor": "#333",
+        "primaryImage": "/clientes/xv/pili/background/bg3.jpg",
+        "textColor": "#8c6eb8",
+        "lightBgTextColor": "#8c6eb8",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#FDF0EE",
         "modalTextColor": "#FFFFFF",
@@ -42,7 +43,7 @@
     "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
-        "phrase": "Una noche mágica está por comenzar",
+        "phrase": "Una noche soñada está por comenzar",
         "buttonText": "Ingresar"
     },
 
@@ -53,8 +54,9 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/xv/dasha/music/gimme.mp3",
-        "autoplay": true
+        "src": "/clientes/xv/pili/music/music.mp3",
+        "autoplay": true,
+        "startTime": 237
     },
 
     "// ==========================================-": "",
@@ -63,7 +65,7 @@
 
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
-        "coupleImage": "/clientes/xv/dasha/images/img-hero.jpeg",
+        "coupleImage": "/clientes/xv/pili/images/img-hero.jpeg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
         "namesDisplay": {
@@ -85,7 +87,7 @@
                     "style": "normal"
                 },
                 {
-                    "text": "Dasha",
+                    "text": "Pili",
                     "font": "",
                     "weight": "200",
                     "size": "lg",
@@ -94,7 +96,7 @@
             ]
         },
         "countdownPrefix": "",
-        "eventDate": "2026-04-11T21:00:00",
+        "eventDate": "2026-05-16T21:30:00",
         "countdownLabels": {
             "days": "Días",
             "hours": "Horas",
@@ -121,9 +123,10 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
+            "bgImage": "primaryImage",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Una noche mágica está por comenzar… y me encantaría compartirla con vos.",
+                "text": "Este es un momento que soñé mucho… y quiero vivirlo junto a vos.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -137,7 +140,7 @@
             "blocks": ["title", "value"],
             "data": {
                 "title": "¿Cuándo?",
-                "value": "11 de Abril 2026"
+                "value": "16 de Mayo 2026"
             }
         },
 
@@ -148,30 +151,54 @@
             "id": "presentation",
             "blocks": ["image", "name", "description"],
             "data": {
-                "image": "/clientes/xv/dasha/images/galeria-1.jpeg",
-                "name": "Dasha",
-                "description": "Mis 15 finalmente llegaron. Ésta es una noche única que quiero compartir con las personas que forman parte de mi vida.",
-                "aspectRatio": "4/3"
+                "image": "/clientes/xv/pili/images/bebe3.jpeg",
+                "name": "Pili",
+                "description": "Pasé mucho tiempo imaginando cómo sería este día, mirando por la ventana y soñando con este momento. Hoy cumplo mis 15 años y por fin siento que mi aventura más grande está empezando.",
+                "aspectRatio": "3/4"
             }
         },
+
         {
-            "// --- UBICACION: FIESTA ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "id": "location-fiesta",
-            "blocks": ["title", "address", "button"],
+            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
             "data": {
-                "title": "Club Del Valle",
-                "address": "Ruta 86 & Calle 66",
-                "showButton": true,
-                "datetime": {
-                    "time": "21:00 hs"
-                },
-                "button": {
-                    "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/UL86WsAfPY7DADeC8?g_st=iw",
-                    "variant": "primary"
-                }
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "pin",
+                        "name": "Recepción",
+                        "address": "Salón de eventos 'La Cayetana' / Salón: 'Martina'",
+                        "time": "21:30 hs",
+
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/BgZoZQhBfVUph52n6?g_st=ic",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "sparkles",
+                        "name": "Llegada Pili",
+
+                        "time": "22:00 hs"
+                    },
+                    {
+                        "icon": "heart",
+                        "name": "Vals",
+                        "time": "00:30 hs"
+                    },
+                    { "icon": "party", "name": "Baile" },
+                    {
+                        "icon": "clock",
+                        "name": "Fin de fiesta",
+
+                        "time": "05:00 hs"
+                    }
+                ]
             }
         },
 
@@ -193,7 +220,7 @@
             "data": {
                 "icons": ["gem"],
                 "title": "Vestimenta",
-                "subtitle": "Elegante Sport",
+                "subtitle": "Formal - Elegante",
                 "description": "",
                 "showButton": false
             }
@@ -206,8 +233,8 @@
             "id": "gallery-photos",
             "blocks": ["slider"],
             "data": {
-                "aspectRatio": "4/3",
-                "images": ["/clientes/xv/dasha/images/galeria-2.jpeg"]
+                "aspectRatio": "3/4",
+                "images": ["/clientes/xv/pili/images/bebe2.jpeg"]
             }
         },
 
@@ -219,7 +246,7 @@
             "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Hay momentos que parecen escritos en las estrellas, momentos únicos que llegan para recordarnos que la vida está hecha de sueños, recuerdos y personas especiales.",
+                "text": "Me enseñaron que hay que ir y vivir los sueños... y hoy, mi sueño más lindo es compartir esta noche mágica con vos. ¡Te espero!",
                 "author": "",
                 "decorativeLines": true
             }
@@ -237,7 +264,7 @@
                 "description": "Si sacás fotos o videos durante la fiesta, podés subirlos acá para que juntos guardemos los mejores momentos de esta noche.",
                 "button": {
                     "text": "Subir fotos",
-                    "url": "https://drive.google.com/drive/folders/1hjcoR8H0Kxyn_okmM0v10_eM3_pH346T",
+                    "url": "https://drive.google.com/drive/folders/1aEVpOQbED4RElrPtJ9foLR7vAPTgs6bg?usp=sharing",
                     "variant": "background"
                 }
             }
@@ -251,7 +278,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/xv/dasha/images/final.jpeg"]
+                "images": ["/clientes/xv/pili/images/img2.jpg"]
             }
         },
 
@@ -274,7 +301,7 @@
                     "questions": [
                         {
                             "question": "¿Cuál es mi color favorito?",
-                            "options": ["Rosa", "Turquesa", "Azul", "Violeta"],
+                            "options": ["Rosa", "Lila", "Azul", "Violeta"],
                             "correctIndex": 1,
                             "explanation": ""
                         },
@@ -282,17 +309,17 @@
                             "question": "¿Qué comida me gusta más?",
                             "options": [
                                 "Pizza",
-                                "Sushi",
+                                "Milanesa con pure",
                                 "Hamburguesa",
                                 "Pasta"
                             ],
-                            "correctIndex": 2,
+                            "correctIndex": 1,
                             "explanation": ""
                         },
                         {
                             "question": "¿De qué color es el vestido de mis XV?",
                             "options": ["Champagne", "Rosa", "Violeta", "Azul"],
-                            "correctIndex": 0,
+                            "correctIndex": 2,
                             "explanation": ""
                         },
                         {
@@ -309,8 +336,8 @@
                         {
                             "question": "¿Qué me gusta hacer más?",
                             "options": [
-                                "Escuchar música",
-                                "Salir con amigos",
+                                "Dormir",
+                                "Hacer Tik-Tok's",
                                 "Ver series",
                                 "Dormir"
                             ],
@@ -340,7 +367,10 @@
                 "modal": {
                     "title": "Mis datos",
                     "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para mí.",
-                    "bankData": [{ "label": "Alias", "value": "dasha.cb" }]
+                    "bankData": [
+                        { "label": "Alias", "value": "pili.puig1705" },
+                        { "label": "Titular", "value": "Pilar Puigdellivol" }
+                    ]
                 }
             }
         },
@@ -350,11 +380,11 @@
             "_comment": "Fondo rosa. Formulario de confirmacion. Todos los labels, opciones y textos son editables.",
             "type": "rsvp",
             "id": "rsvp-form",
-            "bgColor": "primary",
+            "bgColor": "background",
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 6 de Abril",
+                "deadline": "Antes del 30 de Abril",
                 "guestCountLabel": "Numero de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
@@ -375,8 +405,8 @@
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "542262336872",
-                    "messageTemplate": "Hola Dasha! Confirmo asistencia para tus XV:\n\n{resumen}\n\nGracias por la invitación a este momento tan especial! 🫶🏼🤗"
+                    "number": "543516646865",
+                    "messageTemplate": "Hola Pili! Confirmo asistencia para tus XV:\n\n{resumen}\n\nGracias por la invitación a este momento tan especial! 🫶🏼🤗"
                 }
             }
         },
@@ -389,8 +419,8 @@
             "blocks": ["title", "text"],
             "data": {
                 "title": "Gracias por estar",
-                "text": "Este momento es muy especial para mí, y me haría muy feliz poder compartirlo con vos. Gracias por ser parte de mi vida y acompañarme en una noche que voy a recordar siempre.",
-                "signature": "Dasha",
+                "text": "Este día es aún más lindo porque estás vos. Gracias por acompañarme.",
+                "signature": "Pili",
                 "decorativeLines": true
             }
         },
@@ -403,7 +433,7 @@
             "blocks": ["image", "name"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/xv/dasha/images/img-hero.jpeg"
+                "image": "/clientes/xv/pili/images/img1.jpeg"
             }
         },
 
