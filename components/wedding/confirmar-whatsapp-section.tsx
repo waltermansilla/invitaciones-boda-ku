@@ -19,6 +19,11 @@ interface ConfirmarWhatsappSectionProps {
   buttonText: string
   whatsappNumber: string
   message: string
+  noAsiste?: {
+    enabled: boolean
+    buttonText: string
+    message: string
+  }
 }
 
 export default function ConfirmarWhatsappSection({
@@ -27,15 +32,16 @@ export default function ConfirmarWhatsappSection({
   buttonText,
   whatsappNumber,
   message,
+  noAsiste,
 }: ConfirmarWhatsappSectionProps) {
   const isMuestra = useIsMuestra()
 
-  const handleClick = () => {
+  const handleClick = (msg: string) => {
     if (isMuestra) {
       alert("Modo muestra: en la version real, esto abre WhatsApp.")
       return
     }
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
+    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`
     window.open(url, "_blank")
   }
 
@@ -49,12 +55,22 @@ export default function ConfirmarWhatsappSection({
           {subtitle}
         </p>
       )}
-      <button
-        onClick={handleClick}
-        className={`inline-flex min-h-[48px] items-center rounded-full border border-current/40 px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-inherit transition-opacity hover:bg-current/10 ${!subtitle ? "mt-3" : ""}`}
-      >
-        {buttonText}
-      </button>
+      <div className={`flex flex-col gap-3 ${!subtitle ? "mt-3" : ""}`}>
+        <button
+          onClick={() => handleClick(message)}
+          className="inline-flex min-h-[48px] items-center rounded-full border border-current/40 px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-inherit transition-opacity hover:bg-current/10"
+        >
+          {buttonText}
+        </button>
+        {noAsiste?.enabled && (
+          <button
+            onClick={() => handleClick(noAsiste.message)}
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full px-6 py-2 text-[10px] font-light tracking-[0.15em] uppercase text-inherit/60 transition-opacity hover:text-inherit/80"
+          >
+            {noAsiste.buttonText}
+          </button>
+        )}
+      </div>
     </section>
   )
 }
