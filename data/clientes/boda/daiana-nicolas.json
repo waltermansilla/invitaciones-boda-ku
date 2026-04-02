@@ -20,7 +20,7 @@
     "theme": {
         "primaryColor": "#385e78",
         "backgroundColor": "#fff",
-        "textColor": "#4a5d4e",
+        "textColor": "#385e78",
         "lightBgTextColor": "#d17a38",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
@@ -185,8 +185,8 @@
             "data": {
                 "icons": ["gem"],
                 "title": "Vestimenta",
-                "subtitle": "ELEGANTE",
-                "description": "",
+                "subtitle": "ELEGANTE SPORT",
+                "description": "Sugerimos ropa cómoda y calzado adecuado para disfrutar y bailar toda la noche.",
                 "showButton": false,
                 "colorSwatches": {
                     "enabled": false,
@@ -207,6 +207,19 @@
                         }
                     ]
                 }
+            }
+        },
+
+        {
+            "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
+            "type": "adultsOnly",
+            "id": "adults-only",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description"],
+            "data": {
+                "icon": "baby",
+                "title": "NIÑOS Y DIVERSIÓN A LA VISTA",
+                "description": "Pedimos a los papás que se hagan cargo de sus pequeños super héroes, para que todos podamos disfrutar de una noche inolvidable."
             }
         },
 
