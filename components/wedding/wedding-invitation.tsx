@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useConfig } from "@/lib/config-context";
+import { useConfig, useIsMuestra } from "@/lib/config-context";
 import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
 import HeroSection from "./hero-section";
@@ -10,6 +10,7 @@ import MusicPlayer from "./music-player";
 
 export default function WeddingInvitation() {
     const config = useConfig();
+    const isMuestra = useIsMuestra();
     const hero = config.hero;
     const sections = config.sections ?? [];
     const meta = config.meta;
@@ -22,10 +23,10 @@ export default function WeddingInvitation() {
     // Track if music should start (triggered by overlay dismiss when autoplay is true)
     const [shouldPlayMusic, setShouldPlayMusic] = useState(false);
     
-    // Handle overlay dismiss - start music if autoplay is enabled
+    // Handle overlay dismiss - start music if autoplay is enabled (not in muestra mode)
     const handleOverlayDismiss = () => {
         setOverlayDismissed(true);
-        if (music.autoplay) {
+        if (music.autoplay && !isMuestra) {
             setShouldPlayMusic(true);
         }
     };
