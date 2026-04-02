@@ -53,7 +53,7 @@
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/daiana-nicolas/images/hero.png",
+        "coupleImage": "/clientes/boda/daiana-nicolas/images/hero.PNG",
         "headline": "¡Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
@@ -115,7 +115,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "1/1",
-                "images": ["/clientes/boda/daiana-nicolas/images/ramo.PNG"]
+                "images": ["/clientes/boda/daiana-nicolas/images/ramo.png"]
             }
         },
 
