@@ -9,7 +9,14 @@ interface Invitado { id: string; nombre: string; codigo?: string; tipo: "persona
 interface Evento { id: string; panel_id: string; fecha_evento?: string }
 interface PanelData { evento: Evento; invitados: Invitado[]; stats: { confirmados: number; noAsisten: number; pendientes: number } }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
+const fetcher = async (url: string) => {
+  console.log("[v0] Fetching:", url)
+  const res = await fetch(url)
+  const json = await res.json()
+  console.log("[v0] Response:", res.status, json)
+  if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`)
+  return json
+}
 const filterToEstado: Record<string, string> = { confirmados: "confirmado", pendientes: "pendiente", no_asiste: "no_asiste" }
 
 export default function PanelPage({ params }: { params: Promise<{ panelId: string }> }) {
@@ -50,7 +57,8 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
     mutate()
   }, [panelId, mutate])
 
-  if (!panelId || error || !data) return <div className="flex min-h-screen items-center justify-center bg-[#faf9f7]"><p className="text-neutral-500">{error ? "Error al cargar" : "Cargando..."}</p></div>
+  if (error) return <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#faf9f7] p-4"><p className="text-red-500 font-medium">Error al cargar el panel</p><p className="text-xs text-neutral-500 text-center max-w-sm">{error?.message || String(error)}</p><button onClick={() => mutate()} className="mt-2 rounded-lg px-4 py-2 text-sm text-white" style={{backgroundColor: "#b8a88a"}}>Reintentar</button></div>
+  if (!panelId || !data) return <div className="flex min-h-screen items-center justify-center bg-[#faf9f7]"><p className="text-neutral-500">Cargando...</p></div>
 
   const { evento, invitados, stats } = data
   const total = stats.confirmados + stats.noAsisten + stats.pendientes
