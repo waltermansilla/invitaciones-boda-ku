@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import useSWR from "swr"
-import { Copy, Trash2, Edit2, Plus, Users, User, Check, X } from "lucide-react"
+import { Copy, Trash2, Edit2, Plus, Users, User, Check, X, Utensils, Music, MessageSquare } from "lucide-react"
 
 // Types
 interface Integrante {
@@ -52,11 +52,10 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const [editingInvitado, setEditingInvitado] = useState<Invitado | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
-  const giftCardEnabled = true // TODO: Leer del JSON
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const giftCardEnabled = true
 
-  // Color primario (beige/dorado como en las imágenes)
   const primaryColor = "#b8a88a"
-  const primaryColorLight = "#d4c9b5"
 
   useEffect(() => {
     params.then((p) => setPanelId(p.panelId))
@@ -107,7 +106,6 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const { evento, invitados, stats } = data
   const total = stats.confirmados + stats.noAsisten + stats.pendientes
 
-  // Calcular días restantes
   let diasRestantes: number | null = null
   if (evento.fecha_evento) {
     const hoy = new Date()
@@ -115,8 +113,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
     diasRestantes = Math.ceil((fechaEvento.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24))
   }
 
-  // Filtrar y buscar invitados
-  let invitadosFiltrados = invitados
+  const invitadosFiltrados = invitados
     .filter((inv) => filter === "todos" || inv.estado === filter)
     .filter((inv) => inv.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
 
@@ -139,25 +136,27 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
 
       {/* Stats Cards */}
       <div className="px-5 py-6">
+        {/* Total grande arriba */}
+        <div className="mb-3">
+          <div className="rounded-lg bg-white px-4 py-6 text-center shadow-sm">
+            <p className="text-4xl font-bold text-neutral-700">{total}</p>
+            <p className="mt-1 text-xs uppercase tracking-wide text-neutral-500">En total</p>
+          </div>
+        </div>
+        {/* Los 3 estados abajo */}
         <div className="grid grid-cols-3 gap-3">
-          <StatCard 
-            number={total} 
-            label="En total" 
-            bgColor="#fff"
-            textColor="#666"
-          />
-          <StatCard 
-            number={stats.confirmados} 
-            label="Confirmados" 
-            bgColor={primaryColorLight}
-            textColor="#5a5a5a"
-          />
-          <StatCard 
-            number={stats.noAsisten} 
-            label="Inasistencias" 
-            bgColor="#f5d5d5"
-            textColor="#8b6b6b"
-          />
+          <div className="rounded-lg px-3 py-4 text-center" style={{ backgroundColor: "#d4edda" }}>
+            <p className="text-2xl font-bold" style={{ color: "#155724" }}>{stats.confirmados}</p>
+            <p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: "#155724", opacity: 0.8 }}>Confirmados</p>
+          </div>
+          <div className="rounded-lg bg-neutral-100 px-3 py-4 text-center">
+            <p className="text-2xl font-bold text-neutral-600">{stats.pendientes}</p>
+            <p className="mt-1 text-[10px] uppercase tracking-wide text-neutral-500">Pendientes</p>
+          </div>
+          <div className="rounded-lg px-3 py-4 text-center" style={{ backgroundColor: "#f5d5d5" }}>
+            <p className="text-2xl font-bold" style={{ color: "#8b6b6b" }}>{stats.noAsisten}</p>
+            <p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: "#8b6b6b", opacity: 0.8 }}>Inasistencias</p>
+          </div>
         </div>
       </div>
 
@@ -219,6 +218,8 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
                 copiedId={copiedId}
                 giftCardEnabled={giftCardEnabled}
                 primaryColor={primaryColor}
+                expanded={expandedId === invitado.id}
+                onToggleExpand={() => setExpandedId(expandedId === invitado.id ? null : invitado.id)}
                 onCopyLink={handleCopyLink}
                 onDelete={handleDelete}
                 onEdit={() => setEditingInvitado(invitado)}
@@ -259,7 +260,6 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   )
 }
 
-// Loading Screen
 function LoadingScreen() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#faf9f7]">
@@ -268,7 +268,6 @@ function LoadingScreen() {
   )
 }
 
-// Error Screen
 function ErrorScreen() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#faf9f7]">
@@ -277,38 +276,14 @@ function ErrorScreen() {
   )
 }
 
-// Stat Card Component
-function StatCard({ 
-  number, 
-  label, 
-  bgColor, 
-  textColor 
-}: { 
-  number: number
-  label: string
-  bgColor: string
-  textColor: string
-}) {
-  return (
-    <div 
-      className="rounded-lg px-3 py-4 text-center"
-      style={{ backgroundColor: bgColor }}
-    >
-      <p className="text-2xl font-bold" style={{ color: textColor }}>{number}</p>
-      <p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: textColor, opacity: 0.8 }}>
-        {label}
-      </p>
-    </div>
-  )
-}
-
-// Invitado Row Component
 function InvitadoRow({
   invitado,
   isLast,
   copiedId,
   giftCardEnabled,
   primaryColor,
+  expanded,
+  onToggleExpand,
   onCopyLink,
   onDelete,
   onEdit,
@@ -320,34 +295,32 @@ function InvitadoRow({
   copiedId: string | null
   giftCardEnabled: boolean
   primaryColor: string
+  expanded: boolean
+  onToggleExpand: () => void
   onCopyLink: (inv: Invitado) => void
   onDelete: (id: string) => void
   onEdit: () => void
   onTogglePago: (inv: Invitado) => void
   onConfirmManual: (inv: Invitado, estado: "confirmado" | "no_asiste") => void
 }) {
-  const [expanded, setExpanded] = useState(false)
-
   const estadoBg = {
-    confirmado: "#d4c9b5",
+    confirmado: "#d4edda",
     pendiente: "#f5f5f5",
     no_asiste: "#f5d5d5",
   }
 
   const estadoText = {
-    confirmado: "#5a5a5a",
+    confirmado: "#155724",
     pendiente: "#888",
     no_asiste: "#8b6b6b",
   }
 
   return (
     <div className={!isLast ? "border-b border-neutral-100" : ""}>
-      {/* Main Row */}
       <div 
         className="flex items-center gap-3 px-4 py-3 cursor-pointer"
-        onClick={() => setExpanded(!expanded)}
+        onClick={onToggleExpand}
       >
-        {/* Icon */}
         <div 
           className="flex h-8 w-8 items-center justify-center rounded-full"
           style={{ backgroundColor: estadoBg[invitado.estado] }}
@@ -359,7 +332,6 @@ function InvitadoRow({
           )}
         </div>
 
-        {/* Name */}
         <div className="flex-1">
           <p className="font-medium text-neutral-800">{invitado.nombre}</p>
           {invitado.tipo === "familia" && invitado.integrantes && (
@@ -369,7 +341,6 @@ function InvitadoRow({
           )}
         </div>
 
-        {/* Status Badge */}
         <span
           className="rounded px-2 py-1 text-[10px] font-medium uppercase"
           style={{ 
@@ -382,11 +353,9 @@ function InvitadoRow({
         </span>
       </div>
 
-      {/* Expanded Actions */}
       {expanded && (
         <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3">
           <div className="flex flex-wrap gap-2">
-            {/* Copy Link */}
             <button
               onClick={(e) => { e.stopPropagation(); onCopyLink(invitado); }}
               className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white"
@@ -396,7 +365,6 @@ function InvitadoRow({
               {copiedId === invitado.id ? "Copiado!" : "Copiar link"}
             </button>
 
-            {/* Confirm Manual (only if pending) */}
             {invitado.estado === "pendiente" && (
               <>
                 <button
@@ -416,7 +384,6 @@ function InvitadoRow({
               </>
             )}
 
-            {/* Gift Card Toggle */}
             {giftCardEnabled && (
               <button
                 onClick={(e) => { e.stopPropagation(); onTogglePago(invitado); }}
@@ -431,7 +398,6 @@ function InvitadoRow({
               </button>
             )}
 
-            {/* Edit */}
             <button
               onClick={(e) => { e.stopPropagation(); onEdit(); }}
               className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"
@@ -440,7 +406,6 @@ function InvitadoRow({
               Editar
             </button>
 
-            {/* Delete */}
             <button
               onClick={(e) => { e.stopPropagation(); onDelete(invitado.id); }}
               className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600"
@@ -450,14 +415,26 @@ function InvitadoRow({
             </button>
           </div>
 
-          {/* Extra Info */}
-          {(invitado.restricciones || invitado.mensaje) && (
-            <div className="mt-3 space-y-1 text-xs text-neutral-600">
+          {/* Detalles */}
+          {(invitado.restricciones || invitado.mensaje || invitado.cancion) && (
+            <div className="mt-3 space-y-2">
               {invitado.restricciones && (
-                <p><strong>Restricciones:</strong> {invitado.restricciones}</p>
+                <div className="flex items-center gap-2 text-xs text-neutral-600">
+                  <Utensils className="h-3 w-3" />
+                  <span>{invitado.restricciones}</span>
+                </div>
+              )}
+              {invitado.cancion && (
+                <div className="flex items-center gap-2 text-xs text-neutral-600">
+                  <Music className="h-3 w-3" />
+                  <span>{invitado.cancion}</span>
+                </div>
               )}
               {invitado.mensaje && (
-                <p><strong>Mensaje:</strong> {invitado.mensaje}</p>
+                <div className="flex items-center gap-2 text-xs text-neutral-600">
+                  <MessageSquare className="h-3 w-3" />
+                  <span>{invitado.mensaje}</span>
+                </div>
               )}
             </div>
           )}
@@ -488,7 +465,6 @@ function InvitadoRow({
   )
 }
 
-// Modal para agregar invitado
 function AddInvitadoModal({
   panelId,
   primaryColor,
@@ -505,10 +481,17 @@ function AddInvitadoModal({
   const [integrantes, setIntegrantes] = useState<string[]>([])
   const [nuevoIntegrante, setNuevoIntegrante] = useState("")
   const [loading, setLoading] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!nombre.trim()) return
+
+    // Capturar el valor actual del input de integrante si hay algo escrito
+    let integrantesFinales = [...integrantes]
+    if (tipo === "familia" && nuevoIntegrante.trim()) {
+      integrantesFinales.push(nuevoIntegrante.trim())
+    }
 
     setLoading(true)
     try {
@@ -518,7 +501,7 @@ function AddInvitadoModal({
         body: JSON.stringify({
           nombre: nombre.trim(),
           tipo,
-          integrantes: tipo === "familia" ? integrantes : [],
+          integrantes: tipo === "familia" ? integrantesFinales : [],
         }),
       })
       onSuccess()
@@ -533,6 +516,7 @@ function AddInvitadoModal({
     if (nuevoIntegrante.trim()) {
       setIntegrantes([...integrantes, nuevoIntegrante.trim()])
       setNuevoIntegrante("")
+      inputRef.current?.focus()
     }
   }
 
@@ -544,7 +528,6 @@ function AddInvitadoModal({
         </h2>
         
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Tipo */}
           <div className="flex gap-3">
             <button
               type="button"
@@ -572,7 +555,6 @@ function AddInvitadoModal({
             </button>
           </div>
 
-          {/* Nombre */}
           <div>
             <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-500">
               {tipo === "familia" ? "Nombre de la familia" : "Nombre completo"}
@@ -587,7 +569,6 @@ function AddInvitadoModal({
             />
           </div>
 
-          {/* Integrantes (solo familia) */}
           {tipo === "familia" && (
             <div>
               <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-500">
@@ -617,6 +598,7 @@ function AddInvitadoModal({
               
               <div className="flex gap-2">
                 <input
+                  ref={inputRef}
                   type="text"
                   value={nuevoIntegrante}
                   onChange={(e) => setNuevoIntegrante(e.target.value)}
@@ -636,7 +618,6 @@ function AddInvitadoModal({
             </div>
           )}
 
-          {/* Buttons */}
           <div className="flex gap-3 pt-2">
             <button
               type="button"
@@ -660,7 +641,6 @@ function AddInvitadoModal({
   )
 }
 
-// Modal para editar invitado
 function EditInvitadoModal({
   panelId,
   invitado,
@@ -675,24 +655,46 @@ function EditInvitadoModal({
   onSuccess: () => void
 }) {
   const [nombre, setNombre] = useState(invitado.nombre)
+  const [integrantes, setIntegrantes] = useState<{id: string; nombre: string}[]>(
+    invitado.integrantes?.map((i) => ({ id: i.id, nombre: i.nombre })) || []
+  )
+  const [nuevoIntegrante, setNuevoIntegrante] = useState("")
   const [loading, setLoading] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!nombre.trim()) return
+
+    // Capturar integrante en el input si hay algo
+    let integrantesFinales = [...integrantes]
+    if (invitado.tipo === "familia" && nuevoIntegrante.trim()) {
+      integrantesFinales.push({ id: `new-${Date.now()}`, nombre: nuevoIntegrante.trim() })
+    }
 
     setLoading(true)
     try {
       await fetch(`/api/panel/${panelId}/invitado/${invitado.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombre: nombre.trim() }),
+        body: JSON.stringify({ 
+          nombre: nombre.trim(),
+          integrantes: invitado.tipo === "familia" ? integrantesFinales : undefined
+        }),
       })
       onSuccess()
     } catch {
       alert("Error al actualizar invitado")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const addIntegrante = () => {
+    if (nuevoIntegrante.trim()) {
+      setIntegrantes([...integrantes, { id: `new-${Date.now()}`, nombre: nuevoIntegrante.trim() }])
+      setNuevoIntegrante("")
+      inputRef.current?.focus()
     }
   }
 
@@ -706,7 +708,7 @@ function EditInvitadoModal({
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-500">
-              Nombre
+              {invitado.tipo === "familia" ? "Nombre de la familia" : "Nombre completo"}
             </label>
             <input
               type="text"
@@ -716,6 +718,64 @@ function EditInvitadoModal({
               autoFocus
             />
           </div>
+
+          {invitado.tipo === "familia" && (
+            <div>
+              <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-500">
+                Integrantes
+              </label>
+              
+              {integrantes.length > 0 && (
+                <div className="mb-3 flex flex-wrap gap-2">
+                  {integrantes.map((int, idx) => (
+                    <span
+                      key={int.id}
+                      className="flex items-center gap-1 rounded-full px-3 py-1 text-xs"
+                      style={{ backgroundColor: primaryColor + "30", color: "#666" }}
+                    >
+                      <input
+                        type="text"
+                        value={int.nombre}
+                        onChange={(e) => {
+                          const newIntegrantes = [...integrantes]
+                          newIntegrantes[idx].nombre = e.target.value
+                          setIntegrantes(newIntegrantes)
+                        }}
+                        className="w-24 bg-transparent border-none text-xs focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setIntegrantes(integrantes.filter((_, i) => i !== idx))}
+                        className="text-neutral-400 hover:text-neutral-600"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              
+              <div className="flex gap-2">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={nuevoIntegrante}
+                  onChange={(e) => setNuevoIntegrante(e.target.value)}
+                  placeholder="Agregar integrante"
+                  className="flex-1 rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
+                  onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addIntegrante())}
+                />
+                <button
+                  type="button"
+                  onClick={addIntegrante}
+                  className="rounded-lg px-4 text-white"
+                  style={{ backgroundColor: primaryColor }}
+                >
+                  <Plus className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className="flex gap-3 pt-2">
             <button
