@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server"
+import { createApiClient } from "@/lib/supabase/api"
 import { NextRequest, NextResponse } from "next/server"
 
 // GET: Obtener datos del invitado por código
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ codigo: string }> }
 ) {
   const { codigo } = await params
-  const supabase = await createClient()
+  const supabase = createApiClient()
 
   const { data: invitado, error } = await supabase
     .from("invitados")
@@ -29,7 +29,7 @@ export async function POST(
 ) {
   const { codigo } = await params
   const body = await request.json()
-  const supabase = await createClient()
+  const supabase = createApiClient()
 
   // Obtener invitado
   const { data: invitado, error: getError } = await supabase
