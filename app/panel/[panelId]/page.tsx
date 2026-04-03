@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import useSWR from "swr"
-import { Check, X, Copy, Trash2, Edit2, Plus, Users, User, ChevronDown, ChevronUp } from "lucide-react"
+import { Copy, Trash2, Edit2, Plus, Users, User, Check, X } from "lucide-react"
 
 // Types
 interface Integrante {
@@ -48,12 +48,15 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 export default function PanelPage({ params }: { params: Promise<{ panelId: string }> }) {
   const [panelId, setPanelId] = useState<string | null>(null)
   const [filter, setFilter] = useState<"todos" | "confirmados" | "pendientes" | "no_asiste">("todos")
-  const [sortBy, setSortBy] = useState<"nombre" | "fecha" | "estado">("nombre")
-  const [sortAsc, setSortAsc] = useState(true)
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingInvitado, setEditingInvitado] = useState<Invitado | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
-  const [giftCardEnabled, setGiftCardEnabled] = useState(true) // TODO: Leer del JSON
+  const [searchTerm, setSearchTerm] = useState("")
+  const giftCardEnabled = true // TODO: Leer del JSON
+
+  // Color primario (beige/dorado como en las imágenes)
+  const primaryColor = "#b8a88a"
+  const primaryColorLight = "#d4c9b5"
 
   useEffect(() => {
     params.then((p) => setPanelId(p.panelId))
@@ -67,16 +70,14 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
 
   const handleCopyLink = useCallback((invitado: Invitado) => {
     const baseUrl = window.location.origin
-    // TODO: Obtener la ruta real de la invitación desde el JSON
-    const link = `${baseUrl}/invitacion/${invitado.codigo}`
+    const link = `${baseUrl}/boda/anto-walter?c=${invitado.codigo}`
     navigator.clipboard.writeText(link)
     setCopiedId(invitado.id)
     setTimeout(() => setCopiedId(null), 2000)
   }, [])
 
   const handleDelete = useCallback(async (invitadoId: string) => {
-    if (!confirm("¿Estás seguro de eliminar este invitado?")) return
-    
+    if (!confirm("¿Eliminar este invitado?")) return
     await fetch(`/api/panel/${panelId}/invitado/${invitadoId}`, { method: "DELETE" })
     mutate()
   }, [panelId, mutate])
@@ -99,9 +100,9 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
     mutate()
   }, [panelId, mutate])
 
-  if (!panelId) return <div className="flex min-h-screen items-center justify-center">Cargando...</div>
-  if (error) return <div className="flex min-h-screen items-center justify-center text-red-500">Error cargando panel</div>
-  if (!data) return <div className="flex min-h-screen items-center justify-center">Cargando...</div>
+  if (!panelId) return <LoadingScreen />
+  if (error) return <ErrorScreen />
+  if (!data) return <LoadingScreen />
 
   const { evento, invitados, stats } = data
   const total = stats.confirmados + stats.noAsisten + stats.pendientes
@@ -114,165 +115,126 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
     diasRestantes = Math.ceil((fechaEvento.getTime() - hoy.getTime()) / (1000 * 60 * 60 * 24))
   }
 
-  // Filtrar invitados
-  let invitadosFiltrados = invitados.filter((inv) => {
-    if (filter === "todos") return true
-    return inv.estado === filter
-  })
-
-  // Ordenar invitados
-  invitadosFiltrados = [...invitadosFiltrados].sort((a, b) => {
-    let comparison = 0
-    if (sortBy === "nombre") {
-      comparison = a.nombre.localeCompare(b.nombre)
-    } else if (sortBy === "fecha") {
-      const dateA = a.fecha_confirmacion ? new Date(a.fecha_confirmacion).getTime() : 0
-      const dateB = b.fecha_confirmacion ? new Date(b.fecha_confirmacion).getTime() : 0
-      comparison = dateA - dateB
-    } else if (sortBy === "estado") {
-      const order = { confirmado: 0, pendiente: 1, no_asiste: 2 }
-      comparison = order[a.estado] - order[b.estado]
-    }
-    return sortAsc ? comparison : -comparison
-  })
-
-  const progressPercent = total > 0 ? ((stats.confirmados + stats.noAsisten) / total) * 100 : 0
-  const confirmedPercent = total > 0 ? (stats.confirmados / total) * 100 : 0
-  const noAsistePercent = total > 0 ? (stats.noAsisten / total) * 100 : 0
+  // Filtrar y buscar invitados
+  let invitadosFiltrados = invitados
+    .filter((inv) => filter === "todos" || inv.estado === filter)
+    .filter((inv) => inv.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-[#faf9f7]">
       {/* Header */}
-      <header className="border-b border-neutral-200 bg-white px-4 py-6 md:px-8">
-        <div className="mx-auto max-w-4xl">
-          <h1 className="text-xl font-medium text-neutral-800 md:text-2xl">Panel de Confirmaciones</h1>
-          
-          {/* Días restantes */}
-          {diasRestantes !== null && (
-            <p className="mt-1 text-sm text-neutral-500">
-              {diasRestantes > 0 ? `Faltan ${diasRestantes} días para el evento` : 
-               diasRestantes === 0 ? "El evento es hoy" : 
-               `El evento fue hace ${Math.abs(diasRestantes)} días`}
-            </p>
-          )}
-
-          {/* Barra de progreso */}
-          <div className="mt-6">
-            <div className="mb-2 flex items-center justify-between text-xs text-neutral-500">
-              <span>{stats.confirmados} confirmados</span>
-              <span>{stats.noAsisten} no asisten</span>
-              <span>{stats.pendientes} pendientes</span>
-            </div>
-            <div className="h-3 w-full overflow-hidden rounded-full bg-neutral-200">
-              <div className="flex h-full">
-                <div 
-                  className="bg-emerald-500 transition-all duration-500" 
-                  style={{ width: `${confirmedPercent}%` }} 
-                />
-                <div 
-                  className="bg-red-400 transition-all duration-500" 
-                  style={{ width: `${noAsistePercent}%` }} 
-                />
-              </div>
-            </div>
-            <p className="mt-2 text-center text-sm font-medium text-neutral-700">
-              {stats.confirmados} confirmados, {stats.noAsisten} no asisten, {stats.pendientes} pendientes
-            </p>
-          </div>
-        </div>
+      <header 
+        className="px-5 py-8 text-center text-white"
+        style={{ backgroundColor: primaryColor }}
+      >
+        <h1 className="text-lg font-semibold tracking-[0.2em] uppercase">
+          Listado de Invitados
+        </h1>
+        {diasRestantes !== null && diasRestantes > 0 && (
+          <p className="mt-2 text-sm font-light opacity-90">
+            Faltan {diasRestantes} días para el evento
+          </p>
+        )}
       </header>
 
-      {/* Controles */}
-      <div className="border-b border-neutral-200 bg-white px-4 py-4 md:px-8">
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center gap-3">
-          {/* Filtros */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-neutral-500">Filtrar:</span>
-            {(["todos", "confirmados", "pendientes", "no_asiste"] as const).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`rounded-full px-3 py-1 text-xs transition-colors ${
-                  filter === f 
-                    ? "bg-neutral-800 text-white" 
-                    : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-                }`}
-              >
-                {f === "no_asiste" ? "No asisten" : f.charAt(0).toUpperCase() + f.slice(1)}
-              </button>
-            ))}
-          </div>
-
-          {/* Ordenar */}
-          <div className="flex items-center gap-2 md:ml-auto">
-            <span className="text-xs text-neutral-500">Ordenar:</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-700"
-            >
-              <option value="nombre">Nombre</option>
-              <option value="fecha">Fecha confirmación</option>
-              <option value="estado">Estado</option>
-            </select>
-            <button
-              onClick={() => setSortAsc(!sortAsc)}
-              className="rounded border border-neutral-200 p-1 hover:bg-neutral-50"
-            >
-              {sortAsc ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
-          </div>
-
-          {/* Agregar */}
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-1 rounded-full bg-neutral-800 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-neutral-700"
-          >
-            <Plus className="h-3 w-3" />
-            Agregar invitado
-          </button>
+      {/* Stats Cards */}
+      <div className="px-5 py-6">
+        <div className="grid grid-cols-3 gap-3">
+          <StatCard 
+            number={total} 
+            label="En total" 
+            bgColor="#fff"
+            textColor="#666"
+          />
+          <StatCard 
+            number={stats.confirmados} 
+            label="Confirmados" 
+            bgColor={primaryColorLight}
+            textColor="#5a5a5a"
+          />
+          <StatCard 
+            number={stats.noAsisten} 
+            label="Inasistencias" 
+            bgColor="#f5d5d5"
+            textColor="#8b6b6b"
+          />
         </div>
       </div>
 
-      {/* Lista de invitados */}
-      <main className="px-4 py-6 md:px-8">
-        <div className="mx-auto max-w-4xl">
-          {invitadosFiltrados.length === 0 ? (
-            <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-12 text-center">
-              <p className="text-neutral-500">No hay invitados {filter !== "todos" ? `${filter}` : ""}</p>
-              {filter === "todos" && (
-                <button
-                  onClick={() => setShowAddModal(true)}
-                  className="mt-4 text-sm font-medium text-neutral-800 underline"
-                >
-                  Agregar el primer invitado
-                </button>
-              )}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {invitadosFiltrados.map((invitado) => (
-                <InvitadoCard
-                  key={invitado.id}
-                  invitado={invitado}
-                  giftCardEnabled={giftCardEnabled}
-                  copiedId={copiedId}
-                  onCopyLink={handleCopyLink}
-                  onDelete={handleDelete}
-                  onEdit={() => setEditingInvitado(invitado)}
-                  onTogglePago={handleTogglePago}
-                  onConfirmManual={handleConfirmManual}
-                />
-              ))}
-            </div>
-          )}
+      {/* Search & Filter */}
+      <div className="px-5 pb-4">
+        <input
+          type="text"
+          placeholder="Buscar invitado..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="mb-4 w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
+        />
+        
+        <div className="flex flex-wrap gap-2">
+          {(["todos", "confirmados", "pendientes", "no_asiste"] as const).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className="rounded-full px-4 py-2 text-xs font-medium transition-colors"
+              style={{
+                backgroundColor: filter === f ? primaryColor : "#fff",
+                color: filter === f ? "#fff" : "#666",
+                border: filter === f ? "none" : "1px solid #e5e5e5"
+              }}
+            >
+              {f === "no_asiste" ? "No asisten" : f === "todos" ? "Todos" : f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
         </div>
-      </main>
+      </div>
 
-      {/* Modal Agregar */}
+      {/* Add Button */}
+      <div className="px-5 pb-4">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="flex w-full items-center justify-center gap-2 rounded-lg py-4 text-sm font-semibold tracking-wide text-white uppercase transition-opacity hover:opacity-90"
+          style={{ backgroundColor: primaryColor }}
+        >
+          <Plus className="h-5 w-5" />
+          Agregar Invitado
+        </button>
+      </div>
+
+      {/* Lista de invitados */}
+      <div className="px-5 pb-8">
+        {invitadosFiltrados.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-12 text-center">
+            <p className="text-neutral-500">
+              {searchTerm ? "No se encontraron resultados" : "No hay invitados"}
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+            {invitadosFiltrados.map((invitado, idx) => (
+              <InvitadoRow
+                key={invitado.id}
+                invitado={invitado}
+                isLast={idx === invitadosFiltrados.length - 1}
+                copiedId={copiedId}
+                giftCardEnabled={giftCardEnabled}
+                primaryColor={primaryColor}
+                onCopyLink={handleCopyLink}
+                onDelete={handleDelete}
+                onEdit={() => setEditingInvitado(invitado)}
+                onTogglePago={handleTogglePago}
+                onConfirmManual={handleConfirmManual}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Modals */}
       {showAddModal && (
         <AddInvitadoModal
           panelId={panelId}
+          primaryColor={primaryColor}
           onClose={() => setShowAddModal(false)}
           onSuccess={() => {
             setShowAddModal(false)
@@ -281,11 +243,11 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
         />
       )}
 
-      {/* Modal Editar */}
       {editingInvitado && (
         <EditInvitadoModal
           panelId={panelId}
           invitado={editingInvitado}
+          primaryColor={primaryColor}
           onClose={() => setEditingInvitado(null)}
           onSuccess={() => {
             setEditingInvitado(null)
@@ -297,11 +259,56 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   )
 }
 
-// Componente de tarjeta de invitado
-function InvitadoCard({
+// Loading Screen
+function LoadingScreen() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#faf9f7]">
+      <p className="text-neutral-500">Cargando...</p>
+    </div>
+  )
+}
+
+// Error Screen
+function ErrorScreen() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#faf9f7]">
+      <p className="text-red-500">Error al cargar el panel</p>
+    </div>
+  )
+}
+
+// Stat Card Component
+function StatCard({ 
+  number, 
+  label, 
+  bgColor, 
+  textColor 
+}: { 
+  number: number
+  label: string
+  bgColor: string
+  textColor: string
+}) {
+  return (
+    <div 
+      className="rounded-lg px-3 py-4 text-center"
+      style={{ backgroundColor: bgColor }}
+    >
+      <p className="text-2xl font-bold" style={{ color: textColor }}>{number}</p>
+      <p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: textColor, opacity: 0.8 }}>
+        {label}
+      </p>
+    </div>
+  )
+}
+
+// Invitado Row Component
+function InvitadoRow({
   invitado,
-  giftCardEnabled,
+  isLast,
   copiedId,
+  giftCardEnabled,
+  primaryColor,
   onCopyLink,
   onDelete,
   onEdit,
@@ -309,135 +316,174 @@ function InvitadoCard({
   onConfirmManual,
 }: {
   invitado: Invitado
-  giftCardEnabled: boolean
+  isLast: boolean
   copiedId: string | null
+  giftCardEnabled: boolean
+  primaryColor: string
   onCopyLink: (inv: Invitado) => void
   onDelete: (id: string) => void
   onEdit: () => void
   onTogglePago: (inv: Invitado) => void
   onConfirmManual: (inv: Invitado, estado: "confirmado" | "no_asiste") => void
 }) {
-  const estadoColors = {
-    confirmado: "bg-emerald-100 text-emerald-700",
-    pendiente: "bg-neutral-100 text-neutral-600",
-    no_asiste: "bg-red-100 text-red-700",
+  const [expanded, setExpanded] = useState(false)
+
+  const estadoBg = {
+    confirmado: "#d4c9b5",
+    pendiente: "#f5f5f5",
+    no_asiste: "#f5d5d5",
   }
 
-  const estadoLabels = {
-    confirmado: "Confirmado",
-    pendiente: "Pendiente",
-    no_asiste: "No asiste",
+  const estadoText = {
+    confirmado: "#5a5a5a",
+    pendiente: "#888",
+    no_asiste: "#8b6b6b",
   }
 
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-4">
-      <div className="flex flex-wrap items-start gap-3">
-        {/* Icono tipo */}
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100">
+    <div className={!isLast ? "border-b border-neutral-100" : ""}>
+      {/* Main Row */}
+      <div 
+        className="flex items-center gap-3 px-4 py-3 cursor-pointer"
+        onClick={() => setExpanded(!expanded)}
+      >
+        {/* Icon */}
+        <div 
+          className="flex h-8 w-8 items-center justify-center rounded-full"
+          style={{ backgroundColor: estadoBg[invitado.estado] }}
+        >
           {invitado.tipo === "familia" ? (
-            <Users className="h-5 w-5 text-neutral-600" />
+            <Users className="h-4 w-4" style={{ color: estadoText[invitado.estado] }} />
           ) : (
-            <User className="h-5 w-5 text-neutral-600" />
+            <User className="h-4 w-4" style={{ color: estadoText[invitado.estado] }} />
           )}
         </div>
 
-        {/* Info */}
+        {/* Name */}
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <h3 className="font-medium text-neutral-800">{invitado.nombre}</h3>
-            <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${estadoColors[invitado.estado]}`}>
-              {estadoLabels[invitado.estado]}
-              {invitado.confirmado_manual && " (manual)"}
-            </span>
+          <p className="font-medium text-neutral-800">{invitado.nombre}</p>
+          {invitado.tipo === "familia" && invitado.integrantes && (
+            <p className="text-xs text-neutral-500">
+              {invitado.integrantes.length} integrantes
+            </p>
+          )}
+        </div>
+
+        {/* Status Badge */}
+        <span
+          className="rounded px-2 py-1 text-[10px] font-medium uppercase"
+          style={{ 
+            backgroundColor: estadoBg[invitado.estado],
+            color: estadoText[invitado.estado]
+          }}
+        >
+          {invitado.estado === "confirmado" ? "Confirmado" : 
+           invitado.estado === "no_asiste" ? "No asiste" : "Pendiente"}
+        </span>
+      </div>
+
+      {/* Expanded Actions */}
+      {expanded && (
+        <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3">
+          <div className="flex flex-wrap gap-2">
+            {/* Copy Link */}
+            <button
+              onClick={(e) => { e.stopPropagation(); onCopyLink(invitado); }}
+              className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white"
+              style={{ backgroundColor: primaryColor }}
+            >
+              <Copy className="h-3 w-3" />
+              {copiedId === invitado.id ? "Copiado!" : "Copiar link"}
+            </button>
+
+            {/* Confirm Manual (only if pending) */}
+            {invitado.estado === "pendiente" && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onConfirmManual(invitado, "confirmado"); }}
+                  className="flex items-center gap-1 rounded-lg bg-emerald-100 px-3 py-2 text-xs font-medium text-emerald-700"
+                >
+                  <Check className="h-3 w-3" />
+                  Confirmar
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onConfirmManual(invitado, "no_asiste"); }}
+                  className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-700"
+                >
+                  <X className="h-3 w-3" />
+                  No asiste
+                </button>
+              </>
+            )}
+
+            {/* Gift Card Toggle */}
+            {giftCardEnabled && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onTogglePago(invitado); }}
+                className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium ${
+                  invitado.pago_tarjeta 
+                    ? "bg-emerald-100 text-emerald-700" 
+                    : "bg-neutral-200 text-neutral-600"
+                }`}
+              >
+                <Check className="h-3 w-3" />
+                {invitado.pago_tarjeta ? "Pagó" : "Sin pagar"}
+              </button>
+            )}
+
+            {/* Edit */}
+            <button
+              onClick={(e) => { e.stopPropagation(); onEdit(); }}
+              className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"
+            >
+              <Edit2 className="h-3 w-3" />
+              Editar
+            </button>
+
+            {/* Delete */}
+            <button
+              onClick={(e) => { e.stopPropagation(); onDelete(invitado.id); }}
+              className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600"
+            >
+              <Trash2 className="h-3 w-3" />
+              Eliminar
+            </button>
           </div>
 
-          {/* Integrantes si es familia */}
-          {invitado.tipo === "familia" && invitado.integrantes && invitado.integrantes.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1">
-              {invitado.integrantes.map((int) => (
-                <span
-                  key={int.id}
-                  className={`rounded px-2 py-0.5 text-[10px] ${estadoColors[int.estado]}`}
-                >
-                  {int.nombre}
-                </span>
-              ))}
+          {/* Extra Info */}
+          {(invitado.restricciones || invitado.mensaje) && (
+            <div className="mt-3 space-y-1 text-xs text-neutral-600">
+              {invitado.restricciones && (
+                <p><strong>Restricciones:</strong> {invitado.restricciones}</p>
+              )}
+              {invitado.mensaje && (
+                <p><strong>Mensaje:</strong> {invitado.mensaje}</p>
+              )}
             </div>
           )}
 
-          {/* Restricciones/mensaje */}
-          {invitado.restricciones && (
-            <p className="mt-1 text-xs text-neutral-500">Restricciones: {invitado.restricciones}</p>
-          )}
-          {invitado.mensaje && (
-            <p className="mt-1 text-xs italic text-neutral-500">&quot;{invitado.mensaje}&quot;</p>
+          {/* Integrantes */}
+          {invitado.tipo === "familia" && invitado.integrantes && invitado.integrantes.length > 0 && (
+            <div className="mt-3">
+              <p className="mb-2 text-xs font-medium text-neutral-600">Integrantes:</p>
+              <div className="flex flex-wrap gap-1">
+                {invitado.integrantes.map((int) => (
+                  <span
+                    key={int.id}
+                    className="rounded px-2 py-1 text-[10px]"
+                    style={{ 
+                      backgroundColor: estadoBg[int.estado],
+                      color: estadoText[int.estado]
+                    }}
+                  >
+                    {int.nombre}
+                  </span>
+                ))}
+              </div>
+            </div>
           )}
         </div>
-
-        {/* Acciones */}
-        <div className="flex items-center gap-2">
-          {/* Pago tarjeta */}
-          {giftCardEnabled && (
-            <button
-              onClick={() => onTogglePago(invitado)}
-              className={`flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors ${
-                invitado.pago_tarjeta 
-                  ? "bg-emerald-100 text-emerald-700" 
-                  : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200"
-              }`}
-              title="Marcar pago de tarjeta"
-            >
-              <Check className="h-3 w-3" />
-              Pagó
-            </button>
-          )}
-
-          {/* Copiar link */}
-          <button
-            onClick={() => onCopyLink(invitado)}
-            className="flex items-center gap-1 rounded bg-neutral-100 px-2 py-1 text-[10px] font-medium text-neutral-600 transition-colors hover:bg-neutral-200"
-          >
-            <Copy className="h-3 w-3" />
-            {copiedId === invitado.id ? "Copiado!" : "Copiar link"}
-          </button>
-
-          {/* Confirmar manual (solo si está pendiente) */}
-          {invitado.estado === "pendiente" && (
-            <>
-              <button
-                onClick={() => onConfirmManual(invitado, "confirmado")}
-                className="rounded bg-emerald-100 p-1 text-emerald-700 transition-colors hover:bg-emerald-200"
-                title="Confirmar manualmente"
-              >
-                <Check className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => onConfirmManual(invitado, "no_asiste")}
-                className="rounded bg-red-100 p-1 text-red-700 transition-colors hover:bg-red-200"
-                title="Marcar como no asiste"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </>
-          )}
-
-          {/* Editar */}
-          <button
-            onClick={onEdit}
-            className="rounded bg-neutral-100 p-1 text-neutral-600 transition-colors hover:bg-neutral-200"
-          >
-            <Edit2 className="h-4 w-4" />
-          </button>
-
-          {/* Eliminar */}
-          <button
-            onClick={() => onDelete(invitado.id)}
-            className="rounded bg-neutral-100 p-1 text-neutral-600 transition-colors hover:bg-red-100 hover:text-red-600"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
@@ -445,10 +491,12 @@ function InvitadoCard({
 // Modal para agregar invitado
 function AddInvitadoModal({
   panelId,
+  primaryColor,
   onClose,
   onSuccess,
 }: {
   panelId: string
+  primaryColor: string
   onClose: () => void
   onSuccess: () => void
 }) {
@@ -488,26 +536,24 @@ function AddInvitadoModal({
     }
   }
 
-  const removeIntegrante = (index: number) => {
-    setIntegrantes(integrantes.filter((_, i) => i !== index))
-  }
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6">
-        <h2 className="mb-4 text-lg font-medium text-neutral-800">Agregar invitado</h2>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 md:items-center md:p-4">
+      <div className="w-full max-w-md rounded-t-2xl bg-white p-6 md:rounded-2xl">
+        <h2 className="mb-6 text-center text-sm font-semibold tracking-[0.15em] uppercase text-neutral-800">
+          Agregar Invitado
+        </h2>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Tipo */}
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
               type="button"
               onClick={() => setTipo("persona")}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-lg border py-3 text-sm transition-colors ${
-                tipo === "persona" 
-                  ? "border-neutral-800 bg-neutral-800 text-white" 
-                  : "border-neutral-200 text-neutral-600 hover:bg-neutral-50"
-              }`}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg py-4 text-sm font-medium transition-colors"
+              style={{
+                backgroundColor: tipo === "persona" ? primaryColor : "#f5f5f5",
+                color: tipo === "persona" ? "#fff" : "#666"
+              }}
             >
               <User className="h-4 w-4" />
               Persona
@@ -515,11 +561,11 @@ function AddInvitadoModal({
             <button
               type="button"
               onClick={() => setTipo("familia")}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-lg border py-3 text-sm transition-colors ${
-                tipo === "familia" 
-                  ? "border-neutral-800 bg-neutral-800 text-white" 
-                  : "border-neutral-200 text-neutral-600 hover:bg-neutral-50"
-              }`}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg py-4 text-sm font-medium transition-colors"
+              style={{
+                backgroundColor: tipo === "familia" ? primaryColor : "#f5f5f5",
+                color: tipo === "familia" ? "#fff" : "#666"
+              }}
             >
               <Users className="h-4 w-4" />
               Familia
@@ -528,15 +574,15 @@ function AddInvitadoModal({
 
           {/* Nombre */}
           <div>
-            <label className="mb-1 block text-sm text-neutral-600">
-              {tipo === "familia" ? "Nombre de la familia" : "Nombre"}
+            <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-500">
+              {tipo === "familia" ? "Nombre de la familia" : "Nombre completo"}
             </label>
             <input
               type="text"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               placeholder={tipo === "familia" ? "Ej: Familia García" : "Ej: Juan Pérez"}
-              className="w-full rounded-lg border border-neutral-200 px-4 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
               autoFocus
             />
           </div>
@@ -544,55 +590,66 @@ function AddInvitadoModal({
           {/* Integrantes (solo familia) */}
           {tipo === "familia" && (
             <div>
-              <label className="mb-1 block text-sm text-neutral-600">Integrantes</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={nuevoIntegrante}
-                  onChange={(e) => setNuevoIntegrante(e.target.value)}
-                  placeholder="Nombre del integrante"
-                  className="flex-1 rounded-lg border border-neutral-200 px-4 py-2 text-sm focus:border-neutral-400 focus:outline-none"
-                  onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addIntegrante())}
-                />
-                <button
-                  type="button"
-                  onClick={addIntegrante}
-                  className="rounded-lg bg-neutral-100 px-4 py-2 text-sm text-neutral-600 hover:bg-neutral-200"
-                >
-                  Agregar
-                </button>
-              </div>
+              <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-500">
+                Integrantes
+              </label>
+              
               {integrantes.length > 0 && (
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {integrantes.map((int, i) => (
+                <div className="mb-3 flex flex-wrap gap-2">
+                  {integrantes.map((int, idx) => (
                     <span
-                      key={i}
-                      className="flex items-center gap-1 rounded bg-neutral-100 px-2 py-1 text-xs text-neutral-600"
+                      key={idx}
+                      className="flex items-center gap-1 rounded-full px-3 py-1 text-xs"
+                      style={{ backgroundColor: primaryColor + "30", color: "#666" }}
                     >
                       {int}
-                      <button type="button" onClick={() => removeIntegrante(i)} className="hover:text-red-600">
+                      <button
+                        type="button"
+                        onClick={() => setIntegrantes(integrantes.filter((_, i) => i !== idx))}
+                        className="ml-1 text-neutral-400 hover:text-neutral-600"
+                      >
                         <X className="h-3 w-3" />
                       </button>
                     </span>
                   ))}
                 </div>
               )}
+              
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={nuevoIntegrante}
+                  onChange={(e) => setNuevoIntegrante(e.target.value)}
+                  placeholder="Nombre del integrante"
+                  className="flex-1 rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
+                  onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addIntegrante())}
+                />
+                <button
+                  type="button"
+                  onClick={addIntegrante}
+                  className="rounded-lg px-4 text-white"
+                  style={{ backgroundColor: primaryColor }}
+                >
+                  <Plus className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           )}
 
-          {/* Botones */}
-          <div className="flex gap-2 pt-2">
+          {/* Buttons */}
+          <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-neutral-200 py-2 text-sm text-neutral-600 hover:bg-neutral-50"
+              className="flex-1 rounded-lg border border-neutral-200 py-4 text-sm font-medium text-neutral-600"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading || !nombre.trim()}
-              className="flex-1 rounded-lg bg-neutral-800 py-2 text-sm text-white hover:bg-neutral-700 disabled:opacity-50"
+              className="flex-1 rounded-lg py-4 text-sm font-medium text-white disabled:opacity-50"
+              style={{ backgroundColor: primaryColor }}
             >
               {loading ? "Guardando..." : "Guardar"}
             </button>
@@ -607,11 +664,13 @@ function AddInvitadoModal({
 function EditInvitadoModal({
   panelId,
   invitado,
+  primaryColor,
   onClose,
   onSuccess,
 }: {
   panelId: string
   invitado: Invitado
+  primaryColor: string
   onClose: () => void
   onSuccess: () => void
 }) {
@@ -638,34 +697,39 @@ function EditInvitadoModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6">
-        <h2 className="mb-4 text-lg font-medium text-neutral-800">Editar invitado</h2>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 md:items-center md:p-4">
+      <div className="w-full max-w-md rounded-t-2xl bg-white p-6 md:rounded-2xl">
+        <h2 className="mb-6 text-center text-sm font-semibold tracking-[0.15em] uppercase text-neutral-800">
+          Editar Invitado
+        </h2>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="mb-1 block text-sm text-neutral-600">Nombre</label>
+            <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-neutral-500">
+              Nombre
+            </label>
             <input
               type="text"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              className="w-full rounded-lg border border-neutral-200 px-4 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+              className="w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
               autoFocus
             />
           </div>
 
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-3 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-neutral-200 py-2 text-sm text-neutral-600 hover:bg-neutral-50"
+              className="flex-1 rounded-lg border border-neutral-200 py-4 text-sm font-medium text-neutral-600"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading || !nombre.trim()}
-              className="flex-1 rounded-lg bg-neutral-800 py-2 text-sm text-white hover:bg-neutral-700 disabled:opacity-50"
+              className="flex-1 rounded-lg py-4 text-sm font-medium text-white disabled:opacity-50"
+              style={{ backgroundColor: primaryColor }}
             >
               {loading ? "Guardando..." : "Guardar"}
             </button>
