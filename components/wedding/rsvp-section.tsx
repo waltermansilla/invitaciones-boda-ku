@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useIsMuestra } from "@/lib/config-context";
+
+interface InvitadoData {
+    id: string;
+    nombre: string;
+    tipo: "persona" | "familia";
+    estado: "pendiente" | "confirmado" | "no_asiste";
+    integrantes?: { id: string; nombre: string; estado: string }[];
+}
 
 interface RSVPSectionProps {
     title: string;
@@ -66,6 +74,7 @@ export default function RSVPSection({
     panel,
 }: RSVPSectionProps) {
     const isMuestra = useIsMuestra();
+    const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     const [guestCount, setGuestCount] = useState(1);
     const [guests, setGuests] = useState<GuestForm[]>([
         {
@@ -79,6 +88,44 @@ export default function RSVPSection({
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Obtener datos del invitado cuando hay código
+    useEffect(() => {
+        if (panel?.enabled && panel?.codigo) {
+            fetch(`/api/rsvp/${panel.codigo}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.invitado) {
+                        setInvitado(data.invitado);
+                        // Si es familia, precargar integrantes
+                        if (data.invitado.tipo === "familia" && data.invitado.integrantes?.length > 0) {
+                            setGuestCount(data.invitado.integrantes.length);
+                            setGuests(data.invitado.integrantes.map((int: { nombre: string }) => {
+                                const [firstName, ...lastParts] = int.nombre.split(" ");
+                                return {
+                                    firstName,
+                                    lastName: lastParts.join(" "),
+                                    attendance: "",
+                                    dietary: "Ninguno",
+                                    songRequest: "",
+                                };
+                            }));
+                        } else if (data.invitado.tipo === "persona") {
+                            // Para persona individual, precargar el nombre
+                            const [firstName, ...lastParts] = data.invitado.nombre.split(" ");
+                            setGuests([{
+                                firstName,
+                                lastName: lastParts.join(" "),
+                                attendance: "",
+                                dietary: "Ninguno",
+                                songRequest: "",
+                            }]);
+                        }
+                    }
+                })
+                .catch(() => {});
+        }
+    }, [panel?.enabled, panel?.codigo]);
 
     const handleGuestCountChange = (count: number) => {
         setGuestCount(count);
@@ -182,6 +229,20 @@ export default function RSVPSection({
     return (
         <section className="px-6 py-14">
             <div className="mx-auto max-w-sm md:max-w-md">
+                {/* Caja con nombre del invitado - cuando hay panel activo */}
+                {invitado && (
+                    <div className="mb-8 rounded-2xl border border-current/20 bg-current/5 px-6 py-5 text-center">
+                        <h3 className="text-lg font-semibold uppercase tracking-[0.15em] text-inherit/80">
+                            {invitado.tipo === "familia" ? `Familia ${invitado.nombre}` : invitado.nombre}
+                        </h3>
+                        <p className="mt-1 text-sm font-light tracking-wide text-inherit/60">
+                            {invitado.tipo === "familia" && invitado.integrantes
+                                ? `Hay ${invitado.integrantes.length} lugares reservados para ustedes`
+                                : "Hay un lugar reservado para ti"}
+                        </p>
+                    </div>
+                )}
+
                 <h2 className="mb-1 text-center text-xl font-semibold tracking-[0.2em] uppercase text-inherit/90 md:text-2xl">
                     {title}
                 </h2>

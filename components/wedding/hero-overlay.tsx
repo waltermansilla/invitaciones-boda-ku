@@ -11,6 +11,14 @@ interface NameStyle {
   letterSpacing?: string // "none" = sin espaciado (cursivas conectan), "normal" = 0.1em, "wide" = 0.2em (default)
 }
 
+interface InvitadoData {
+  id: string
+  nombre: string
+  tipo: "persona" | "familia"
+  estado: "pendiente" | "confirmado" | "no_asiste"
+  integrantes?: { id: string; nombre: string; estado: string }[]
+}
+
 interface HeroOverlayProps {
   groomName: string
   brideName: string
@@ -25,6 +33,7 @@ interface HeroOverlayProps {
   nameStyle?: NameStyle
   buttonPosition?: "center" | "top" | "bottom" | number // number = percentage from top (0-100)
   onDismiss?: () => void // callback when overlay is dismissed
+  invitado?: InvitadoData | null // datos del invitado cuando viene con código
 }
 
 export default function HeroOverlay({
@@ -40,6 +49,7 @@ export default function HeroOverlay({
   nameStyle,
   buttonPosition = "center",
   onDismiss,
+  invitado,
 }: HeroOverlayProps) {
   const [visible, setVisible] = useState(true)
   const [exiting, setExiting] = useState(false)
@@ -183,10 +193,24 @@ export default function HeroOverlay({
           )}
 
           {/* Romantic phrase */}
-          {showPhrase && (
+          {showPhrase && !invitado && (
             <p className="mx-auto max-w-xs px-6 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:text-base">
               {phrase}
             </p>
+          )}
+
+          {/* Caja con nombre del invitado - cuando hay código */}
+          {invitado && (
+            <div className="mx-6 mt-6 rounded-2xl border border-muted/30 bg-background/90 px-8 py-6 text-center shadow-sm backdrop-blur-sm">
+              <h2 className="text-lg font-semibold uppercase tracking-[0.2em] text-foreground/80 sm:text-xl">
+                {invitado.tipo === "familia" ? `Familia ${invitado.nombre}` : invitado.nombre}
+              </h2>
+              <p className="mt-2 text-sm font-light tracking-wide text-muted-foreground">
+                {invitado.tipo === "familia" && invitado.integrantes
+                  ? `Hay ${invitado.integrantes.length} lugares reservados para ustedes`
+                  : "Tenemos un lugar reservado para ti"}
+              </p>
+            </div>
           )}
         </div>
       )}

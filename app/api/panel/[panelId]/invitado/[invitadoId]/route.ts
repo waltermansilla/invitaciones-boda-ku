@@ -46,18 +46,58 @@ export async function PUT(
   if (body.mensaje !== undefined) updateData.mensaje = body.mensaje
   if (body.cancion !== undefined) updateData.cancion = body.cancion
 
-  const { data: invitado, error } = await supabase
+  const { error } = await supabase
     .from("invitados")
     .update(updateData)
     .eq("id", invitadoId)
-    .select(`*, integrantes (*)`)
-    .single()
 
   if (error) {
     return NextResponse.json({ error: "Error actualizando invitado" }, { status: 500 })
   }
 
-  return NextResponse.json({ invitado })
+  // Si vienen integrantes, actualizar/crear/eliminar
+  if (body.integrantes !== undefined) {
+    const { data: currentIntegrantes } = await supabase
+      .from("integrantes")
+      .select("id")
+      .eq("invitado_id", invitadoId)
+
+    const currentIds = currentIntegrantes?.map((i) => i.id) || []
+    const newIds = body.integrantes
+      .filter((i: { id: string }) => i.id && !i.id.startsWith("new"))
+      .map((i: { id: string }) => i.id)
+
+    // Eliminar los que ya no están
+    const toDelete = currentIds.filter((id) => !newIds.includes(id))
+    if (toDelete.length > 0) {
+      await supabase.from("integrantes").delete().in("id", toDelete)
+    }
+
+    // Actualizar existentes
+    for (const int of body.integrantes) {
+      if (int.id && !int.id.startsWith("new") && currentIds.includes(int.id)) {
+        await supabase.from("integrantes").update({ nombre: int.nombre }).eq("id", int.id)
+      }
+    }
+
+    // Crear nuevos
+    const newIntegrantes = body.integrantes
+      .filter((i: { id: string }) => !i.id || i.id.startsWith("new"))
+      .map((i: { nombre: string }) => ({ invitado_id: invitadoId, nombre: i.nombre }))
+
+    if (newIntegrantes.length > 0) {
+      await supabase.from("integrantes").insert(newIntegrantes)
+    }
+  }
+
+  // Obtener invitado actualizado
+  const { data: invitadoActualizado } = await supabase
+    .from("invitados")
+    .select(`*, integrantes (*)`)
+    .eq("id", invitadoId)
+    .single()
+
+  return NextResponse.json({ invitado: invitadoActualizado })
 }
 
 // DELETE: Eliminar invitado

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { useConfig, useIsMuestra } from "@/lib/config-context";
 import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
@@ -8,20 +9,48 @@ import HeroSection from "./hero-section";
 import Section from "./section";
 import MusicPlayer from "./music-player";
 
-export default function WeddingInvitation() {
+interface InvitadoData {
+    id: string;
+    nombre: string;
+    tipo: "persona" | "familia";
+    estado: "pendiente" | "confirmado" | "no_asiste";
+    integrantes?: { id: string; nombre: string; estado: string }[];
+}
+
+function WeddingInvitationContent() {
     const config = useConfig();
     const isMuestra = useIsMuestra();
+    const searchParams = useSearchParams();
+    const codigoInvitado = searchParams.get("c") || "";
     const hero = config.hero;
     const sections = config.sections ?? [];
     const meta = config.meta;
     const music = config.music;
     const overlay = config.overlay;
+    const rsvpPanel = config.rsvpPanel as { enabled?: boolean; panelId?: string; confirmationMessage?: string } | undefined;
+    
+    // Datos del invitado (cuando viene con código)
+    const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     
     // Track if overlay has been dismissed
     const [overlayDismissed, setOverlayDismissed] = useState(false);
     
     // Track if music should start (triggered by overlay dismiss when autoplay is true)
     const [shouldPlayMusic, setShouldPlayMusic] = useState(false);
+    
+    // Obtener datos del invitado si hay código
+    useEffect(() => {
+        if (codigoInvitado && rsvpPanel?.enabled) {
+            fetch(`/api/rsvp/${codigoInvitado}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.invitado) {
+                        setInvitado(data.invitado);
+                    }
+                })
+                .catch(() => {});
+        }
+    }, [codigoInvitado, rsvpPanel?.enabled]);
     
     // Handle overlay dismiss - start music if autoplay is enabled (not in muestra mode)
     const handleOverlayDismiss = () => {
@@ -48,6 +77,7 @@ export default function WeddingInvitation() {
                     showPhrase={(overlay as Record<string, unknown>).showPhrase as boolean | undefined}
                     nameStyle={(overlay as Record<string, unknown>).nameStyle as { font?: string; size?: string; weight?: string; color?: string } | undefined}
                     buttonPosition={(overlay as Record<string, unknown>).buttonPosition as "center" | "top" | "bottom" | number | undefined}
+                    invitado={invitado}
                 />
             )}
 
@@ -195,5 +225,13 @@ export default function WeddingInvitation() {
                 )}
             </main>
         </ModalProvider>
+    );
+}
+
+export default function WeddingInvitation() {
+    return (
+        <Suspense fallback={null}>
+            <WeddingInvitationContent />
+        </Suspense>
     );
 }
