@@ -114,7 +114,15 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   }
 
   const invitadosFiltrados = invitados
-    .filter((inv) => filter === "todos" || inv.estado === filter)
+    .filter((inv) => {
+      if (filter === "todos") return true
+      // Para familias, verificar si ALGÚN integrante tiene el estado del filtro
+      if (inv.tipo === "familia" && inv.integrantes && inv.integrantes.length > 0) {
+        return inv.integrantes.some((int: { estado: string }) => int.estado === filter)
+      }
+      // Para personas individuales, usar el estado del invitado
+      return inv.estado === filter
+    })
     .filter((inv) => inv.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
 
   return (
@@ -321,16 +329,39 @@ function InvitadoRow({
         className="flex items-center gap-3 px-4 py-3 cursor-pointer"
         onClick={onToggleExpand}
       >
-        <div 
-          className="flex h-8 w-8 items-center justify-center rounded-full"
-          style={{ backgroundColor: estadoBg[invitado.estado] }}
-        >
-          {invitado.tipo === "familia" ? (
-            <Users className="h-4 w-4" style={{ color: estadoText[invitado.estado] }} />
-          ) : (
-            <User className="h-4 w-4" style={{ color: estadoText[invitado.estado] }} />
-          )}
-        </div>
+        {(() => {
+          // Determinar el color del ícono basado en los estados de integrantes
+          let bgColor = estadoBg[invitado.estado]
+          let txtColor = estadoText[invitado.estado]
+          
+          if (invitado.tipo === "familia" && invitado.integrantes && invitado.integrantes.length > 0) {
+            const estados = new Set(invitado.integrantes.map((int: { estado: string }) => int.estado))
+            if (estados.size > 1) {
+              // Mixto - usar gris neutro
+              bgColor = "#e5e5e5"
+              txtColor = "#666"
+            } else if (estados.has("confirmado")) {
+              bgColor = estadoBg.confirmado
+              txtColor = estadoText.confirmado
+            } else if (estados.has("no_asiste")) {
+              bgColor = estadoBg.no_asiste
+              txtColor = estadoText.no_asiste
+            }
+          }
+          
+          return (
+            <div 
+              className="flex h-8 w-8 items-center justify-center rounded-full"
+              style={{ backgroundColor: bgColor }}
+            >
+              {invitado.tipo === "familia" ? (
+                <Users className="h-4 w-4" style={{ color: txtColor }} />
+              ) : (
+                <User className="h-4 w-4" style={{ color: txtColor }} />
+              )}
+            </div>
+          )
+        })()}
 
         <div className="flex-1">
           <p className="font-medium text-neutral-800">{invitado.nombre}</p>
@@ -341,16 +372,47 @@ function InvitadoRow({
           )}
         </div>
 
-        <span
-          className="rounded px-2 py-1 text-[10px] font-medium uppercase"
-          style={{ 
-            backgroundColor: estadoBg[invitado.estado],
-            color: estadoText[invitado.estado]
-          }}
-        >
-          {invitado.estado === "confirmado" ? "Confirmado" : 
-           invitado.estado === "no_asiste" ? "No asiste" : "Pendiente"}
-        </span>
+        {/* Badge de estado - para familias mostrar conteo por estado */}
+        {invitado.tipo === "familia" && invitado.integrantes && invitado.integrantes.length > 0 ? (
+          <div className="flex gap-1">
+            {(() => {
+              const estados = { confirmado: 0, pendiente: 0, no_asiste: 0 }
+              invitado.integrantes.forEach((int: { estado: "confirmado" | "pendiente" | "no_asiste" }) => {
+                estados[int.estado]++
+              })
+              return (
+                <>
+                  {estados.confirmado > 0 && (
+                    <span className="rounded px-2 py-1 text-[10px] font-medium" style={{ backgroundColor: estadoBg.confirmado, color: estadoText.confirmado }}>
+                      {estados.confirmado}
+                    </span>
+                  )}
+                  {estados.pendiente > 0 && (
+                    <span className="rounded px-2 py-1 text-[10px] font-medium" style={{ backgroundColor: estadoBg.pendiente, color: estadoText.pendiente }}>
+                      {estados.pendiente}
+                    </span>
+                  )}
+                  {estados.no_asiste > 0 && (
+                    <span className="rounded px-2 py-1 text-[10px] font-medium" style={{ backgroundColor: estadoBg.no_asiste, color: estadoText.no_asiste }}>
+                      {estados.no_asiste}
+                    </span>
+                  )}
+                </>
+              )
+            })()}
+          </div>
+        ) : (
+          <span
+            className="rounded px-2 py-1 text-[10px] font-medium uppercase"
+            style={{ 
+              backgroundColor: estadoBg[invitado.estado],
+              color: estadoText[invitado.estado]
+            }}
+          >
+            {invitado.estado === "confirmado" ? "Confirmado" : 
+             invitado.estado === "no_asiste" ? "No asiste" : "Pendiente"}
+          </span>
+        )}
       </div>
 
       {expanded && (
