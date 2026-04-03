@@ -203,7 +203,7 @@ export default function HeroOverlay({
           {invitado && (
             <div className="mx-6 mt-6 rounded-2xl border border-muted/30 bg-background/90 px-8 py-6 text-center shadow-sm backdrop-blur-sm">
               <h2 className="text-lg font-semibold uppercase tracking-[0.2em] text-foreground/80 sm:text-xl">
-                {invitado.tipo === "familia" ? `Familia ${invitado.nombre}` : invitado.nombre}
+                {invitado.nombre}
               </h2>
               <p className="mt-2 text-sm font-light tracking-wide text-muted-foreground">
                 {invitado.tipo === "familia" && invitado.integrantes
