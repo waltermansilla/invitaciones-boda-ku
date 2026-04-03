@@ -263,7 +263,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
 function LoadingScreen() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#faf9f7]">
-      <p className="text-neutral-500">Cargando...</p>
+      <p className="text-neutral-500">Cargando panel...</p>
     </div>
   )
 }
