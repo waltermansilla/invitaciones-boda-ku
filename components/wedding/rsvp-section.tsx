@@ -40,6 +40,7 @@ interface RSVPSectionProps {
 }
 
 interface GuestForm {
+    id?: string; // ID del integrante (para familias)
     firstName: string;
     lastName: string;
     attendance: string;
@@ -100,9 +101,10 @@ export default function RSVPSection({
                         // Si es familia, precargar integrantes
                         if (data.invitado.tipo === "familia" && data.invitado.integrantes?.length > 0) {
                             setGuestCount(data.invitado.integrantes.length);
-                            setGuests(data.invitado.integrantes.map((int: { nombre: string }) => {
+                            setGuests(data.invitado.integrantes.map((int: { id: string; nombre: string }) => {
                                 const [firstName, ...lastParts] = int.nombre.split(" ");
                                 return {
+                                    id: int.id, // Guardar el ID del integrante
                                     firstName,
                                     lastName: lastParts.join(" "),
                                     attendance: "",
@@ -172,10 +174,12 @@ export default function RSVPSection({
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         integrantes: guests.map((g) => ({
+                            id: g.id, // ID del integrante para actualizar
                             nombre: `${g.firstName} ${g.lastName}`,
-                            estado: g.attendance === "yes" ? "confirmado" : "no_asiste",
+                            asiste: g.attendance === "yes", // La API espera "asiste" boolean
                             restricciones: g.dietary !== "Ninguno" ? g.dietary : null,
                         })),
+                        asiste: guests.some((g) => g.attendance === "yes"), // Al menos uno asiste
                         mensaje: guests[0]?.songRequest || null,
                         cancion: guests[0]?.songRequest || null,
                     }),

@@ -62,16 +62,18 @@ export async function POST(
   }
 
   // Si es familia y vienen integrantes, actualizar cada uno
-  if (invitado.tipo === "familia" && body.integrantes) {
+  if (invitado.tipo === "familia" && body.integrantes && Array.isArray(body.integrantes)) {
     for (const int of body.integrantes) {
-      await supabase
-        .from("integrantes")
-        .update({
-          estado: int.asiste ? "confirmado" : "no_asiste",
-          restricciones: int.restricciones,
-          fecha_confirmacion: new Date().toISOString(),
-        })
-        .eq("id", int.id)
+      if (int.id) {
+        await supabase
+          .from("integrantes")
+          .update({
+            estado: int.asiste ? "confirmado" : "no_asiste",
+            restricciones: int.restricciones || null,
+            fecha_confirmacion: new Date().toISOString(),
+          })
+          .eq("id", int.id)
+      }
     }
   }
 
