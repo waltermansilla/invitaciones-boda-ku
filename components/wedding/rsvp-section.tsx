@@ -23,6 +23,12 @@ interface RSVPSectionProps {
         number: string;
         messageTemplate: string;
     };
+    /** Configuracion del panel de confirmaciones (si está habilitado) */
+    panel?: {
+        enabled: boolean;
+        codigo: string;
+        confirmationMessage: string;
+    };
 }
 
 interface GuestForm {
@@ -35,12 +41,6 @@ interface GuestForm {
 
 /**
  * Construye el mensaje de WhatsApp reemplazando placeholders del template.
- *
- * Placeholders disponibles en messageTemplate:
- *   {resumen}  -> Bloque completo con los datos de cada invitado
- *
- * Ejemplo de template en JSON:
- *   "Hola! Confirmo asistencia:\n{resumen}\nGracias!"
  */
 function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
     const lines = guests.map((g, i) => {
@@ -63,6 +63,7 @@ export default function RSVPSection({
     guestCountOptions,
     fields,
     whatsapp,
+    panel,
 }: RSVPSectionProps) {
     const isMuestra = useIsMuestra();
     const [guestCount, setGuestCount] = useState(1);
@@ -76,6 +77,8 @@ export default function RSVPSection({
         },
     ]);
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleGuestCountChange = (count: number) => {
         setGuestCount(count);
@@ -104,11 +107,42 @@ export default function RSVPSection({
         setGuests(newGuests);
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (isMuestra) {
             setSubmitted(true);
+            return;
+        }
+
+        // Si el panel está habilitado, enviar a la API
+        if (panel?.enabled && panel?.codigo) {
+            setSubmitting(true);
+            setError(null);
+            try {
+                const res = await fetch(`/api/rsvp/${panel.codigo}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        integrantes: guests.map((g) => ({
+                            nombre: `${g.firstName} ${g.lastName}`,
+                            estado: g.attendance === "yes" ? "confirmado" : "no_asiste",
+                            restricciones: g.dietary !== "Ninguno" ? g.dietary : null,
+                        })),
+                        mensaje: guests[0]?.songRequest || null,
+                        cancion: guests[0]?.songRequest || null,
+                    }),
+                });
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error || "Error al enviar confirmacion");
+                }
+                setSubmitted(true);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : "Error al enviar confirmacion");
+            } finally {
+                setSubmitting(false);
+            }
             return;
         }
 
@@ -128,15 +162,18 @@ export default function RSVPSection({
     };
 
     if (submitted) {
+        const confirmMsg = panel?.enabled 
+            ? (panel.confirmationMessage || "Gracias por confirmar!")
+            : (isMuestra 
+                ? "Confirmacion simulada. En la version real, los datos se envian." 
+                : "Tu confirmacion ha sido enviada por WhatsApp.");
         return (
             <section className="px-6 py-16 text-center">
                 <h2 className="mb-4 text-3xl font-semibold tracking-[0.15em] text-inherit/90">
                     {isMuestra ? "Modo muestra" : "Gracias!"}
                 </h2>
                 <p className="text-sm tracking-wide text-inherit/65">
-                    {isMuestra
-                        ? "Confirmacion simulada. En la version real, los datos se envian por WhatsApp."
-                        : "Tu confirmacion ha sido enviada por WhatsApp."}
+                    {confirmMsg}
                 </p>
             </section>
         );
@@ -177,6 +214,13 @@ export default function RSVPSection({
                             ))}
                         </select>
                     </div>
+
+                    {/* Error message */}
+                    {error && (
+                        <div className="rounded-md border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600">
+                            {error}
+                        </div>
+                    )}
 
                     {/* Guest forms */}
                     {guests.map((guest, index) => (
@@ -317,9 +361,10 @@ export default function RSVPSection({
 
                     <button
                         type="submit"
-                        className="mt-1 min-h-[48px] w-full rounded-md border border-current/25 bg-current/10 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit/90 transition-colors hover:bg-current/20"
+                        disabled={submitting}
+                        className="mt-1 min-h-[48px] w-full rounded-md border border-current/25 bg-current/10 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit/90 transition-colors hover:bg-current/20 disabled:opacity-50"
                     >
-                        {fields.submitButton}
+                        {submitting ? "Enviando..." : fields.submitButton}
                     </button>
                 </form>
             </div>

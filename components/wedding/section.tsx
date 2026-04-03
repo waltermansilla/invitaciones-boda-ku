@@ -1,5 +1,7 @@
 "use client"
 
+import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 import AnimatedSection from "./animated-section"
 import QuoteSection from "./quote-section"
 import EventInfoSection from "./event-info-section"
@@ -48,10 +50,17 @@ interface SectionProps {
   prevBgImage?: string
 }
 
-export default function Section({ section, coupleNames, prevBgColor, prevBgImage }: SectionProps) {
+function useCodigoInvitado() {
+  const searchParams = useSearchParams()
+  return searchParams.get("c") || ""
+}
+
+function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: SectionProps) {
   const config = useConfig()
   const { type, id, data, bgColor, bgImage, textColor, enabled = true } = section
   const theme = config.theme as Record<string, unknown>
+  const rsvpPanel = config.rsvpPanel as { enabled?: boolean; panelId?: string; confirmationMessage?: string } | undefined
+  const codigoInvitado = useCodigoInvitado()
 
   // Si enabled es false, no renderizar la seccion
   if (enabled === false) return null
@@ -240,6 +249,11 @@ export default function Section({ section, coupleNames, prevBgColor, prevBgImage
               }
             }
             whatsapp={data.whatsapp as { number: string; messageTemplate: string } | undefined}
+            panel={rsvpPanel?.enabled ? {
+              enabled: true,
+              codigo: codigoInvitado,
+              confirmationMessage: rsvpPanel.confirmationMessage || "Gracias por confirmar!"
+            } : undefined}
           />
         )
 
@@ -378,5 +392,13 @@ export default function Section({ section, coupleNames, prevBgColor, prevBgImage
         </div>
       )}
     </AnimatedSection>
+  )
+}
+
+export default function Section(props: SectionProps) {
+  return (
+    <Suspense fallback={null}>
+      <SectionContent {...props} />
+    </Suspense>
   )
 }
