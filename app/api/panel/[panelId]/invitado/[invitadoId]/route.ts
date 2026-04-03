@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server"
+import { createApiClient } from "@/lib/supabase/api"
 import { NextRequest, NextResponse } from "next/server"
 
 // GET: Obtener invitado específico
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ panelId: string; invitadoId: string }> }
 ) {
   const { invitadoId } = await params
-  const supabase = await createClient()
+  const supabase = createApiClient()
 
   const { data: invitado, error } = await supabase
     .from("invitados")
@@ -29,7 +29,7 @@ export async function PUT(
 ) {
   const { invitadoId } = await params
   const body = await request.json()
-  const supabase = await createClient()
+  const supabase = createApiClient()
 
   const updateData: Record<string, unknown> = {}
 
@@ -106,7 +106,7 @@ export async function DELETE(
   { params }: { params: Promise<{ panelId: string; invitadoId: string }> }
 ) {
   const { invitadoId } = await params
-  const supabase = await createClient()
+  const supabase = createApiClient()
 
   const { error } = await supabase
     .from("invitados")
