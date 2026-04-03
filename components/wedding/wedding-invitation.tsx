@@ -31,6 +31,7 @@ function WeddingInvitationContent() {
     
     // Datos del invitado (cuando viene con código)
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
+    const [loadingInvitado, setLoadingInvitado] = useState(!!codigoInvitado && !!rsvpPanel?.enabled);
     
     // Track if overlay has been dismissed
     const [overlayDismissed, setOverlayDismissed] = useState(false);
@@ -41,6 +42,7 @@ function WeddingInvitationContent() {
     // Obtener datos del invitado si hay código
     useEffect(() => {
         if (codigoInvitado && rsvpPanel?.enabled) {
+            setLoadingInvitado(true);
             fetch(`/api/rsvp/${codigoInvitado}`)
                 .then(res => res.json())
                 .then(data => {
@@ -48,9 +50,15 @@ function WeddingInvitationContent() {
                         setInvitado(data.invitado);
                     }
                 })
-                .catch(() => {});
+                .catch(() => {})
+                .finally(() => setLoadingInvitado(false));
         }
     }, [codigoInvitado, rsvpPanel?.enabled]);
+    
+    // Si hay código pero aún estamos cargando, no mostrar nada
+    if (loadingInvitado) {
+        return null;
+    }
     
     // Handle overlay dismiss - start music if autoplay is enabled (not in muestra mode)
     const handleOverlayDismiss = () => {

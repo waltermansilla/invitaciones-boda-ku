@@ -233,7 +233,7 @@ export default function RSVPSection({
                 {invitado && (
                     <div className="mb-8 rounded-2xl border border-current/20 bg-current/5 px-6 py-5 text-center">
                         <h3 className="text-lg font-semibold uppercase tracking-[0.15em] text-inherit/80">
-                            {invitado.tipo === "familia" ? `Familia ${invitado.nombre}` : invitado.nombre}
+                            {invitado.nombre}
                         </h3>
                         <p className="mt-1 text-sm font-light tracking-wide text-inherit/60">
                             {invitado.tipo === "familia" && invitado.integrantes
