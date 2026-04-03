@@ -20,9 +20,9 @@
         "_comment_enabled": "true = usa panel con base de datos. false = usa WhatsApp como siempre.",
         "panelId": "anto-walter-boda",
         "_comment_panelId": "ID unico del panel. El anfitrion accede en /panel/[panelId]",
-        "fechaEvento": "2024-11-23",
+        "fechaEvento": "2027-02-16",
         "_comment_fechaEvento": "Fecha del evento para calcular dias restantes. Formato: YYYY-MM-DD",
-        "confirmationMessage": "Gracias por confirmar! Nos vemos el 23 de noviembre.",
+        "confirmationMessage": "Gracias por confirmar! Nos vemos el 16 de febrero.",
         "_comment_confirmationMessage": "Mensaje que ve el invitado despues de confirmar."
     },
 
