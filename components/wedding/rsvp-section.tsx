@@ -8,7 +8,9 @@ interface InvitadoData {
     nombre: string;
     tipo: "persona" | "familia";
     estado: "pendiente" | "confirmado" | "no_asiste";
-    integrantes?: { id: string; nombre: string; estado: string }[];
+    integrantes?: { id: string; nombre: string; estado: string; restricciones?: string }[];
+    cancion?: string;
+    mensaje?: string;
 }
 
 interface RSVPSectionProps {
@@ -31,7 +33,6 @@ interface RSVPSectionProps {
         number: string;
         messageTemplate: string;
     };
-    /** Configuracion del panel de confirmaciones (si está habilitado) */
     panel?: {
         enabled: boolean;
         codigo: string;
@@ -40,7 +41,7 @@ interface RSVPSectionProps {
 }
 
 interface GuestForm {
-    id?: string; // ID del integrante (para familias)
+    id?: string;
     firstName: string;
     lastName: string;
     attendance: string;
@@ -48,17 +49,12 @@ interface GuestForm {
     songRequest: string;
 }
 
-/**
- * Construye el mensaje de WhatsApp reemplazando placeholders del template.
- */
 function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
     const lines = guests.map((g, i) => {
         const prefix = guests.length > 1 ? `*Invitado ${i + 1}:* ` : "";
-        const attendance =
-            g.attendance === "yes" ? "Confirma asistencia" : "No asiste";
+        const attendance = g.attendance === "yes" ? "Confirma asistencia" : "No asiste";
         let line = `*${prefix}${g.firstName} ${g.lastName}* - ${attendance}`;
-        if (g.dietary && g.dietary !== "Ninguno")
-            line += ` | Alimentacion: ${g.dietary}`;
+        if (g.dietary && g.dietary !== "Ninguno") line += ` | Alimentacion: ${g.dietary}`;
         if (g.songRequest) line += ` | Cancion: ${g.songRequest}`;
         return line;
     });
@@ -78,79 +74,72 @@ export default function RSVPSection({
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     const [guestCount, setGuestCount] = useState(1);
     const [guests, setGuests] = useState<GuestForm[]>([
-        {
-            firstName: "",
-            lastName: "",
-            attendance: "",
-            dietary: "Ninguno",
-            songRequest: "",
-        },
+        { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "" },
     ]);
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [alreadyConfirmed, setAlreadyConfirmed] = useState(false);
+    const [editing, setEditing] = useState(false);
 
-    // Obtener datos del invitado cuando hay código
+    // Obtener datos del invitado cuando hay codigo
     useEffect(() => {
         if (panel?.enabled && panel?.codigo) {
             fetch(`/api/rsvp/${panel.codigo}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.invitado) {
-                        setInvitado(data.invitado);
-                        // Si es familia, precargar integrantes
-                        if (data.invitado.tipo === "familia" && data.invitado.integrantes?.length > 0) {
-                            setGuestCount(data.invitado.integrantes.length);
-                            setGuests(data.invitado.integrantes.map((int: { id: string; nombre: string }) => {
+                        const inv = data.invitado;
+                        setInvitado(inv);
+                        
+                        // Verificar si ya confirmo (estado no es pendiente)
+                        const yaConfirmo = inv.estado !== "pendiente" || 
+                            (inv.integrantes && inv.integrantes.some((int: { estado: string }) => int.estado !== "pendiente"));
+                        
+                        if (yaConfirmo && !editing) {
+                            setAlreadyConfirmed(true);
+                        }
+                        
+                        // Si es familia, precargar integrantes con sus datos guardados
+                        if (inv.tipo === "familia" && inv.integrantes?.length > 0) {
+                            setGuestCount(inv.integrantes.length);
+                            setGuests(inv.integrantes.map((int: { id: string; nombre: string; estado: string; restricciones?: string }) => {
                                 const [firstName, ...lastParts] = int.nombre.split(" ");
                                 return {
-                                    id: int.id, // Guardar el ID del integrante
+                                    id: int.id,
                                     firstName,
                                     lastName: lastParts.join(" "),
-                                    attendance: "",
-                                    dietary: "Ninguno",
-                                    songRequest: "",
+                                    attendance: int.estado === "confirmado" ? "yes" : int.estado === "no_asiste" ? "no" : "",
+                                    dietary: int.restricciones || "Ninguno",
+                                    songRequest: inv.cancion || "",
                                 };
                             }));
-                        } else if (data.invitado.tipo === "persona") {
-                            // Para persona individual, precargar el nombre
-                            const [firstName, ...lastParts] = data.invitado.nombre.split(" ");
+                        } else if (inv.tipo === "persona") {
+                            const [firstName, ...lastParts] = inv.nombre.split(" ");
                             setGuests([{
                                 firstName,
                                 lastName: lastParts.join(" "),
-                                attendance: "",
+                                attendance: inv.estado === "confirmado" ? "yes" : inv.estado === "no_asiste" ? "no" : "",
                                 dietary: "Ninguno",
-                                songRequest: "",
+                                songRequest: inv.cancion || "",
                             }]);
                         }
                     }
                 })
                 .catch(() => {});
         }
-    }, [panel?.enabled, panel?.codigo]);
+    }, [panel?.enabled, panel?.codigo, editing]);
 
     const handleGuestCountChange = (count: number) => {
         setGuestCount(count);
         const newGuests: GuestForm[] = [];
         for (let i = 0; i < count; i++) {
-            newGuests.push(
-                guests[i] || {
-                    firstName: "",
-                    lastName: "",
-                    attendance: "",
-                    dietary: "Ninguno",
-                    songRequest: "",
-                },
-            );
+            newGuests.push(guests[i] || { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "" });
         }
         setGuests(newGuests);
     };
 
-    const updateGuest = (
-        index: number,
-        field: keyof GuestForm,
-        value: string,
-    ) => {
+    const updateGuest = (index: number, field: keyof GuestForm, value: string) => {
         const newGuests = [...guests];
         newGuests[index] = { ...newGuests[index], [field]: value };
         setGuests(newGuests);
@@ -158,13 +147,8 @@ export default function RSVPSection({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isMuestra) { setSubmitted(true); return; }
 
-        if (isMuestra) {
-            setSubmitted(true);
-            return;
-        }
-
-        // Si el panel está habilitado, enviar a la API
         if (panel?.enabled && panel?.codigo) {
             setSubmitting(true);
             setError(null);
@@ -174,12 +158,12 @@ export default function RSVPSection({
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         integrantes: guests.map((g) => ({
-                            id: g.id, // ID del integrante para actualizar
+                            id: g.id,
                             nombre: `${g.firstName} ${g.lastName}`,
-                            asiste: g.attendance === "yes", // La API espera "asiste" boolean
+                            asiste: g.attendance === "yes",
                             restricciones: g.dietary !== "Ninguno" ? g.dietary : null,
                         })),
-                        asiste: guests.some((g) => g.attendance === "yes"), // Al menos uno asiste
+                        asiste: guests.some((g) => g.attendance === "yes"),
                         mensaje: guests[0]?.songRequest || null,
                         cancion: guests[0]?.songRequest || null,
                     }),
@@ -189,6 +173,8 @@ export default function RSVPSection({
                     throw new Error(data.error || "Error al enviar confirmacion");
                 }
                 setSubmitted(true);
+                setAlreadyConfirmed(true);
+                setEditing(false);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error al enviar confirmacion");
             } finally {
@@ -197,27 +183,55 @@ export default function RSVPSection({
             return;
         }
 
-        // Build WhatsApp message and redirect
         if (whatsapp?.number && whatsapp?.messageTemplate) {
-            const message = buildWhatsAppMessage(
-                whatsapp.messageTemplate,
-                guests,
-            );
+            const message = buildWhatsAppMessage(whatsapp.messageTemplate, guests);
             const url = `https://wa.me/${whatsapp.number}?text=${encodeURIComponent(message)}`;
             window.open(url, "_blank");
             setSubmitted(true);
         } else {
-            // Fallback if no whatsapp config
             setSubmitted(true);
         }
     };
 
-    if (submitted) {
+    const handleEdit = () => {
+        setEditing(true);
+        setAlreadyConfirmed(false);
+        setSubmitted(false);
+    };
+
+    // Mostrar mensaje de confirmacion si ya confirmo o acaba de enviar
+    if ((alreadyConfirmed && !editing) || submitted) {
         const confirmMsg = panel?.enabled 
-            ? (panel.confirmationMessage || "Gracias por confirmar!")
+            ? (panel.confirmationMessage || "Gracias por confirmar tu asistencia!")
             : (isMuestra 
                 ? "Confirmacion simulada. En la version real, los datos se envian." 
                 : "Tu confirmacion ha sido enviada por WhatsApp.");
+        
+        // Resumen de lo que confirmaron
+        const resumen = invitado && (
+            <div className="mt-6 rounded-xl border border-current/15 bg-current/5 px-5 py-4 text-left">
+                {invitado.tipo === "familia" && invitado.integrantes ? (
+                    <div className="space-y-2">
+                        {invitado.integrantes.map((int, i) => (
+                            <div key={i} className="flex items-center justify-between text-sm">
+                                <span className="text-inherit/80">{int.nombre}</span>
+                                <span className={`text-xs font-medium ${int.estado === "confirmado" ? "text-green-600" : int.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}>
+                                    {int.estado === "confirmado" ? "Asiste" : int.estado === "no_asiste" ? "No asiste" : "Pendiente"}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex items-center justify-between text-sm">
+                        <span className="text-inherit/80">{invitado.nombre}</span>
+                        <span className={`text-xs font-medium ${invitado.estado === "confirmado" ? "text-green-600" : invitado.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}>
+                            {invitado.estado === "confirmado" ? "Asiste" : invitado.estado === "no_asiste" ? "No asiste" : "Pendiente"}
+                        </span>
+                    </div>
+                )}
+            </div>
+        );
+
         return (
             <section className="px-6 py-16 text-center">
                 <h2 className="mb-4 text-3xl font-semibold tracking-[0.15em] text-inherit/90">
@@ -226,18 +240,34 @@ export default function RSVPSection({
                 <p className="text-sm tracking-wide text-inherit/65">
                     {confirmMsg}
                 </p>
+                {resumen}
+                {panel?.enabled && (
+                    <button
+                        onClick={handleEdit}
+                        className="mt-6 text-xs font-medium tracking-wider text-inherit/50 underline underline-offset-4 transition-colors hover:text-inherit/80"
+                    >
+                        Editar mi confirmacion
+                    </button>
+                )}
             </section>
         );
     }
 
+    // Nombre a mostrar (sin duplicar "Familia")
+    const displayName = invitado ? (
+        invitado.tipo === "familia" 
+            ? (invitado.nombre.toLowerCase().startsWith("familia ") ? invitado.nombre : `Familia ${invitado.nombre}`)
+            : invitado.nombre
+    ) : null;
+
     return (
         <section className="px-6 py-14">
             <div className="mx-auto max-w-sm md:max-w-md">
-                {/* Caja con nombre del invitado - cuando hay panel activo */}
+                {/* Caja con nombre del invitado */}
                 {invitado && (
                     <div className="mb-8 rounded-2xl border border-current/20 bg-current/5 px-6 py-5 text-center">
                         <h3 className="text-lg font-semibold uppercase tracking-[0.15em] text-inherit/80">
-                            {invitado.tipo === "familia" ? `Familia ${invitado.nombre}` : invitado.nombre}
+                            {displayName}
                         </h3>
                         <p className="mt-1 text-sm font-light tracking-wide text-inherit/60">
                             {invitado.tipo === "familia" && invitado.integrantes
@@ -255,45 +285,38 @@ export default function RSVPSection({
                 </p>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                    {/* Guest count */}
-                    <div>
-                        <label className="mb-2 block text-[11px] font-medium tracking-[0.1em] text-inherit/65">
-                            {guestCountLabel}
-                        </label>
-                        <select
-                            value={guestCount}
-                            onChange={(e) =>
-                                handleGuestCountChange(Number(e.target.value))
-                            }
-                            className="w-full rounded-md border border-current/15 bg-current/10 px-4 py-3 text-sm tracking-wide text-inherit/90 backdrop-blur-sm"
-                            style={{ fontSize: "16px" }}
-                        >
-                            {guestCountOptions.map((n) => (
-                                <option
-                                    key={n}
-                                    value={n}
-                                    className="bg-primary text-primary-foreground"
-                                >
-                                    {n} {n === 1 ? "persona" : "personas"}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    {/* Guest count - solo si no hay panel (invitado sin codigo) */}
+                    {!invitado && (
+                        <div>
+                            <label className="mb-2 block text-[11px] font-medium tracking-[0.1em] text-inherit/65">
+                                {guestCountLabel}
+                            </label>
+                            <select
+                                value={guestCount}
+                                onChange={(e) => handleGuestCountChange(Number(e.target.value))}
+                                className="w-full rounded-md border border-current/15 bg-current/10 px-4 py-3 text-sm tracking-wide text-inherit/90 backdrop-blur-sm"
+                                style={{ fontSize: "16px" }}
+                            >
+                                {guestCountOptions.map((n) => (
+                                    <option key={n} value={n} className="bg-primary text-primary-foreground">
+                                        {n} {n === 1 ? "persona" : "personas"}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
 
-                    {/* Error message */}
                     {error && (
                         <div className="rounded-md border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600">
                             {error}
                         </div>
                     )}
 
-                    {/* Guest forms */}
                     {guests.map((guest, index) => (
                         <Fragment key={index}>
                             {guestCount > 1 && (
                                 <p className="mt-1 text-[11px] font-semibold tracking-[0.15em] uppercase text-inherit/65">
-                                    {"Invitado "}
-                                    {index + 1}
+                                    Invitado {index + 1}
                                 </p>
                             )}
                             <div className="flex flex-col gap-0 overflow-hidden rounded-md border border-current/15 bg-current/10 backdrop-blur-sm">
@@ -302,13 +325,7 @@ export default function RSVPSection({
                                     placeholder={fields.firstName + " *"}
                                     required
                                     value={guest.firstName}
-                                    onChange={(e) =>
-                                        updateGuest(
-                                            index,
-                                            "firstName",
-                                            e.target.value,
-                                        )
-                                    }
+                                    onChange={(e) => updateGuest(index, "firstName", e.target.value)}
                                     className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
                                     style={{ fontSize: "16px" }}
                                 />
@@ -317,18 +334,11 @@ export default function RSVPSection({
                                     placeholder={fields.lastName + " *"}
                                     required
                                     value={guest.lastName}
-                                    onChange={(e) =>
-                                        updateGuest(
-                                            index,
-                                            "lastName",
-                                            e.target.value,
-                                        )
-                                    }
+                                    onChange={(e) => updateGuest(index, "lastName", e.target.value)}
                                     className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
                                     style={{ fontSize: "16px" }}
                                 />
 
-                                {/* Attendance */}
                                 <div className="border-b border-current/10 px-4 py-3">
                                     <p className="mb-2 text-[11px] font-medium tracking-wide text-inherit/55">
                                         {fields.attendance}
@@ -339,16 +349,8 @@ export default function RSVPSection({
                                                 type="radio"
                                                 name={`attendance-${index}`}
                                                 value="yes"
-                                                checked={
-                                                    guest.attendance === "yes"
-                                                }
-                                                onChange={() =>
-                                                    updateGuest(
-                                                        index,
-                                                        "attendance",
-                                                        "yes",
-                                                    )
-                                                }
+                                                checked={guest.attendance === "yes"}
+                                                onChange={() => updateGuest(index, "attendance", "yes")}
                                                 className="h-4 w-4 accent-current"
                                                 required
                                             />
@@ -359,16 +361,8 @@ export default function RSVPSection({
                                                 type="radio"
                                                 name={`attendance-${index}`}
                                                 value="no"
-                                                checked={
-                                                    guest.attendance === "no"
-                                                }
-                                                onChange={() =>
-                                                    updateGuest(
-                                                        index,
-                                                        "attendance",
-                                                        "no",
-                                                    )
-                                                }
+                                                checked={guest.attendance === "no"}
+                                                onChange={() => updateGuest(index, "attendance", "no")}
                                                 className="h-4 w-4 accent-current"
                                             />
                                             {fields.attendanceNo}
@@ -376,47 +370,29 @@ export default function RSVPSection({
                                     </div>
                                 </div>
 
-                                {/* Dietary */}
                                 <div className="border-b border-current/10 px-4 py-3">
                                     <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
                                         {fields.dietary}
                                     </label>
                                     <select
                                         value={guest.dietary}
-                                        onChange={(e) =>
-                                            updateGuest(
-                                                index,
-                                                "dietary",
-                                                e.target.value,
-                                            )
-                                        }
+                                        onChange={(e) => updateGuest(index, "dietary", e.target.value)}
                                         className="w-full bg-transparent text-sm tracking-wide text-inherit/80 focus:outline-none"
                                         style={{ fontSize: "16px" }}
                                     >
                                         {fields.dietaryOptions.map((opt) => (
-                                            <option
-                                                key={opt}
-                                                value={opt}
-                                                className="bg-primary text-primary-foreground"
-                                            >
+                                            <option key={opt} value={opt} className="bg-primary text-primary-foreground">
                                                 {opt}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
 
-                                {/* Song request */}
                                 <input
                                     type="text"
                                     placeholder={fields.songRequest}
                                     value={guest.songRequest}
-                                    onChange={(e) =>
-                                        updateGuest(
-                                            index,
-                                            "songRequest",
-                                            e.target.value,
-                                        )
-                                    }
+                                    onChange={(e) => updateGuest(index, "songRequest", e.target.value)}
                                     className="w-full bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
                                     style={{ fontSize: "16px" }}
                                 />

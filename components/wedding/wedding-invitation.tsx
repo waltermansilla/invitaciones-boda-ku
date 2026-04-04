@@ -87,11 +87,10 @@ function WeddingInvitationContent() {
                 />
             )}
 
-            {/* Hide main content until overlay is dismissed */}
+            {/* Hide main content until overlay is dismissed - fade in when overlay exits */}
             <main 
-                className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl"
+                className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl transition-opacity duration-700 ease-out"
                 style={{ 
-                    visibility: overlay.enabled && !overlayDismissed ? "hidden" : "visible",
                     opacity: overlay.enabled && !overlayDismissed ? 0 : 1,
                 }}
             >
