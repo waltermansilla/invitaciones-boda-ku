@@ -7,7 +7,9 @@ import { Copy, Trash2, Edit2, Plus, Users, User, Check, X, Utensils, Music, Mess
 interface Integrante { id: string; nombre: string; estado: "pendiente" | "confirmado" | "no_asiste"; restricciones?: string }
 interface Invitado { id: string; nombre: string; codigo?: string; tipo: "persona" | "familia" | "integrante"; estado: "pendiente" | "confirmado" | "no_asiste"; pago_tarjeta?: boolean; confirmado_manual?: boolean; restricciones?: string; mensaje?: string; cancion?: string; fecha_confirmacion?: string; integrantes?: Integrante[]; familiaId?: string; familiaNombre?: string; pago?: boolean }
 interface Evento { id: string; panel_id: string; fecha_evento?: string; nombre_evento?: string; tipo_evento?: string }
-interface PanelData { evento: Evento; invitados: Invitado[]; stats: { confirmados: number; noAsisten: number; pendientes: number } }
+interface PanelTheme { primaryColor?: string; backgroundColor?: string }
+interface PanelLabels { title?: string; totalLabel?: string; confirmedLabel?: string; pendingLabel?: string; declinedLabel?: string; paymentPending?: string; addGuest?: string; copyLink?: string; manualConfirm?: string; paidButton?: string; unpaidButton?: string }
+interface PanelData { evento: Evento; invitados: Invitado[]; stats: { confirmados: number; noAsisten: number; pendientes: number }; panelConfig?: { theme?: PanelTheme; labels?: PanelLabels } }
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -39,8 +41,10 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
 
   const { data, error, mutate } = useSWR<PanelData>(panelId ? `/api/panel/${panelId}` : null, fetcher, { refreshInterval: 30000 })
   
-  // Color del tema desde el JSON del cliente
-  const primaryColor = (data?.evento as { primary_color?: string })?.primary_color || "#b8a88a"
+  // Configuración del panel desde el JSON del cliente
+  const theme = data?.panelConfig?.theme
+  const labels = data?.panelConfig?.labels
+  const primaryColor = theme?.primaryColor || "#b8a88a"
 
   const handleCopyLink = useCallback((invitado: Invitado) => {
     // Inferir slug y tipo del panelId (ej: "anto-walter-boda" -> "anto-walter", tipo "boda")
@@ -112,17 +116,17 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   return (
     <div className="min-h-screen bg-[#faf9f7]">
       <header className="px-5 py-8 text-center text-white" style={{ backgroundColor: primaryColor }}>
-        <h1 className="text-lg font-semibold tracking-[0.2em] uppercase">Panel de Invitados</h1>
+        <h1 className="text-lg font-semibold tracking-[0.2em] uppercase">{labels?.title || "Panel de Invitados"}</h1>
         <p className="mt-1 text-sm font-light opacity-90">{tituloEvento}</p>
         {diasRestantes !== null && diasRestantes > 0 && <p className="mt-1 text-xs font-light opacity-80">Faltan {diasRestantes} días</p>}
       </header>
 
       <div className="px-5 py-6">
-        <div className="mb-3"><div className="rounded-lg bg-white px-4 py-6 text-center shadow-sm"><p className="text-4xl font-bold text-neutral-700">{total}</p><p className="mt-1 text-xs uppercase tracking-wide text-neutral-500">Total invitados</p></div></div>
+        <div className="mb-3"><div className="rounded-lg bg-white px-4 py-6 text-center shadow-sm"><p className="text-4xl font-bold text-neutral-700">{total}</p><p className="mt-1 text-xs uppercase tracking-wide text-neutral-500">{labels?.totalLabel || "Total invitados"}</p></div></div>
         <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-lg px-3 py-4 text-center" style={{ backgroundColor: "#d4edda" }}><p className="text-2xl font-bold" style={{ color: "#155724" }}>{stats.confirmados}</p><p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: "#155724", opacity: 0.8 }}>Confirmados</p></div>
-          <div className="rounded-lg bg-neutral-100 px-3 py-4 text-center"><p className="text-2xl font-bold text-neutral-600">{stats.pendientes}</p><p className="mt-1 text-[10px] uppercase tracking-wide text-neutral-500">Pendientes</p></div>
-          <div className="rounded-lg px-3 py-4 text-center" style={{ backgroundColor: "#f5d5d5" }}><p className="text-2xl font-bold" style={{ color: "#8b6b6b" }}>{stats.noAsisten}</p><p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: "#8b6b6b", opacity: 0.8 }}>No asisten</p></div>
+          <div className="rounded-lg px-3 py-4 text-center" style={{ backgroundColor: "#d4edda" }}><p className="text-2xl font-bold" style={{ color: "#155724" }}>{stats.confirmados}</p><p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: "#155724", opacity: 0.8 }}>{labels?.confirmedLabel || "Confirmados"}</p></div>
+          <div className="rounded-lg bg-neutral-100 px-3 py-4 text-center"><p className="text-2xl font-bold text-neutral-600">{stats.pendientes}</p><p className="mt-1 text-[10px] uppercase tracking-wide text-neutral-500">{labels?.pendingLabel || "Pendientes"}</p></div>
+          <div className="rounded-lg px-3 py-4 text-center" style={{ backgroundColor: "#f5d5d5" }}><p className="text-2xl font-bold" style={{ color: "#8b6b6b" }}>{stats.noAsisten}</p><p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: "#8b6b6b", opacity: 0.8 }}>{labels?.declinedLabel || "No asisten"}</p></div>
         </div>
       </div>
 
@@ -137,14 +141,14 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
         </div>
       </div>
 
-      <div className="px-5 pb-4"><button onClick={() => setShowAddModal(true)} className="flex w-full items-center justify-center gap-2 rounded-lg py-4 text-sm font-semibold tracking-wide text-white uppercase transition-opacity hover:opacity-90" style={{ backgroundColor: primaryColor }}><Plus className="h-5 w-5" />Agregar Invitado</button></div>
+      <div className="px-5 pb-4"><button onClick={() => setShowAddModal(true)} className="flex w-full items-center justify-center gap-2 rounded-lg py-4 text-sm font-semibold tracking-wide text-white uppercase transition-opacity hover:opacity-90" style={{ backgroundColor: primaryColor }}><Plus className="h-5 w-5" />{labels?.addGuest || "Agregar Invitado"}</button></div>
 
       <div className="px-5 pb-8">
         {invitadosFiltrados.length === 0 ? (
           <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-12 text-center"><p className="text-neutral-500">{searchTerm ? "No se encontraron resultados" : "No hay invitados"}</p></div>
         ) : (
           <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
-            {invitadosFiltrados.map((inv, idx) => <InvitadoRow key={inv.id} invitado={inv} isLast={idx === invitadosFiltrados.length - 1} copiedId={copiedId} giftCardEnabled={giftCardEnabled} primaryColor={primaryColor} expanded={expandedId === inv.id} onToggleExpand={() => setExpandedId(expandedId === inv.id ? null : inv.id)} onCopyLink={handleCopyLink} onDelete={handleDelete} onEdit={() => setEditingInvitado(inv)} onTogglePago={handleTogglePago} onOpenConfirmManual={() => setConfirmManualInvitado(inv)} />)}
+            {invitadosFiltrados.map((inv, idx) => <InvitadoRow key={inv.id} invitado={inv} isLast={idx === invitadosFiltrados.length - 1} copiedId={copiedId} giftCardEnabled={giftCardEnabled} primaryColor={primaryColor} labels={labels} expanded={expandedId === inv.id} onToggleExpand={() => setExpandedId(expandedId === inv.id ? null : inv.id)} onCopyLink={handleCopyLink} onDelete={handleDelete} onEdit={() => setEditingInvitado(inv)} onTogglePago={handleTogglePago} onOpenConfirmManual={() => setConfirmManualInvitado(inv)} />)}
           </div>
         )}
       </div>
@@ -156,7 +160,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   )
 }
 
-function InvitadoRow({ invitado, isLast, copiedId, giftCardEnabled, primaryColor, expanded, onToggleExpand, onCopyLink, onDelete, onEdit, onTogglePago, onOpenConfirmManual }: { invitado: Invitado; isLast: boolean; copiedId: string | null; giftCardEnabled: boolean; primaryColor: string; expanded: boolean; onToggleExpand: () => void; onCopyLink: (inv: Invitado) => void; onDelete: (id: string) => void; onEdit: () => void; onTogglePago: (inv: Invitado) => void; onOpenConfirmManual: () => void }) {
+function InvitadoRow({ invitado, isLast, copiedId, giftCardEnabled, primaryColor, labels, expanded, onToggleExpand, onCopyLink, onDelete, onEdit, onTogglePago, onOpenConfirmManual }: { invitado: Invitado; isLast: boolean; copiedId: string | null; giftCardEnabled: boolean; primaryColor: string; labels?: PanelLabels; expanded: boolean; onToggleExpand: () => void; onCopyLink: (inv: Invitado) => void; onDelete: (id: string) => void; onEdit: () => void; onTogglePago: (inv: Invitado) => void; onOpenConfirmManual: () => void }) {
   const estadoBg: Record<string, string> = { confirmado: "#d4edda", pendiente: "#f5f5f5", no_asiste: "#f5d5d5" }
   const estadoText: Record<string, string> = { confirmado: "#155724", pendiente: "#888", no_asiste: "#8b6b6b" }
   const bgColor = estadoBg[invitado.estado] || "#f5f5f5"
@@ -224,9 +228,9 @@ function InvitadoRow({ invitado, isLast, copiedId, giftCardEnabled, primaryColor
       {expanded && (
         <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3">
           <div className="flex flex-wrap gap-2">
-            {invitado.codigo && <button onClick={(e) => { e.stopPropagation(); onCopyLink(invitado) }} className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white" style={{ backgroundColor: primaryColor }}><Copy className="h-3 w-3" />{copiedId === invitado.id ? "Copiado!" : "Copiar link"}</button>}
-            {invitado.estado === "pendiente" && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onOpenConfirmManual() }} className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"><Settings className="h-3 w-3" />Confirmación manual</button>}
-            {giftCardEnabled && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onTogglePago(invitado) }} className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}><Check className="h-3 w-3" />{invitado.pago_tarjeta ? "Ya pagó" : "¿Pagó tarjeta?"}</button>}
+            {invitado.codigo && <button onClick={(e) => { e.stopPropagation(); onCopyLink(invitado) }} className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white" style={{ backgroundColor: primaryColor }}><Copy className="h-3 w-3" />{copiedId === invitado.id ? "Copiado!" : (labels?.copyLink || "Copiar link")}</button>}
+            {invitado.estado === "pendiente" && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onOpenConfirmManual() }} className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"><Settings className="h-3 w-3" />{labels?.manualConfirm || "Confirmación manual"}</button>}
+            {giftCardEnabled && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onTogglePago(invitado) }} className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}><Check className="h-3 w-3" />{invitado.pago_tarjeta ? (labels?.paidButton || "Ya pagó") : (labels?.unpaidButton || "¿Pagó tarjeta?")}</button>}
             {invitado.tipo !== "integrante" && <><button onClick={(e) => { e.stopPropagation(); onEdit() }} className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"><Edit2 className="h-3 w-3" />Editar</button><button onClick={(e) => { e.stopPropagation(); onDelete(invitado.id) }} className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600"><Trash2 className="h-3 w-3" />Eliminar</button></>}
           </div>
           {invitado.restricciones && <div className="mt-3 flex items-center gap-2 text-xs text-neutral-600"><Utensils className="h-3 w-3" /><span>{invitado.restricciones}</span></div>}

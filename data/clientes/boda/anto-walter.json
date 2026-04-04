@@ -23,7 +23,28 @@
         "fechaEvento": "2027-02-16",
         "_comment_fechaEvento": "Fecha del evento para calcular dias restantes. Formato: YYYY-MM-DD",
         "confirmationMessage": "Gracias por confirmar! Nos vemos el 16 de febrero.",
-        "_comment_confirmationMessage": "Mensaje que ve el invitado despues de confirmar."
+        "_comment_confirmationMessage": "Mensaje que ve el invitado despues de confirmar.",
+        
+        "_comment_theme": "TEMA VISUAL DEL PANEL - Colores personalizados.",
+        "theme": {
+            "primaryColor": "#b8a88a",
+            "_comment_primaryColor": "Color principal del panel (header, botones, filtros activos)."
+        },
+        
+        "_comment_labels": "TEXTOS DEL PANEL - Todos los textos estaticos son configurables.",
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Pago pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Ya pagó",
+            "unpaidButton": "¿Pagó tarjeta?"
+        }
     },
 
     "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /boda/[slug]/qr para captura de pantalla.",
