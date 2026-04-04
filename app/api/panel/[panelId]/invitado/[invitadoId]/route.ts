@@ -39,6 +39,14 @@ export async function PUT(
     if (body.estado === "confirmado" || body.estado === "no_asiste") {
       updateData.fecha_confirmacion = new Date().toISOString()
     }
+    
+    // Si es confirmación manual, también actualizar todos los integrantes con el mismo estado
+    if (body.confirmado_manual) {
+      await supabase
+        .from("integrantes")
+        .update({ estado: body.estado })
+        .eq("invitado_id", invitadoId)
+    }
   }
   if (body.pago_tarjeta !== undefined) updateData.pago_tarjeta = body.pago_tarjeta
   if (body.confirmado_manual !== undefined) updateData.confirmado_manual = body.confirmado_manual
