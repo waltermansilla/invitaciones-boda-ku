@@ -34,11 +34,13 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const giftCardEnabled = true
-  const primaryColor = "#b8a88a"
 
   useEffect(() => { params.then((p) => setPanelId(p.panelId)) }, [params])
 
   const { data, error, mutate } = useSWR<PanelData>(panelId ? `/api/panel/${panelId}` : null, fetcher, { refreshInterval: 30000 })
+  
+  // Color del tema desde el JSON del cliente
+  const primaryColor = (data?.evento as { primary_color?: string })?.primary_color || "#b8a88a"
 
   const handleCopyLink = useCallback((invitado: Invitado) => {
     // Inferir slug y tipo del panelId (ej: "anto-walter-boda" -> "anto-walter", tipo "boda")
