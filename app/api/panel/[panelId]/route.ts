@@ -3,13 +3,16 @@ import { NextRequest, NextResponse } from "next/server"
 import { nanoid } from "nanoid"
 import { findConfigByPanelId, getEventDataFromConfig } from "@/lib/config-loader"
 
-// GET: Obtener evento y lista de invitados
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ panelId: string }> }
 ) {
   const { panelId } = await params
   const supabase = createApiClient()
+
+  // Leer config del JSON para theme y labels
+  const config = findConfigByPanelId(panelId)
+  const configData = config ? getEventDataFromConfig(config) : { panel_theme: null, panel_labels: null }
 
   // Obtener evento
   const { data: evento, error: eventoError } = await supabase
@@ -19,17 +22,14 @@ export async function GET(
     .single()
 
   if (eventoError || !evento) {
-    // Si no existe, buscar datos en el JSON del cliente y crear el evento
-    const config = findConfigByPanelId(panelId)
-    const eventData = config ? getEventDataFromConfig(config) : {}
-    
+    // Si no existe, crear el evento
     const { data: nuevoEvento, error: createError } = await supabase
       .from("eventos")
       .insert({ 
         panel_id: panelId,
-        nombre_evento: eventData.nombre_evento || null,
-        tipo_evento: eventData.tipo_evento || "boda",
-        fecha_evento: eventData.fecha_evento || null
+        nombre_evento: configData.nombre_evento || null,
+        tipo_evento: configData.tipo_evento || "boda",
+        fecha_evento: configData.fecha_evento || null
       })
       .select()
       .single()
@@ -41,17 +41,18 @@ export async function GET(
     return NextResponse.json({
       evento: nuevoEvento,
       invitados: [],
-      stats: { confirmados: 0, noAsisten: 0, pendientes: 0 }
+      stats: { confirmados: 0, noAsisten: 0, pendientes: 0 },
+      panelConfig: {
+        theme: configData.panel_theme,
+        labels: configData.panel_labels
+      }
     })
   }
 
   // Obtener invitados con sus integrantes
   const { data: invitados, error: invitadosError } = await supabase
     .from("invitados")
-    .select(`
-      *,
-      integrantes (*)
-    `)
+    .select(`*, integrantes (*)`)
     .eq("evento_id", evento.id)
     .order("created_at", { ascending: true })
 
@@ -59,7 +60,7 @@ export async function GET(
     return NextResponse.json({ error: "Error obteniendo invitados" }, { status: 500 })
   }
 
-  // Calcular estadísticas (por persona, no por grupo)
+  // Calcular estadísticas
   let confirmados = 0
   let noAsisten = 0
   let pendientes = 0
@@ -70,7 +71,6 @@ export async function GET(
       else if (inv.estado === "no_asiste") noAsisten++
       else pendientes++
     } else {
-      // Familia: contar integrantes
       inv.integrantes?.forEach((int: { estado: string }) => {
         if (int.estado === "confirmado") confirmados++
         else if (int.estado === "no_asiste") noAsisten++
@@ -90,7 +90,6 @@ export async function GET(
   })
 }
 
-// POST: Crear nuevo invitado
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ panelId: string }> }
@@ -99,7 +98,6 @@ export async function POST(
   const body = await request.json()
   const supabase = createApiClient()
 
-  // Obtener evento
   const { data: evento } = await supabase
     .from("eventos")
     .select("id")
@@ -110,10 +108,8 @@ export async function POST(
     return NextResponse.json({ error: "Evento no encontrado" }, { status: 404 })
   }
 
-  // Generar código único para el invitado
   const codigo = nanoid(8)
 
-  // Crear invitado
   const { data: invitado, error } = await supabase
     .from("invitados")
     .insert({
@@ -129,17 +125,14 @@ export async function POST(
     return NextResponse.json({ error: "Error creando invitado" }, { status: 500 })
   }
 
-  // Si es familia, crear integrantes
   if (body.tipo === "familia" && body.integrantes?.length > 0) {
     const integrantes = body.integrantes.map((nombre: string) => ({
       invitado_id: invitado.id,
       nombre,
     }))
-
     await supabase.from("integrantes").insert(integrantes)
   }
 
-  // Obtener invitado con integrantes
   const { data: invitadoCompleto } = await supabase
     .from("invitados")
     .select(`*, integrantes (*)`)
