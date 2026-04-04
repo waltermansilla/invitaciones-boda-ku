@@ -26,7 +26,7 @@ const getEstadoTexto = (estado: string, plural: boolean) => {
 
 export default function PanelPage({ params }: { params: Promise<{ panelId: string }> }) {
   const [panelId, setPanelId] = useState<string | null>(null)
-  const [filter, setFilter] = useState<"todos" | "confirmados" | "pendientes" | "no_asiste">("todos")
+  const [filter, setFilter] = useState<"todos" | "confirmados" | "pendientes" | "no_asiste" | "pago_pendiente">("todos")
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingInvitado, setEditingInvitado] = useState<Invitado | null>(null)
   const [confirmManualInvitado, setConfirmManualInvitado] = useState<Invitado | null>(null)
@@ -75,16 +75,21 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   let diasRestantes: number | null = null
   if (evento.fecha_evento) { diasRestantes = Math.ceil((new Date(evento.fecha_evento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) }
 
-  // Nombre del evento
+  // Nombre del evento (sin "La boda de" ni "Los XV de")
   const tipoEvento = evento.tipo_evento || "boda"
   const nombreEvento = evento.nombre_evento || "Anto & Walter"
-  const tituloEvento = tipoEvento === "xv" ? `Los XV de ${nombreEvento}` : `La boda de ${nombreEvento}`
+  const tituloEvento = tipoEvento === "xv" ? `XV ${nombreEvento}` : `Boda ${nombreEvento}`
 
   const estadoFilter = filterToEstado[filter] || filter
   let itemsToDisplay: Invitado[] = []
 
   if (filter === "todos") {
-    itemsToDisplay = invitados.map((inv) => ({ ...inv }))
+    // Ordenar: pendientes primero, luego no asisten, luego confirmados
+    const ordenEstado: Record<string, number> = { pendiente: 0, no_asiste: 1, confirmado: 2 }
+    itemsToDisplay = invitados.map((inv) => ({ ...inv })).sort((a, b) => (ordenEstado[a.estado] ?? 1) - (ordenEstado[b.estado] ?? 1))
+  } else if (filter === "pago_pendiente") {
+    // Mostrar solo los que no pagaron tarjeta
+    itemsToDisplay = invitados.filter((inv) => !inv.pago_tarjeta).map((inv) => ({ ...inv }))
   } else {
     for (const inv of invitados) {
       if (inv.tipo === "familia" && inv.integrantes && inv.integrantes.length > 0) {
@@ -111,7 +116,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
       </header>
 
       <div className="px-5 py-6">
-        <div className="mb-3"><div className="rounded-lg bg-white px-4 py-6 text-center shadow-sm"><p className="text-4xl font-bold text-neutral-700">{total}</p><p className="mt-1 text-xs uppercase tracking-wide text-neutral-500">Invitados</p></div></div>
+        <div className="mb-3"><div className="rounded-lg bg-white px-4 py-6 text-center shadow-sm"><p className="text-4xl font-bold text-neutral-700">{total}</p><p className="mt-1 text-xs uppercase tracking-wide text-neutral-500">Total invitados</p></div></div>
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-lg px-3 py-4 text-center" style={{ backgroundColor: "#d4edda" }}><p className="text-2xl font-bold" style={{ color: "#155724" }}>{stats.confirmados}</p><p className="mt-1 text-[10px] uppercase tracking-wide" style={{ color: "#155724", opacity: 0.8 }}>Confirmados</p></div>
           <div className="rounded-lg bg-neutral-100 px-3 py-4 text-center"><p className="text-2xl font-bold text-neutral-600">{stats.pendientes}</p><p className="mt-1 text-[10px] uppercase tracking-wide text-neutral-500">Pendientes</p></div>
@@ -122,9 +127,9 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
       <div className="px-5 pb-4">
         <input type="text" placeholder="Buscar invitado..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="mb-4 w-full rounded-lg border border-neutral-200 bg-white px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none" />
         <div className="flex flex-wrap gap-2">
-          {(["todos", "confirmados", "pendientes", "no_asiste"] as const).map((f) => (
+          {(["todos", "confirmados", "pendientes", "no_asiste", "pago_pendiente"] as const).map((f) => (
             <button key={f} onClick={() => setFilter(f)} className="rounded-full px-4 py-2 text-xs font-medium transition-colors" style={{ backgroundColor: filter === f ? primaryColor : "#fff", color: filter === f ? "#fff" : "#666", border: filter === f ? "none" : "1px solid #e5e5e5" }}>
-              {f === "no_asiste" ? "No asisten" : f === "todos" ? "Todos" : f.charAt(0).toUpperCase() + f.slice(1)}
+              {f === "no_asiste" ? "No asisten" : f === "todos" ? "Todos" : f === "pago_pendiente" ? "Pago pendiente" : f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
           ))}
         </div>
@@ -219,12 +224,12 @@ function InvitadoRow({ invitado, isLast, copiedId, giftCardEnabled, primaryColor
           <div className="flex flex-wrap gap-2">
             {invitado.codigo && <button onClick={(e) => { e.stopPropagation(); onCopyLink(invitado) }} className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white" style={{ backgroundColor: primaryColor }}><Copy className="h-3 w-3" />{copiedId === invitado.id ? "Copiado!" : "Copiar link"}</button>}
             {invitado.estado === "pendiente" && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onOpenConfirmManual() }} className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"><Settings className="h-3 w-3" />Confirmación manual</button>}
-            {giftCardEnabled && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onTogglePago(invitado) }} className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}><Check className="h-3 w-3" />{invitado.pago_tarjeta ? "Pagó" : "Sin pagar"}</button>}
+            {giftCardEnabled && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onTogglePago(invitado) }} className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}><Check className="h-3 w-3" />{invitado.pago_tarjeta ? "Ya pagó" : "¿Pagó tarjeta?"}</button>}
             {invitado.tipo !== "integrante" && <><button onClick={(e) => { e.stopPropagation(); onEdit() }} className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"><Edit2 className="h-3 w-3" />Editar</button><button onClick={(e) => { e.stopPropagation(); onDelete(invitado.id) }} className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600"><Trash2 className="h-3 w-3" />Eliminar</button></>}
           </div>
           {invitado.restricciones && <div className="mt-3 flex items-center gap-2 text-xs text-neutral-600"><Utensils className="h-3 w-3" /><span>{invitado.restricciones}</span></div>}
           {invitado.cancion && <div className="mt-2 flex items-center gap-2 text-xs text-neutral-600"><Music className="h-3 w-3" /><span>{invitado.cancion}</span></div>}
-          {invitado.mensaje && <div className="mt-2 flex items-center gap-2 text-xs text-neutral-600"><MessageSquare className="h-3 w-3" /><span>{invitado.mensaje}</span></div>}
+          {invitado.mensaje && invitado.mensaje !== invitado.cancion && <div className="mt-2 flex items-center gap-2 text-xs text-neutral-600"><MessageSquare className="h-3 w-3" /><span>{invitado.mensaje}</span></div>}
           {invitado.tipo === "familia" && invitado.integrantes?.length && (
             <div className="mt-3">
               <p className="mb-2 text-xs font-medium text-neutral-700">Integrantes:</p>
