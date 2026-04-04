@@ -1,6 +1,7 @@
-import { createClient } from "@/lib/supabase/server"
+import { createApiClient } from "@/lib/supabase/api"
 import { NextRequest, NextResponse } from "next/server"
 import { nanoid } from "nanoid"
+import { findConfigByPanelId, getEventDataFromConfig } from "@/lib/config-loader"
 
 // GET: Obtener evento y lista de invitados
 export async function GET(
@@ -8,7 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ panelId: string }> }
 ) {
   const { panelId } = await params
-  const supabase = await createClient()
+  const supabase = createApiClient()
 
   // Obtener evento
   const { data: evento, error: eventoError } = await supabase
@@ -18,10 +19,18 @@ export async function GET(
     .single()
 
   if (eventoError || !evento) {
-    // Si no existe, crear el evento
+    // Si no existe, buscar datos en el JSON del cliente y crear el evento
+    const config = findConfigByPanelId(panelId)
+    const eventData = config ? getEventDataFromConfig(config) : {}
+    
     const { data: nuevoEvento, error: createError } = await supabase
       .from("eventos")
-      .insert({ panel_id: panelId })
+      .insert({ 
+        panel_id: panelId,
+        nombre_evento: eventData.nombre_evento || null,
+        tipo_evento: eventData.tipo_evento || "boda",
+        fecha_evento: eventData.fecha_evento || null
+      })
       .select()
       .single()
 
@@ -84,7 +93,7 @@ export async function POST(
 ) {
   const { panelId } = await params
   const body = await request.json()
-  const supabase = await createClient()
+  const supabase = createApiClient()
 
   // Obtener evento
   const { data: evento } = await supabase

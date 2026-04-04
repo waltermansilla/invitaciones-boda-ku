@@ -41,11 +41,14 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const { data, error, mutate } = useSWR<PanelData>(panelId ? `/api/panel/${panelId}` : null, fetcher, { refreshInterval: 30000 })
 
   const handleCopyLink = useCallback((invitado: Invitado) => {
-    const link = `${window.location.origin}/boda/anto-walter?c=${invitado.codigo || ""}`
+    // Inferir slug y tipo del panelId (ej: "anto-walter-boda" -> "anto-walter", tipo "boda")
+    const slug = panelId?.replace(/-boda$/, "").replace(/-xv$/, "") || ""
+    const tipo = panelId?.includes("-xv") ? "xv" : "boda"
+    const link = `${window.location.origin}/${tipo}/${slug}?c=${invitado.codigo || ""}`
     navigator.clipboard.writeText(link)
     setCopiedId(invitado.id)
     setTimeout(() => setCopiedId(null), 2000)
-  }, [])
+  }, [panelId])
 
   const handleDelete = useCallback(async (invitadoId: string) => {
     if (!confirm("¿Eliminar este invitado?")) return
