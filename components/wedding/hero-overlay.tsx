@@ -57,7 +57,8 @@ export default function HeroOverlay({
   function handleEnter() {
     setExiting(true)
     // Notify parent that overlay is being dismissed (show content behind)
-    onDismiss?.()
+    // Small delay to let the exit animation start before showing content
+    setTimeout(() => onDismiss?.(), 300)
     setTimeout(() => setVisible(false), 1200)
   }
 
