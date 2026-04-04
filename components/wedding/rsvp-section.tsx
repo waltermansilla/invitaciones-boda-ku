@@ -253,12 +253,8 @@ export default function RSVPSection({
         );
     }
 
-    // Nombre a mostrar (sin duplicar "Familia")
-    const displayName = invitado ? (
-        invitado.tipo === "familia" 
-            ? (invitado.nombre.toLowerCase().startsWith("familia ") ? invitado.nombre : `Familia ${invitado.nombre}`)
-            : invitado.nombre
-    ) : null;
+    // Nombre tal cual esta en el panel (sin prefijos)
+    const displayName = invitado?.nombre || null;
 
     return (
         <section className="px-6 py-14">
