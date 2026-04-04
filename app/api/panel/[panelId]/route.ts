@@ -82,7 +82,11 @@ export async function GET(
   return NextResponse.json({
     evento,
     invitados: invitados || [],
-    stats: { confirmados, noAsisten, pendientes }
+    stats: { confirmados, noAsisten, pendientes },
+    panelConfig: {
+      theme: configData.panel_theme,
+      labels: configData.panel_labels
+    }
   })
 }
 
