@@ -15,40 +15,30 @@ interface EventConfig {
     fechaEvento?: string
   }
   slug?: string
-  tipo?: "boda" | "xv"
+  tipo?: "boda" | "xv" | "baby" | "cumple" | "evento"
 }
+
+// Todos los tipos de eventos soportados
+const TIPOS_EVENTO = ["boda", "xv", "baby", "cumple", "evento"] as const
 
 // Busca el JSON que tenga el panelId especificado
 export function findConfigByPanelId(panelId: string): EventConfig | null {
   const dataDir = path.join(process.cwd(), "data", "clientes")
   
-  // Buscar en bodas
-  const bodasDir = path.join(dataDir, "boda")
-  if (fs.existsSync(bodasDir)) {
-    const bodasFiles = fs.readdirSync(bodasDir).filter(f => f.endsWith(".json"))
-    for (const file of bodasFiles) {
-      try {
-        const content = fs.readFileSync(path.join(bodasDir, file), "utf-8")
-        const config = JSON.parse(content) as EventConfig
-        if (config.rsvpPanel?.panelId === panelId) {
-          return { ...config, slug: file.replace(".json", ""), tipo: "boda" }
-        }
-      } catch { /* ignore */ }
-    }
-  }
-  
-  // Buscar en XV
-  const xvDir = path.join(dataDir, "xv")
-  if (fs.existsSync(xvDir)) {
-    const xvFiles = fs.readdirSync(xvDir).filter(f => f.endsWith(".json"))
-    for (const file of xvFiles) {
-      try {
-        const content = fs.readFileSync(path.join(xvDir, file), "utf-8")
-        const config = JSON.parse(content) as EventConfig
-        if (config.rsvpPanel?.panelId === panelId) {
-          return { ...config, slug: file.replace(".json", ""), tipo: "xv" }
-        }
-      } catch { /* ignore */ }
+  // Buscar en todos los tipos de eventos
+  for (const tipo of TIPOS_EVENTO) {
+    const tipoDir = path.join(dataDir, tipo)
+    if (fs.existsSync(tipoDir)) {
+      const files = fs.readdirSync(tipoDir).filter(f => f.endsWith(".json"))
+      for (const file of files) {
+        try {
+          const content = fs.readFileSync(path.join(tipoDir, file), "utf-8")
+          const config = JSON.parse(content) as EventConfig
+          if (config.rsvpPanel?.panelId === panelId) {
+            return { ...config, slug: file.replace(".json", ""), tipo }
+          }
+        } catch { /* ignore */ }
+      }
     }
   }
   
