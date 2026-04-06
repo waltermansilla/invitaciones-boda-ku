@@ -150,6 +150,29 @@
         },
 
         {
+            "// --- UBICACION: FIESTA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "bgColor": "primary",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "¿Dónde?",
+                "address": "'La Restinga Espacio', Eva Perón 1873",
+                "showButton": true,
+                "order": ["address", "time"],
+                "datetime": {
+                    "time": "18:00 hs"
+                },
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/FnDC2HBpA3Z1LWN97?g_st=iw",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
             "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
@@ -160,15 +183,9 @@
                 "title": "Itinerario",
                 "events": [
                     {
-                        "icon": "pin",
+                        "icon": "heart",
                         "name": "Recepción y bebidas",
-                        "time": "18:00 hs",
-                        "address": "Eva Perón 1873, Salón de eventos",
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/FnDC2HBpA3Z1LWN97?g_st=iw",
-                            "variant": "primary"
-                        }
+                        "time": "18:00 hs"
                     },
                     {
                         "icon": "sparkles",

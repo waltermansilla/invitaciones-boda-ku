@@ -129,6 +129,13 @@
                     "titulo": "Valentina",
                     "etiqueta": "XV premium",
                     "accentColor": "#C4788A"
+                },
+                {
+                    "tipo": "baby",
+                    "slug": "maxima",
+                    "titulo": "Máxima",
+                    "etiqueta": "Baby Shower",
+                    "accentColor": "#bdb2ff"
                 }
             ]
         },
