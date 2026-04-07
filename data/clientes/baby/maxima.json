@@ -317,7 +317,7 @@
             "blocks": ["title", "button"],
             "data": {
                 "title": "Confirmar asistencia",
-                "subtitle": "",
+                "subtitle": "Por favor, confirmar asistencia antes del 11 de Abril",
                 "buttonText": "¡Confirmo!",
                 "whatsappNumber": "542974429467",
                 "message": "Hola Laura y Carlos! Confirmo mi asistencia al Baby Shower de Máxima. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗",
