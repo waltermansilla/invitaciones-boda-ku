@@ -2357,6 +2357,12 @@ export default function LandingTdyPage({
   )
 
   useEffect(() => {
+    if (mode !== "landing2") return
+    const lang = new URLSearchParams(window.location.search).get("lang")
+    setLocale(lang === "en" ? "en" : "es")
+  }, [mode])
+
+  useEffect(() => {
     document.documentElement.lang = locale === "en" ? "en" : "es"
   }, [locale])
 
