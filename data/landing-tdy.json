@@ -1,0 +1,476 @@
+{
+    "_comment": "Landing /landing. Tipografías y colores en theme.*. Reseñas Google: poné la URL de tu negocio en hero.reviews.url (Maps → tu negocio → Compartir). Para listar opiniones en vivo necesitás Google Places API (Google Cloud, facturación) o un widget (p. ej. Elfsight).",
+
+    "theme": {
+        "_comment_creams": "Cremas y neutros cercanos a thedigitalyes.com (fondos cálidos, texto carbón).",
+        "background": "#FDFBF7",
+        "foreground": "#4A3A2F",
+        "cardBg": "#FFFFFF",
+        "cardBorder": "#E6E1D9",
+        "footerBg": "#1A1917",
+        "footerText": "#F7F4EF",
+        "surfaceAlt": "#F3EEE6",
+
+        "typography": {
+            "headingFont": "'Playfair Display', Georgia, 'Times New Roman', serif",
+            "bodyFont": "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+            "priceFont": "var(--font-landing-price), 'Cormorant Garamond', Georgia, serif",
+            "priceLetterSpacing": "-0.03em"
+        },
+
+        "text": {
+            "heading": "#4A3A2F",
+            "body": "#5A4A3F",
+            "muted": "#7A6A5D",
+            "caption": "#7A756D",
+            "highlight": "#4A3A2F",
+            "link": "#4A3A2F",
+            "linkUnderline": true,
+            "inverse": "#FDFBF7"
+        },
+
+        "buttons": {
+            "primaryBg": "#6F5848",
+            "primaryText": "#FFFCF8",
+            "primaryHoverBg": "#7C6453",
+            "secondaryBorder": "#6F5848",
+            "secondaryText": "#6F5848",
+            "secondaryBg": "#FFFCF8",
+            "secondaryHoverBg": "#F3EEE6",
+            "demoBg": "#6F5848",
+            "demoText": "#FDFBF7",
+            "demoOverlayBorder": "rgba(255,252,248,0.55)",
+            "demoOverlayText": "rgba(255,252,248,0.95)",
+            "floatingBg": "#7C4E36",
+            "floatingText": "#FFFCF8",
+            "floatingSubtext": "rgba(255,252,248,0.88)",
+            "floatingBorderRadius": "9999px",
+            "floatingBoxShadow": "0 8px 22px rgba(54, 34, 24, 0.30), 0 16px 36px rgba(54, 34, 24, 0.24), 0 0 0 1px rgba(255,255,255,0.14) inset"
+        },
+
+        "comparativa": {
+            "paperCardOpacity": 0.7,
+            "paperTotalStrike": "#C62828",
+            "digitalCardBg": "#EDE6DC",
+            "digitalCardBorder": "#7A6554",
+            "digitalBadgeBg": "#1A1917",
+            "digitalBadgeText": "#FFFCF8",
+            "savingsColor": "#5C4D3F",
+            "digitalBulletIconBg": "#D9CFC2",
+            "digitalBulletIconColor": "#4A3F35",
+            "tableHeaderBg": "#F3EEE6",
+            "tablePaperCircleBg": "#FFEBEE",
+            "tablePaperIcon": "#B71C1C",
+            "tableDigitalCircleBg": "#E8F5E9",
+            "tableDigitalIcon": "#1B5E20"
+        },
+
+        "accents": {
+            "star": "#D4A017",
+            "softGold": "#B8956A",
+            "success": "#2F5F3A",
+            "iconMuted": "#8A847A"
+        }
+    },
+
+    "header": {
+        "brand": "Momento Único",
+        "nav": [
+            { "label": "Inicio", "anchor": "#" },
+            { "label": "Incluye", "anchor": "#incluye" },
+            { "label": "Papel vs digital", "anchor": "#comparativa" },
+            { "label": "Estilos", "anchor": "#estilos" },
+            { "label": "Cómo funciona", "anchor": "#proceso" },
+            { "label": "Planes", "anchor": "#planes" }
+        ],
+        "cta": { "label": "Crear invitación", "anchor": "#planes" }
+    },
+
+    "floatingCta": {
+        "enabled": true,
+        "line1": "Empezá aquí",
+        "line2": "Completá el formulario para continuar",
+        "anchor": "#planes",
+        "hideWhenSectionId": "planes"
+    },
+
+    "whatsapp": {
+        "number": "543456023759",
+        "defaultMessage": "Hola! Me interesa una invitación digital. Quiero saber más."
+    },
+
+    "ctaButtons": {
+        "heroPrimary": {
+            "text": "Crear mi invitación",
+            "type": "anchor",
+            "anchor": "#planes"
+        },
+        "heroSecondary": {
+            "text": "Ver muestras",
+            "type": "anchor",
+            "anchor": "#estilos"
+        },
+        "planPremium": {
+            "text": "Elegir Premium",
+            "type": "link",
+            "url": "/configurador?plan=premium"
+        },
+        "planDisenoUnico": {
+            "text": "Elegir Diseño único",
+            "type": "link",
+            "url": "/configurador?plan=diseno-unico&start=idioma"
+        }
+    },
+
+    "sections": {
+        "hero": {
+            "enabled": true,
+            "title": {
+                "line1": "Invitaciones digitales",
+                "line2": "para tu",
+                "rotatingWords": [
+                    "Momento único",
+                    "recuerdo único",
+                    "noche única",
+                    "historia única",
+                    "evento único",
+                    "fiesta única"
+                ]
+            },
+            "subtitle": "Con RSVP, lista de invitados, mapa, música y un diseño pensado para emocionar. Un solo pago, sin suscripciones.",
+            "languagesHint": "Tu invitación, multilingüe",
+            "reviews": {
+                "enabled": true,
+                "rating": "5,0",
+                "count": 15,
+                "source": "Google Maps",
+                "linkText": "Ver opiniones",
+                "url": "https://maps.google.com/?q=Momento+Único+invitaciones"
+            }
+        },
+        "incluye": {
+            "id": "incluye",
+            "title": "Qué incluye tu invitación digital",
+            "subtitle": "Todo lo esencial para sorprender a tus invitados y organizarte sin estrés.",
+            "listStyle": {
+                "fontSizePx": 13,
+                "gapPx": 16,
+                "iconSize": 18
+            },
+            "imageSrc": "",
+            "imageAlt": "Vista previa de una invitación digital de muestra",
+            "items": [
+                {
+                    "text": "Diseño personalizado acorde a tu evento",
+                    "icon": "palette"
+                },
+                {
+                    "text": "Confirmación de asistencia con mensaje claro para vos",
+                    "icon": "mailCheck"
+                },
+                {
+                    "text": "Lista de invitados y seguimiento en un solo lugar",
+                    "icon": "users"
+                },
+                {
+                    "text": "Mapa, cronograma e información clave siempre a mano",
+                    "icon": "mapPin"
+                },
+                {
+                    "text": "Dos idiomas a elección para familias que vienen de lejos",
+                    "icon": "languages"
+                }
+            ]
+        },
+        "comparativa": {
+            "id": "comparativa",
+            "title": "Papel vs Digital",
+            "lead": "El papel tiene un encanto único. La invitación digital es la alternativa cuidada para quienes quieren ahorrar, simplificar y no renunciar a una experiencia hermosa.",
+            "tableHeaders": {
+                "feature": "Función",
+                "paper": "Papel",
+                "digital": "Digital"
+            },
+            "paper": {
+                "title": "Invitación en papel",
+                "guestHint": "Precio orientativo en Argentina · ~120 invitados",
+                "lines": [
+                    { "label": "Diseño", "value": "-" },
+                    { "label": "Impresión (130 u.)", "value": "-" },
+                    { "label": "Sobres y sellos", "value": "-" },
+                    { "label": "Envío postal", "value": "-" }
+                ],
+                "totalLabel": "Total aproximado",
+                "totalValue": "-",
+                "totalValueUsd": ""
+            },
+            "digital": {
+                "title": "Invitación digital",
+                "badge": "La mejor opción",
+                "savingsLine": "Ahorro estimado frente al papel",
+                "bullets": [
+                    {
+                        "text": "Ahorro real",
+                        "subtext": "Sin impresión, sobres ni envíos postales",
+                        "icon": "banknote"
+                    },
+                    {
+                        "text": "Panel de invitados",
+                        "subtext": "Confirmaciones, filtros y control en tiempo real",
+                        "icon": "layoutDashboard"
+                    },
+                    {
+                        "text": "Siempre accesible",
+                        "subtext": "Disponible 24/7 en el celular del invitado",
+                        "icon": "smartphone"
+                    },
+                    {
+                        "text": "Actualizá cuando quieras",
+                        "subtext": "Cambiá datos luego de enviar, sin reimprimir",
+                        "icon": "refreshCw"
+                    }
+                ],
+                "fromLabel": "Desde sólo",
+                "fromPrice": "-",
+                "fromPriceUsd": "",
+                "footnote": "Valores de papel referenciales; la digital es pago único según tu plan."
+            },
+            "tableTitle": "Ventajas que solo tiene lo digital",
+            "tableRows": [
+                {
+                    "feature": "Actualizar datos después de enviar",
+                    "paper": "No",
+                    "digital": "Sí"
+                },
+                {
+                    "feature": "Seguimiento de confirmaciones",
+                    "paper": "No",
+                    "digital": "Sí"
+                },
+                {
+                    "feature": "Mapa e itinerario interactivos",
+                    "paper": "No",
+                    "digital": "Sí"
+                },
+                {
+                    "feature": "Cuenta regresiva y ambientación",
+                    "paper": "No",
+                    "digital": "Sí"
+                },
+                {
+                    "feature": "Galería y música",
+                    "paper": "No",
+                    "digital": "Sí"
+                }
+            ],
+            "ecoNote": "Cada invitación digital evita papel y reduce el impacto ambiental del evento."
+        },
+        "estilos": {
+            "id": "estilos",
+            "eyebrow": "Catálogo",
+            "title": "Elegí tu estilo, hacelo único",
+            "subtitle": "Deslizá y conocé propuestas reales. Cada una cuenta una historia distinta.",
+            "demoButtonText": "Ver demo",
+            "noStylePrompt": "¿No encontrás tu estilo?",
+            "noStyleCta": "Contanos tu idea",
+            "noStyleWhatsappMessage": "Hola! Tengo una idea para mi invitación y me gustaría contarles.",
+            "items": [
+                {
+                    "image": "",
+                    "titulo": "Anto & Walter",
+                    "descripcion": "Elegancia cálida y detalles premium.",
+                    "href": "/m/boda/anto-walter"
+                },
+                {
+                    "image": "",
+                    "titulo": "Meliza & Iván",
+                    "descripcion": "Estilo esencial, muy claro para compartir.",
+                    "href": "/m/boda/meliza-ivan"
+                },
+                {
+                    "image": "",
+                    "titulo": "Valentina",
+                    "descripcion": "XV con personalidad y color.",
+                    "href": "/m/xv/valentina"
+                }
+            ]
+        },
+        "idiomas": {
+            "title": "Tu invitación en dos idiomas",
+            "subtitle": "En tu invitación podés agregar un segundo idioma y cada invitado lo puede cambiar con un toque.",
+            "globeImageSrc": "",
+            "languages": [
+                { "code": "ES", "name": "Español" },
+                { "code": "EN", "name": "English" },
+                { "code": "PT", "name": "Português" },
+                { "code": "FR", "name": "Français" },
+                { "code": "DE", "name": "Deutsch" },
+                { "code": "IT", "name": "Italiano" },
+                { "code": "NL", "name": "Nederlands" },
+                { "code": "CA", "name": "Català" },
+                { "code": "PL", "name": "Polski" },
+                { "code": "RU", "name": "Русский" },
+                { "code": "AR", "name": "العربية" },
+                { "code": "JA", "name": "日本語" }
+            ],
+            "bullets": [
+                "Cada invitación puede incluir hasta dos idiomas a tu elección",
+                "Cambio sencillo para quien recibe el enlace",
+                "Perfecto para grupos que vienen del exterior"
+            ],
+            "missingLanguageTitle": "¿No ves tu idioma?",
+            "missingLanguageSubtitle": "Trabajamos con cualquier idioma del mundo"
+        },
+        "proceso": {
+            "enabled": true,
+            "id": "proceso",
+            "title": "Cómo funciona",
+            "steps": [
+                {
+                    "number": "01",
+                    "title": "Elegí tu estilo",
+                    "description": "Inspirate en nuestras muestras y contanos qué buscás para tu evento.",
+                    "icon": "sparkles"
+                },
+                {
+                    "number": "02",
+                    "title": "Envianos los datos",
+                    "description": "Fecha, lugar, cronograma, textos y fotos. Te guiamos en lo que falte.",
+                    "icon": "inbox"
+                },
+                {
+                    "number": "03",
+                    "title": "Recibí tu enlace",
+                    "description": "Tu invitación lista para compartir por WhatsApp, redes o mail.",
+                    "icon": "link"
+                }
+            ]
+        },
+        "panel": {
+            "eyebrow": "Panel privado",
+            "title": "Todo bajo control, en un solo lugar",
+            "subtitle": "Detrás de cada invitación hay un espacio solo para vos para organizar la lista y las respuestas.",
+            "panelUrlLabel": "panel.tuinvitacion.com",
+            "imageSrc": "",
+            "imageAlt": "Captura del panel de administración de invitados",
+            "stats": [
+                { "value": "42", "label": "Confirmados" },
+                { "value": "8", "label": "Pendientes" },
+                { "value": "3", "label": "No asisten" }
+            ],
+            "guestListTitle": "Lista de invitados",
+            "guestListTotal": "53 en total",
+            "sampleGuests": [
+                { "name": "María G.", "note": "Vegetariano" },
+                { "name": "Carlos L.", "note": "" },
+                { "name": "Ana M.", "note": "Sin gluten" }
+            ],
+            "features": [
+                {
+                    "title": "Control de asistencia",
+                    "subtitle": "Confirmaciones en tiempo real y visión clara de quién viene.",
+                    "icon": "userCheck"
+                },
+                {
+                    "title": "Intolerancias y menús",
+                    "subtitle": "Anotá alergias y preferencias para coordinar con el catering.",
+                    "icon": "utensils"
+                },
+                {
+                    "title": "Estadísticas claras",
+                    "subtitle": "Seguí el avance de las respuestas de un vistazo.",
+                    "icon": "barChart"
+                }
+            ]
+        },
+        "servicio": {
+            "enabled": true,
+            "title": "Elegí tu plan",
+            "subtitle": "Dos formas de trabajar tu invitación: configurable por bloques o diseño totalmente único.",
+            "showPrices": true,
+            "notice": "Normalmente, sin Entrega Rápida tu invitación puede demorar entre 3 y 5 días hábiles.",
+            "planes": [
+                {
+                    "name": "Premium",
+                    "ctaButton": "planPremium",
+                    "badge": "Más elegido",
+                    "price": "-",
+                    "priceUsd": "",
+                    "description": "Configurá tu invitación paso a paso según lo que realmente necesitás.",
+                    "features": [
+                        "Confirmación de asistencia por WhatsApp",
+                        "Hasta 5 fotos + cuenta regresiva",
+                        "Colores y frases personalizadas",
+                        "4 secciones incluidas (+$4.000 por sección extra)",
+                        "Podés elegir un 2do idioma (+$12.000)"
+                    ]
+                },
+                {
+                    "name": "Diseño único",
+                    "ctaButton": "planDisenoUnico",
+                    "badge": null,
+                    "price": "-",
+                    "priceUsd": "",
+                    "description": "Para casos especiales que necesitan un diseño desde cero, por ejemplo dibujos o acuarelas integrados, video detrás de un texto o fondos florales personalizados. Incluye todas las secciones posibles.",
+                    "features": [
+                        "Todas las secciones disponibles incluidas",
+                        "Segundo idioma incluido",
+                        "Panel de invitados en tiempo real incluido",
+                        "Dominio personalizado (extra opcional)",
+                        "Entrega rápida 24hs (extra opcional)"
+                    ]
+                }
+            ],
+            "sharedFeatures": {
+                "title": "Incluido en ambos planes",
+                "items": [
+                    "Enlace activo por 3 meses post-evento",
+                    "Música de fondo",
+                    "Cuenta regresiva",
+                    "Ubicación con Cómo llegar",
+                    "Itinerario del evento",
+                    "Sección para regalos",
+                    "Valor de tarjeta",
+                    "Colores personalizados",
+                    "Compatible con todos los dispositivos"
+                ]
+            }
+        },
+        "faq": {
+            "enabled": true,
+            "id": "faq",
+            "title": "Preguntas frecuentes",
+            "subtitle": "Lo más importante antes de reservar tu invitación.",
+            "items": [
+                {
+                    "question": "¿Puedo hacer cambios después de recibir la invitación?",
+                    "answer": "Sí. Incluimos una ronda de ajustes para dejarla como querés. Si después querés sumar cambios puntuales, también se pueden coordinar."
+                },
+                {
+                    "question": "¿Cómo comparten el enlace los invitados?",
+                    "answer": "Te entregamos un link único que podés enviar por WhatsApp, redes o mail. No requiere descargar ninguna app."
+                },
+                {
+                    "question": "¿Cuánto tarda la entrega?",
+                    "answer": "El plazo normal es de 3 a 5 días hábiles desde que recibimos todo el material. Si necesitás urgencia, podés sumar entrega rápida en 24 hs."
+                },
+                {
+                    "question": "¿Cómo es la forma de pago?",
+                    "answer": "Reservás con una seña del 50% y el saldo se completa al entregar tu link final."
+                },
+                {
+                    "question": "¿Qué cambia entre confirmar por WhatsApp y sumar panel?",
+                    "answer": "Con WhatsApp recibís los mensajes y gestionás manualmente. Con panel, las confirmaciones se actualizan automáticamente en tu tablero con estados y métricas."
+                },
+                {
+                    "question": "¿Puedo elegir más de 4 secciones o agregar otro idioma?",
+                    "answer": "Sí. En el configurador ves todo paso a paso: el plan Premium incluye 4 secciones y podés sumar extras, además de un segundo idioma."
+                },
+                {
+                    "question": "¿El link vence después del evento?",
+                    "answer": "Sí. El enlace queda activo hasta 3 meses después del evento. Si querés conservarlo de forma permanente, se puede extender con un costo extra por almacenamiento."
+                }
+            ]
+        }
+    }
+}

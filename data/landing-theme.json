@@ -1,0 +1,65 @@
+{
+  "background": "#FDFBF7",
+  "foreground": "#4A3A2F",
+  "cardBg": "#FFFFFF",
+  "cardBorder": "#E6E1D9",
+  "footerBg": "#1A1917",
+  "footerText": "#F7F4EF",
+  "surfaceAlt": "#F3EEE6",
+  "typography": {
+    "headingFont": "'Playfair Display', Georgia, 'Times New Roman', serif",
+    "bodyFont": "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+    "priceFont": "var(--font-landing-price), 'Cormorant Garamond', Georgia, serif",
+    "priceLetterSpacing": "-0.03em"
+  },
+  "text": {
+    "heading": "#4A3A2F",
+    "body": "#5A4A3F",
+    "muted": "#7A6A5D",
+    "caption": "#7A756D",
+    "highlight": "#4A3A2F",
+    "link": "#4A3A2F",
+    "linkUnderline": true,
+    "inverse": "#FDFBF7"
+  },
+  "buttons": {
+    "primaryBg": "#6F5848",
+    "primaryText": "#FFFCF8",
+    "primaryHoverBg": "#7C6453",
+    "secondaryBorder": "#6F5848",
+    "secondaryText": "#6F5848",
+    "secondaryBg": "#FFFCF8",
+    "secondaryHoverBg": "#F3EEE6",
+    "demoBg": "#6F5848",
+    "demoText": "#FDFBF7",
+    "demoOverlayBorder": "rgba(255,252,248,0.55)",
+    "demoOverlayText": "rgba(255,252,248,0.95)",
+    "floatingBg": "#7C4E36",
+    "floatingText": "#FFFCF8",
+    "floatingSubtext": "rgba(255,252,248,0.88)",
+    "floatingBorderRadius": "9999px",
+    "floatingBoxShadow": "0 8px 22px rgba(54, 34, 24, 0.30), 0 16px 36px rgba(54, 34, 24, 0.24), 0 0 0 1px rgba(255,255,255,0.14) inset"
+  },
+  "comparativa": {
+    "paperCardOpacity": 0.7,
+    "paperTotalStrike": "#C62828",
+    "digitalCardBg": "#EDE6DC",
+    "digitalCardBorder": "#7A6554",
+    "digitalBadgeBg": "#1A1917",
+    "digitalBadgeText": "#FFFCF8",
+    "savingsColor": "#5C4D3F",
+    "digitalBulletIconBg": "#D9CFC2",
+    "digitalBulletIconColor": "#4A3F35",
+    "tableHeaderBg": "#F3EEE6",
+    "tablePaperCircleBg": "#FFEBEE",
+    "tablePaperIcon": "#B71C1C",
+    "tableDigitalCircleBg": "#E8F5E9",
+    "tableDigitalIcon": "#1B5E20"
+  },
+  "accents": {
+    "star": "#D4A017",
+    "softGold": "#B8956A",
+    "success": "#2F5F3A",
+    "iconMuted": "#8A847A"
+  }
+}

@@ -1,0 +1,25 @@
+{
+    "usdArs": 1390,
+    "usdRounding": "ceil_per_item",
+    "plans": {
+        "premium": 49000,
+        "disenoUnico": 110000
+    },
+    "configurator": {
+        "extraSection": 5000,
+        "secondLanguage": 12000,
+        "extras": {
+            "panel": 20000,
+            "dominio": 45000,
+            "rapida24h": 25000
+        }
+    },
+    "landing": {
+        "paper": {
+            "design": 260000,
+            "printing130": 160000,
+            "envelopesAndSeals": 120000,
+            "postalShipping": 95000
+        }
+    }
+}

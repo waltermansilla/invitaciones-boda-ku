@@ -1,0 +1,441 @@
+{
+    "_comment": "English copy for /landing. Same structure as landing-tdy.json.",
+
+    "theme": {
+        "_comment_creams": "Same as ES.",
+        "background": "#FDFBF7",
+        "foreground": "#4A3A2F",
+        "cardBg": "#FFFFFF",
+        "cardBorder": "#E6E1D9",
+        "footerBg": "#1A1917",
+        "footerText": "#F7F4EF",
+        "surfaceAlt": "#F3EEE6",
+
+        "typography": {
+            "headingFont": "'Playfair Display', Georgia, 'Times New Roman', serif",
+            "bodyFont": "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+            "priceFont": "var(--font-landing-price), 'Cormorant Garamond', Georgia, serif",
+            "priceLetterSpacing": "-0.03em"
+        },
+
+        "text": {
+            "heading": "#4A3A2F",
+            "body": "#5A4A3F",
+            "muted": "#7A6A5D",
+            "caption": "#7A756D",
+            "highlight": "#4A3A2F",
+            "link": "#4A3A2F",
+            "linkUnderline": true,
+            "inverse": "#FDFBF7"
+        },
+
+        "buttons": {
+            "primaryBg": "#6F5848",
+            "primaryText": "#FFFCF8",
+            "primaryHoverBg": "#7C6453",
+            "secondaryBorder": "#6F5848",
+            "secondaryText": "#6F5848",
+            "secondaryBg": "#FFFCF8",
+            "secondaryHoverBg": "#F3EEE6",
+            "demoBg": "#6F5848",
+            "demoText": "#FDFBF7",
+            "demoOverlayBorder": "rgba(255,252,248,0.55)",
+            "demoOverlayText": "rgba(255,252,248,0.95)",
+            "floatingBg": "#7C4E36",
+            "floatingText": "#FFFCF8",
+            "floatingSubtext": "rgba(255,252,248,0.88)",
+            "floatingBorderRadius": "9999px",
+            "floatingBoxShadow": "0 8px 22px rgba(54, 34, 24, 0.30), 0 16px 36px rgba(54, 34, 24, 0.24), 0 0 0 1px rgba(255,255,255,0.14) inset"
+        },
+
+        "comparativa": {
+            "paperCardOpacity": 0.7,
+            "paperTotalStrike": "#C62828",
+            "digitalCardBg": "#EDE6DC",
+            "digitalCardBorder": "#7A6554",
+            "digitalBadgeBg": "#1A1917",
+            "digitalBadgeText": "#FFFCF8",
+            "savingsColor": "#5C4D3F",
+            "digitalBulletIconBg": "#D9CFC2",
+            "digitalBulletIconColor": "#4A3F35",
+            "tableHeaderBg": "#F3EEE6",
+            "tablePaperCircleBg": "#FFEBEE",
+            "tablePaperIcon": "#B71C1C",
+            "tableDigitalCircleBg": "#E8F5E9",
+            "tableDigitalIcon": "#1B5E20"
+        },
+
+        "accents": {
+            "star": "#D4A017",
+            "softGold": "#B8956A",
+            "success": "#2F5F3A",
+            "iconMuted": "#8A847A"
+        }
+    },
+
+    "header": {
+        "brand": "Momento Único",
+        "nav": [
+            { "label": "Home", "anchor": "#" },
+            { "label": "What's included", "anchor": "#incluye" },
+            { "label": "Paper vs digital", "anchor": "#comparativa" },
+            { "label": "Styles", "anchor": "#estilos" },
+            { "label": "How it works", "anchor": "#proceso" },
+            { "label": "Plans", "anchor": "#planes" }
+        ],
+        "cta": { "label": "Create invitation", "anchor": "#planes" }
+    },
+
+    "floatingCta": {
+        "enabled": true,
+        "line1": "Start here",
+        "line2": "Complete the form to continue",
+        "anchor": "#planes",
+        "hideWhenSectionId": "planes"
+    },
+
+    "whatsapp": {
+        "number": "543456023759",
+        "defaultMessage": "Hi! I'm interested in a digital invitation. I'd like to know more."
+    },
+
+    "ctaButtons": {
+        "heroPrimary": {
+            "text": "Create my invitation",
+            "type": "anchor",
+            "anchor": "#planes"
+        },
+        "heroSecondary": {
+            "text": "View samples",
+            "type": "anchor",
+            "anchor": "#estilos"
+        },
+        "planPremium": {
+            "text": "Choose Premium",
+            "type": "link",
+            "url": "/configurador?plan=premium"
+        },
+        "planUniqueDesign": {
+            "text": "Choose Unique design",
+            "type": "link",
+            "url": "/configurador?plan=diseno-unico&start=idioma"
+        }
+    },
+
+    "sections": {
+        "hero": {
+            "enabled": true,
+            "title": {
+                "line1": "Digital wedding invitations",
+                "line2": "for your",
+                "rotatingWords": [
+                    "Special moment",
+                    "A unique celebration",
+                    "A one-of-a-kind day",
+                    "A unique night",
+                    "A unique story",
+                    "A unique event"
+                ]
+            },
+            "subtitle": "RSVPs, guest list, map, music, and a design tailored to your day. One-time payment, no subscription.",
+            "languagesHint": "Your invitation, multilingual",
+            "reviews": {
+                "enabled": true,
+                "rating": "5.0",
+                "count": 15,
+                "source": "Google Maps",
+                "linkText": "See reviews",
+                "url": "https://maps.google.com/?q=Momento+Único+invitaciones"
+            }
+        },
+        "incluye": {
+            "id": "incluye",
+            "title": "What your digital invitation includes",
+            "subtitle": "Everything you need to wow your guests and keep planning simple.",
+            "listStyle": {
+                "fontSizePx": 13,
+                "gapPx": 16,
+                "iconSize": 18
+            },
+            "imageSrc": "",
+            "imageAlt": "Preview of a sample digital invitation",
+            "items": [
+                { "text": "Custom design tailored to your event", "icon": "palette" },
+                { "text": "RSVP with a clear confirmation message for you", "icon": "mailCheck" },
+                { "text": "Guest list and tracking in one place", "icon": "users" },
+                { "text": "Map, timeline and key info always at hand", "icon": "mapPin" },
+                { "text": "Two languages of your choice for guests abroad", "icon": "languages" }
+            ]
+        },
+        "comparativa": {
+            "id": "comparativa",
+            "title": "Paper vs digital",
+            "lead": "Paper invites are beautiful, but digital gives you a cleaner process, lower costs, and a better guest experience.",
+            "tableHeaders": {
+                "feature": "Feature",
+                "paper": "Paper",
+                "digital": "Digital"
+            },
+            "paper": {
+                "title": "Paper invitation",
+                "guestHint": "Estimated pricing in Argentina · ~120 guests",
+                "lines": [
+                    { "label": "Design", "value": "-" },
+                    { "label": "Printing (130 pcs)", "value": "-" },
+                    { "label": "Envelopes & seals", "value": "-" },
+                    { "label": "Postal shipping", "value": "-" }
+                ],
+                "totalLabel": "Approx. total",
+                "totalValue": "-",
+                "totalValueUsd": ""
+            },
+            "digital": {
+                "title": "Digital invitation",
+                "badge": "Most practical choice",
+                "savingsLine": "Estimated savings compared to paper",
+                "bullets": [
+                    {
+                        "text": "Real savings",
+                        "subtext": "No printing, envelopes or postal shipping",
+                        "icon": "banknote"
+                    },
+                    {
+                        "text": "RSVP dashboard",
+                        "subtext": "Live responses, filters, and clear attendee tracking",
+                        "icon": "layoutDashboard"
+                    },
+                    {
+                        "text": "Always accessible",
+                        "subtext": "Available 24/7 on every guest’s phone",
+                        "icon": "smartphone"
+                    },
+                    {
+                        "text": "Update anytime",
+                        "subtext": "Edit details after sending, no reprinting needed",
+                        "icon": "refreshCw"
+                    }
+                ],
+                "fromLabel": "Digital total",
+                "fromPrice": "-",
+                "fromPriceUsd": "",
+                "footnote": "Paper costs are estimates. Digital is a one-time payment based on your plan."
+            },
+            "tableTitle": "Advantages only digital offers",
+            "tableRows": [
+                { "feature": "Update details after sending", "paper": "No", "digital": "Yes" },
+                { "feature": "RSVP tracking", "paper": "No", "digital": "Yes" },
+                { "feature": "Interactive map & schedule", "paper": "No", "digital": "Yes" },
+                { "feature": "Countdown & ambience", "paper": "No", "digital": "Yes" },
+                { "feature": "Gallery & music", "paper": "No", "digital": "Yes" }
+            ],
+            "ecoNote": "Every digital invitation saves paper and reduces your event’s environmental footprint."
+        },
+        "estilos": {
+            "id": "estilos",
+            "eyebrow": "Catalogue",
+            "title": "Choose your style, make it yours",
+            "subtitle": "Explore real examples. Each one sets a different vibe.",
+            "demoButtonText": "View demo",
+            "noStylePrompt": "Don’t see your style?",
+            "noStyleCta": "Tell us your idea",
+            "noStyleWhatsappMessage": "Hi! I have an idea for my invitation and I’d love to share it with you.",
+            "items": [
+                {
+                    "image": "",
+                    "titulo": "Anto & Walter",
+                    "descripcion": "Warm elegance and premium details.",
+                    "href": "/m/boda/anto-walter"
+                },
+                {
+                    "image": "",
+                    "titulo": "Meliza & Iván",
+                    "descripcion": "Essential style, easy to share.",
+                    "href": "/m/boda/meliza-ivan"
+                },
+                {
+                    "image": "",
+                    "titulo": "Valentina",
+                    "descripcion": "Quinceañera with personality and colour.",
+                    "href": "/m/xv/valentina"
+                }
+            ]
+        },
+        "idiomas": {
+            "title": "Your invitation in any language",
+            "subtitle": "For your invitation, you can add a second language and guests can switch with one tap.",
+            "globeImageSrc": "",
+            "languages": [
+                { "code": "ES", "name": "Español" },
+                { "code": "EN", "name": "English" },
+                { "code": "PT", "name": "Português" },
+                { "code": "FR", "name": "Français" },
+                { "code": "DE", "name": "Deutsch" },
+                { "code": "IT", "name": "Italiano" },
+                { "code": "NL", "name": "Nederlands" },
+                { "code": "CA", "name": "Català" },
+                { "code": "PL", "name": "Polski" },
+                { "code": "RU", "name": "Русский" },
+                { "code": "AR", "name": "العربية" },
+                { "code": "JA", "name": "日本語" }
+            ],
+            "bullets": [
+                "Each invitation can include up to two languages",
+                "Guests can switch languages in one tap",
+                "Great for international guest lists"
+            ],
+            "missingLanguageTitle": "Don’t see your language?",
+            "missingLanguageSubtitle": "We work with any language in the world"
+        },
+        "proceso": {
+            "enabled": true,
+            "id": "proceso",
+            "title": "How it works",
+            "steps": [
+                {
+                    "number": "01",
+                    "title": "Choose your style",
+                    "description": "Browse our samples and tell us what you’re looking for.",
+                    "icon": "sparkles"
+                },
+                {
+                    "number": "02",
+                    "title": "Send us the details",
+                    "description": "Date, venue, timeline, wording, and photos. We’ll guide you through anything missing.",
+                    "icon": "inbox"
+                },
+                {
+                    "number": "03",
+                    "title": "Get your link",
+                    "description": "Your invitation ready to share on WhatsApp, social or email.",
+                    "icon": "link"
+                }
+            ]
+        },
+        "panel": {
+            "eyebrow": "Private dashboard",
+            "title": "Everything under control, in one place",
+            "subtitle": "Every invitation includes a private dashboard to manage your guest list and responses.",
+            "panelUrlLabel": "panel.yourinvitation.com",
+            "imageSrc": "",
+            "imageAlt": "Guest admin panel screenshot",
+            "stats": [
+                { "value": "42", "label": "Confirmed" },
+                { "value": "8", "label": "Pending" },
+                { "value": "3", "label": "Declined" }
+            ],
+            "guestListTitle": "Guest list",
+            "guestListTotal": "53 total",
+            "sampleGuests": [
+                { "name": "María G.", "note": "Vegetarian" },
+                { "name": "Carlos L.", "note": "" },
+                { "name": "Ana M.", "note": "Gluten-free" }
+            ],
+            "features": [
+                {
+                    "title": "Attendance control",
+                    "subtitle": "Real-time confirmations with a clear view of who’s coming.",
+                    "icon": "userCheck"
+                },
+                {
+                    "title": "Dietary restrictions",
+                    "subtitle": "Track allergies and meal preferences for easier catering coordination.",
+                    "icon": "utensils"
+                },
+                {
+                    "title": "Clear stats",
+                    "subtitle": "Track responses at a glance.",
+                    "icon": "barChart"
+                }
+            ]
+        },
+        "servicio": {
+            "enabled": true,
+            "title": "Choose your plan",
+            "subtitle": "Two ways to build your invitation: modular and customizable, or fully bespoke.",
+            "showPrices": true,
+            "notice": "Typical turnaround: 3–5 business days once we have all materials.",
+            "planes": [
+                {
+                    "name": "Premium",
+                    "ctaButton": "planPremium",
+                    "badge": "Most popular",
+                    "price": "-",
+                    "priceUsd": "",
+                    "description": "Build your invitation step by step around what you actually need.",
+                    "features": [
+                        "RSVP via WhatsApp",
+                        "Up to 5 photos + countdown",
+                        "Custom colours and custom phrases",
+                        "4 sections included (+ARS 4,000 per extra section)",
+                        "Optional second language (+ARS 12,000)"
+                    ]
+                },
+                {
+                    "name": "Unique Design",
+                    "ctaButton": "planUniqueDesign",
+                    "badge": null,
+                    "price": "-",
+                    "priceUsd": "",
+                    "description": "For special requests that need a true from-scratch build, for example integrated drawings or watercolor artwork, a video behind text, or custom floral text backgrounds. It includes all available sections.",
+                    "features": [
+                        "All available sections included",
+                        "Second language included",
+                        "Real-time guest dashboard included",
+                        "Custom domain (optional add-on)",
+                        "24-hour rush delivery (optional add-on)"
+                    ]
+                }
+            ],
+            "sharedFeatures": {
+                "title": "Included in both plans",
+                "items": [
+                    "Link active for 3 months after the event",
+                    "Background music",
+                    "Countdown",
+                    "Location with directions",
+                    "Event itinerary",
+                    "Gifts section",
+                    "Gift amount section",
+                    "Custom colours",
+                    "Works on all devices"
+                ]
+            }
+        },
+        "faq": {
+            "enabled": true,
+            "id": "faq",
+            "title": "Frequently asked questions",
+            "subtitle": "Quick answers before you book your invitation.",
+            "items": [
+                {
+                    "question": "Can I request changes after I receive the invitation?",
+                    "answer": "Yes. One revision round is included so everything feels right. If you need small additional tweaks, we can coordinate them."
+                },
+                {
+                    "question": "How do guests open and share the invitation?",
+                    "answer": "You receive a unique link you can share on WhatsApp, social media, or email. No app download is required."
+                },
+                {
+                    "question": "What is the delivery time?",
+                    "answer": "Standard delivery is 3 to 5 business days once we have all your content. If needed, you can add 24-hour rush delivery."
+                },
+                {
+                    "question": "How does payment work?",
+                    "answer": "You reserve your date with a 50% deposit, and the remaining balance is paid when your final link is delivered."
+                },
+                {
+                    "question": "What is the difference between WhatsApp RSVP and the dashboard add-on?",
+                    "answer": "With WhatsApp RSVP, confirmations arrive by message and you track them manually. With the dashboard, responses update automatically with statuses and live totals."
+                },
+                {
+                    "question": "Can I add more than 4 sections or another language?",
+                    "answer": "Yes. The configurator shows everything step by step: Premium includes 4 sections, and you can add extra sections plus a second language."
+                },
+                {
+                    "question": "Does my link expire after the event?",
+                    "answer": "Yes. Your link stays active for up to 3 months after the event. If you want to keep it permanently, we can extend it for an extra storage fee."
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,58 @@
+/** Globo terraqueo en gris (inline SVG) — evita fallos de Next/Image con .svg en iOS Safari. */
+
+export function GlobeEarthSvg({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 256 256"
+      fill="none"
+      className={className}
+      aria-hidden
+    >
+      <defs>
+        <radialGradient id="ldyGlobeOcean" cx="30%" cy="28%" r="75%">
+          <stop offset="0%" stopColor="#d8d4cc" />
+          <stop offset="50%" stopColor="#a9a59d" />
+          <stop offset="100%" stopColor="#6f6b65" />
+        </radialGradient>
+        <linearGradient id="ldyGlobeShade" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.28" />
+          <stop offset="45%" stopColor="#ffffff" stopOpacity="0" />
+          <stop offset="100%" stopColor="#1a1816" stopOpacity="0.22" />
+        </linearGradient>
+        <clipPath id="ldyGlobeClip">
+          <circle cx="128" cy="128" r="104" />
+        </clipPath>
+      </defs>
+      <circle cx="128" cy="128" r="104" fill="url(#ldyGlobeOcean)" />
+      <g clipPath="url(#ldyGlobeClip)">
+        <circle cx="128" cy="128" r="104" fill="url(#ldyGlobeShade)" />
+        <g fill="#4a4744" opacity={0.94}>
+          <path d="M38 72c12-8 28-6 40 4 4 14-2 28-14 36-8 4-18 2-26-4-10-8-12-22 0-36zm8 38c6 10 18 14 28 10 8-4 12-14 8-24-4-8-14-12-24-10-8 2-14 12-12 24z" />
+          <path d="M58 118c8 2 14 10 16 18-4 8-14 10-22 6-6-4-8-14 6-24zm-4 28c10 4 18 14 20 26-8 6-20 4-28-4-4-8 0-18 8-22z" />
+          <path d="M72 158c14 4 24 18 28 34 4 20-4 40-18 52-10 8-24 6-34-6-8-12-6-30 8-42 10-8 10-22 16-38z" />
+          <path d="M118 36c10-4 22 0 28 10 4 12-4 24-16 28-10 2-20-4-24-14-2-10 4-20 12-24z" />
+          <path d="M138 58c14 2 26 12 30 26-2 12-14 20-26 18-12-2-20-14-18-26 2-10 8-16 14-18zm-8 32c8 6 18 4 24-4 8 8 6 22-4 28-10 4-22-2-26-12-2-8 2-14 6-12z" />
+          <path d="M142 108c18 2 32 16 36 36 4 24-6 48-22 62-12 10-28 8-40-6-10-14-8-36 4-50 8-10 10-24 22-42z" />
+          <path d="M178 88c12 4 22 16 24 30-4 14-18 22-32 18-12-4-18-18-12-32 4-10 12-16 20-16z" />
+          <path d="M198 118c10 8 14 22 10 36-6 14-20 20-34 14-12-6-16-22-8-36 6-10 18-16 32-14z" />
+          <path d="M188 72c16 2 30 14 34 32 4 18-6 36-22 44-14 6-30 0-38-14-6-14-2-32 12-42 6-4 10-18 14-20z" />
+          <path d="M168 44c20-2 38 8 48 26 8 16 4 36-10 46-14 8-32 4-42-10-8-12-6-30 4-42 4-6 0-16 0-20z" />
+          <path d="M208 168c12 2 22 12 24 24 2 14-8 26-22 28-12 2-24-8-26-22-2-12 8-24 24-30z" />
+          <path d="M232 96c4 6 2 14-4 18-6 2-12-2-10-10 2-6 8-10 14-8z" />
+          <path d="M224 118c3 5 1 12-4 14-6 2-10-4-8-10 2-4 8-6 12-4z" />
+          <path d="M124 52c4 4 4 12-2 14-6 2-10-4-8-10 2-4 6-6 10-4z" />
+          <path d="M168 152c4 2 6 10 4 18-2 8-8 12-12 8-4-4-4-14 4-22 2-2 2-4 4-4z" />
+        </g>
+        <g fill="none" stroke="#8a8680" strokeOpacity={0.35} strokeWidth={0.6}>
+          <ellipse cx="128" cy="128" rx="104" ry="36" />
+          <ellipse cx="128" cy="128" rx="104" ry="70" />
+          <ellipse cx="128" cy="128" rx="40" ry="104" />
+          <ellipse cx="128" cy="128" rx="70" ry="104" />
+          <path d="M24 128h208" />
+        </g>
+      </g>
+      <circle cx="128" cy="128" r="104" stroke="#a39e96" strokeWidth={1.2} fill="none" opacity={0.55} />
+    </svg>
+  )
+}

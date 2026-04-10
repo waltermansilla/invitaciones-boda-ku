@@ -31,7 +31,6 @@ const brandConfig = (landingConfig as Record<string, unknown>).brand as
 const BRAND_NAME = brandConfig?.name || "Momento Único";
 const BRAND_FONT = brandConfig?.font || "font-serif";
 const BRAND_SIZE = brandConfig?.size || "text-lg";
-const BRAND_STYLE = brandConfig?.style || "italic";
 const BRAND_ICON: string | null = brandConfig?.icon || null;
 const ICON_SIZE = brandConfig?.iconSize || 30;
 
@@ -96,9 +95,10 @@ const iconMap: Record<string, () => React.JSX.Element> = {
  * Los datos de marca se leen desde landing.json -> brand
  */
 export default function FooterSection() {
+    const currentYear = new Date().getFullYear();
     return (
-        <footer className="bg-primary px-6 py-16 text-center">
-            <div className="mb-6 flex items-center justify-center gap-7">
+        <footer className="bg-primary px-6 py-14 text-center md:py-16">
+            <div className="mb-6 flex items-center justify-center gap-6">
                 {SOCIAL_LINKS.map((link) => {
                     const Icon = iconMap[link.icon];
                     if (!Icon) return null;
@@ -108,7 +108,7 @@ export default function FooterSection() {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex min-h-[48px] min-w-[48px] items-center justify-center text-primary-foreground/70 transition-opacity hover:opacity-60"
+                            className="inline-flex min-h-[46px] min-w-[46px] items-center justify-center text-primary-foreground/78 transition-opacity hover:opacity-100"
                             aria-label={link.label}
                         >
                             <Icon />
@@ -118,7 +118,8 @@ export default function FooterSection() {
             </div>
             <a
                 href="/"
-                className={`${BRAND_FONT} ${BRAND_SIZE} ${BRAND_STYLE === "italic" ? "italic" : ""} inline-flex items-center gap-2 tracking-[0.1em] text-primary-foreground/40 transition-opacity hover:text-primary-foreground/60`}
+                className={`${BRAND_FONT} ${BRAND_SIZE} inline-flex items-center gap-2 font-normal not-italic tracking-[0.02em] text-primary-foreground/92 transition-opacity hover:opacity-85`}
+                style={{ fontFamily: "var(--font-landing-hero), var(--font-landing-price), Georgia, serif" }}
             >
                 {BRAND_ICON && (
                     <img
@@ -129,6 +130,10 @@ export default function FooterSection() {
                 )}
                 {BRAND_NAME}
             </a>
+            <div className="mx-auto mt-5 h-px w-full max-w-sm bg-primary-foreground/14" />
+            <p className="mt-4 text-[11px] tracking-[0.08em] text-primary-foreground/62 md:text-xs">
+                © {currentYear} {BRAND_NAME}. Todos los derechos reservados.
+            </p>
         </footer>
     );
 }
