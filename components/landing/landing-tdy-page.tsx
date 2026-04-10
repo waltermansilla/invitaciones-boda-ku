@@ -2309,14 +2309,30 @@ export default function LandingTdyPage({
   dataEs,
   dataEn,
   mode = "landing",
+  initialLocale = "es",
 }: {
   dataEs: LandingTdyData
   dataEn?: LandingTdyData
   mode?: "landing" | "landing2"
+  initialLocale?: LandingTdyLocale
 }) {
-  const [locale, setLocale] = useState<LandingTdyLocale>("es")
+  const [locale, setLocale] = useState<LandingTdyLocale>(initialLocale)
   const baseData = locale === "en" && dataEn ? dataEn : dataEs
-  const data = useMemo(() => applyPricingToLandingData(baseData, locale), [baseData, locale])
+  const data = useMemo(() => {
+    const pricedData = applyPricingToLandingData(baseData, locale)
+    if (mode !== "landing2") return pricedData
+
+    // In landing2, mark configurador links so "close" can return here.
+    const next = structuredClone(pricedData) as LandingTdyData
+    Object.values(next.ctaButtons).forEach((btn) => {
+      if (btn.type !== "link" || !btn.url?.startsWith("/configurador")) return
+      const [path, query = ""] = btn.url.split("?")
+      const params = new URLSearchParams(query)
+      params.set("from", "landing2")
+      btn.url = `${path}?${params.toString()}`
+    })
+    return next
+  }, [baseData, locale, mode])
   const theme = useMemo(() => mergeTheme(landingThemeData as LandingTdyTheme), [])
   const themeAlt = useMemo<LandingTdyTheme>(
     () => ({

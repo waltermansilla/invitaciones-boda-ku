@@ -210,6 +210,8 @@ function WhatsAppHref(number: string, message: string) {
 function ConfiguradorPageContent() {
     const params = useSearchParams();
     const uiLang = params.get("lang") === "en" ? "en" : "es";
+    const fromLanding2 = params.get("from") === "landing2";
+    const closeHref = fromLanding2 ? `/landing2?lang=${uiLang}` : "/landing";
     const rawPlan = params.get("plan");
     const plan: PlanKey =
         rawPlan === "diseno-unico" ? "diseno-unico" : "premium";
@@ -418,7 +420,7 @@ function ConfiguradorPageContent() {
                     className={`mx-auto grid max-w-3xl grid-cols-3 items-center gap-2 py-3 ${PAGE_GUTTER}`}
                 >
                     <Link
-                        href="/landing"
+                        href={closeHref}
                         className="justify-self-start text-sm font-medium text-[#6A5C52]"
                     >
                         {t.headerClose}
