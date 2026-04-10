@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
     Baby,
@@ -207,7 +207,7 @@ function WhatsAppHref(number: string, message: string) {
     return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
-export default function ConfiguradorPage() {
+function ConfiguradorPageContent() {
     const params = useSearchParams();
     const uiLang = params.get("lang") === "en" ? "en" : "es";
     const rawPlan = params.get("plan");
@@ -1367,5 +1367,13 @@ export default function ConfiguradorPage() {
                 </div>
             </footer>
         </main>
+    );
+}
+
+export default function ConfiguradorPage() {
+    return (
+        <Suspense fallback={null}>
+            <ConfiguradorPageContent />
+        </Suspense>
     );
 }
