@@ -3,7 +3,7 @@ import { promises as fs } from "fs"
 import path from "path"
 import type { AdminData } from "@/lib/admin-types"
 
-const DATA_PATH = path.join(process.cwd(), "data", "admin.json")
+const DATA_PATH = path.join(process.cwd(), "data", "admin", "admin.json")
 
 // POST - Importar datos desde Excel
 export async function POST(request: NextRequest) {

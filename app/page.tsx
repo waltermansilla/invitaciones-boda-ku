@@ -3,8 +3,8 @@ import { Cormorant_Garamond, Lora } from "next/font/google";
 import LandingPageHome, {
     type LandingData,
 } from "@/components/landing/landing-page-home";
-import landingHomeData from "@/data/landing-2.json";
-import landingHomeDataEn from "@/data/landing-2.en.json";
+import landingHomeData from "@/data/landing/landing-2.json";
+import landingHomeDataEn from "@/data/landing/landing-2.en.json";
 
 const landingPriceFont = Cormorant_Garamond({
     subsets: ["latin"],

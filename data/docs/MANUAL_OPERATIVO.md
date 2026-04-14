@@ -7,8 +7,8 @@
 ### Paso 1: Crear la invitacion
 
 1. Duplica el template correspondiente:
-   - Boda: `data/_TEMPLATE_BODA.json` -> `data/clientes/boda/[slug].json`
-   - XV: `data/_TEMPLATE_XV.json` -> `data/clientes/xv/[slug].json`
+   - Boda: `data/templates/_TEMPLATE_BODA.json` -> `data/clientes/boda/[slug].json`
+   - XV: `data/templates/_TEMPLATE_XV.json` -> `data/clientes/xv/[slug].json`
 
 2. Edita el JSON con los datos del cliente
 
@@ -200,15 +200,25 @@ Para obtener el token:
 
 ```
 data/
-  _TEMPLATE_BODA.json      <- Template de referencia para bodas
-  _TEMPLATE_XV.json        <- Template de referencia para XV
-  MANUAL_OPERATIVO.md      <- Este archivo
+  README.md                <- Indice de carpetas (ver raiz de data/)
   clientes/
     boda/
       juan-maria.json      <- Invitacion de boda
       otra-pareja.json
     xv/
       valentina.json       <- Invitacion de XV
+  landing/                 <- Landings comerciales (/, /landing)
+  config/
+    pricing.json           <- Precios globales
+  templates/
+    _TEMPLATE_BODA.json    <- Template de referencia para bodas
+    _TEMPLATE_XV.json      <- Template de referencia para XV
+  reference/
+    wedding-config.json    <- Ejemplo legacy (referencia)
+  admin/
+    admin.json             <- Panel admin (API)
+  docs/
+    MANUAL_OPERATIVO.md    <- Este archivo
 
 public/
   clientes/                <- Imagenes ANTES de migrar a Blob

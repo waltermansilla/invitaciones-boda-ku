@@ -13,8 +13,24 @@ interface PanelData { evento: Evento; invitados: Invitado[]; stats: { confirmado
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
-  const json = await res.json()
-  if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`)
+  const raw = await res.text()
+  let json: Record<string, unknown> | null = null
+  try {
+    json = raw ? (JSON.parse(raw) as Record<string, unknown>) : null
+  } catch {
+    throw new Error(
+      !res.ok
+        ? `Error HTTP ${res.status}. El servidor no devolvió JSON (¿Supabase o .env.local?).`
+        : "Respuesta del servidor no es JSON válido.",
+    )
+  }
+  if (!res.ok) {
+    const msg =
+      (typeof json?.error === "string" && json.error) ||
+      (typeof json?.message === "string" && json.message) ||
+      `HTTP ${res.status}`
+    throw new Error(msg)
+  }
   return json
 }
 const filterToEstado: Record<string, string> = { confirmados: "confirmado", pendientes: "pendiente", no_asiste: "no_asiste" }

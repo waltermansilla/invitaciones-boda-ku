@@ -1,6 +1,6 @@
 "use client";
 
-import landingConfig from "@/data/landing-1.json";
+import landingConfig from "@/data/landing/landing-1.json";
 
 /* ───────────────────────────────────────────────
  * DATOS DE MARCA - Se leen desde landing-1.json (seccion "brand").

@@ -25,8 +25,8 @@ import {
     Users,
     Wallet,
 } from "lucide-react";
-import landingHomeData from "@/data/landing-2.json";
-import pricingData from "@/data/pricing.json";
+import landingHomeData from "@/data/landing/landing-2.json";
+import pricingData from "@/data/config/pricing.json";
 import {
     EXTRA_SECTION_PRICE,
     PRESET_LANGUAGES,

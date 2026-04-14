@@ -1,4 +1,4 @@
-import pricingData from "@/data/pricing.json";
+import pricingData from "@/data/config/pricing.json";
 
 export type ConfiguratorLang = "es" | "en";
 

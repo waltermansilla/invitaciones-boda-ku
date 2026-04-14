@@ -44,7 +44,7 @@ import {
     type LandingLocale,
 } from "@/components/landing/landing-header-home";
 import FooterSection from "@/components/wedding/footer-section";
-import pricingData from "@/data/pricing.json";
+import pricingData from "@/data/config/pricing.json";
 
 /** sessionStorage: posición vertical al abrir /configurador (restaurar al volver). */
 const MU_LANDING_RETURN_SCROLL_KEY = "mu-landing-return-scroll";

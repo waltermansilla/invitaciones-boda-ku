@@ -1,9 +1,14 @@
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
 // Cliente simple para rutas de API (sin cookies)
 export function createApiClient() {
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const urlRaw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()
+  if (!urlRaw || !key) {
+    throw new Error(
+      "Faltan NEXT_PUBLIC_SUPABASE_URL o NEXT_PUBLIC_SUPABASE_ANON_KEY (revisá .env.local).",
+    )
+  }
+  const url = /^https?:\/\//i.test(urlRaw) ? urlRaw : `https://${urlRaw}`
+  return createSupabaseClient(url, key)
 }

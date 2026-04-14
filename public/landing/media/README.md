@@ -1,4 +1,4 @@
-# Medios de la landing home (ruta `/`, datos en `data/landing-2.json`)
+# Medios de la landing home (ruta `/`, datos en `data/landing/landing-2.json`)
 
 Todo lo que pongas acá se sirve desde la raíz del sitio: rutas que empiezan con `/landing/media/`.
 

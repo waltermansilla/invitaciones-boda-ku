@@ -8,7 +8,7 @@ Esta guia explica TODO el proyecto: como esta armado, como funciona por dentro,
 que hace cada archivo, como se conectan entre si y como editar cualquier cosa
 sin romper nada. Es la referencia definitiva antes de tocar cualquier codigo.
 
-Si ya leiste el MANUAL_OPERATIVO_BASICO_V1.md (que es mas operativo y rapido),
+Si ya leiste el docs/MANUAL_OPERATIVO_BASICO_V1.md (que es mas operativo y rapido),
 esta guia va mas profundo y cubre la arquitectura completa.
 
 
@@ -200,10 +200,16 @@ PARTE 2 - ESTRUCTURA DE CARPETAS Y ARCHIVOS
 │   └── ui/                           <- Componentes base de shadcn (no tocar)
 │
 ├── data/
-│   ├── landing.json                  <- Configuracion COMPLETA de la landing
-│   ├── wedding-config.json           <- Archivo legacy (no se usa)
-│   ├── _TEMPLATE_BODA.json           <- Plantilla de referencia con TODAS las secciones de boda
-│   ├── _TEMPLATE_XV.json             <- Plantilla de referencia con TODAS las secciones de XV
+│   ├── README.md                     <- Indice de carpetas
+│   ├── landing/                      <- Landings comerciales (home y clasica)
+│   ├── config/
+│   │   └── pricing.json              <- Precios globales
+│   ├── templates/                    <- Plantillas para copiar a clientes/
+│   ├── reference/
+│   │   └── wedding-config.json       <- Ejemplo legacy (referencia)
+│   ├── admin/
+│   │   └── admin.json                <- Panel admin (API)
+│   ├── docs/                         <- Manuales (README-landing, etc.)
 │   └── clientes/
 │       ├── boda/
 │       │   └── anto-walter.json      <- Cliente real: boda de Anto & Walter
@@ -220,6 +226,8 @@ PARTE 2 - ESTRUCTURA DE CARPETAS Y ARCHIVOS
 │   ├── config-context.tsx            <- Context de React para pasar el config a todos
 │   └── utils.ts                      <- Funcion cn() para clases condicionales
 │
+├── scripts/                          <- Scripts TS/SQL (ej: migrate-to-blob.ts)
+│
 ├── public/
 │   ├── manifest.json                 <- Manifest PWA (nombre, icono en pantalla inicio)
 │   └── clientes/
@@ -233,9 +241,11 @@ PARTE 2 - ESTRUCTURA DE CARPETAS Y ARCHIVOS
 ├── styles/
 │   └── globals.css                   <- CSS base de shadcn (NO es el que usa la app)
 │
-├── MANUAL_OPERATIVO_BASICO_V1.md     <- Manual operativo rapido
-├── GUIA_COMPLETA_DESARROLLADOR.txt   <- Esta guia (la que estas leyendo)
-├── package.json                      <- Dependencias y scripts
+├── docs/                             <- Manuales de proyecto (esta carpeta)
+│   ├── MANUAL_OPERATIVO_BASICO_V1.md   <- Manual operativo rapido
+│   └── GUIA_COMPLETA_DESARROLLADOR.txt <- Guia completa (arquitectura)
+│
+├── package.json                      <- Dependencias y scripts npm
 ├── next.config.mjs                   <- Configuracion de Next.js
 ├── tsconfig.json                     <- Configuracion de TypeScript
 └── postcss.config.mjs                <- Configuracion de PostCSS
@@ -278,7 +288,7 @@ PARTE 3 - COMO FUNCIONA EL RUTEO
 
   URL                          Que carga                Fuente de datos
   ─────────────────────────    ─────────────────────    ────────────────────
-  /                            Landing comercial        data/landing.json
+  /                            Landing comercial        data/landing/landing-2.json
   /boda/anto-walter            Invitacion REAL           data/clientes/boda/anto-walter.json
   /m/boda/anto-walter          Invitacion MUESTRA        Mismo JSON, isMuestra=true
   /xv/valentina                Invitacion REAL           data/clientes/xv/valentina.json
@@ -860,7 +870,7 @@ PARTE 7 - LA LANDING COMERCIAL
 7.1 COMO FUNCIONA
 -------------------
 
-  La landing se configura 100% desde data/landing.json.
+  La landing se configura 100% desde data/landing/landing-2.json.
   El componente esta en components/landing/landing-page.tsx.
   Se renderiza en app/page.tsx.
 
@@ -1033,7 +1043,7 @@ PARTE 8 - IMAGENES Y ARCHIVOS ESTATICOS
   │                            │ Nombre exacto de Google Fonts            │
   │                            │ Ej: "Cormorant Garamond"                │
   ├────────────────────────────┼──────────────────────────────────────────┤
-  │ Colores de la landing      │ data/landing.json -> theme               │
+  │ Colores de la landing      │ data/landing/landing-2.json -> theme               │
   │                            │ background, foreground, accent, etc.     │
   ├────────────────────────────┼──────────────────────────────────────────┤
   │ Colores de cada invitacion │ JSON del cliente -> theme.colors         │
@@ -1161,8 +1171,8 @@ PARTE 11 - COMO CREAR UN NUEVO CLIENTE (PASO A PASO EXTENDIDO)
 ================================================================================
 
   1. ELEGIR EL TEMPLATE
-     - Para boda: copiar data/_TEMPLATE_BODA.json
-     - Para XV: copiar data/_TEMPLATE_XV.json
+     - Para boda: copiar data/templates/_TEMPLATE_BODA.json
+     - Para XV: copiar data/templates/_TEMPLATE_XV.json
 
   2. RENOMBRAR Y UBICAR
      - Destino: data/clientes/[tipo]/[slug].json
@@ -1190,7 +1200,7 @@ PARTE 11 - COMO CREAR UN NUEVO CLIENTE (PASO A PASO EXTENDIDO)
      - Probar en celular real (con ngrok o red local)
 
   6. AGREGAR A LA LANDING (OPCIONAL)
-     - Editar data/landing.json > sections.muestras.items
+     - Editar data/landing/landing-2.json > sections.muestras.items
      - Agregar: { tipo, slug, titulo, etiqueta, accentColor }
 
   7. SUBIR A PRODUCCION
@@ -1242,7 +1252,7 @@ PARTE 13 - TIPS PRACTICOS
 ----------------------------------
   - Todos los componentes de wedding/ sirven para boda Y XV
   - Para un tipo de evento nuevo (ej: cumple, bautismo):
-    1. Crear data/_TEMPLATE_CUMPLE.json
+    1. Crear data/templates/_TEMPLATE_CUMPLE.json
     2. Poner los clientes en data/clientes/cumple/slug.json
     3. Listo. El ruteo lo detecta automaticamente.
   - No hay que tocar ningun componente (salvo que necesites una seccion nueva)
@@ -1319,7 +1329,7 @@ Algunas cosas no estan en el JSON porque son globales o de marca. Aca como edita
 
   Para la landing:
     - Archivo: app/layout.tsx (metadata export)
-    - O en data/landing.json si hay soporte de metadata
+    - O en data/landing/landing-2.json si hay soporte de metadata
 
 13B.4 TEXTOS DE UI DENTRO DE COMPONENTES
 -----------------------------------------
@@ -1383,9 +1393,9 @@ PARTE 14 - ARCHIVOS QUE NO TOCAR (Y POR QUE)
   components/theme-provider.tsx     Provider de shadcn. No se usa activamente.
   hooks/use-mobile.ts               Hook de shadcn. No se usa activamente.
   hooks/use-toast.ts                Hook de shadcn. No se usa activamente.
-  data/_TEMPLATE_BODA.json          Son de referencia. No editarlos.
-  data/_TEMPLATE_XV.json            Son de referencia. No editarlos.
-  data/wedding-config.json          Archivo legacy. No se usa.
+  data/templates/_TEMPLATE_BODA.json    Son de referencia. No editarlos.
+  data/templates/_TEMPLATE_XV.json      Son de referencia. No editarlos.
+  data/reference/wedding-config.json    Archivo legacy. No se usa.
 
 
 ================================================================================
@@ -1438,5 +1448,5 @@ Con esta guia, deberias poder:
   - No romper nada
 
 Si despues de leer esto todavia tenes dudas sobre algo especifico, consulta
-el MANUAL_OPERATIVO_BASICO_V1.md para los pasos operativos rapidos, o pregunta
+el docs/MANUAL_OPERATIVO_BASICO_V1.md para los pasos operativos rapidos, o pregunta
 directamente.

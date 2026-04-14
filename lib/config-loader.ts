@@ -13,6 +13,8 @@ interface EventConfig {
     enabled?: boolean
     panelId?: string
     fechaEvento?: string
+    theme?: Record<string, unknown>
+    labels?: Record<string, unknown>
   }
   slug?: string
   tipo?: "boda" | "xv" | "baby" | "cumple" | "evento"
@@ -61,6 +63,8 @@ export function getEventDataFromConfig(config: EventConfig) {
     tipo_evento: tipo,
     nombre_evento: nombreEvento,
     fecha_evento: config.rsvpPanel?.fechaEvento || null,
-    slug: config.slug
+    slug: config.slug,
+    panel_theme: config.rsvpPanel?.theme ?? null,
+    panel_labels: config.rsvpPanel?.labels ?? null,
   }
 }

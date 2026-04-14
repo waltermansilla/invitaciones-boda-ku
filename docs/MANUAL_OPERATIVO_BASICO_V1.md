@@ -35,7 +35,7 @@ Un solo proyecto sirve para **todos los clientes y tipos de evento** (bodas, XV,
 - La URL se genera automaticamente: `data/clientes/boda/anto-walter.json` -> `tudominio.com/boda/anto-walter`
 - Cada cliente tiene **dos versiones automaticas**: la real (`/boda/slug`) y la muestra (`/m/boda/slug`).
 - **No se toca codigo para crear un nuevo cliente.** Solo se agrega un JSON y una carpeta de imagenes.
-- La landing comercial se configura desde `data/landing.json`.
+- La landing comercial se configura desde `data/landing/landing-2.json`.
 - El footer de marca es global y se edita en un solo archivo.
 
 ---
@@ -44,7 +44,7 @@ Un solo proyecto sirve para **todos los clientes y tipos de evento** (bodas, XV,
 
 ```
 app/
-  page.tsx                     <- Landing comercial (lee de landing.json)
+  page.tsx                     <- Landing comercial (lee data/landing/landing-2.json)
   layout.tsx                   <- Layout raiz (fuentes, metadata)
   globals.css                  <- Estilos globales, variables CSS
   [tipo]/[slug]/               <- Ruta REAL de cada cliente (/boda/anto-walter)
@@ -64,9 +64,12 @@ components/
     hero-section.tsx, gallery-section.tsx, rsvp-section.tsx, etc.
 
 data/
-  landing.json                 <- Configuracion completa de la landing
-  _TEMPLATE_BODA.json          <- Referencia con TODAS las secciones posibles para boda
-  _TEMPLATE_XV.json            <- Referencia con TODAS las secciones posibles para XV
+  README.md                    <- Indice de carpetas
+  landing/                     <- Landings comerciales (landing-2.json = home /)
+  config/pricing.json          <- Precios globales (landing + configurador)
+  templates/                   <- Plantillas para copiar a clientes/
+  admin/admin.json             <- Panel admin (API)
+  docs/                        <- Manuales operativos
   clientes/
     boda/
       anto-walter.json         -> /boda/anto-walter (real) y /m/boda/anto-walter (muestra)
@@ -83,7 +86,7 @@ public/
 
 | URL                   | Que carga          | Fuente de datos                       |
 | --------------------- | ------------------ | ------------------------------------- |
-| `/`                   | Landing comercial  | `data/landing.json`                   |
+| `/`                   | Landing comercial  | `data/landing/landing-2.json`         |
 | `/boda/anto-walter`   | Invitacion real    | `data/clientes/boda/anto-walter.json` |
 | `/m/boda/anto-walter` | Invitacion muestra | Mismo JSON, con `isMuestra=true`      |
 | `/xv/valentina`       | Invitacion real    | `data/clientes/xv/valentina.json`     |
@@ -136,8 +139,8 @@ Cada vez que guardas un archivo (JSON, `.tsx`, `.css`), el navegador se actualiz
 
 ### Paso 1: Elegir el template
 
-- Para **boda**: copiar `data/_TEMPLATE_BODA.json`
-- Para **XV**: copiar `data/_TEMPLATE_XV.json`
+- Para **boda**: copiar `data/templates/_TEMPLATE_BODA.json`
+- Para **XV**: copiar `data/templates/_TEMPLATE_XV.json`
 
 Estos templates tienen TODAS las secciones posibles con comentarios explicativos.
 
@@ -218,8 +221,8 @@ Listo. No hay que tocar ningun otro archivo.
 
 ### Templates
 
-- `data/_TEMPLATE_BODA.json` -- Todas las secciones para boda
-- `data/_TEMPLATE_XV.json` -- Todas las secciones para XV (incluye `presentation`, `parents`, `ourStory` adaptado)
+- `data/templates/_TEMPLATE_BODA.json` -- Todas las secciones para boda
+- `data/templates/_TEMPLATE_XV.json` -- Todas las secciones para XV (incluye `presentation`, `parents`, `ourStory` adaptado)
 
 ---
 
@@ -289,7 +292,7 @@ Ambas usan **el mismo JSON**. No se duplica nada.
 
 ## 8. LANDING COMERCIAL (PAGINA RAIZ)
 
-La landing en `/` se configura **100% desde** `data/landing.json`.
+La landing en `/` se configura **100% desde** `data/landing/landing-2.json`.
 
 ### Que se puede editar desde el JSON
 
@@ -404,13 +407,13 @@ const ICON_SIZE = 28;
 ### Color del footer
 
 - En las **invitaciones**: se adapta automaticamente al `primaryColor` del cliente via CSS variables.
-- En la **landing**: se configura desde `landing.json` en `theme.footerBg` y `theme.footerText`.
+- En la **landing**: se configura desde `data/landing/landing-2.json` en `theme.footerBg` y `theme.footerText`.
 
 ---
 
 ## 10. BOTONES CTA DE LA LANDING
 
-Todos los botones de accion estan centralizados en `landing.json` > `ctaButtons`.
+Todos los botones de accion estan centralizados en `data/landing/landing-2.json` > `ctaButtons`.
 
 ### Estructura de un boton
 
@@ -468,7 +471,7 @@ No hay que tocar ningun componente.
 
 Seguir la seccion 4 (crear JSON + imagenes).
 
-### Paso 2: Editar landing.json
+### Paso 2: Editar `data/landing/landing-2.json`
 
 Buscar `sections.muestras.items` y agregar un objeto:
 
@@ -794,7 +797,7 @@ Si `logo` tiene valor, se muestra la imagen en vez de los nombres como texto.
 | Que quiero cambiar                   | Donde                                                |
 | ------------------------------------ | ---------------------------------------------------- |
 | Textos, fotos, colores de un cliente | Solo su JSON                                         |
-| Textos, precios, FAQ de la landing   | `data/landing.json`                                  |
+| Textos, precios, FAQ de la landing   | `data/landing/landing-2.json`                                  |
 | Nombre de marca, redes del footer    | `components/wedding/footer-section.tsx` (constantes) |
 | Agregar un nuevo tipo de seccion     | `components/wedding/section.tsx` (requiere React)    |
 | Agregar un nuevo icono al itinerario | `components/wedding/itinerary-section.tsx`           |
@@ -813,19 +816,19 @@ Si `logo` tiene valor, se muestra la imagen en vez de los nombres como texto.
 
 ```
 Crear nueva boda:
-  1. Copiar data/_TEMPLATE_BODA.json -> data/clientes/boda/nuevo-slug.json
+  1. Copiar data/templates/_TEMPLATE_BODA.json -> data/clientes/boda/nuevo-slug.json
   2. Crear public/clientes/boda/nuevo-slug/ con las fotos
   3. Editar el JSON
   4. Listo: /boda/nuevo-slug (real) y /m/boda/nuevo-slug (muestra)
 
 Crear nuevo XV:
-  1. Copiar data/_TEMPLATE_XV.json -> data/clientes/xv/nuevo-slug.json
+  1. Copiar data/templates/_TEMPLATE_XV.json -> data/clientes/xv/nuevo-slug.json
   2. Crear public/clientes/xv/nuevo-slug/ con las fotos
   3. Editar el JSON
   4. Listo: /xv/nuevo-slug (real) y /m/xv/nuevo-slug (muestra)
 
 Agregar muestra a la landing:
-  1. Editar data/landing.json > sections.muestras.items
+  1. Editar data/landing/landing-2.json > sections.muestras.items
   2. Agregar { tipo, slug, titulo, etiqueta, accentColor }
 
 Cambiar nombre de marca:

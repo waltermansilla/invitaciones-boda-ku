@@ -10,7 +10,7 @@ import {
     Trash2,
     CircleCheckBig,
 } from "lucide-react";
-import landingHomeData from "@/data/landing-2.json";
+import landingHomeData from "@/data/landing/landing-2.json";
 
 type EventType =
     | "boda"
