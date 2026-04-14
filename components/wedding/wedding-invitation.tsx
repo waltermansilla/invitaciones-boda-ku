@@ -22,6 +22,9 @@ function WeddingInvitationContent() {
     const isMuestra = useIsMuestra();
     const searchParams = useSearchParams();
     const codigoInvitado = searchParams.get("c") || "";
+    const skipOverlay =
+        searchParams.get("enter") === "1" ||
+        searchParams.get("noOverlay") === "1";
     const hero = config.hero;
     const sections = config.sections ?? [];
     const meta = config.meta;
@@ -56,7 +59,8 @@ function WeddingInvitationContent() {
     }, [codigoInvitado, rsvpPanel?.enabled]);
     
     // Si hay código y estamos cargando, mostrar pantalla de carga en lugar del overlay
-    const showOverlay = overlay.enabled && !overlayDismissed && !loadingInvitado;
+    const showOverlay =
+        overlay.enabled && !overlayDismissed && !loadingInvitado && !skipOverlay;
     
     // Handle overlay dismiss - start music if autoplay is enabled (not in muestra mode)
     const handleOverlayDismiss = () => {
@@ -91,7 +95,7 @@ function WeddingInvitationContent() {
             <main 
                 className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl transition-opacity duration-700 ease-out"
                 style={{ 
-                    opacity: overlay.enabled && !overlayDismissed ? 0 : 1,
+                    opacity: showOverlay ? 0 : 1,
                 }}
             >
                 {/* Hero is always rendered first */}

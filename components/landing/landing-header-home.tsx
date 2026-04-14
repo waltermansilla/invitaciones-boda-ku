@@ -2,9 +2,9 @@
 
 import { Languages } from "lucide-react"
 import { useEffect, useId, useState } from "react"
-import type { LandingTdyTheme } from "@/components/landing/landing-tdy-page"
+import type { LandingTheme } from "@/components/landing/landing-page-home"
 
-export type LandingTdyLocale = "es" | "en"
+export type LandingLocale = "es" | "en"
 
 function handleHeaderAnchorClick(event: React.MouseEvent<HTMLAnchorElement>, anchor: string, afterNavigate?: () => void) {
   if (!anchor.startsWith("#")) {
@@ -31,7 +31,7 @@ function NavLinks({
   className,
 }: {
   nav: { label: string; anchor: string }[]
-  tx: LandingTdyTheme["text"]
+  tx: LandingTheme["text"]
   onNavigate?: () => void
   className?: string
 }) {
@@ -52,7 +52,7 @@ function NavLinks({
   )
 }
 
-export function LandingTdyHeader({
+export function LandingHeader({
   theme,
   brand,
   nav,
@@ -61,12 +61,12 @@ export function LandingTdyHeader({
   onLocaleChange,
   languageToggle = true,
 }: {
-  theme: LandingTdyTheme
+  theme: LandingTheme
   brand: string
   nav: { label: string; anchor: string }[]
   cta?: { label: string; anchor: string }
-  locale: LandingTdyLocale
-  onLocaleChange: (l: LandingTdyLocale) => void
+  locale: LandingLocale
+  onLocaleChange: (l: LandingLocale) => void
   /** Si hay un solo idioma de datos, ocultar ES | EN */
   languageToggle?: boolean
 }) {

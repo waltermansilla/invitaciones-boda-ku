@@ -6,12 +6,12 @@
         "disenoUnico": 110000
     },
     "configurator": {
-        "extraSection": 4000,
+        "extraSection": 4500,
         "secondLanguage": 12000,
         "extras": {
             "panel": 20000,
             "dominio": 45000,
-            "rapida24h": 25000
+            "rapida24h": 19000
         }
     },
     "landing": {

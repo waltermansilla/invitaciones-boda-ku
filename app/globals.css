@@ -1,3 +1,14 @@
+/* Keep trivia anchor targets lower in viewport (more centered). */
+#trivia-game,
+#truths-game {
+    scroll-margin-top: 34vh;
+}
+
+/* Required field hint: tighter to field, more gap after hint. */
+.details-form p[class*="text-[#B71C1C]"] {
+    margin-top: -0.45rem;
+    margin-bottom: 0.6rem;
+}
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -106,8 +117,8 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Landing TDY (raíz): altura usable en iOS Safari (barra inferior / gesto) */
-  .landing-tdy-shell {
+  /* Landing home (raíz): altura usable en iOS Safari (barra inferior / gesto) */
+  .landing-home-shell {
     min-height: 100svh;
     min-height: -webkit-fill-available;
   }
@@ -183,7 +194,7 @@
   animation: iconTouch 0.45s ease-out;
 }
 
-/* CTA flotante landing TDY: estrellas decorativas */
+/* CTA flotante landing home: estrellas decorativas */
 @keyframes landing-fab-star-drift-a {
   0%,
   100% {

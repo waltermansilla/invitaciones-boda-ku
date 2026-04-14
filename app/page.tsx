@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Lora } from "next/font/google";
-import LandingTdyPage, {
-    type LandingTdyData,
-} from "@/components/landing/landing-tdy-page";
-import landingTdyData from "@/data/landing-tdy.json";
-import landingTdyDataEn from "@/data/landing-tdy.en.json";
+import LandingPageHome, {
+    type LandingData,
+} from "@/components/landing/landing-page-home";
+import landingHomeData from "@/data/landing-2.json";
+import landingHomeDataEn from "@/data/landing-2.en.json";
 
 const landingPriceFont = Cormorant_Garamond({
     subsets: ["latin"],
@@ -37,11 +37,11 @@ export const metadata: Metadata = {
 export default function HomePage() {
     return (
         <div
-            className={`landing-tdy-shell ${landingPriceFont.variable} ${landingHeroTitleFont.variable}`}
+            className={`landing-home-shell ${landingPriceFont.variable} ${landingHeroTitleFont.variable}`}
         >
-            <LandingTdyPage
-                dataEs={landingTdyData as LandingTdyData}
-                dataEn={landingTdyDataEn as LandingTdyData}
+            <LandingPageHome
+                dataEs={landingHomeData as LandingData}
+                dataEn={landingHomeDataEn as LandingData}
                 syncLocaleFromSearch
             />
         </div>

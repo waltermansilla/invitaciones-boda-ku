@@ -1,16 +1,16 @@
 "use client";
 
-import landingConfig from "@/data/landing.json";
+import landingConfig from "@/data/landing-1.json";
 
 /* ───────────────────────────────────────────────
- * DATOS DE MARCA - Se leen desde landing.json (seccion "brand").
- * Para modificar la marca, editar landing.json -> brand
+ * DATOS DE MARCA - Se leen desde landing-1.json (seccion "brand").
+ * Para modificar la marca, editar landing-1.json -> brand
  *
  * La marca es igual en TODAS las invitaciones y en la landing.
  * Solo cambia el color de fondo que se adapta al tema de cada invitacion.
  * ─────────────────────────────────────────────── */
 
-// Leer configuracion de marca desde landing.json
+// Leer configuracion de marca desde landing-1.json
 const brandConfig = (landingConfig as Record<string, unknown>).brand as
     | {
           name: string;
@@ -27,7 +27,7 @@ const brandConfig = (landingConfig as Record<string, unknown>).brand as
       }
     | undefined;
 
-// Fallback values si no existe la config en landing.json
+// Fallback values si no existe la config en landing-1.json
 const BRAND_NAME = brandConfig?.name || "Momento Único";
 const BRAND_FONT = brandConfig?.font || "font-serif";
 const BRAND_SIZE = brandConfig?.size || "text-lg";
@@ -92,7 +92,7 @@ const iconMap: Record<string, () => React.JSX.Element> = {
 /**
  * Footer fijo de marca. Igual en TODAS las invitaciones y la landing.
  * El color se adapta automaticamente via CSS variables (bg-primary / text-primary-foreground).
- * Los datos de marca se leen desde landing.json -> brand
+ * Los datos de marca se leen desde landing-1.json -> brand
  */
 export default function FooterSection() {
     const currentYear = new Date().getFullYear();

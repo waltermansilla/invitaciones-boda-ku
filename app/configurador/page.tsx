@@ -25,7 +25,7 @@ import {
     Users,
     Wallet,
 } from "lucide-react";
-import landingTdyData from "@/data/landing-tdy.json";
+import landingHomeData from "@/data/landing-2.json";
 import pricingData from "@/data/pricing.json";
 import {
     EXTRA_SECTION_PRICE,
@@ -207,6 +207,48 @@ function WhatsAppHref(number: string, message: string) {
     return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
+function toBase64Url(value: string) {
+    const utf8 = encodeURIComponent(value).replace(
+        /%([0-9A-F]{2})/g,
+        (_, hex: string) => String.fromCharCode(Number.parseInt(hex, 16)),
+    );
+    const base64 =
+        typeof window !== "undefined"
+            ? window.btoa(utf8)
+            : Buffer.from(utf8, "binary").toString("base64");
+    return base64
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/g, "");
+}
+
+const DETAILS_SECTION_ORDER = [
+    "mapa",
+    "dress",
+    "itinerario",
+    "regalos",
+    "tarjeta",
+    "album",
+    "musica",
+    "playlist",
+    "historia",
+    "trivia",
+    "fotos10",
+    "faq",
+    "alojamiento",
+    "adultos",
+] as const;
+
+const EVENT_TYPE_CODE: Record<EventType | "", string> = {
+    boda: "b",
+    xv: "x",
+    cumpleanos: "c",
+    "baby-shower": "y",
+    corporativo: "p",
+    otro: "o",
+    "": "n",
+};
+
 function ConfiguradorPageContent() {
     const params = useSearchParams();
     const uiLang = params.get("lang") === "en" ? "en" : "es";
@@ -251,9 +293,13 @@ function ConfiguradorPageContent() {
     const [seccionesInfoOpen, setSeccionesInfoOpen] = useState(false);
     const [seccionesMinErrorShown, setSeccionesMinErrorShown] =
         useState(false);
+    const [detailsId] = useState(
+        () =>
+            `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    );
 
-    const styleItems = landingTdyData.sections.estilos.items ?? [];
-    const waNumber = landingTdyData.whatsapp.number;
+    const styleItems = landingHomeData.sections.estilos.items ?? [];
+    const waNumber = landingHomeData.whatsapp.number;
 
     const steps: readonly string[] =
         plan === "diseno-unico"
@@ -276,10 +322,18 @@ function ConfiguradorPageContent() {
         document.documentElement.lang = uiLang;
     }, [uiLang]);
 
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        window.scrollTo({ top: 0, behavior: "auto" });
+    }, [stepIdx]);
+
     const t = useMemo(() => getUiStrings(uiLang), [uiLang]);
+    const tWa = useMemo(() => getUiStrings("es"), []);
     const extrasList = useMemo(() => getExtrasForLang(uiLang), [uiLang]);
+    const extrasListWa = useMemo(() => getExtrasForLang("es"), []);
     const extraDetails = useMemo(() => getExtraDetailById(uiLang), [uiLang]);
     const eventLabelMap = useMemo(() => getEventLabels(uiLang), [uiLang]);
+    const eventLabelMapWa = useMemo(() => getEventLabels("es"), []);
 
     const selectedExtras = extrasList.filter((e) => extras.includes(e.id));
     const sectionOptions = useMemo<SectionOption[]>(
@@ -323,6 +377,18 @@ function ConfiguradorPageContent() {
         () => sections.map((id) => sectionLabelById.get(id) ?? id),
         [sections, sectionLabelById],
     );
+    const sectionLabelByIdWa = useMemo(
+        () =>
+            new Map<string, string>([
+                ...SECTION_OPTIONS.map((s) => [s.id, s.label] as const),
+                ...customSections.map((c) => [c.id, c.label] as const),
+            ]),
+        [customSections],
+    );
+    const selectedSectionLabelsWa = useMemo(
+        () => sections.map((id) => sectionLabelByIdWa.get(id) ?? id),
+        [sections, sectionLabelByIdWa],
+    );
     const languageOptions = useMemo(
         () => [...PRESET_LANGUAGES[uiLang], ...customLanguageOptions],
         [uiLang, customLanguageOptions],
@@ -349,30 +415,68 @@ function ConfiguradorPageContent() {
 
     const planLabel =
         plan === "premium" ? t.planPremium : t.planUnique;
+    const planLabelWa =
+        plan === "premium" ? tWa.planPremium : tWa.planUnique;
+    const selectedExtraLabelsWa = selectedExtras.map((e) => {
+        const match = extrasListWa.find((x) => x.id === e.id);
+        return match?.label ?? e.label;
+    });
+    const detailsToken = useMemo(() => {
+        const selectedSet = new Set(sections);
+        let mask = 0;
+        DETAILS_SECTION_ORDER.forEach((sectionId, idx) => {
+            if (selectedSet.has(sectionId)) {
+                mask |= 1 << idx;
+            }
+        });
+        const customSelectedLabels = customSections
+            .filter((item) => selectedSet.has(item.id))
+            .map((item) => item.label.trim())
+            .filter(Boolean);
+        const customEncoded = customSelectedLabels.length
+            ? toBase64Url(JSON.stringify(customSelectedLabels))
+            : "-";
+        const compact = [
+            "v1",
+            EVENT_TYPE_CODE[eventType] ?? "n",
+            eventOther.trim() ? toBase64Url(eventOther.trim()) : "-",
+            mask.toString(36),
+            customEncoded,
+        ].join(".");
+        return compact;
+    }, [customSections, eventOther, eventType, sections]);
+    const detailsPathId = detailsToken ? `${detailsId}.${detailsToken}` : detailsId;
+    const detailsUrl =
+        typeof window !== "undefined"
+            ? `${window.location.origin}/detalles/${detailsPathId}`
+            : `/detalles/${detailsPathId}`;
     const summary = [
-        t.summaryHi(planLabel),
+        tWa.summaryHi(planLabelWa),
         "",
-        `${t.currency}: ${currency}`,
-        `${t.total}: ${formatMoney(total, currency)}`,
-        `${t.deposit50}: ${formatMoney(downPayment, currency)}`,
+        `${tWa.currency}: ${currency}`,
+        `${tWa.total}: ${formatMoney(total, currency)}`,
+        `${tWa.deposit50}: ${formatMoney(downPayment, currency)}`,
         "",
         plan === "premium"
-            ? `${t.event}: ${eventType ? `${eventLabelMap[eventType]}${eventType === "otro" && eventOther ? ` (${eventOther})` : ""}` : t.tbd}`
+            ? `${tWa.event}: ${eventType ? `${eventLabelMapWa[eventType]}${eventType === "otro" && eventOther ? ` (${eventOther})` : ""}` : tWa.tbd}`
             : null,
         plan === "premium"
-            ? `${t.style}: ${styleSelected || t.tbd}`
+            ? `${tWa.style}: ${styleSelected || tWa.tbd}`
             : null,
         plan === "premium"
-            ? `${t.sections} (${sections.length}): ${sections.length ? selectedSectionLabels.join(", ") : t.tbd}`
+            ? `${tWa.sections} (${sections.length}): ${sections.length ? selectedSectionLabelsWa.join(", ") : tWa.tbd}`
             : null,
-        `${t.primaryLang}: ${t.spanish}`,
-        `${t.secondLang}: ${secondLanguage || t.none}`,
-        `${t.extrasLine}: ${selectedExtras.length ? selectedExtras.map((e) => e.label).join(", ") : t.noneExtras}${plan === "diseno-unico" ? t.uniqueExtrasNote : ""}`,
+        `${tWa.primaryLang}: ${tWa.spanish}`,
+        `${tWa.secondLang}: ${secondLanguage || tWa.none}`,
+        `${tWa.extrasLine}: ${selectedExtraLabelsWa.length ? selectedExtraLabelsWa.join(", ") : tWa.noneExtras}${plan === "diseno-unico" ? tWa.uniqueExtrasNote : ""}`,
         "",
-        `${t.name1Line}: ${name1 || "-"}`,
-        `${t.name2Line}: ${name2 || "-"}`,
-        `${t.emailLine}: ${email || "-"}`,
-        `${t.eventDateLine}: ${eventDate || "-"}`,
+        `${tWa.name1Line}: ${name1 || "-"}`,
+        `${tWa.name2Line}: ${name2 || "-"}`,
+        `${tWa.emailLine}: ${email || "-"}`,
+        `${tWa.eventDateLine}: ${eventDate || "-"}`,
+        "",
+        "Completar detalles de la invitacion:",
+        detailsUrl,
     ]
         .filter(Boolean)
         .join("\n");
@@ -1267,38 +1371,47 @@ function ConfiguradorPageContent() {
             </section>
 
             <footer
-                className={`fixed inset-x-0 bottom-0 z-30 border-t bg-[#FDFBF7]/98 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 backdrop-blur ${PAGE_GUTTER}`}
+                className={`fixed inset-x-0 bottom-0 z-30 border-t bg-[#FDFBF7]/98 pb-[max(8px,env(safe-area-inset-bottom))] pt-2 backdrop-blur ${PAGE_GUTTER}`}
             >
                 <div className="mx-auto max-w-3xl">
-                    <div className="mb-3 flex items-center justify-center gap-2">
-                        <button
-                            type="button"
-                            onClick={() => setCurrency("ARS")}
-                            className="rounded-full border px-3 py-1 text-xs font-semibold"
-                            style={{
-                                borderColor:
-                                    currency === "ARS" ? "#7A5F45" : "#DCCFC0",
-                                background:
-                                    currency === "ARS" ? "#F3EBDD" : "#FFF",
-                            }}
-                        >
-                            ARS
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setCurrency("USD")}
-                            className="rounded-full border px-3 py-1 text-xs font-semibold"
-                            style={{
-                                borderColor:
-                                    currency === "USD" ? "#7A5F45" : "#DCCFC0",
-                                background:
-                                    currency === "USD" ? "#F3EBDD" : "#FFF",
-                            }}
-                        >
-                            USD
-                        </button>
+                    <div className="mb-1 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-1.5">
+                            <button
+                                type="button"
+                                onClick={() => setCurrency("ARS")}
+                                className="rounded-full border px-2.5 py-0.5 text-[11px] font-semibold"
+                                style={{
+                                    borderColor:
+                                        currency === "ARS"
+                                            ? "#7A5F45"
+                                            : "#DCCFC0",
+                                    background:
+                                        currency === "ARS" ? "#F3EBDD" : "#FFF",
+                                }}
+                            >
+                                ARS
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setCurrency("USD")}
+                                className="rounded-full border px-2.5 py-0.5 text-[11px] font-semibold"
+                                style={{
+                                    borderColor:
+                                        currency === "USD"
+                                            ? "#7A5F45"
+                                            : "#DCCFC0",
+                                    background:
+                                        currency === "USD" ? "#F3EBDD" : "#FFF",
+                                }}
+                            >
+                                USD
+                            </button>
+                        </div>
+                        <p className="text-base font-bold text-[#4A3729] sm:text-[17px]">
+                            {t.total}: {formatMoney(total, currency)}
+                        </p>
                     </div>
-                    <div className="mb-2 flex items-center justify-between">
+                    <div className="flex items-center justify-between">
                         <button
                             type="button"
                             onClick={() =>
@@ -1327,38 +1440,33 @@ function ConfiguradorPageContent() {
                                     );
                                 }}
                                 disabled={!canContinue}
-                                className="inline-flex items-center gap-1 rounded-full bg-[#7A5F45] px-4 py-2 text-sm font-semibold text-white disabled:opacity-45"
+                                className="inline-flex items-center gap-1 rounded-full bg-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-45"
                             >
                                 {t.next} <ChevronRight size={16} />
                             </button>
                         ) : (
-                            <a
-                                href={WhatsAppHref(waNumber, summary)}
-                                target="_blank"
-                                rel="noreferrer"
-                                className={`inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold text-white ${canContinue ? "" : "pointer-events-none opacity-45"}`}
-                                style={{ background: "#7A5F45" }}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (!canContinue) return;
+                                    window.open(
+                                        WhatsAppHref(waNumber, summary),
+                                        "_blank",
+                                        "noopener,noreferrer",
+                                    );
+                                }}
+                                disabled={!canContinue}
+                                className="inline-flex items-center gap-1 rounded-full bg-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-45"
                             >
                                 {t.goWhatsapp} <ChevronRight size={16} />
-                            </a>
+                            </button>
                         )}
                     </div>
-                    <a
-                        href={
-                            isLastStep && canContinue
-                                ? WhatsAppHref(waNumber, summary)
-                                : undefined
-                        }
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`flex w-full items-center justify-center rounded-2xl py-3 text-base font-semibold text-white ${isLastStep && canContinue ? "" : "pointer-events-none opacity-75"}`}
-                        style={{ background: "#7A5F45" }}
-                    >
-                        {t.totalDeposit(formatMoney(total, currency))}
-                    </a>
-                    <p className="mt-2 text-center text-[11px] text-[#7A6A5D]">
-                        {t.footerNote}
-                    </p>
+                    {isLastStep ? (
+                        <p className="mt-0.5 text-center text-[10px] text-[#7A6A5D]">
+                            {t.footerNote}
+                        </p>
+                    ) : null}
                 </div>
             </footer>
         </main>

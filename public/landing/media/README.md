@@ -1,4 +1,4 @@
-# Medios de la landing TDY (ruta `/`, datos en `data/landing-tdy.json`)
+# Medios de la landing home (ruta `/`, datos en `data/landing-2.json`)
 
 Todo lo que pongas acá se sirve desde la raíz del sitio: rutas que empiezan con `/landing/media/`.
 
@@ -11,7 +11,7 @@ Todo lo que pongas acá se sirve desde la raíz del sitio: rutas que empiezan co
 
 Podés crear subcarpetas si querés ordenar (ej. `images/estilos/`, `images/panel/`); la ruta en JSON debe coincidir.
 
-## Cómo enlazarlo en `landing-tdy.json` (y `.en.json`)
+## Cómo enlazarlo en `landing-2.json` (y `.en.json`)
 
 Las rutas son **públicas**, sin `public/` en el string:
 

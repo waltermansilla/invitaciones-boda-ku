@@ -1,5 +1,5 @@
 {
-    "_comment_archivo": "Ruta: / (raíz). Landing oficial TDY: theme, header, floatingCta, whatsapp, ctaButtons, sections.*, pageLayout. Tipos: components/landing/landing-tdy-page.tsx (LandingTdyData).",
+    "_comment_archivo": "Ruta: / (raíz). Landing oficial: theme, header, floatingCta, whatsapp, ctaButtons, sections.*, pageLayout. Tipos: components/landing/landing-home-page.tsx (LandingData).",
     "_comment_theme": "theme.background, theme.text.*, theme.buttons.*, theme.footerBg/footerText (pie de página), theme.surfaceAlt (alternancia de fondos en bloques con surface alt).",
     "_comment_pageLayout": "pageLayout: hero (id HTML), reseñas compactas, orden post-estilos, query ?from= en /configurador. postEstilosSections: id = panel | idiomas | servicio | proceso | faq; surface default|alt (alt intercambia fondo con surfaceAlt).",
     "_comment_media": "Imágenes/videos en public/landing/media/; en JSON rutas /landing/media/...",
@@ -158,7 +158,7 @@
                 "count": 15,
                 "source": "Google Maps",
                 "linkText": "Ver opiniones",
-                "url": "https://maps.google.com/?q=Momento+Único+invitaciones"
+                "url": "https://www.google.com/search?q=Momento+%C3%9Anico+Invitaciones+Web#lrd=0x95bb21bc055acb8b:0x42f7018a340ec6b,1,,,"
             }
         },
         "incluye": {
@@ -276,52 +276,59 @@
                     "digital": "Sí"
                 }
             ],
-            "ecoNote": "Cada invitación digital evita papel y reduce el impacto ambiental del evento."
+            "ecoNote": "Cada invitación digital evita papel y reduce el impacto ambiental."
         },
         "estilos": {
             "id": "estilos",
-            "eyebrow": "Catálogo",
-            "title": "Elegí tu estilo, hacelo único",
-            "subtitle": "Deslizá y conocé propuestas reales. Cada una cuenta una historia distinta.",
-            "demoButtonText": "Ver demo",
+            "eyebrow": "Modelos",
+            "title": "Mirá nuestras invitaciones ya diseñadas",
+            "subtitle": "Elegí la que más te guste y usala como referencia para crear la tuya.",
+            "demoButtonText": "Ver invitación",
             "noStylePrompt": "¿No encontrás tu estilo?",
             "noStyleCta": "Contanos tu idea",
-            "noStyleWhatsappMessage": "Hola! Tengo una idea para mi invitación y me gustaría contarles.",
+            "noStyleWhatsappMessage": "Hola! No encontré mi estilo en sus invitaciones. Pero tengo una idea para mi invitación y me gustaría contarles.",
+            "noStyleConfirmMessage": "Serás redirigido al WhatsApp del diseñador. ¿Querés continuar?",
             "items": [
                 {
                     "image": "/landing/media/images/anto-walter-boda.jpg",
                     "titulo": "Anto & Walter",
-                    "descripcion": "Boda · Elegancia cálida y detalles premium.",
+                    "descripcion": "Boda · Cuenta su historia, trivia divertida.",
                     "href": "/m/boda/anto-walter"
                 },
                 {
                     "image": "/landing/media/images/meliza-ivan-boda.jpg",
                     "titulo": "Meliza & Iván",
-                    "descripcion": "Boda · Estilo esencial, muy claro para compartir.",
+                    "descripcion": "Boda · Sencillo, minimalista.",
                     "href": "/m/boda/meliza-ivan"
                 },
                 {
                     "image": "/landing/media/images/yesica-hernan-boda.jpg",
                     "titulo": "Yesica & Hernán",
-                    "descripcion": "Boda · Romance y claridad en cada detalle.",
+                    "descripcion": "Boda · Más premium, fondos florales.",
                     "href": "/m/boda/yesica-hernan"
                 },
                 {
                     "image": "/landing/media/images/camila-xv.jpg",
                     "titulo": "Camila",
-                    "descripcion": "XV · Brillo y energía para tu fiesta.",
+                    "descripcion": "XV · Tipografías personalizadas, trivia interactiva.",
                     "href": "/m/xv/camila"
                 },
                 {
                     "image": "/landing/media/images/dasha-xv.jpg",
                     "titulo": "Dasha",
-                    "descripcion": "XV · Personalidad y color.",
+                    "descripcion": "XV · Mágica. Álbum compartido de fotos.",
                     "href": "/m/xv/dasha"
+                },
+                {
+                    "image": "/landing/media/images/carmela-xv.jpg",
+                    "titulo": "Carmela",
+                    "descripcion": "XV · Elegante y luminosa, con detalles personalizados.",
+                    "href": "/m/xv/carmela"
                 },
                 {
                     "image": "/landing/media/images/maxima-baby.jpg",
                     "titulo": "Máxima",
-                    "descripcion": "Baby shower · Dulzura y celebración.",
+                    "descripcion": "Baby shower · Dulce, sencilla.",
                     "href": "/m/baby/maxima"
                 }
             ]
@@ -379,12 +386,10 @@
         },
         "panel": {
             "eyebrow": "Panel privado",
-            "title": "Todo bajo control, en un solo lugar",
-            "subtitle": "Detrás de cada invitación hay un espacio solo para vos para organizar la lista y las respuestas.",
-            "panelUrlLabel": "panel.tuinvitacion.com",
-            "imageSrc": "/landing/media/images/panel.jpg",
-            "imageWidth": 1179,
-            "imageHeight": 2127,
+            "title": "Tus invitados, en un solo lugar",
+            "subtitle": "Desde un panel claro y práctico podés ver quién confirmó, quién falta responder y sus requerimientos de alimentación.",
+            "panelUrlLabel": "",
+            "imageSrc": "/landing/media/images/panel.PNG",
             "imageAlt": "Captura del panel de administración de invitados",
             "stats": [
                 { "value": "42", "label": "Confirmados" },
@@ -434,11 +439,11 @@
                     "priceUsd": "",
                     "description": "Configurá tu invitación paso a paso según lo que realmente necesitás.",
                     "features": [
-                        "Confirmación de asistencia por WhatsApp",
-                        "Hasta 5 fotos + cuenta regresiva",
+                        "Confirmación de asistencia. Opción de panel privado.",
+                        "Hasta 5 fotos gratis + cuenta regresiva",
                         "Colores y frases personalizadas",
-                        "4 secciones incluidas (+$4.000 por sección extra)",
-                        "Podés elegir un 2do idioma (+$12.000)"
+                        "4 secciones gratis y extras opcionales",
+                        "Podés agregar un segundo idioma."
                     ]
                 },
                 {
@@ -447,13 +452,12 @@
                     "badge": null,
                     "price": "-",
                     "priceUsd": "",
-                    "description": "Para casos especiales que necesitan un diseño desde cero, por ejemplo dibujos o acuarelas integrados, video detrás de un texto o fondos florales personalizados. Incluye todas las secciones posibles.",
+                    "description": "Para casos especiales que necesitan un diseño desde cero, por ejemplo dibujos o acuarelas integrados, video detrás de un texto o fondos florales personalizados. **Incluye todas las secciones posibles, y panel privado de invitados.**",
                     "features": [
+                        "Diseño completo a tu medida",
                         "Todas las secciones disponibles incluidas",
-                        "Segundo idioma incluido",
                         "Panel de invitados en tiempo real incluido",
-                        "Dominio personalizado (extra opcional)",
-                        "Entrega rápida 24hs (extra opcional)"
+                        "Segundo idioma incluido"
                     ]
                 }
             ],

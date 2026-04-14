@@ -40,9 +40,9 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import {
-    LandingTdyHeader,
-    type LandingTdyLocale,
-} from "@/components/landing/landing-tdy-header";
+    LandingHeader,
+    type LandingLocale,
+} from "@/components/landing/landing-header-home";
 import FooterSection from "@/components/wedding/footer-section";
 import pricingData from "@/data/pricing.json";
 
@@ -92,7 +92,7 @@ function TdyIcon({
 }
 
 /* ─── Theme types ─── */
-export interface LandingTdyTheme {
+export interface LandingTheme {
     background: string;
     foreground: string;
     cardBg: string;
@@ -174,8 +174,8 @@ export type LandingPostEstilosSectionId =
     | "proceso"
     | "faq";
 
-export interface LandingTdyData {
-    theme: LandingTdyTheme;
+export interface LandingData {
+    theme: LandingTheme;
     /** Orden y apariencia post-carrusel Estilos; si falta, se usa el orden clásico (idiomas → proceso → panel → planes → FAQ). */
     pageLayout?: {
         heroSectionId?: string;
@@ -187,7 +187,7 @@ export interface LandingTdyData {
         /** Valor del query `from` en enlaces a /configurador (p. ej. home). */
         configuradorFromQuery?: string;
     };
-    /** Barra superior estilo TDY + anclas; si falta, no se renderiza */
+    /** Barra superior estilo landing + anclas; si falta, no se renderiza */
     header?: {
         brand: string;
         nav: { label: string; anchor: string }[];
@@ -278,6 +278,7 @@ export interface LandingTdyData {
             noStylePrompt: string;
             noStyleCta: string;
             noStyleWhatsappMessage: string;
+            noStyleConfirmMessage?: string;
             items: {
                 image?: string;
                 videoSrc?: string;
@@ -356,7 +357,7 @@ export interface LandingTdyData {
     };
 }
 
-const THEME_DEFAULTS: Partial<LandingTdyTheme> = {
+const THEME_DEFAULTS: Partial<LandingTheme> = {
     typography: {
         headingFont: "'Playfair Display', Georgia, serif",
         bodyFont: "ui-sans-serif, system-ui, sans-serif",
@@ -416,7 +417,7 @@ const THEME_DEFAULTS: Partial<LandingTdyTheme> = {
     },
 };
 
-function priceTypeStyle(theme: LandingTdyTheme): React.CSSProperties {
+function priceTypeStyle(theme: LandingTheme): React.CSSProperties {
     return {
         fontFamily: theme.typography.priceFont,
         letterSpacing: theme.typography.priceLetterSpacing,
@@ -424,14 +425,14 @@ function priceTypeStyle(theme: LandingTdyTheme): React.CSSProperties {
     };
 }
 
-function formatArs(amount: number, locale: LandingTdyLocale): string {
+function formatArs(amount: number, locale: LandingLocale): string {
     if (locale === "en") return `ARS ${amount.toLocaleString("en-US")}`;
     return `$${amount.toLocaleString("es-AR")}`;
 }
 
 function formatUsd(
     amount: number,
-    locale: LandingTdyLocale,
+    locale: LandingLocale,
     variant: "USD" | "US$" = "USD",
 ): string {
     const n = Math.ceil(amount);
@@ -448,9 +449,9 @@ function toUsdPerItem(ars: number): number {
 }
 
 function applyPricingToLandingData(
-    raw: LandingTdyData,
-    locale: LandingTdyLocale,
-): LandingTdyData {
+    raw: LandingData,
+    locale: LandingLocale,
+): LandingData {
     const premiumArs = pricingData.plans.premium;
     const disenoUnicoArs = pricingData.plans.disenoUnico;
     const premiumUsd = toUsdPerItem(premiumArs);
@@ -491,7 +492,7 @@ function applyPricingToLandingData(
         locale === "en" ? paperLineLabelsEn : paperLineLabelsEs;
     const usdVariant = locale === "en" ? "US$" : "USD";
 
-    const next = structuredClone(raw) as LandingTdyData;
+    const next = structuredClone(raw) as LandingData;
 
     Object.values(next.ctaButtons).forEach((btn) => {
         if (btn.type !== "link" || !btn.url?.startsWith("/configurador"))
@@ -615,8 +616,8 @@ function applyPricingToLandingData(
     return next;
 }
 
-function mergeTheme(t: LandingTdyData["theme"]): LandingTdyTheme {
-    const base = t as LandingTdyTheme;
+function mergeTheme(t: LandingData["theme"]): LandingTheme {
+    const base = t as LandingTheme;
     return {
         ...base,
         typography: {
@@ -634,10 +635,10 @@ function mergeTheme(t: LandingTdyData["theme"]): LandingTdyTheme {
 }
 
 /**
- * Transiciones de la landing TDY: velocidad, distancia, curva, IntersectionObserver y CTA flotante.
+ * Transiciones de la landing: velocidad, distancia, curva, IntersectionObserver y CTA flotante.
  * Los delays escalonados por bloque (números en `blockRevealStyle(..., N)`) siguen en cada sección.
  */
-const TDY_MOTION = {
+const LANDING_MOTION = {
     /** Curva usada en casi todas las transiciones (opacity + transform) */
     ease: "cubic-bezier(0.34, 1.2, 0.64, 1)",
 
@@ -709,8 +710,8 @@ function blockRevealStyle(
     revealed: boolean,
     delayMs: number,
 ): React.CSSProperties {
-    const b = TDY_MOTION.blockReveal;
-    const e = TDY_MOTION.ease;
+    const b = LANDING_MOTION.blockReveal;
+    const e = LANDING_MOTION.ease;
     return {
         opacity: revealed ? 1 : 0,
         transform: revealed ? "translateY(0)" : `translateY(${b.translateY}px)`,
@@ -760,8 +761,8 @@ function StaggerText({
 }
 
 function useSectionReveal(
-    threshold: number = TDY_MOTION.sectionInView.threshold,
-    rootMargin: string = TDY_MOTION.sectionInView.rootMargin,
+    threshold: number = LANDING_MOTION.sectionInView.threshold,
+    rootMargin: string = LANDING_MOTION.sectionInView.rootMargin,
 ) {
     const revealRef = useRef<HTMLDivElement>(null);
     const [revealed, setRevealed] = useState(false);
@@ -859,7 +860,7 @@ function handleLocalAnchorClick(
     window.history.replaceState(null, "", cleanUrl);
 }
 
-function heroPremiumPriceLine(locale: LandingTdyLocale): string {
+function heroPremiumPriceLine(locale: LandingLocale): string {
     const premiumArs = pricingData.plans.premium;
     if (locale === "en") {
         return `from USD ${Math.ceil(premiumArs / pricingData.usdArs).toLocaleString("en-US")}`;
@@ -875,8 +876,8 @@ function Landing2PrimaryPill({
     waNumber,
 }: {
     primary?: CtaButton;
-    theme: LandingTdyTheme;
-    locale: LandingTdyLocale;
+    theme: LandingTheme;
+    locale: LandingLocale;
     waNumber: string;
 }) {
     const label =
@@ -941,7 +942,7 @@ function Landing2PrimaryPill({
     );
 }
 
-function LandingFooter({ theme }: { theme: LandingTdyTheme }) {
+function LandingFooter({ theme }: { theme: LandingTheme }) {
     return (
         <div
             style={
@@ -960,8 +961,8 @@ function FloatingCta({
     data,
     theme,
 }: {
-    data: NonNullable<LandingTdyData["floatingCta"]>;
-    theme: LandingTdyTheme;
+    data: NonNullable<LandingData["floatingCta"]>;
+    theme: LandingTheme;
 }) {
     const [hiddenBySection, setHiddenBySection] = useState(false);
     /** Ocultar de forma definitiva al haber scrolleado por debajo de #planes (FAQ, footer, etc.). */
@@ -993,7 +994,7 @@ function FloatingCta({
             .map((id) => document.getElementById(id))
             .filter((el): el is HTMLElement => Boolean(el));
         if (!els.length) return;
-        const hideIo = TDY_MOTION.floatingCta.hideSection;
+        const hideIo = LANDING_MOTION.floatingCta.hideSection;
         const visibility = new Map<string, boolean>();
         const obs = new IntersectionObserver(
             (entries) => {
@@ -1055,8 +1056,8 @@ function FloatingCta({
     if (!data.enabled) return null;
 
     const r = b.floatingBorderRadius;
-    const fc = TDY_MOTION.floatingCta;
-    const e = TDY_MOTION.ease;
+    const fc = LANDING_MOTION.floatingCta;
+    const e = LANDING_MOTION.ease;
     const l1 = fc.line1;
     const l2 = fc.line2;
     const anchorTargetId = data.anchor?.startsWith("#")
@@ -1460,11 +1461,11 @@ function HeroTdy({
     reviewsTopSimple = false,
     heroSectionId,
 }: {
-    data: LandingTdyData["sections"]["hero"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["hero"];
+    theme: LandingTheme;
     buttons: Record<string, CtaButton>;
     waNumber: string;
-    locale: LandingTdyLocale;
+    locale: LandingLocale;
     reviewsTopSimple?: boolean;
     heroSectionId?: string;
 }) {
@@ -1952,12 +1953,12 @@ function IncluyeSection({
     data,
     theme,
 }: {
-    data: LandingTdyData["sections"]["incluye"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["incluye"];
+    theme: LandingTheme;
 }) {
     const mediaSrc = data.imageSrc?.trim() ?? "";
     const showVideo = Boolean(mediaSrc && isVideoMediaSrc(mediaSrc));
-    const ioReveal = TDY_MOTION.sectionInView;
+    const ioReveal = LANDING_MOTION.sectionInView;
     /**
      * Con video: el root de intersección se alarga un viewport hacia abajo para que, al cargar,
      * el bloque ya se considere visible (título/lista sin esperar scroll). Sin video: igual que el resto.
@@ -2341,8 +2342,8 @@ function ComparativaSection({
     data,
     theme,
 }: {
-    data: LandingTdyData["sections"]["comparativa"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["comparativa"];
+    theme: LandingTheme;
 }) {
     const { revealRef, revealed } = useSectionReveal();
     const c = theme.comparativa;
@@ -2892,13 +2893,13 @@ function estiloKindFromHref(href: string | undefined): EstiloCatalogKind | null 
 }
 
 function estiloItemsGroupedByKind(
-    items: LandingTdyData["sections"]["estilos"]["items"],
-): { kind: EstiloCatalogKind; items: LandingTdyData["sections"]["estilos"]["items"] }[] {
+    items: LandingData["sections"]["estilos"]["items"],
+): { kind: EstiloCatalogKind; items: LandingData["sections"]["estilos"]["items"] }[] {
     const out: {
         kind: EstiloCatalogKind;
-        items: LandingTdyData["sections"]["estilos"]["items"];
+        items: LandingData["sections"]["estilos"]["items"];
     }[] = [];
-    const orphans: LandingTdyData["sections"]["estilos"]["items"] = [];
+    const orphans: LandingData["sections"]["estilos"]["items"] = [];
     for (const it of items) {
         const k = estiloKindFromHref(it.href);
         if (!k) {
@@ -2922,11 +2923,11 @@ function estiloItemsGroupedByKind(
 
 function estiloCatalogGroupTitle(
     kind: EstiloCatalogKind,
-    locale: LandingTdyLocale,
+    locale: LandingLocale,
 ): string {
     if (locale === "en") {
         if (kind === "boda") return "Weddings";
-        if (kind === "xv") return "Quinceañera";
+        if (kind === "xv") return "XV";
         return "Baby shower";
     }
     if (kind === "boda") return "Bodas";
@@ -2947,13 +2948,13 @@ function EstilosCarousel({
     locale = "es",
     endHeroPrimaryCta,
 }: {
-    data: LandingTdyData["sections"]["estilos"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["estilos"];
+    theme: LandingTheme;
     waNumber: string;
-    locale?: LandingTdyLocale;
+    locale?: LandingLocale;
     /** Mismo CTA principal que el hero (#planes + precio) debajo del carrusel (layout compacto). */
     endHeroPrimaryCta?: {
-        locale: LandingTdyLocale;
+        locale: LandingLocale;
         primary?: CtaButton;
     };
 }) {
@@ -2961,7 +2962,12 @@ function EstilosCarousel({
     const tx = theme.text;
     const b = theme.buttons;
     const waNoStyle = waHref(waNumber, data.noStyleWhatsappMessage);
-    const car = TDY_MOTION.estilosCarousel;
+    const noStyleConfirmMessage =
+        data.noStyleConfirmMessage ??
+        (locale === "en"
+            ? "You will be redirected to the designer's WhatsApp. Continue?"
+            : "Serás redirigida al WhatsApp del diseñador. ¿Querés continuar?");
+    const car = LANDING_MOTION.estilosCarousel;
     const cardBaseDelay = car.firstCardDelayMs;
     const kindGroups = useMemo(
         () => estiloItemsGroupedByKind(data.items),
@@ -2973,7 +2979,7 @@ function EstilosCarousel({
         "flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-5 pb-4 pt-2 md:gap-6 md:px-8 [scrollbar-width:thin] scroll-pl-5 scroll-pr-5";
 
     const renderEstiloCard = (
-        item: LandingTdyData["sections"]["estilos"]["items"][number],
+        item: LandingData["sections"]["estilos"]["items"][number],
         i: number,
     ) => {
         const cardClass =
@@ -3196,6 +3202,25 @@ function EstilosCarousel({
                         )}
                     </div>
                 )}
+                {endHeroPrimaryCta ? (
+                    <div
+                        className="mx-auto mt-12 flex w-full max-w-[280px] flex-col items-stretch sm:max-w-md"
+                        style={blockRevealStyle(
+                            revealed,
+                            cardBaseDelay +
+                                data.items.length * car.stepBetweenCardsMs +
+                                car.footerAfterCardsExtraMs +
+                                95,
+                        )}
+                    >
+                        <Landing2PrimaryPill
+                            primary={endHeroPrimaryCta.primary}
+                            theme={theme}
+                            locale={endHeroPrimaryCta.locale}
+                            waNumber={waNumber}
+                        />
+                    </div>
+                ) : null}
                 <p
                     className="mt-10 px-5 text-center text-xs leading-relaxed md:px-8 md:text-[13px]"
                     style={{
@@ -3223,6 +3248,16 @@ function EstilosCarousel({
                         href={waNoStyle}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={(event) => {
+                            event.preventDefault();
+                            const ok = window.confirm(noStyleConfirmMessage);
+                            if (!ok) return;
+                            window.open(
+                                waNoStyle,
+                                "_blank",
+                                "noopener,noreferrer",
+                            );
+                        }}
                         className="font-semibold underline decoration-1 underline-offset-[3px]"
                         style={{ color: tx.link }}
                     >
@@ -3239,25 +3274,6 @@ function EstilosCarousel({
                         />
                     </a>
                 </p>
-                {endHeroPrimaryCta ? (
-                    <div
-                        className="mx-auto mt-12 flex w-full max-w-[280px] flex-col items-stretch sm:max-w-md"
-                        style={blockRevealStyle(
-                            revealed,
-                            cardBaseDelay +
-                                data.items.length * car.stepBetweenCardsMs +
-                                car.footerAfterCardsExtraMs +
-                                95,
-                        )}
-                    >
-                        <Landing2PrimaryPill
-                            primary={endHeroPrimaryCta.primary}
-                            theme={theme}
-                            locale={endHeroPrimaryCta.locale}
-                            waNumber={waNumber}
-                        />
-                    </div>
-                ) : null}
             </div>
         </section>
     );
@@ -3267,8 +3283,8 @@ function IdiomasSection({
     data,
     theme,
 }: {
-    data: LandingTdyData["sections"]["idiomas"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["idiomas"];
+    theme: LandingTheme;
 }) {
     const { revealRef, revealed } = useSectionReveal();
     const tx = theme.text;
@@ -3419,8 +3435,8 @@ function ProcesoTdy({
     data,
     theme,
 }: {
-    data: LandingTdyData["sections"]["proceso"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["proceso"];
+    theme: LandingTheme;
 }) {
     const { revealRef, revealed } = useSectionReveal();
     const tx = theme.text;
@@ -3508,8 +3524,8 @@ function PanelSection({
     data,
     theme,
 }: {
-    data: LandingTdyData["sections"]["panel"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["panel"];
+    theme: LandingTheme;
 }) {
     const { revealRef, revealed } = useSectionReveal();
     const tx = theme.text;
@@ -3562,39 +3578,35 @@ function PanelSection({
                         wordStepMs={14}
                     />
                 </p>
-                <p
-                    className="mt-4 flex items-center justify-center gap-2 text-center font-mono text-xs tracking-wide md:text-sm"
-                    style={{
-                        color: tx.caption,
-                        ...blockRevealStyle(revealed, 145),
-                    }}
-                >
-                    <LayoutDashboard size={14} aria-hidden />
-                    <StaggerText
-                        text={data.panelUrlLabel}
-                        revealed={revealed}
-                        baseDelayMs={148}
-                        wordStepMs={16}
-                    />
-                </p>
-                <div
-                    className="relative mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border shadow-lg"
-                    style={{
-                        borderColor: theme.cardBorder,
-                        background: theme.cardBg,
-                        ...blockRevealStyle(revealed, 195),
-                    }}
-                >
-                    {data.imageSrc ? (
-                        <Image
-                            src={data.imageSrc}
-                            alt={data.imageAlt}
-                            width={data.imageWidth ?? 1179}
-                            height={data.imageHeight ?? 2127}
-                            className="h-auto w-full"
-                            sizes="(max-width: 896px) 100vw, 896px"
-                        />
-                    ) : (
+                {data.imageSrc ? (
+                    <div
+                        className="relative mx-auto mt-10 flex justify-center"
+                        style={blockRevealStyle(revealed, 195)}
+                    >
+                        <div
+                            className="relative inline-flex max-w-full overflow-hidden rounded-2xl"
+                            style={{ background: theme.background }}
+                        >
+                            <div className="relative aspect-[9/16] h-auto w-[min(88vw,300px)] max-h-[min(70vh,520px)] max-w-full sm:w-[min(86vw,360px)] md:w-[min(84vw,480px)]">
+                                <Image
+                                    src={data.imageSrc}
+                                    alt={data.imageAlt}
+                                    fill
+                                    className="object-contain"
+                                    sizes="(max-width: 768px) 90vw, 480px"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div
+                        className="relative mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border shadow-lg"
+                        style={{
+                            borderColor: theme.cardBorder,
+                            background: theme.cardBg,
+                            ...blockRevealStyle(revealed, 195),
+                        }}
+                    >
                         <div className="p-6 md:p-10">
                             <div className="grid grid-cols-3 gap-3 md:gap-4">
                                 {data.stats.map((s) => (
@@ -3674,8 +3686,8 @@ function PanelSection({
                                 </code>
                             </p>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
                 <div className="mt-16 grid gap-14 md:grid-cols-3 md:gap-16">
                     {data.features.map((f, i) => (
                         <div
@@ -3732,8 +3744,8 @@ function PlanesTdy({
     waNumber,
     modelsLink,
 }: {
-    data: LandingTdyData["sections"]["servicio"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["servicio"];
+    theme: LandingTheme;
     buttons: Record<string, CtaButton>;
     waNumber: string;
     /** Texto + CTA bajo las tarjetas (JSON o fallback si `reviewsTopSimple`). */
@@ -3863,12 +3875,20 @@ function PlanesTdy({
                                     className="mt-2 text-sm leading-relaxed"
                                     style={{ color: tx.muted }}
                                 >
-                                    <StaggerText
-                                        text={plan.description}
-                                        revealed={revealed}
-                                        baseDelayMs={214 + i * 75}
-                                        wordStepMs={10}
-                                    />
+                                    {hasBoldMarkers(plan.description) ? (
+                                        <span>
+                                            {renderTextWithBoldMarkers(
+                                                plan.description,
+                                            )}
+                                        </span>
+                                    ) : (
+                                        <StaggerText
+                                            text={plan.description}
+                                            revealed={revealed}
+                                            baseDelayMs={214 + i * 75}
+                                            wordStepMs={10}
+                                        />
+                                    )}
                                 </p>
                                 {data.showPrices && (
                                     <p
@@ -3913,14 +3933,22 @@ function PlanesTdy({
                                                     }}
                                                 />
                                                 <span>
-                                                    <StaggerText
-                                                        text={f}
-                                                        revealed={revealed}
-                                                        baseDelayMs={
-                                                            232 + i * 75
-                                                        }
-                                                        wordStepMs={9}
-                                                    />
+                                                    {hasBoldMarkers(f) ? (
+                                                        <span>
+                                                            {renderTextWithBoldMarkers(
+                                                                f,
+                                                            )}
+                                                        </span>
+                                                    ) : (
+                                                        <StaggerText
+                                                            text={f}
+                                                            revealed={revealed}
+                                                            baseDelayMs={
+                                                                232 + i * 75
+                                                            }
+                                                            wordStepMs={9}
+                                                        />
+                                                    )}
                                                 </span>
                                             </li>
                                         ))}
@@ -3998,11 +4026,11 @@ function FaqTdy({
     theme,
     heroCtaFooter,
 }: {
-    data: LandingTdyData["sections"]["faq"];
-    theme: LandingTdyTheme;
+    data: LandingData["sections"]["faq"];
+    theme: LandingTheme;
     /** Título + mismo CTA principal que el hero al pie del FAQ (layout compacto). */
     heroCtaFooter?: {
-        locale: LandingTdyLocale;
+        locale: LandingLocale;
         primary?: CtaButton;
         waNumber: string;
         footerTitle?: string;
@@ -4161,20 +4189,36 @@ function FaqTdy({
     );
 }
 
+function hasBoldMarkers(text: string): boolean {
+    return /\*\*[^*]+\*\*/.test(text);
+}
+
+function renderTextWithBoldMarkers(text: string): ReactNode[] {
+    return text
+        .split(/(\*\*[^*]+\*\*)/g)
+        .filter(Boolean)
+        .map((chunk, idx) => {
+            if (chunk.startsWith("**") && chunk.endsWith("**")) {
+                return <strong key={idx}>{chunk.slice(2, -2)}</strong>;
+            }
+            return <span key={idx}>{chunk}</span>;
+        });
+}
+
 function renderLandingPostEstilosSection(
     row: {
         id: LandingPostEstilosSectionId;
         surface: "default" | "alt";
     },
     ctx: {
-        sections: LandingTdyData["sections"];
-        theme: LandingTdyTheme;
-        themeAlt: LandingTdyTheme;
+        sections: LandingData["sections"];
+        theme: LandingTheme;
+        themeAlt: LandingTheme;
         ctaButtons: Record<string, CtaButton>;
         wa: string;
         modelsLink?: { prompt: string; cta: string; anchor: string };
         compactHeroLayout: boolean;
-        locale: LandingTdyLocale;
+        locale: LandingLocale;
         showLang: boolean;
     },
 ): ReactNode {
@@ -4230,26 +4274,26 @@ function renderLandingPostEstilosSection(
     }
 }
 
-export default function LandingTdyPage({
+export default function LandingPageHome({
     dataEs,
     dataEn,
     initialLocale = "es",
     /** Si true, lee `?lang=en|es` de la URL al montar (solo página raíz). */
     syncLocaleFromSearch = false,
 }: {
-    dataEs: LandingTdyData;
-    dataEn?: LandingTdyData;
-    initialLocale?: LandingTdyLocale;
+    dataEs: LandingData;
+    dataEn?: LandingData;
+    initialLocale?: LandingLocale;
     syncLocaleFromSearch?: boolean;
 }) {
-    const [locale, setLocale] = useState<LandingTdyLocale>(initialLocale);
+    const [locale, setLocale] = useState<LandingLocale>(initialLocale);
     const baseData = locale === "en" && dataEn ? dataEn : dataEs;
     const data = useMemo(() => {
         const pricedData = applyPricingToLandingData(baseData, locale);
         const from = pricedData.pageLayout?.configuradorFromQuery;
         if (!from) return pricedData;
 
-        const next = structuredClone(pricedData) as LandingTdyData;
+        const next = structuredClone(pricedData) as LandingData;
         Object.values(next.ctaButtons).forEach((btn) => {
             if (btn.type !== "link" || !btn.url?.startsWith("/configurador"))
                 return;
@@ -4264,7 +4308,7 @@ export default function LandingTdyPage({
         () => mergeTheme(baseData.theme),
         [baseData.theme],
     );
-    const themeAlt = useMemo<LandingTdyTheme>(
+    const themeAlt = useMemo<LandingTheme>(
         () => ({
             ...theme,
             background: theme.surfaceAlt,
@@ -4405,7 +4449,7 @@ export default function LandingTdyPage({
             }}
         >
             {showHeader && header ? (
-                <LandingTdyHeader
+                <LandingHeader
                     theme={theme}
                     brand={header.brand}
                     nav={header.nav}

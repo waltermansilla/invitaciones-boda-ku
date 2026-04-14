@@ -161,7 +161,7 @@ export function getEventLabels(lang: ConfiguratorLang): Record<
     if (lang === "en") {
         return {
             boda: "Wedding",
-            xv: "Quinceañera",
+            xv: "XV",
             cumpleanos: "Birthday",
             "baby-shower": "Baby shower",
             corporativo: "Corporate",
@@ -242,7 +242,7 @@ export function getUiStrings(lang: ConfiguratorLang) {
             dateHelp: "Tap the field to open the calendar and pick a date.",
             back: "Back",
             next: "Next",
-            goWhatsapp: "Open WhatsApp",
+            goWhatsapp: "Pay 50% deposit",
             totalDeposit: (total: string) => `Total ${total} | Deposit 50%`,
             footerNote: "The remaining 50% is due on final delivery.",
             summaryHi: (planLabel: string) =>
@@ -331,7 +331,7 @@ export function getUiStrings(lang: ConfiguratorLang) {
             "Tocá el campo para abrir el calendario y seleccionar la fecha.",
         back: "Atrás",
         next: "Siguiente",
-        goWhatsapp: "Ir a WhatsApp",
+        goWhatsapp: "Señar 50%",
         totalDeposit: (total: string) => `Total ${total} | Señar 50%`,
         footerNote: "El 50% restante se abona en la entrega final.",
         summaryHi: (planLabel: string) =>

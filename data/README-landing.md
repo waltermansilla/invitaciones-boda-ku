@@ -9,14 +9,14 @@ Este resumen es **solo para landing y configurador** (no invitaciones de cliente
   - `usdArs`: cotizacion ARS/USD.
   - USD se calcula automatico con redondeo hacia arriba por item.
 
-- `landing-theme.json`
-  - Tema por defecto / referencia (la landing TDY en `/` usa `theme` dentro de `landing-tdy*.json`).
+- `landing-2-theme.json`
+  - Tema por defecto / referencia (la landing home en `/` usa `theme` dentro de `landing-2*.json`).
 
-- `landing-tdy.json` + `landing-tdy.en.json`
-  - Landing **oficial** en la **raíz** `/` (componente `LandingTdyPage`).
+- `landing-2.json` + `landing-2.en.json`
+  - Landing **oficial** en la **raíz** `/` (componente `LandingPageHome`).
   - Textos, `theme`, `pageLayout`, secciones; precios principales desde `pricing.json`.
 
-- `landing.json`
+- `landing-1.json`
   - Landing **clásica** en **`/landing`** (`LandingPage`).
 
 ## Fotos y videos de la landing

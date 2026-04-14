@@ -1,5 +1,5 @@
 {
-    "_comment_archivo": "English copy for / (home). Same schema as landing-tdy.json + pageLayout.",
+    "_comment_archivo": "English copy for / (home). Same schema as landing-2.json + pageLayout.",
     "_comment_media": "Media: public/landing/media/ — paths /landing/media/...",
     "pageLayout": {
         "heroSectionId": "hero-home",
@@ -90,7 +90,7 @@
         "brand": "Momento Único",
         "nav": [
             { "label": "Home", "anchor": "#" },
-            { "label": "Styles", "anchor": "#estilos" },
+            { "label": "Samples", "anchor": "#estilos" },
             { "label": "Pricing", "anchor": "#planes" },
             { "label": "How it works", "anchor": "#proceso" }
         ],
@@ -126,7 +126,7 @@
             "type": "link",
             "url": "/configurador?plan=premium"
         },
-        "planUniqueDesign": {
+        "planDisenoUnico": {
             "text": "Choose Unique design",
             "type": "link",
             "url": "/configurador?plan=diseno-unico&start=idioma"
@@ -137,18 +137,18 @@
         "hero": {
             "enabled": true,
             "title": {
-                "line1": "Digital wedding invitations",
+                "line1": "Digital invitations",
                 "line2": "for your",
                 "rotatingWords": [
-                    "Special moment",
-                    "A unique celebration",
-                    "A one-of-a-kind day",
-                    "A unique night",
-                    "A unique story",
-                    "A unique event"
+                    "unique moment",
+                    "unique memory",
+                    "unique night",
+                    "unique story",
+                    "unique event",
+                    "unique party"
                 ]
             },
-            "subtitle": "RSVPs, guest list, map, music, and a design tailored to your day. One-time payment, no subscription.",
+            "subtitle": "With RSVP, guest list, map, music, and a design made to move people. One payment, no subscriptions.",
             "languagesHint": "Your invitation, multilingual",
             "reviews": {
                 "enabled": true,
@@ -156,13 +156,13 @@
                 "count": 15,
                 "source": "Google Maps",
                 "linkText": "See reviews",
-                "url": "https://maps.google.com/?q=Momento+Único+invitaciones"
+                "url": "https://www.google.com/search?q=Momento+%C3%9Anico+Invitaciones+Web#lrd=0x95bb21bc055acb8b:0x42f7018a340ec6b,1,,,"
             }
         },
         "incluye": {
             "id": "incluye",
             "title": "What your digital invitation includes",
-            "subtitle": "Everything you need to wow your guests and keep planning simple.",
+            "subtitle": "Everything you need to surprise your guests and stay organized without the stress.",
             "listStyle": {
                 "fontSizePx": 13,
                 "gapPx": 16,
@@ -171,17 +171,17 @@
             "imageSrc": "/landing/media/videos/video-landing.mov",
             "imageAlt": "Digital invitation animation on a transparent background",
             "items": [
-                { "text": "Custom design tailored to your event", "icon": "palette" },
+                { "text": "Custom design that fits your event", "icon": "palette" },
                 { "text": "RSVP with a clear confirmation message for you", "icon": "mailCheck" },
                 { "text": "Guest list and tracking in one place", "icon": "users" },
-                { "text": "Map, timeline and key info always at hand", "icon": "mapPin" },
-                { "text": "Two languages of your choice for guests abroad", "icon": "languages" }
+                { "text": "Map, schedule, and key details always at hand", "icon": "mapPin" },
+                { "text": "Two languages of your choice for guests coming from afar", "icon": "languages" }
             ]
         },
         "comparativa": {
             "id": "comparativa",
             "title": "Paper vs digital",
-            "lead": "Paper invites are beautiful, but digital gives you a cleaner process, lower costs, and a better guest experience.",
+            "lead": "Paper has a charm all its own. The digital invitation is a thoughtful choice for anyone who wants to save, simplify, and still enjoy a beautiful experience.",
             "tableHeaders": {
                 "feature": "Feature",
                 "paper": "Paper",
@@ -202,96 +202,103 @@
             },
             "digital": {
                 "title": "Digital invitation",
-                "badge": "Most practical choice",
+                "badge": "The best choice",
                 "savingsLine": "Estimated savings compared to paper",
                 "bullets": [
                     {
                         "text": "Real savings",
-                        "subtext": "No printing, envelopes or postal shipping",
+                        "subtext": "No printing, envelopes, or postal shipping",
                         "icon": "banknote"
                     },
                     {
-                        "text": "RSVP dashboard",
-                        "subtext": "Live responses, filters, and clear attendee tracking",
+                        "text": "Guest dashboard",
+                        "subtext": "Confirmations, filters, and real-time control",
                         "icon": "layoutDashboard"
                     },
                     {
                         "text": "Always accessible",
-                        "subtext": "Available 24/7 on every guest’s phone",
+                        "subtext": "Available 24/7 on each guest’s phone",
                         "icon": "smartphone"
                     },
                     {
-                        "text": "Update anytime",
-                        "subtext": "Edit details after sending, no reprinting needed",
+                        "text": "Update whenever you want",
+                        "subtext": "Change details after sending—no reprinting",
                         "icon": "refreshCw"
                     }
                 ],
-                "fromLabel": "Digital total",
+                "fromLabel": "From only",
                 "fromPrice": "-",
                 "fromPriceUsd": "",
-                "footnote": "Paper costs are estimates. Digital is a one-time payment based on your plan."
+                "footnote": "Paper figures are indicative; digital is a one-time payment according to your plan."
             },
             "tableTitle": "Advantages only digital offers",
             "tableRows": [
                 { "feature": "Update details after sending", "paper": "No", "digital": "Yes" },
-                { "feature": "RSVP tracking", "paper": "No", "digital": "Yes" },
+                { "feature": "Track confirmations", "paper": "No", "digital": "Yes" },
                 { "feature": "Interactive map & schedule", "paper": "No", "digital": "Yes" },
                 { "feature": "Countdown & ambience", "paper": "No", "digital": "Yes" },
                 { "feature": "Gallery & music", "paper": "No", "digital": "Yes" }
             ],
-            "ecoNote": "Every digital invitation saves paper and reduces your event’s environmental footprint."
+            "ecoNote": "Every digital invitation avoids paper and reduces your event’s environmental impact."
         },
         "estilos": {
             "id": "estilos",
-            "eyebrow": "Catalogue",
-            "title": "Choose your style, make it yours",
-            "subtitle": "Explore real examples. Each one sets a different vibe.",
-            "demoButtonText": "View demo",
-            "noStylePrompt": "Don’t see your style?",
+            "eyebrow": "Samples",
+            "title": "See our invitations we’ve already designed",
+            "subtitle": "Pick the one you like most and use it as a reference to build yours.",
+            "demoButtonText": "View invitation",
+            "noStylePrompt": "Can’t find your style?",
             "noStyleCta": "Tell us your idea",
-            "noStyleWhatsappMessage": "Hi! I have an idea for my invitation and I’d love to share it with you.",
+            "noStyleWhatsappMessage": "Hi! I couldn’t find my style in your invitations, but I have an idea for mine and I’d love to tell you about it.",
+            "noStyleConfirmMessage": "You’ll be redirected to the designer’s WhatsApp. Do you want to continue?",
             "items": [
                 {
                     "image": "/landing/media/images/anto-walter-boda.jpg",
                     "titulo": "Anto & Walter",
-                    "descripcion": "Wedding · Warm elegance and premium details.",
+                    "descripcion": "Wedding · Tells their story, fun trivia.",
                     "href": "/m/boda/anto-walter"
                 },
                 {
                     "image": "/landing/media/images/meliza-ivan-boda.jpg",
                     "titulo": "Meliza & Iván",
-                    "descripcion": "Wedding · Clean, easy-to-share style.",
+                    "descripcion": "Wedding · Simple and minimal.",
                     "href": "/m/boda/meliza-ivan"
                 },
                 {
                     "image": "/landing/media/images/yesica-hernan-boda.jpg",
                     "titulo": "Yesica & Hernán",
-                    "descripcion": "Wedding · Romance and clarity in every detail.",
+                    "descripcion": "Wedding · More premium, floral backgrounds.",
                     "href": "/m/boda/yesica-hernan"
                 },
                 {
                     "image": "/landing/media/images/camila-xv.jpg",
                     "titulo": "Camila",
-                    "descripcion": "Quinceañera · Sparkle and energy for your party.",
+                    "descripcion": "XV · Custom typography, interactive trivia.",
                     "href": "/m/xv/camila"
                 },
                 {
                     "image": "/landing/media/images/dasha-xv.jpg",
                     "titulo": "Dasha",
-                    "descripcion": "Quinceañera · Personality and colour.",
+                    "descripcion": "XV · Magical. Shared photo album.",
                     "href": "/m/xv/dasha"
+                },
+                {
+                    "image": "/landing/media/images/carmela-xv.jpg",
+                    "titulo": "Carmela",
+                    "descripcion": "XV · Elegant and bright, with custom details.",
+                    "href": "/m/xv/carmela"
                 },
                 {
                     "image": "/landing/media/images/maxima-baby.jpg",
                     "titulo": "Máxima",
-                    "descripcion": "Baby shower · Sweet celebration.",
+                    "descripcion": "Baby shower · Sweet and simple.",
                     "href": "/m/baby/maxima"
                 }
             ]
         },
         "idiomas": {
-            "title": "Your invitation in any language",
-            "subtitle": "For your invitation, you can add a second language and guests can switch with one tap.",
+            "title": "Your invitation in two languages",
+            "subtitle": "You can add a second language to your invitation, and each guest can switch with one tap.",
             "globeImageSrc": "",
             "languages": [
                 { "code": "ES", "name": "Español" },
@@ -308,9 +315,9 @@
                 { "code": "JA", "name": "日本語" }
             ],
             "bullets": [
-                "Each invitation can include up to two languages",
-                "Guests can switch languages in one tap",
-                "Great for international guest lists"
+                "Each invitation can include up to two languages of your choice",
+                "Easy to switch for whoever receives the link",
+                "Perfect for groups traveling from abroad"
             ],
             "missingLanguageTitle": "Don’t see your language?",
             "missingLanguageSubtitle": "We work with any language in the world"
@@ -318,41 +325,39 @@
         "proceso": {
             "enabled": true,
             "id": "proceso",
-            "title": "How it works",
+            "title": "How configuring your invitation works",
             "steps": [
                 {
                     "number": "01",
-                    "title": "Pick your plan",
-                    "description": "Choose Premium or Unique Design based on your needs.",
+                    "title": "Choose your plan",
+                    "description": "Premium or Unique design—whatever you need.",
                     "icon": "sparkles"
                 },
                 {
                     "number": "02",
                     "title": "Customize in minutes",
-                    "description": "Choose sections, language, and add-ons. You can also use one of our existing designs as your reference.",
+                    "description": "Set sections, language, and extras. If you want, we can use one of our samples as a reference.",
                     "icon": "layoutDashboard"
                 },
                 {
                     "number": "03",
                     "title": "Receive your invitation",
-                    "description": "Send your summary on WhatsApp, reserve with a deposit, and get your link ready to share in 3 to 5 business days.",
+                    "description": "Send your summary on WhatsApp, book with a deposit, and in 3–5 business days you’ll have your link ready to share.",
                     "icon": "link"
                 }
             ]
         },
         "panel": {
             "eyebrow": "Private dashboard",
-            "title": "Everything under control, in one place",
-            "subtitle": "Every invitation includes a private dashboard to manage your guest list and responses.",
-            "panelUrlLabel": "panel.yourinvitation.com",
-            "imageSrc": "/landing/media/images/panel.jpg",
-            "imageWidth": 1179,
-            "imageHeight": 2127,
+            "title": "Your guests, all in one place",
+            "subtitle": "From a clear, practical dashboard you can see who confirmed, who’s still pending, and their dietary requirements.",
+            "panelUrlLabel": "",
+            "imageSrc": "/landing/media/images/panel.PNG",
             "imageAlt": "Guest admin panel screenshot",
             "stats": [
                 { "value": "42", "label": "Confirmed" },
                 { "value": "8", "label": "Pending" },
-                { "value": "3", "label": "Declined" }
+                { "value": "3", "label": "Not attending" }
             ],
             "guestListTitle": "Guest list",
             "guestListTotal": "53 total",
@@ -364,17 +369,17 @@
             "features": [
                 {
                     "title": "Attendance control",
-                    "subtitle": "Real-time confirmations with a clear view of who’s coming.",
+                    "subtitle": "Real-time confirmations and a clear view of who’s coming.",
                     "icon": "userCheck"
                 },
                 {
-                    "title": "Dietary restrictions",
-                    "subtitle": "Track allergies and meal preferences for easier catering coordination.",
+                    "title": "Intolerances and menus",
+                    "subtitle": "Note allergies and preferences to coordinate with catering.",
                     "icon": "utensils"
                 },
                 {
                     "title": "Clear stats",
-                    "subtitle": "Track responses at a glance.",
+                    "subtitle": "Follow how responses are progressing at a glance.",
                     "icon": "barChart"
                 }
             ]
@@ -382,11 +387,11 @@
         "servicio": {
             "enabled": true,
             "title": "Choose your plan",
-            "subtitle": "Two ways to build your invitation: modular and customizable, or fully bespoke.",
+            "subtitle": "Two ways to build your invitation: block-by-block configuration, or a fully unique design.",
             "showPrices": true,
-            "notice": "Typical turnaround: 3–5 business days once we have all materials.",
-            "modelsLinkPrompt": "Want to see the designs we've already made?",
-            "modelsLinkCta": "View models",
+            "notice": "Normally, without Rush Delivery your invitation may take between 3 and 5 business days.",
+            "modelsLinkPrompt": "Want to see the samples we’ve already designed?",
+            "modelsLinkCta": "View samples",
             "modelsLinkAnchor": "#estilos",
             "planes": [
                 {
@@ -395,28 +400,27 @@
                     "badge": "Most popular",
                     "price": "-",
                     "priceUsd": "",
-                    "description": "Build your invitation step by step around what you actually need.",
+                    "description": "Configure your invitation step by step based on what you really need.",
                     "features": [
-                        "RSVP via WhatsApp",
-                        "Up to 5 photos + countdown",
-                        "Custom colours and custom phrases",
-                        "4 sections included (+ARS 4,000 per extra section)",
-                        "Optional second language (+ARS 12,000)"
+                        "RSVP confirmation. Optional private dashboard.",
+                        "Up to 5 photos free + countdown",
+                        "Custom colours and phrases",
+                        "4 sections included free, optional extras",
+                        "You can add a second language."
                     ]
                 },
                 {
-                    "name": "Unique Design",
-                    "ctaButton": "planUniqueDesign",
+                    "name": "Unique design",
+                    "ctaButton": "planDisenoUnico",
                     "badge": null,
                     "price": "-",
                     "priceUsd": "",
-                    "description": "For special requests that need a true from-scratch build, for example integrated drawings or watercolor artwork, a video behind text, or custom floral text backgrounds. It includes all available sections.",
+                    "description": "For special cases that need a design built from scratch—for example integrated drawings or watercolors, video behind text, or custom floral backgrounds. **It includes every available section and a private guest dashboard.**",
                     "features": [
-                        "All available sections included",
-                        "Second language included",
+                        "Fully custom design",
+                        "Every available section included",
                         "Real-time guest dashboard included",
-                        "Custom domain (optional add-on)",
-                        "24-hour rush delivery (optional add-on)"
+                        "Second language included"
                     ]
                 }
             ],
@@ -429,7 +433,7 @@
                     "Location with directions",
                     "Event itinerary",
                     "Gifts section",
-                    "Gift amount section",
+                    "Suggested gift amount",
                     "Custom colours",
                     "Works on all devices"
                 ]
@@ -439,36 +443,36 @@
             "enabled": true,
             "id": "faq",
             "title": "Frequently asked questions",
-            "subtitle": "Quick answers before you book your invitation.",
-            "footerCtaTitle": "Ready for the invitation you'll love to share?",
+            "subtitle": "The essentials before you book your invitation.",
+            "footerCtaTitle": "Ready for the invitation you’ll love sharing?",
             "items": [
                 {
-                    "question": "Can I request changes after I receive the invitation?",
-                    "answer": "Yes. One revision round is included so everything feels right. If you need small additional tweaks, we can coordinate them."
+                    "question": "Can I make changes after I receive the invitation?",
+                    "answer": "Yes. We include one round of tweaks to get it just how you want. If you later need small extra changes, we can arrange those too."
                 },
                 {
-                    "question": "How do guests open and share the invitation?",
-                    "answer": "You receive a unique link you can share on WhatsApp, social media, or email. No app download is required."
+                    "question": "How do guests share the link?",
+                    "answer": "We give you a unique link you can send by WhatsApp, social media, or email. Guests don’t need to download any app."
                 },
                 {
-                    "question": "What is the delivery time?",
-                    "answer": "Standard delivery is 3 to 5 business days once we have all your content. If needed, you can add 24-hour rush delivery."
+                    "question": "How long does delivery take?",
+                    "answer": "The usual timeline is 3 to 5 business days from when we receive all your materials. If you’re in a hurry, you can add 24-hour rush delivery."
                 },
                 {
                     "question": "How does payment work?",
-                    "answer": "You reserve your date with a 50% deposit, and the remaining balance is paid when your final link is delivered."
+                    "answer": "You book with a 50% deposit and pay the balance when your final link is delivered."
                 },
                 {
-                    "question": "What is the difference between WhatsApp RSVP and the dashboard add-on?",
-                    "answer": "With WhatsApp RSVP, confirmations arrive by message and you track them manually. With the dashboard, responses update automatically with statuses and live totals."
+                    "question": "What’s the difference between confirming via WhatsApp and adding the dashboard?",
+                    "answer": "With WhatsApp you get the messages and manage them yourself. With the dashboard, confirmations update automatically on your board with statuses and metrics."
                 },
                 {
-                    "question": "Can I add more than 4 sections or another language?",
-                    "answer": "Yes. The configurator shows everything step by step: Premium includes 4 sections, and you can add extra sections plus a second language."
+                    "question": "Can I choose more than 4 sections or add another language?",
+                    "answer": "Yes. The configurator walks you through everything: the Premium plan includes 4 sections, and you can add extras plus a second language."
                 },
                 {
-                    "question": "Does my link expire after the event?",
-                    "answer": "Yes. Your link stays active for up to 3 months after the event. If you want to keep it permanently, we can extend it for an extra storage fee."
+                    "question": "Does the link expire after the event?",
+                    "answer": "Yes. The link stays active for up to 3 months after the event. If you want to keep it permanently, we can extend it for an extra storage fee."
                 }
             ]
         }
