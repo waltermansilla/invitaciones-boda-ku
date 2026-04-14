@@ -210,8 +210,7 @@ function WhatsAppHref(number: string, message: string) {
 function ConfiguradorPageContent() {
     const params = useSearchParams();
     const uiLang = params.get("lang") === "en" ? "en" : "es";
-    const fromLanding2 = params.get("from") === "landing2";
-    const closeHref = fromLanding2 ? `/landing2?lang=${uiLang}` : "/landing";
+    const closeHref = `/?lang=${uiLang}`;
     const rawPlan = params.get("plan");
     const plan: PlanKey =
         rawPlan === "diseno-unico" ? "diseno-unico" : "premium";
@@ -249,15 +248,16 @@ function ConfiguradorPageContent() {
     const [name2, setName2] = useState("");
     const [email, setEmail] = useState("");
     const [eventDate, setEventDate] = useState("");
-    const [termsAccepted, setTermsAccepted] = useState(false);
     const [seccionesInfoOpen, setSeccionesInfoOpen] = useState(false);
+    const [seccionesMinErrorShown, setSeccionesMinErrorShown] =
+        useState(false);
 
     const styleItems = landingTdyData.sections.estilos.items ?? [];
     const waNumber = landingTdyData.whatsapp.number;
 
     const steps: readonly string[] =
         plan === "diseno-unico"
-            ? (["idioma", "extras", "datos", "terminos"] as const)
+            ? (["idioma", "extras", "datos"] as const)
             : ([
                   "evento",
                   "estilo",
@@ -265,7 +265,6 @@ function ConfiguradorPageContent() {
                   "idioma",
                   "extras",
                   "datos",
-                  "terminos",
               ] as const);
     const initialStep = useMemo(() => {
         if (start && steps.includes(start)) return steps.indexOf(start);
@@ -383,6 +382,8 @@ function ConfiguradorPageContent() {
         return v.length > 5 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     }, [email]);
 
+    const MIN_SECTION_BLOCKS = 3;
+
     const canContinue = useMemo(() => {
         const step = steps[stepIdx];
         if (step === "evento")
@@ -391,13 +392,13 @@ function ConfiguradorPageContent() {
                 (eventType !== "otro" || eventOther.trim().length > 2)
             );
         if (step === "estilo") return Boolean(styleSelected);
+        if (step === "secciones") return true;
         if (step === "datos")
             return (
                 name1.trim().length > 1 &&
                 Boolean(eventDate) &&
                 hasValidEmail
             );
-        if (step === "terminos") return termsAccepted;
         return true;
     }, [
         steps,
@@ -408,10 +409,23 @@ function ConfiguradorPageContent() {
         name1,
         hasValidEmail,
         eventDate,
-        termsAccepted,
     ]);
 
+    const isLastStep = stepIdx === steps.length - 1;
+
     const step = steps[stepIdx];
+
+    useEffect(() => {
+        if (sections.length >= MIN_SECTION_BLOCKS) {
+            setSeccionesMinErrorShown(false);
+        }
+    }, [sections.length]);
+
+    useEffect(() => {
+        if (step !== "secciones") {
+            setSeccionesMinErrorShown(false);
+        }
+    }, [step]);
 
     return (
         <main className="min-h-svh bg-[#FDFBF7] text-[#3F332B]">
@@ -428,17 +442,20 @@ function ConfiguradorPageContent() {
                     <div className="justify-self-center text-center text-sm font-semibold">
                         {plan === "premium" ? t.planPremium : t.planUnique}
                     </div>
-                    <div className="justify-self-end text-sm font-semibold tabular-nums">
+                    <div className="justify-self-end text-right text-[15px] font-bold tabular-nums leading-tight tracking-tight text-[#4A3729] sm:text-base">
                         {formatMoney(total, currency)}
                     </div>
                 </div>
                 <div
-                    className={`mx-auto grid max-w-3xl grid-cols-7 gap-2 pb-3 ${PAGE_GUTTER}`}
+                    className={`mx-auto grid w-full max-w-3xl min-w-0 gap-1.5 pb-3 sm:gap-2 ${PAGE_GUTTER}`}
+                    style={{
+                        gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))`,
+                    }}
                 >
                     {steps.map((_, i) => (
                         <span
                             key={i}
-                            className="h-1.5 rounded-full"
+                            className="h-2 min-w-0 rounded-full sm:h-1.5"
                             style={{
                                 background:
                                     i <= stepIdx ? "#7A5F45" : "#E8E0D7",
@@ -681,6 +698,15 @@ function ConfiguradorPageContent() {
                                     : t.sinExtras}
                             </span>
                         </p>
+                        {seccionesMinErrorShown &&
+                        sections.length < MIN_SECTION_BLOCKS ? (
+                            <p
+                                className="mt-2 text-sm font-semibold text-[#B71C1C]"
+                                role="alert"
+                            >
+                                {t.seccionesMinThree}
+                            </p>
+                        ) : null}
                         <div className="mt-4 grid w-full min-w-0 grid-cols-4 gap-x-4 gap-y-7 pt-3 sm:gap-x-3 sm:gap-y-5 sm:pt-2">
                             {sectionOptions.map((s) => {
                                 const on = sections.includes(s.id);
@@ -1238,47 +1264,6 @@ function ConfiguradorPageContent() {
                         </div>
                     </>
                 ) : null}
-
-                {step === "terminos" ? (
-                    <>
-                        <h2
-                            className="text-3xl font-normal"
-                            style={{
-                                fontFamily:
-                                    "var(--font-landing-hero), Georgia, serif",
-                            }}
-                        >
-                            {t.terminosTitle}
-                        </h2>
-                        <div
-                            className="mt-4 rounded-xl border px-4 py-4 text-sm leading-relaxed"
-                            style={{
-                                borderColor: "#DCCFC0",
-                                background: "#FFF",
-                            }}
-                        >
-                            <p>
-                                <strong>{t.terminosTermsLabel}</strong>{" "}
-                                {t.terminosTermsBody}
-                            </p>
-                            <p className="mt-3">
-                                <strong>{t.terminosPrivacyLabel}</strong>{" "}
-                                {t.terminosPrivacyBody}
-                            </p>
-                        </div>
-                        <label className="mt-4 flex items-start gap-2 text-sm">
-                            <input
-                                type="checkbox"
-                                checked={termsAccepted}
-                                onChange={(e) =>
-                                    setTermsAccepted(e.target.checked)
-                                }
-                                className="mt-1"
-                            />
-                            {t.terminosCheck}
-                        </label>
-                    </>
-                ) : null}
             </section>
 
             <footer
@@ -1325,14 +1310,22 @@ function ConfiguradorPageContent() {
                         >
                             {t.back}
                         </button>
-                        {step !== "terminos" ? (
+                        {!isLastStep ? (
                             <button
                                 type="button"
-                                onClick={() =>
+                                onClick={() => {
+                                    const cur = steps[stepIdx];
+                                    if (
+                                        cur === "secciones" &&
+                                        sections.length < MIN_SECTION_BLOCKS
+                                    ) {
+                                        setSeccionesMinErrorShown(true);
+                                        return;
+                                    }
                                     setStepIdx((s) =>
                                         Math.min(steps.length - 1, s + 1),
-                                    )
-                                }
+                                    );
+                                }}
                                 disabled={!canContinue}
                                 className="inline-flex items-center gap-1 rounded-full bg-[#7A5F45] px-4 py-2 text-sm font-semibold text-white disabled:opacity-45"
                             >
@@ -1352,13 +1345,13 @@ function ConfiguradorPageContent() {
                     </div>
                     <a
                         href={
-                            step === "terminos" && canContinue
+                            isLastStep && canContinue
                                 ? WhatsAppHref(waNumber, summary)
                                 : undefined
                         }
                         target="_blank"
                         rel="noreferrer"
-                        className={`flex w-full items-center justify-center rounded-2xl py-3 text-base font-semibold text-white ${step === "terminos" && canContinue ? "" : "pointer-events-none opacity-75"}`}
+                        className={`flex w-full items-center justify-center rounded-2xl py-3 text-base font-semibold text-white ${isLastStep && canContinue ? "" : "pointer-events-none opacity-75"}`}
                         style={{ background: "#7A5F45" }}
                     >
                         {t.totalDeposit(formatMoney(total, currency))}

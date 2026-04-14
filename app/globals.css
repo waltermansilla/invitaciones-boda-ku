@@ -106,7 +106,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* /landing (TDY): altura usable en iOS Safari (barra inferior / gesto) */
+  /* Landing TDY (raíz): altura usable en iOS Safari (barra inferior / gesto) */
   .landing-tdy-shell {
     min-height: 100svh;
     min-height: -webkit-fill-available;
@@ -183,7 +183,7 @@
   animation: iconTouch 0.45s ease-out;
 }
 
-/* CTA flotante /landing: estrellas decorativas */
+/* CTA flotante landing TDY: estrellas decorativas */
 @keyframes landing-fab-star-drift-a {
   0%,
   100% {

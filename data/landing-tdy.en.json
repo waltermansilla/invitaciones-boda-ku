@@ -1,5 +1,18 @@
 {
-    "_comment": "English copy for /landing. Same structure as landing-tdy.json.",
+    "_comment_archivo": "English copy for / (home). Same schema as landing-tdy.json + pageLayout.",
+    "_comment_media": "Media: public/landing/media/ — paths /landing/media/...",
+    "pageLayout": {
+        "heroSectionId": "hero-home",
+        "reviewsTopSimple": true,
+        "postEstilosSections": [
+            { "id": "panel", "surface": "default" },
+            { "id": "idiomas", "surface": "alt" },
+            { "id": "servicio", "surface": "default" },
+            { "id": "proceso", "surface": "alt" },
+            { "id": "faq", "surface": "alt" }
+        ],
+        "configuradorFromQuery": "home"
+    },
 
     "theme": {
         "_comment_creams": "Same as ES.",
@@ -7,8 +20,8 @@
         "foreground": "#4A3A2F",
         "cardBg": "#FFFFFF",
         "cardBorder": "#E6E1D9",
-        "footerBg": "#1A1917",
-        "footerText": "#F7F4EF",
+        "footerBg": "#4A423A",
+        "footerText": "#F7F2EB",
         "surfaceAlt": "#F3EEE6",
 
         "typography": {
@@ -77,11 +90,9 @@
         "brand": "Momento Único",
         "nav": [
             { "label": "Home", "anchor": "#" },
-            { "label": "What's included", "anchor": "#incluye" },
-            { "label": "Paper vs digital", "anchor": "#comparativa" },
             { "label": "Styles", "anchor": "#estilos" },
-            { "label": "How it works", "anchor": "#proceso" },
-            { "label": "Plans", "anchor": "#planes" }
+            { "label": "Pricing", "anchor": "#planes" },
+            { "label": "How it works", "anchor": "#proceso" }
         ],
         "cta": { "label": "Create invitation", "anchor": "#planes" }
     },
@@ -157,8 +168,8 @@
                 "gapPx": 16,
                 "iconSize": 18
             },
-            "imageSrc": "",
-            "imageAlt": "Preview of a sample digital invitation",
+            "imageSrc": "/landing/media/videos/video-landing.mov",
+            "imageAlt": "Digital invitation animation on a transparent background",
             "items": [
                 { "text": "Custom design tailored to your event", "icon": "palette" },
                 { "text": "RSVP with a clear confirmation message for you", "icon": "mailCheck" },
@@ -241,22 +252,40 @@
             "noStyleWhatsappMessage": "Hi! I have an idea for my invitation and I’d love to share it with you.",
             "items": [
                 {
-                    "image": "",
+                    "image": "/landing/media/images/anto-walter-boda.jpg",
                     "titulo": "Anto & Walter",
-                    "descripcion": "Warm elegance and premium details.",
+                    "descripcion": "Wedding · Warm elegance and premium details.",
                     "href": "/m/boda/anto-walter"
                 },
                 {
-                    "image": "",
+                    "image": "/landing/media/images/meliza-ivan-boda.jpg",
                     "titulo": "Meliza & Iván",
-                    "descripcion": "Essential style, easy to share.",
+                    "descripcion": "Wedding · Clean, easy-to-share style.",
                     "href": "/m/boda/meliza-ivan"
                 },
                 {
-                    "image": "",
-                    "titulo": "Valentina",
-                    "descripcion": "Quinceañera with personality and colour.",
-                    "href": "/m/xv/valentina"
+                    "image": "/landing/media/images/yesica-hernan-boda.jpg",
+                    "titulo": "Yesica & Hernán",
+                    "descripcion": "Wedding · Romance and clarity in every detail.",
+                    "href": "/m/boda/yesica-hernan"
+                },
+                {
+                    "image": "/landing/media/images/camila-xv.jpg",
+                    "titulo": "Camila",
+                    "descripcion": "Quinceañera · Sparkle and energy for your party.",
+                    "href": "/m/xv/camila"
+                },
+                {
+                    "image": "/landing/media/images/dasha-xv.jpg",
+                    "titulo": "Dasha",
+                    "descripcion": "Quinceañera · Personality and colour.",
+                    "href": "/m/xv/dasha"
+                },
+                {
+                    "image": "/landing/media/images/maxima-baby.jpg",
+                    "titulo": "Máxima",
+                    "descripcion": "Baby shower · Sweet celebration.",
+                    "href": "/m/baby/maxima"
                 }
             ]
         },
@@ -293,20 +322,20 @@
             "steps": [
                 {
                     "number": "01",
-                    "title": "Choose your style",
-                    "description": "Browse our samples and tell us what you’re looking for.",
+                    "title": "Pick your plan",
+                    "description": "Choose Premium or Unique Design based on your needs.",
                     "icon": "sparkles"
                 },
                 {
                     "number": "02",
-                    "title": "Send us the details",
-                    "description": "Date, venue, timeline, wording, and photos. We’ll guide you through anything missing.",
-                    "icon": "inbox"
+                    "title": "Customize in minutes",
+                    "description": "Choose sections, language, and add-ons. You can also use one of our existing designs as your reference.",
+                    "icon": "layoutDashboard"
                 },
                 {
                     "number": "03",
-                    "title": "Get your link",
-                    "description": "Your invitation ready to share on WhatsApp, social or email.",
+                    "title": "Receive your invitation",
+                    "description": "Send your summary on WhatsApp, reserve with a deposit, and get your link ready to share in 3 to 5 business days.",
                     "icon": "link"
                 }
             ]
@@ -316,7 +345,9 @@
             "title": "Everything under control, in one place",
             "subtitle": "Every invitation includes a private dashboard to manage your guest list and responses.",
             "panelUrlLabel": "panel.yourinvitation.com",
-            "imageSrc": "",
+            "imageSrc": "/landing/media/images/panel.jpg",
+            "imageWidth": 1179,
+            "imageHeight": 2127,
             "imageAlt": "Guest admin panel screenshot",
             "stats": [
                 { "value": "42", "label": "Confirmed" },
@@ -354,6 +385,9 @@
             "subtitle": "Two ways to build your invitation: modular and customizable, or fully bespoke.",
             "showPrices": true,
             "notice": "Typical turnaround: 3–5 business days once we have all materials.",
+            "modelsLinkPrompt": "Want to see the designs we've already made?",
+            "modelsLinkCta": "View models",
+            "modelsLinkAnchor": "#estilos",
             "planes": [
                 {
                     "name": "Premium",
@@ -406,6 +440,7 @@
             "id": "faq",
             "title": "Frequently asked questions",
             "subtitle": "Quick answers before you book your invitation.",
+            "footerCtaTitle": "Ready for the invitation you'll love to share?",
             "items": [
                 {
                     "question": "Can I request changes after I receive the invitation?",

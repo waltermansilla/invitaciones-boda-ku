@@ -10,16 +10,29 @@ Este resumen es **solo para landing y configurador** (no invitaciones de cliente
   - USD se calcula automatico con redondeo hacia arriba por item.
 
 - `landing-theme.json`
-  - Fuente unica de diseno visual para landing (ES y EN).
-  - Colores, bordes, sombras, tipografias, opacidades.
+  - Tema por defecto / referencia (la landing TDY en `/` usa `theme` dentro de `landing-tdy*.json`).
 
-- `landing-tdy.json`
-  - Contenido de texto en espanol (labels, titulos, subtitulos, etc.).
-  - Los precios visibles principales se recalculan en runtime desde `pricing.json`.
+- `landing-tdy.json` + `landing-tdy.en.json`
+  - Landing **oficial** en la **raíz** `/` (componente `LandingTdyPage`).
+  - Textos, `theme`, `pageLayout`, secciones; precios principales desde `pricing.json`.
 
-- `landing-tdy.en.json`
-  - Contenido de texto en ingles.
-  - Mismo criterio: precios principales vienen desde `pricing.json`.
+- `landing.json`
+  - Landing **clásica** en **`/landing`** (`LandingPage`).
+
+## Fotos y videos de la landing
+
+Archivos estáticos (no van dentro de `data/`):
+
+- Carpeta: **`public/landing/media/`**
+  - `images/` — imágenes (cards de estilos, incluye, panel, globo de idiomas, etc.).
+  - `videos/` — previews opcionales para el carrusel de estilos (`videoSrc` en cada ítem).
+
+En el JSON usá rutas desde la raíz del sitio, por ejemplo:
+
+`/landing/media/images/mi-foto.webp`  
+`/landing/media/videos/mi-preview.mp4`
+
+Detalle de campos y convenciones: **`public/landing/media/README.md`**.
 
 ## Importante
 

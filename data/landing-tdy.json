@@ -1,5 +1,20 @@
 {
-    "_comment": "Landing /landing. Tipografías y colores en theme.*. Reseñas Google: poné la URL de tu negocio en hero.reviews.url (Maps → tu negocio → Compartir). Para listar opiniones en vivo necesitás Google Places API (Google Cloud, facturación) o un widget (p. ej. Elfsight).",
+    "_comment_archivo": "Ruta: / (raíz). Landing oficial TDY: theme, header, floatingCta, whatsapp, ctaButtons, sections.*, pageLayout. Tipos: components/landing/landing-tdy-page.tsx (LandingTdyData).",
+    "_comment_theme": "theme.background, theme.text.*, theme.buttons.*, theme.footerBg/footerText (pie de página), theme.surfaceAlt (alternancia de fondos en bloques con surface alt).",
+    "_comment_pageLayout": "pageLayout: hero (id HTML), reseñas compactas, orden post-estilos, query ?from= en /configurador. postEstilosSections: id = panel | idiomas | servicio | proceso | faq; surface default|alt (alt intercambia fondo con surfaceAlt).",
+    "_comment_media": "Imágenes/videos en public/landing/media/; en JSON rutas /landing/media/...",
+    "pageLayout": {
+        "heroSectionId": "hero-home",
+        "reviewsTopSimple": true,
+        "postEstilosSections": [
+            { "id": "panel", "surface": "default" },
+            { "id": "idiomas", "surface": "alt" },
+            { "id": "servicio", "surface": "default" },
+            { "id": "proceso", "surface": "alt" },
+            { "id": "faq", "surface": "alt" }
+        ],
+        "configuradorFromQuery": "home"
+    },
 
     "theme": {
         "_comment_creams": "Cremas y neutros cercanos a thedigitalyes.com (fondos cálidos, texto carbón).",
@@ -7,8 +22,8 @@
         "foreground": "#4A3A2F",
         "cardBg": "#FFFFFF",
         "cardBorder": "#E6E1D9",
-        "footerBg": "#1A1917",
-        "footerText": "#F7F4EF",
+        "footerBg": "#4A423A",
+        "footerText": "#F7F2EB",
         "surfaceAlt": "#F3EEE6",
 
         "typography": {
@@ -77,11 +92,9 @@
         "brand": "Momento Único",
         "nav": [
             { "label": "Inicio", "anchor": "#" },
-            { "label": "Incluye", "anchor": "#incluye" },
-            { "label": "Papel vs digital", "anchor": "#comparativa" },
-            { "label": "Estilos", "anchor": "#estilos" },
-            { "label": "Cómo funciona", "anchor": "#proceso" },
-            { "label": "Planes", "anchor": "#planes" }
+            { "label": "Modelos", "anchor": "#estilos" },
+            { "label": "Precios", "anchor": "#planes" },
+            { "label": "Cómo funciona", "anchor": "#proceso" }
         ],
         "cta": { "label": "Crear invitación", "anchor": "#planes" }
     },
@@ -157,8 +170,8 @@
                 "gapPx": 16,
                 "iconSize": 18
             },
-            "imageSrc": "",
-            "imageAlt": "Vista previa de una invitación digital de muestra",
+            "imageSrc": "/landing/media/videos/video-landing.mov",
+            "imageAlt": "Animación de una invitación digital sobre fondo transparente",
             "items": [
                 {
                     "text": "Diseño personalizado acorde a tu evento",
@@ -276,22 +289,40 @@
             "noStyleWhatsappMessage": "Hola! Tengo una idea para mi invitación y me gustaría contarles.",
             "items": [
                 {
-                    "image": "",
+                    "image": "/landing/media/images/anto-walter-boda.jpg",
                     "titulo": "Anto & Walter",
-                    "descripcion": "Elegancia cálida y detalles premium.",
+                    "descripcion": "Boda · Elegancia cálida y detalles premium.",
                     "href": "/m/boda/anto-walter"
                 },
                 {
-                    "image": "",
+                    "image": "/landing/media/images/meliza-ivan-boda.jpg",
                     "titulo": "Meliza & Iván",
-                    "descripcion": "Estilo esencial, muy claro para compartir.",
+                    "descripcion": "Boda · Estilo esencial, muy claro para compartir.",
                     "href": "/m/boda/meliza-ivan"
                 },
                 {
-                    "image": "",
-                    "titulo": "Valentina",
-                    "descripcion": "XV con personalidad y color.",
-                    "href": "/m/xv/valentina"
+                    "image": "/landing/media/images/yesica-hernan-boda.jpg",
+                    "titulo": "Yesica & Hernán",
+                    "descripcion": "Boda · Romance y claridad en cada detalle.",
+                    "href": "/m/boda/yesica-hernan"
+                },
+                {
+                    "image": "/landing/media/images/camila-xv.jpg",
+                    "titulo": "Camila",
+                    "descripcion": "XV · Brillo y energía para tu fiesta.",
+                    "href": "/m/xv/camila"
+                },
+                {
+                    "image": "/landing/media/images/dasha-xv.jpg",
+                    "titulo": "Dasha",
+                    "descripcion": "XV · Personalidad y color.",
+                    "href": "/m/xv/dasha"
+                },
+                {
+                    "image": "/landing/media/images/maxima-baby.jpg",
+                    "titulo": "Máxima",
+                    "descripcion": "Baby shower · Dulzura y celebración.",
+                    "href": "/m/baby/maxima"
                 }
             ]
         },
@@ -324,24 +355,24 @@
         "proceso": {
             "enabled": true,
             "id": "proceso",
-            "title": "Cómo funciona",
+            "title": "Cómo funciona la configuración",
             "steps": [
                 {
                     "number": "01",
-                    "title": "Elegí tu estilo",
-                    "description": "Inspirate en nuestras muestras y contanos qué buscás para tu evento.",
+                    "title": "Elegís tu plan",
+                    "description": "Premium o Diseño único, según lo que necesites.",
                     "icon": "sparkles"
                 },
                 {
                     "number": "02",
-                    "title": "Envianos los datos",
-                    "description": "Fecha, lugar, cronograma, textos y fotos. Te guiamos en lo que falte.",
-                    "icon": "inbox"
+                    "title": "Personalizás en minutos",
+                    "description": "Definís secciones, idioma y extras. Si querés, tomamos uno de nuestros modelos como referencia.",
+                    "icon": "layoutDashboard"
                 },
                 {
                     "number": "03",
-                    "title": "Recibí tu enlace",
-                    "description": "Tu invitación lista para compartir por WhatsApp, redes o mail.",
+                    "title": "Recibís tu invitación",
+                    "description": "Enviás tu resumen por WhatsApp, reservás con seña y en 3 a 5 días hábiles tenés tu link listo para compartir.",
                     "icon": "link"
                 }
             ]
@@ -351,7 +382,9 @@
             "title": "Todo bajo control, en un solo lugar",
             "subtitle": "Detrás de cada invitación hay un espacio solo para vos para organizar la lista y las respuestas.",
             "panelUrlLabel": "panel.tuinvitacion.com",
-            "imageSrc": "",
+            "imageSrc": "/landing/media/images/panel.jpg",
+            "imageWidth": 1179,
+            "imageHeight": 2127,
             "imageAlt": "Captura del panel de administración de invitados",
             "stats": [
                 { "value": "42", "label": "Confirmados" },
@@ -389,6 +422,9 @@
             "subtitle": "Dos formas de trabajar tu invitación: configurable por bloques o diseño totalmente único.",
             "showPrices": true,
             "notice": "Normalmente, sin Entrega Rápida tu invitación puede demorar entre 3 y 5 días hábiles.",
+            "modelsLinkPrompt": "¿Querés ver los modelos que ya diseñamos?",
+            "modelsLinkCta": "Ver modelos",
+            "modelsLinkAnchor": "#estilos",
             "planes": [
                 {
                     "name": "Premium",
@@ -441,6 +477,7 @@
             "id": "faq",
             "title": "Preguntas frecuentes",
             "subtitle": "Lo más importante antes de reservar tu invitación.",
+            "footerCtaTitle": "¿Lista para la invitación que vas a amar compartir?",
             "items": [
                 {
                     "question": "¿Puedo hacer cambios después de recibir la invitación?",

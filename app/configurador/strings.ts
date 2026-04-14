@@ -208,6 +208,7 @@ export function getUiStrings(lang: ConfiguratorLang) {
             incluyeP2After: "we add",
             incluyeP2Each: "each.",
             seccionesCountFoot: "included · Extra",
+            seccionesMinThree: "Pick at least 3 blocks to continue.",
             perBlock: "/block",
             sinExtras: "(no extras)",
             seccionOtroPh: "Describe the section you want to add…",
@@ -239,14 +240,6 @@ export function getUiStrings(lang: ConfiguratorLang) {
             datePlaceholder: "Choose your event date",
             dateAria: "Event date",
             dateHelp: "Tap the field to open the calendar and pick a date.",
-            terminosTitle: "Terms & privacy",
-            terminosTermsLabel: "Terms:",
-            terminosTermsBody:
-                "The deposit is 50% to reserve the slot and start design. The remaining 50% is due on final delivery. Timelines and revisions depend on receiving complete materials.",
-            terminosPrivacyLabel: "Privacy:",
-            terminosPrivacyBody:
-                "We use your information only to create and manage your invitation. We do not sell data to third parties.",
-            terminosCheck: "I have read and accept the Terms and Privacy Policy",
             back: "Back",
             next: "Next",
             goWhatsapp: "Open WhatsApp",
@@ -303,6 +296,7 @@ export function getUiStrings(lang: ConfiguratorLang) {
         incluyeP2After: "que marques, se suma",
         incluyeP2Each: "por cada uno.",
         seccionesCountFoot: "incluidos · Extra",
+        seccionesMinThree: "Elegí al menos 3 bloques para continuar.",
         perBlock: "/bloque",
         sinExtras: "(sin extras)",
         seccionOtroPh: "Contanos qué sección querés agregar...",
@@ -335,15 +329,6 @@ export function getUiStrings(lang: ConfiguratorLang) {
         dateAria: "Fecha del evento",
         dateHelp:
             "Tocá el campo para abrir el calendario y seleccionar la fecha.",
-        terminosTitle: "Términos y privacidad",
-        terminosTermsLabel: "Términos:",
-        terminosTermsBody:
-            "La seña corresponde al 50% para reservar agenda e iniciar el diseño. El 50% restante se abona en la entrega final. Cambios y tiempos dependen de entregar el material completo.",
-        terminosPrivacyLabel: "Privacidad:",
-        terminosPrivacyBody:
-            "Usamos tus datos únicamente para crear y gestionar tu invitación. No vendemos información a terceros.",
-        terminosCheck:
-            "Leí y acepto Términos y Política de Privacidad",
         back: "Atrás",
         next: "Siguiente",
         goWhatsapp: "Ir a WhatsApp",
