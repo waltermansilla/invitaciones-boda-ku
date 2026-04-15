@@ -80,7 +80,7 @@ const INCLUDED_EXTRAS_BY_PLAN: Record<PlanKey, string[]> = {
 const SECTION_OPTIONS: SectionOption[] = [
     {
         id: "mapa",
-        label: "Mapa y cómo llegar",
+        label: "Ubicación y cómo llegar",
         icon: <MapPin size={15} />,
         price: EXTRA_SECTION_PRICE,
     },
@@ -171,6 +171,13 @@ const OTHER_SECTION_ADDER_BASE = {
     isAdder: true,
 } as const;
 
+const REQUIRED_SECTION_ID = "mapa";
+const PANEL_INCLUDED_GUESTS = 150;
+const PANEL_STEP_GUESTS = 100;
+const PANEL_STEP_PRICE_ARS = pricingData.configurator.extras.panelPer100 ?? 9000;
+const PANEL_MAX_GUESTS = 1000;
+const PANEL_GUEST_PRESETS = [150, 250, 350, 500] as const;
+
 /** Same padding both sides: max of 1rem and both safe-area insets (avoids L/R mismatch). */
 const PAGE_GUTTER =
     "px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]";
@@ -216,10 +223,7 @@ function toBase64Url(value: string) {
         typeof window !== "undefined"
             ? window.btoa(utf8)
             : Buffer.from(utf8, "binary").toString("base64");
-    return base64
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_")
-        .replace(/=+$/g, "");
+    return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
 
 const DETAILS_SECTION_ORDER = [
@@ -249,6 +253,14 @@ const EVENT_TYPE_CODE: Record<EventType | "", string> = {
     "": "n",
 };
 
+function usesOurStoryLabel(eventType: EventTypeSelection): boolean {
+    return (
+        eventType === "boda" ||
+        eventType === "baby-shower" ||
+        eventType === "corporativo"
+    );
+}
+
 function ConfiguradorPageContent() {
     const params = useSearchParams();
     const uiLang = params.get("lang") === "en" ? "en" : "es";
@@ -271,7 +283,7 @@ function ConfiguradorPageContent() {
     const [eventType, setEventType] = useState<EventTypeSelection>("");
     const [eventOther, setEventOther] = useState("");
     const [styleSelected, setStyleSelected] = useState<string>("");
-    const [sections, setSections] = useState<string[]>([]);
+    const [sections, setSections] = useState<string[]>([REQUIRED_SECTION_ID]);
     const [sectionOther, setSectionOther] = useState("");
     const [customSections, setCustomSections] = useState<
         Array<{ id: string; label: string }>
@@ -286,13 +298,13 @@ function ConfiguradorPageContent() {
     const [extras, setExtras] = useState<string[]>(
         INCLUDED_EXTRAS_BY_PLAN[plan],
     );
+    const [panelGuests, setPanelGuests] = useState<number>(PANEL_INCLUDED_GUESTS);
     const [name1, setName1] = useState("");
     const [name2, setName2] = useState("");
     const [email, setEmail] = useState("");
     const [eventDate, setEventDate] = useState("");
     const [seccionesInfoOpen, setSeccionesInfoOpen] = useState(false);
-    const [seccionesMinErrorShown, setSeccionesMinErrorShown] =
-        useState(false);
+    const [seccionesMinErrorShown, setSeccionesMinErrorShown] = useState(false);
     const [detailsId] = useState(
         () =>
             `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
@@ -329,6 +341,10 @@ function ConfiguradorPageContent() {
 
     const t = useMemo(() => getUiStrings(uiLang), [uiLang]);
     const tWa = useMemo(() => getUiStrings("es"), []);
+    const styleNoneOptionLabel =
+        uiLang === "en"
+            ? "None represents what I am looking for"
+            : "Ninguno representa lo que busco";
     const extrasList = useMemo(() => getExtrasForLang(uiLang), [uiLang]);
     const extrasListWa = useMemo(() => getExtrasForLang("es"), []);
     const extraDetails = useMemo(() => getExtraDetailById(uiLang), [uiLang]);
@@ -336,14 +352,29 @@ function ConfiguradorPageContent() {
     const eventLabelMapWa = useMemo(() => getEventLabels("es"), []);
 
     const selectedExtras = extrasList.filter((e) => extras.includes(e.id));
+    const isBoda = eventType === "boda";
+    const storyLabelEs = usesOurStoryLabel(eventType)
+        ? "Nuestra historia"
+        : "Mi historia";
+    const storyLabelEn = usesOurStoryLabel(eventType)
+        ? "Our story"
+        : "My story";
+    const getBaseSectionLabel = (
+        sectionId: string,
+        useEnglish: boolean,
+    ): string => {
+        if (sectionId === "historia") {
+            return useEnglish ? storyLabelEn : storyLabelEs;
+        }
+        const base = SECTION_OPTIONS.find((s) => s.id === sectionId);
+        if (!base) return sectionId;
+        return useEnglish ? (SECTION_LABEL_EN[sectionId] ?? base.label) : base.label;
+    };
     const sectionOptions = useMemo<SectionOption[]>(
         () => [
             ...SECTION_OPTIONS.map((s) => ({
                 ...s,
-                label:
-                    uiLang === "en"
-                        ? (SECTION_LABEL_EN[s.id] ?? s.label)
-                        : s.label,
+                label: getBaseSectionLabel(s.id, uiLang === "en"),
             })),
             ...customSections.map((c) => ({
                 id: c.id,
@@ -356,22 +387,21 @@ function ConfiguradorPageContent() {
                 label: uiLang === "en" ? SECTION_LABEL_EN.otro : "Otro",
             },
         ],
-        [uiLang, customSections],
+        [uiLang, customSections, storyLabelEs, storyLabelEn],
     );
     const sectionLabelById = useMemo(
         () =>
             new Map<string, string>([
-                ...SECTION_OPTIONS.map((s) =>
-                    [
-                        s.id,
-                        uiLang === "en"
-                            ? (SECTION_LABEL_EN[s.id] ?? s.label)
-                            : s.label,
-                    ] as const,
+                ...SECTION_OPTIONS.map(
+                    (s) =>
+                        [
+                            s.id,
+                            getBaseSectionLabel(s.id, uiLang === "en"),
+                        ] as const,
                 ),
                 ...customSections.map((c) => [c.id, c.label] as const),
             ]),
-        [customSections, uiLang],
+        [customSections, uiLang, storyLabelEs, storyLabelEn],
     );
     const selectedSectionLabels = useMemo(
         () => sections.map((id) => sectionLabelById.get(id) ?? id),
@@ -380,10 +410,12 @@ function ConfiguradorPageContent() {
     const sectionLabelByIdWa = useMemo(
         () =>
             new Map<string, string>([
-                ...SECTION_OPTIONS.map((s) => [s.id, s.label] as const),
+                ...SECTION_OPTIONS.map(
+                    (s) => [s.id, getBaseSectionLabel(s.id, false)] as const,
+                ),
                 ...customSections.map((c) => [c.id, c.label] as const),
             ]),
-        [customSections],
+        [customSections, storyLabelEs],
     );
     const selectedSectionLabelsWa = useMemo(
         () => sections.map((id) => sectionLabelByIdWa.get(id) ?? id),
@@ -406,20 +438,43 @@ function ConfiguradorPageContent() {
               ? SECOND_LANGUAGE_PRICE[currency]
               : 0;
     const includedExtraIds = INCLUDED_EXTRAS_BY_PLAN[plan];
-    const extrasCost = selectedExtras
-        .filter((e) => !includedExtraIds.includes(e.id))
-        .reduce((acc, e) => acc + e.price[currency], 0);
+    const clampedPanelGuests = Math.max(
+        PANEL_INCLUDED_GUESTS,
+        Math.min(PANEL_MAX_GUESTS, Math.round(panelGuests || PANEL_INCLUDED_GUESTS)),
+    );
+    const panelExtraGuests = Math.max(
+        0,
+        clampedPanelGuests - PANEL_INCLUDED_GUESTS,
+    );
+    const panelExtraGuestsCost = toPrice(
+        Math.round((panelExtraGuests * PANEL_STEP_PRICE_ARS) / PANEL_STEP_GUESTS),
+    )[currency];
+    const panelBasePrice =
+        extrasList.find((e) => e.id === "panel")?.price[currency] ?? 0;
+    const panelSelected = extras.includes("panel");
+    const panelIncludedByPlan = includedExtraIds.includes("panel");
+    const panelCost = panelSelected
+        ? (panelIncludedByPlan ? 0 : panelBasePrice) + panelExtraGuestsCost
+        : 0;
+    const extrasCost =
+        panelCost +
+        selectedExtras
+            .filter((e) => e.id !== "panel")
+            .filter((e) => !includedExtraIds.includes(e.id))
+            .reduce((acc, e) => acc + e.price[currency], 0);
     const base = PLAN_BASE[plan][currency];
     const total = base + sectionsCost + secondLanguageCost + extrasCost;
     const downPayment = Math.round(total * 0.5);
 
-    const planLabel =
-        plan === "premium" ? t.planPremium : t.planUnique;
-    const planLabelWa =
-        plan === "premium" ? tWa.planPremium : tWa.planUnique;
+    const planLabel = plan === "premium" ? t.planPremium : t.planUnique;
+    const planLabelWa = plan === "premium" ? tWa.planPremium : tWa.planUnique;
     const selectedExtraLabelsWa = selectedExtras.map((e) => {
         const match = extrasListWa.find((x) => x.id === e.id);
-        return match?.label ?? e.label;
+        const label = match?.label ?? e.label;
+        if (e.id !== "panel") return label;
+        const panelLine = `${label} (${clampedPanelGuests} invitados)`;
+        if (panelExtraGuestsCost <= 0) return panelLine;
+        return `${panelLine} + ${formatMoney(panelExtraGuestsCost, currency)} por capacidad`;
     });
     const detailsToken = useMemo(() => {
         const selectedSet = new Set(sections);
@@ -445,41 +500,67 @@ function ConfiguradorPageContent() {
         ].join(".");
         return compact;
     }, [customSections, eventOther, eventType, sections]);
-    const detailsPathId = detailsToken ? `${detailsId}.${detailsToken}` : detailsId;
+    const detailsPathId = detailsToken
+        ? `${detailsId}.${detailsToken}`
+        : detailsId;
+    const detailsQuery = useMemo(() => {
+        const query = new URLSearchParams();
+        const n1 = name1.trim();
+        const n2 = name2.trim();
+        if (n1) query.set("name1", n1);
+        if (n2) query.set("name2", n2);
+        if (eventDate) query.set("eventDate", eventDate);
+        return query.toString();
+    }, [name1, name2, eventDate]);
     const detailsUrl =
         typeof window !== "undefined"
-            ? `${window.location.origin}/detalles/${detailsPathId}`
-            : `/detalles/${detailsPathId}`;
+            ? `${window.location.origin}/detalles/${detailsPathId}${detailsQuery ? `?${detailsQuery}` : ""}`
+            : `/detalles/${detailsPathId}${detailsQuery ? `?${detailsQuery}` : ""}`;
+    const name1Label = isBoda ? "Nombre novio/novia 1" : "Nombre";
+    const name1Placeholder = isBoda
+        ? "Nombre como deberia figurar"
+        : "Nombre como deberia figurar";
+    const name2Label = "Nombre novio/novia 2";
+    const name2Placeholder = "Nombre como deberia figurar";
     const summary = [
         tWa.summaryHi(planLabelWa),
         "",
-        `${tWa.currency}: ${currency}`,
-        `${tWa.total}: ${formatMoney(total, currency)}`,
-        `${tWa.deposit50}: ${formatMoney(downPayment, currency)}`,
+        "CONFIGURACION",
+        ...(plan === "premium"
+            ? [
+                  `- ${tWa.event}: ${eventType ? `${eventLabelMapWa[eventType]}${eventType === "otro" && eventOther ? ` (${eventOther})` : ""}` : tWa.tbd}`,
+                  `- ${tWa.style}: ${styleSelected || tWa.tbd}`,
+                  `- ${tWa.sections} (${sections.length}):`,
+                  ...(sections.length
+                      ? selectedSectionLabelsWa.map((label) => `  - ${label}`)
+                      : [`  - ${tWa.tbd}`]),
+              ]
+            : []),
         "",
-        plan === "premium"
-            ? `${tWa.event}: ${eventType ? `${eventLabelMapWa[eventType]}${eventType === "otro" && eventOther ? ` (${eventOther})` : ""}` : tWa.tbd}`
-            : null,
-        plan === "premium"
-            ? `${tWa.style}: ${styleSelected || tWa.tbd}`
-            : null,
-        plan === "premium"
-            ? `${tWa.sections} (${sections.length}): ${sections.length ? selectedSectionLabelsWa.join(", ") : tWa.tbd}`
-            : null,
-        `${tWa.primaryLang}: ${tWa.spanish}`,
-        `${tWa.secondLang}: ${secondLanguage || tWa.none}`,
-        `${tWa.extrasLine}: ${selectedExtraLabelsWa.length ? selectedExtraLabelsWa.join(", ") : tWa.noneExtras}${plan === "diseno-unico" ? tWa.uniqueExtrasNote : ""}`,
+        "IDIOMAS",
+        `- ${tWa.primaryLang}: ${tWa.spanish}`,
+        `- ${tWa.secondLang}: ${secondLanguage || tWa.none}`,
         "",
-        `${tWa.name1Line}: ${name1 || "-"}`,
-        `${tWa.name2Line}: ${name2 || "-"}`,
-        `${tWa.emailLine}: ${email || "-"}`,
-        `${tWa.eventDateLine}: ${eventDate || "-"}`,
+        "EXTRAS",
+        ...(selectedExtraLabelsWa.length
+            ? selectedExtraLabelsWa.map((label) => `  - ${label}`)
+            : [`  - ${tWa.noneExtras}`]),
+        ...(plan === "diseno-unico" ? [`  - ${tWa.uniqueExtrasNote}`] : []),
         "",
-        "Completar detalles de la invitacion:",
+        "DATOS DE CONTACTO",
+        `- ${isBoda ? "Nombre novio/novia 1" : "Nombre"}: ${name1 || "-"}`,
+        ...(isBoda ? [`- Nombre novio/novia 2: ${name2 || "-"}`] : []),
+        `- ${tWa.emailLine}: ${email || "-"}`,
+        `- ${tWa.eventDateLine}: ${eventDate || "-"}`,
+        "",
+        "*RESUMEN DE PRESUPUESTO*",
+        `- ${tWa.currency}: ${currency}`,
+        `- *${tWa.total}: ${formatMoney(total, currency)}*`,
+        `- *${tWa.deposit50}: ${formatMoney(downPayment, currency)}*`,
+        "",
+        "COMPLETAR DETALLES DE LA INVITACION",
         detailsUrl,
-    ]
-        .filter(Boolean)
-        .join("\n");
+    ].join("\n");
 
     const hasValidEmail = useMemo(() => {
         const v = email.trim();
@@ -500,6 +581,7 @@ function ConfiguradorPageContent() {
         if (step === "datos")
             return (
                 name1.trim().length > 1 &&
+                (!isBoda || name2.trim().length > 1) &&
                 Boolean(eventDate) &&
                 hasValidEmail
             );
@@ -511,6 +593,8 @@ function ConfiguradorPageContent() {
         eventOther,
         styleSelected,
         name1,
+        name2,
+        isBoda,
         hasValidEmail,
         eventDate,
     ]);
@@ -530,6 +614,14 @@ function ConfiguradorPageContent() {
             setSeccionesMinErrorShown(false);
         }
     }, [step]);
+
+    useEffect(() => {
+        setSections((prev) =>
+            prev.includes(REQUIRED_SECTION_ID)
+                ? prev
+                : [REQUIRED_SECTION_ID, ...prev],
+        );
+    }, []);
 
     return (
         <main className="min-h-svh bg-[#FDFBF7] text-[#3F332B]">
@@ -698,6 +790,25 @@ function ConfiguradorPageContent() {
                                 );
                             })}
                         </div>
+                        <button
+                            type="button"
+                            onClick={() => setStyleSelected(styleNoneOptionLabel)}
+                            className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-2xl border px-4 py-3 text-center text-sm font-semibold transition-colors"
+                            style={{
+                                borderColor:
+                                    styleSelected === styleNoneOptionLabel
+                                        ? "#7A5F45"
+                                        : "#DCCFC0",
+                                background:
+                                    styleSelected === styleNoneOptionLabel
+                                        ? "#F3EBDD"
+                                        : "#FFF",
+                                color: "#4A3A2F",
+                            }}
+                        >
+                            {styleNoneOptionLabel}
+                            <ChevronRight size={16} className="shrink-0" aria-hidden />
+                        </button>
                     </>
                 ) : null}
 
@@ -814,8 +925,11 @@ function ConfiguradorPageContent() {
                         <div className="mt-4 grid w-full min-w-0 grid-cols-4 gap-x-4 gap-y-7 pt-3 sm:gap-x-3 sm:gap-y-5 sm:pt-2">
                             {sectionOptions.map((s) => {
                                 const on = sections.includes(s.id);
+                                const isRequiredSection = s.id === REQUIRED_SECTION_ID;
                                 const isPaid =
-                                    !s.isAdder && on && paidSectionIds.includes(s.id);
+                                    !s.isAdder &&
+                                    on &&
+                                    paidSectionIds.includes(s.id);
                                 const isOtroOpen = s.isAdder && isAddingOther;
 
                                 const priceBadge = isPaid ? (
@@ -838,9 +952,12 @@ function ConfiguradorPageContent() {
                                         type="button"
                                         onClick={() => {
                                             if (s.isAdder) {
-                                                setIsAddingOther((prev) => !prev);
+                                                setIsAddingOther(
+                                                    (prev) => !prev,
+                                                );
                                                 return;
                                             }
+                                            if (isRequiredSection) return;
                                             setSections((prev) =>
                                                 on
                                                     ? prev.filter(
@@ -850,17 +967,22 @@ function ConfiguradorPageContent() {
                                             );
                                         }}
                                         className={`relative flex aspect-square w-full min-w-0 flex-col items-center justify-center gap-1.5 rounded-2xl px-1.5 py-2 text-center transition-[border-color,background-color] duration-150 ${
-                                            (on || isOtroOpen)
+                                            on || isOtroOpen
                                                 ? "border-[1.5px]"
                                                 : "border border-[#D9CFC3]"
                                         }`}
                                         style={{
-                                            borderColor: (on || isOtroOpen)
-                                                ? "#7A5F45"
-                                                : "#D9CFC3",
-                                            background: (on || isOtroOpen)
-                                                ? "rgba(122,95,69,0.12)"
-                                                : "transparent",
+                                            borderColor:
+                                                on || isOtroOpen
+                                                    ? "#7A5F45"
+                                                    : "#D9CFC3",
+                                            background:
+                                                on || isOtroOpen
+                                                    ? "rgba(122,95,69,0.12)"
+                                                    : "transparent",
+                                            cursor: isRequiredSection
+                                                ? "default"
+                                                : "pointer",
                                         }}
                                     >
                                         {on || isOtroOpen ? (
@@ -885,7 +1007,9 @@ function ConfiguradorPageContent() {
                                         >
                                             <div className="relative col-span-1 min-h-0 min-w-0">
                                                 {priceBadge}
-                                                <div className="aspect-square w-full">{tileButton}</div>
+                                                <div className="aspect-square w-full">
+                                                    {tileButton}
+                                                </div>
                                             </div>
                                             <div className="col-span-3 flex min-h-0 min-w-0 items-start">
                                                 <div className="flex h-1/2 min-h-[44px] w-full gap-2">
@@ -896,8 +1020,12 @@ function ConfiguradorPageContent() {
                                                                 e.target.value,
                                                             )
                                                         }
-                                                        placeholder={t.seccionOtroPh}
-                                                        aria-label={t.seccionOtroAria}
+                                                        placeholder={
+                                                            t.seccionOtroPh
+                                                        }
+                                                        aria-label={
+                                                            t.seccionOtroAria
+                                                        }
                                                         className="h-full min-h-0 flex-1 resize-none overflow-auto rounded-2xl border px-2 py-2 text-[13px] leading-snug outline-none sm:px-3 sm:py-3 sm:text-sm"
                                                         style={{
                                                             borderColor:
@@ -915,7 +1043,10 @@ function ConfiguradorPageContent() {
                                                             setCustomSections(
                                                                 (prev) => [
                                                                     ...prev,
-                                                                    { id, label },
+                                                                    {
+                                                                        id,
+                                                                        label,
+                                                                    },
                                                                 ],
                                                             );
                                                             setSections(
@@ -1059,9 +1190,7 @@ function ConfiguradorPageContent() {
                                 <input
                                     value={customLanguageInput}
                                     onChange={(e) =>
-                                        setCustomLanguageInput(
-                                            e.target.value,
-                                        )
+                                        setCustomLanguageInput(e.target.value)
                                     }
                                     placeholder={t.typeLanguage}
                                     className="w-full rounded-xl border px-3 py-2 text-sm outline-none"
@@ -1127,10 +1256,10 @@ function ConfiguradorPageContent() {
                         <div className="mt-4 space-y-4 pt-1">
                             {extrasList.map((ex) => {
                                 const on = extras.includes(ex.id);
-                                const locked =
-                                    INCLUDED_EXTRAS_BY_PLAN[plan].includes(
-                                        ex.id,
-                                    );
+                                const isPanel = ex.id === "panel";
+                                const locked = INCLUDED_EXTRAS_BY_PLAN[
+                                    plan
+                                ].includes(ex.id);
                                 const info = extraDetails[ex.id];
                                 const infoOpen = openExtraInfoId === ex.id;
                                 return (
@@ -1145,7 +1274,10 @@ function ConfiguradorPageContent() {
                                             >
                                                 +
                                                 {formatMoney(
-                                                    ex.price[currency],
+                                                    isPanel
+                                                        ? ex.price[currency] +
+                                                              panelExtraGuestsCost
+                                                        : ex.price[currency],
                                                     currency,
                                                 )}
                                             </span>
@@ -1155,7 +1287,10 @@ function ConfiguradorPageContent() {
                                                 className={LINE_BADGE_CLASS}
                                                 style={LINE_BADGE_BORDER}
                                             >
-                                                {t.included}
+                                                {isPanel &&
+                                                panelExtraGuestsCost > 0
+                                                    ? `+${formatMoney(panelExtraGuestsCost, currency)}`
+                                                    : t.included}
                                             </span>
                                         ) : null}
                                         <button
@@ -1211,6 +1346,71 @@ function ConfiguradorPageContent() {
                                                 ) : null}
                                             </div>
                                         </button>
+                                        {isPanel && on ? (
+                                            <div className="mt-2 rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3">
+                                                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
+                                                    {uiLang === "en"
+                                                        ? "Estimated guests for dashboard"
+                                                        : "Invitados estimados para panel"}
+                                                </span>
+                                                <p className="mb-2 text-[11px] leading-relaxed text-[#6A5C52]">
+                                                    {uiLang === "en"
+                                                        ? `Includes up to ${PANEL_INCLUDED_GUESTS} guests. Then +${formatMoney(toPrice(PANEL_STEP_PRICE_ARS)[currency], currency)} every ${PANEL_STEP_GUESTS} extra guests.`
+                                                        : `Incluye hasta ${PANEL_INCLUDED_GUESTS} invitados. Luego suma +${formatMoney(toPrice(PANEL_STEP_PRICE_ARS)[currency], currency)} cada ${PANEL_STEP_GUESTS} invitados extra.`}
+                                                </p>
+                                                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                                                    {PANEL_GUEST_PRESETS.map(
+                                                        (guestCount) => {
+                                                            const selected =
+                                                                clampedPanelGuests ===
+                                                                guestCount;
+                                                            return (
+                                                                <button
+                                                                    key={
+                                                                        guestCount
+                                                                    }
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        setPanelGuests(
+                                                                            guestCount,
+                                                                        )
+                                                                    }
+                                                                    className="rounded-lg border px-2 py-2 text-sm font-semibold transition-colors"
+                                                                    style={{
+                                                                        borderColor:
+                                                                            selected
+                                                                                ? "#7A5F45"
+                                                                                : "#DCCFC0",
+                                                                        background:
+                                                                            selected
+                                                                                ? "#F3EBDD"
+                                                                                : "#FFF",
+                                                                        color: "#4A3A2F",
+                                                                    }}
+                                                                >
+                                                                    {uiLang ===
+                                                                    "en"
+                                                                        ? `Up to ${guestCount}`
+                                                                        : `Hasta ${guestCount}`}
+                                                                </button>
+                                                            );
+                                                        },
+                                                    )}
+                                                </div>
+                                                <div className="mt-2 rounded-lg border border-[#E4DCD1] bg-white p-2 text-[11px] leading-relaxed text-[#6A5C52]">
+                                                    <p className="mt-1 font-medium text-[#4A3A2F]">
+                                                        {uiLang === "en"
+                                                            ? `Capacity surcharge (${clampedPanelGuests}): ${formatMoney(panelExtraGuestsCost, currency)}`
+                                                            : `Recargo por capacidad (${clampedPanelGuests}): ${formatMoney(panelExtraGuestsCost, currency)}`}
+                                                    </p>
+                                                    <p className="mt-1 rounded-md bg-[#F3EBDD] px-2 py-1 text-sm font-bold text-[#4A3A2F]">
+                                                        {uiLang === "en"
+                                                            ? `Panel total: ${formatMoney((locked ? 0 : ex.price[currency]) + panelExtraGuestsCost, currency)}`
+                                                            : `Total panel: ${formatMoney((locked ? 0 : ex.price[currency]) + panelExtraGuestsCost, currency)}`}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ) : null}
                                         {info ? (
                                             <div className="mt-1 px-1">
                                                 <button
@@ -1269,7 +1469,8 @@ function ConfiguradorPageContent() {
                             className="mt-4 rounded-2xl border p-4 sm:p-5"
                             style={{
                                 borderColor: "#DCCFC0",
-                                background: "linear-gradient(180deg, #FFFFFF 0%, #FCF8F2 100%)",
+                                background:
+                                    "linear-gradient(180deg, #FFFFFF 0%, #FCF8F2 100%)",
                             }}
                         >
                             <div
@@ -1277,12 +1478,14 @@ function ConfiguradorPageContent() {
                             >
                                 <label className="block">
                                     <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
-                                        {t.name1}
+                                        {name1Label}
                                     </span>
                                     <input
                                         value={name1}
-                                        onChange={(e) => setName1(e.target.value)}
-                                        placeholder={t.name1Ph}
+                                        onChange={(e) =>
+                                            setName1(e.target.value)
+                                        }
+                                        placeholder={name1Placeholder}
                                         className="w-full rounded-xl border px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45]"
                                         style={{
                                             borderColor: "#DCCFC0",
@@ -1290,21 +1493,25 @@ function ConfiguradorPageContent() {
                                         }}
                                     />
                                 </label>
-                                <label className="block">
-                                    <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
-                                        {t.name2}
-                                    </span>
-                                    <input
-                                        value={name2}
-                                        onChange={(e) => setName2(e.target.value)}
-                                        placeholder={t.name2Ph}
-                                        className="w-full rounded-xl border px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45]"
-                                        style={{
-                                            borderColor: "#DCCFC0",
-                                            background: "#FFF",
-                                        }}
-                                    />
-                                </label>
+                                {isBoda ? (
+                                    <label className="block">
+                                        <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
+                                            {name2Label}
+                                        </span>
+                                        <input
+                                            value={name2}
+                                            onChange={(e) =>
+                                                setName2(e.target.value)
+                                            }
+                                            placeholder={name2Placeholder}
+                                            className="w-full rounded-xl border px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45]"
+                                            style={{
+                                                borderColor: "#DCCFC0",
+                                                background: "#FFF",
+                                            }}
+                                        />
+                                    </label>
+                                ) : null}
                             </div>
                             <label className="mt-3 block min-w-0">
                                 <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
@@ -1336,7 +1543,10 @@ function ConfiguradorPageContent() {
                                 </span>
                                 <div
                                     className="relative w-full overflow-hidden rounded-xl border"
-                                    style={{ borderColor: "#DCCFC0", background: "#FFF" }}
+                                    style={{
+                                        borderColor: "#DCCFC0",
+                                        background: "#FFF",
+                                    }}
                                 >
                                     {!eventDate ? (
                                         <span className="pointer-events-none absolute left-3 right-10 top-1/2 z-[1] -translate-y-1/2 truncate text-sm text-[#7A6A5D]">
@@ -1346,18 +1556,23 @@ function ConfiguradorPageContent() {
                                     <input
                                         type="date"
                                         value={eventDate}
-                                        onChange={(e) => setEventDate(e.target.value)}
+                                        onChange={(e) =>
+                                            setEventDate(e.target.value)
+                                        }
                                         onClick={(e) => {
-                                            const input = e.currentTarget as HTMLInputElement & {
-                                                showPicker?: () => void;
-                                            };
+                                            const input =
+                                                e.currentTarget as HTMLInputElement & {
+                                                    showPicker?: () => void;
+                                                };
                                             input.showPicker?.();
                                         }}
                                         aria-label={t.dateAria}
                                         className="block w-full min-w-0 max-w-full rounded-xl border border-transparent px-3 py-3 pr-10 text-sm outline-none transition-colors focus:border-transparent"
                                         style={{
                                             background: "transparent",
-                                            color: eventDate ? "#3F332B" : "transparent",
+                                            color: eventDate
+                                                ? "#3F332B"
+                                                : "transparent",
                                         }}
                                     />
                                 </div>

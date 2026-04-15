@@ -75,7 +75,7 @@ export function getExtraDetailById(
             panel: {
                 title: "Guest dashboard",
                 summary: "Automatic, end-to-end RSVP management",
-                body: "With WhatsApp (included), messages arrive but you track everything manually. With the dashboard, each guest confirms and your board updates automatically: who’s in, who’s pending, filters by status, and clear totals.",
+                body: "With WhatsApp (included), messages arrive but you track everything manually. With the dashboard, each guest confirms and your board updates automatically: who’s in, who’s pending, filters by status, and clear totals. Includes up to 150 guests; then +9,000 ARS for each extra 100 guests.",
             },
             dominio: {
                 title: "Custom domain",
@@ -93,7 +93,7 @@ export function getExtraDetailById(
         panel: {
             title: "Panel de invitados",
             summary: "Gestión automática y completa de confirmaciones",
-            body: "Con WhatsApp (incluido) recibís los mensajes, pero tenés que anotar y ordenar todo a mano. Con Panel, cada invitado confirma y el tablero se actualiza solo: quién confirmó, cuántos faltan, pendientes y filtros por estado.",
+            body: "Con WhatsApp (incluido) recibís los mensajes, pero tenés que anotar y ordenar todo a mano. Con Panel, cada invitado confirma y el tablero se actualiza solo: quién confirmó, cuántos faltan, pendientes y filtros por estado. Incluye hasta 150 invitados; luego suma +9.000 ARS cada 100 invitados extra.",
         },
         dominio: {
             title: "Dominio personalizado",

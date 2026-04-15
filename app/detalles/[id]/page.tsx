@@ -25,7 +25,7 @@ type CustomSection = { id: string; label: string };
 type StepDefinition = { id: string; title: string };
 type EventItem = { name: string; hour: string; address: string; maps: string };
 type AliasItem = { alias: string; owner: string; bank: string; cbu: string };
-type CardPrice = { amount: string; note: string };
+type CardPrice = { amount: string; note: string; paymentDeadline?: string };
 type StoryStep = { title: string; message: string };
 type TriviaItem = {
     question: string;
@@ -45,12 +45,12 @@ const SECTION_LABELS: Record<string, string> = {
     itinerario: "Itinerario",
     regalos: "Regalos / Alias",
     tarjeta: "Valor tarjeta",
-    album: "Album Drive fotos",
+    album: "Álbum Drive fotos",
     musica: "Musica de fondo",
     playlist: "Playlist Spotify",
     historia: "Nuestra historia",
     trivia: "Trivia interactiva",
-    fotos10: "Fotos (te compartimos album por chat)",
+    fotos10: "Fotos (te compartimos álbum por chat)",
     faq: "Preguntas frecuentes",
     alojamiento: "Alojamientos",
     adultos: "Ninos y cuidados",
@@ -83,32 +83,47 @@ const CODE_TO_EVENT_TYPE: Record<string, EventType> = {
     n: "",
 };
 
+function usesOurStoryLabel(eventType: EventType): boolean {
+    return (
+        eventType === "boda" ||
+        eventType === "baby-shower" ||
+        eventType === "corporativo"
+    );
+}
+
+function defaultSectionTitle(sectionId: string, eventType: EventType): string {
+    if (sectionId === "historia") {
+        return usesOurStoryLabel(eventType) ? "Nuestra historia" : "Mi historia";
+    }
+    return SECTION_LABELS[sectionId] ?? sectionId;
+}
+
 const STEP_HELP_TEXT: Record<string, string> = {
-    base: "Completa los datos principales tal como queres que aparezcan en la invitacion.",
+    base: "Completa los datos principales tal como querés que aparezcan en la invitación.",
     eventos:
-        "Agrega los eventos con horario y direccion. Si activaste la seccion 'Mapa: cómo llegar' podes agregar el link de Google Maps para que tus invitados sepan cómo llegar.",
+        "Agrega los eventos con horario y dirección. Si activaste la sección 'Mapa: cómo llegar' podés agregar el link de Google Maps para que tus invitados sepan cómo llegar.",
     dress: "Define el estilo de vestimenta para orientar a tus invitados.",
     itinerario:
         "Detalla el orden o cronograma del evento para que los invitados sepan como sera la noche.",
     regalos:
         "Carga alias y datos de transferencia. Solo alias es obligatorio; el resto es opcional.",
     tarjeta:
-        "Agrega los valores sugeridos de tarjeta y, si queres, una aclaracion opcional.",
+        "Agrega los valores sugeridos de tarjeta y, si querés, una aclaración opcional.",
     album:
         "Pega el link de tu carpeta de Drive para que tus invitados puedan subir fotos.",
     musica:
-        "Indica la cancion o link que queres usar como musica de fondo en la invitacion.",
+        "Indica la canción o link que querés usar como música de fondo en la invitación.",
     playlist:
         "Comparte la playlist colaborativa para que tus invitados agreguen canciones para el DJ.",
     historia:
-        "Contanos una version breve de tu historia y nosotros te la armamos de forma emotiva. Si queres armarlo vos a tu manera, tocá 'Quiero detallar cada paso'.",
+        "Contanos una versión breve de tu historia y nosotros te la armamos de forma emotiva. Si querés armarlo vos a tu manera, tocá 'Quiero detallar cada paso'.",
     trivia:
-        "Crea al menos 3 preguntas con respuestas y marca la correcta en cada una. Maximo 5 preguntas.",
+        "Crea al menos 3 preguntas con respuestas y marca la correcta en cada una. Máximo 5 preguntas.",
     faq: "Escribe preguntas frecuentes con su respuesta para evitar dudas repetidas.",
     alojamiento:
         "Comparte hasta 5 opciones de alojamiento para invitados que viajan desde otra ciudad.",
     adultos:
-        "Aclara si hay politicas sobre ninos, cuidados o modalidad del evento.",
+        "Aclara si hay políticas sobre niños, cuidados o modalidad del evento.",
     resumen:
         "Revisa el estado de cada paso: verde completo, rojo pendiente. Solo cuando todo este en verde se habilita enviar.",
 };
@@ -216,12 +231,12 @@ function triviaQuestionPlaceholder(
         return (
             TRIVIA_PLACEHOLDERS_BODA[
                 questionIndex % TRIVIA_PLACEHOLDERS_BODA.length
-            ]?.question ?? "Escribi tu pregunta"
+            ]?.question ?? "Escribí tu pregunta"
         );
     }
     return (
         TRIVIA_PLACEHOLDERS_XV[questionIndex % TRIVIA_PLACEHOLDERS_XV.length]
-            ?.question ?? "Escribi tu pregunta"
+            ?.question ?? "Escribí tu pregunta"
     );
 }
 
@@ -310,7 +325,11 @@ function aliasRowHasContent(a: AliasItem): boolean {
 }
 
 function cardPriceHasContent(c: CardPrice): boolean {
-    return c.amount.trim().length > 0 || c.note.trim().length > 0;
+    return (
+        c.amount.trim().length > 0 ||
+        c.note.trim().length > 0 ||
+        (c.paymentDeadline || "").trim().length > 0
+    );
 }
 
 function storyStepHasContent(s: StoryStep): boolean {
@@ -413,18 +432,31 @@ function Input({
     placeholder?: string;
     type?: string;
 }) {
+    const isDate = type === "date";
     return (
         <label className="block">
             <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
                 {label}
             </span>
-            <input
-                type={type}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder={placeholder}
-                className="w-full rounded-xl border border-[#DCCFC0] bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45]"
-            />
+            <div className={`${isDate ? "flex min-w-0 items-center gap-2" : ""}`}>
+                <input
+                    type={type}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder={placeholder}
+                    className="min-w-0 w-full rounded-xl border border-[#DCCFC0] bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45]"
+                />
+                {isDate ? (
+                    <button
+                        type="button"
+                        onClick={() => onChange("")}
+                        disabled={!value}
+                        className="shrink-0 rounded-md border border-[#DCCFC0] bg-[#FCF8F2] px-2.5 py-1 text-[11px] font-semibold text-[#6A5C52] disabled:opacity-45"
+                    >
+                        Borrar
+                    </button>
+                ) : null}
+            </div>
         </label>
     );
 }
@@ -545,10 +577,9 @@ export default function DetallesPage() {
             id,
             title:
                 customSections.find((item) => item.id === id)?.label ??
-                SECTION_LABELS[id] ??
-                id,
+                defaultSectionTitle(id, eventType),
         }));
-    }, [customSections, sectionIds]);
+    }, [customSections, sectionIds, eventType]);
 
     const steps: StepDefinition[] = useMemo(() => {
         return [
@@ -576,7 +607,7 @@ export default function DetallesPage() {
     ]);
     const [giftListLink, setGiftListLink] = useState("");
     const [cardPrices, setCardPrices] = useState<CardPrice[]>([
-        { amount: "", note: "" },
+        { amount: "", note: "", paymentDeadline: "" },
     ]);
     const [driveAlbumLink, setDriveAlbumLink] = useState("");
     const [musicYoutube, setMusicYoutube] = useState("");
@@ -619,6 +650,9 @@ export default function DetallesPage() {
     const [kidsMessage, setKidsMessage] = useState("");
     const [sectionNotes, setSectionNotes] = useState<Record<string, string>>({});
     const [returnToSummary, setReturnToSummary] = useState(false);
+    const [touchedRequiredSteps, setTouchedRequiredSteps] = useState<
+        Record<string, boolean>
+    >({});
     const skipPruneOnStepChange = useRef(true);
 
     const activeStep = steps[stepIdx];
@@ -632,8 +666,14 @@ export default function DetallesPage() {
         activeStep.id === "resumen"
             ? -1
             : stepsWithoutSummary.findIndex((s) => s.id === activeStep.id);
-    /** Siempre mostrar * Campo obligatorio donde corresponda (no solo al volver del resumen). */
-    const showRequiredHints = true;
+    const showRequiredHints = Boolean(touchedRequiredSteps[activeStep.id]);
+    const markCurrentStepTouched = () => {
+        const stepId = activeStep.id;
+        if (stepId === "resumen") return;
+        setTouchedRequiredSteps((prev) =>
+            prev[stepId] ? prev : { ...prev, [stepId]: true },
+        );
+    };
     const draftStorageKey = useMemo(
         () => `detalles-draft:${detailsId}`,
         [detailsId],
@@ -665,12 +705,12 @@ export default function DetallesPage() {
         eventType === "boda" ? "Nombre novio/a 2" : "Subtitulo (opcional)";
     const eventNamePlaceholder =
         eventType === "boda"
-            ? "Nombre como deberia figurar"
+            ? "Nombre como debería figurar"
             : eventType === "xv"
-              ? "Nombre como deberia figurar"
-              : "Titulo o nombre como deberia figurar";
+              ? "Nombre como debería figurar"
+              : "Título o nombre como debería figurar";
     const secondNamePlaceholder =
-        eventType === "boda" ? "Nombre como deberia figurar" : "Opcional";
+        eventType === "boda" ? "Nombre como debería figurar" : "Opcional";
     const eventPlaceholder =
         eventType === "boda"
             ? "Ej: Civil, Ceremonia, Recepcion"
@@ -681,8 +721,8 @@ export default function DetallesPage() {
         eventType === "xv" ? "Contanos brevemente tu historia" : "Contanos brevemente su historia";
     const storyMainHint =
         eventType === "xv"
-            ? "Con esto armamos la seccion a tu medida."
-            : "Con esto armamos la seccion a tu medida.";
+            ? "Con esto armamos la sección a tu medida."
+            : "Con esto armamos la sección a tu medida.";
     const storyPlaceholder =
         eventType === "xv"
             ? "Ej: Desde chiquita soñe este dia. Me encanta bailar, compartir con mi familia y celebrar esta etapa con mis amigos."
@@ -694,6 +734,7 @@ export default function DetallesPage() {
     const sectionMessageBlocks = useMemo(() => {
         return sectionSteps
             .map((section) => {
+                const sectionTitleUpper = section.title.toUpperCase();
                 const note = sectionNotes[section.id] || "";
                 if (section.id === "mapa") {
                     const rows = events
@@ -704,13 +745,13 @@ export default function DetallesPage() {
                         )
                         .join("\n");
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         rows || "  - Sin lugares cargados",
                     ].join("\n");
                 }
                 if (section.id === "dress") {
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         `  Dress code: ${dressCode || "-"}`,
                         `  Colores a evitar: ${colorsToAvoid || "-"}`,
                         `  Consejos extras: ${dressTips || "-"}`,
@@ -718,7 +759,7 @@ export default function DetallesPage() {
                 }
                 if (section.id === "itinerario") {
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         `  Detalle: ${itinerary || "-"}`,
                     ].join("\n");
                 }
@@ -734,7 +775,7 @@ export default function DetallesPage() {
                         )
                         .join("\n");
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         aliases || "  - Sin alias cargados",
                         `  Lista regalos link: ${giftListLink || "-"}`,
                         `  Nota extra: ${note || "-"}`,
@@ -749,31 +790,31 @@ export default function DetallesPage() {
                         )
                         .map(
                             (item, idx) =>
-                                `  ${idx + 1}) $${item.amount || "-"} (${item.note || "Sin detalle"})`,
+                                `  ${idx + 1}) $${item.amount || "-"} (${item.note || "Sin detalle"})${item.paymentDeadline ? ` | Fecha límite pago: ${item.paymentDeadline}` : ""}`,
                         )
                         .join("\n");
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         values || "  - Sin valores cargados",
                         `  Nota extra: ${note || "-"}`,
                     ].join("\n");
                 }
                 if (section.id === "album") {
                     return [
-                        `- ${section.title}:`,
-                        `  Link album Drive: ${driveAlbumLink || "-"}`,
+                        `- ${sectionTitleUpper}:`,
+                        `  Link álbum Drive: ${driveAlbumLink || "-"}`,
                     ].join("\n");
                 }
                 if (section.id === "musica") {
                     return [
-                        `- ${section.title}:`,
-                        `  Link o nombre cancion: ${musicYoutube || "-"}`,
+                        `- ${sectionTitleUpper}:`,
+                        `  Link o nombre canción: ${musicYoutube || "-"}`,
                         `  Preferencias: ${musicNotes || "-"}`,
                     ].join("\n");
                 }
                 if (section.id === "playlist") {
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         `  Spotify: ${spotifyPlaylist || "-"}`,
                     ].join("\n");
                 }
@@ -786,7 +827,7 @@ export default function DetallesPage() {
                         )
                         .join("\n");
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         `  Relato breve: ${storyBrief || "-"}`,
                         values ? `  Pasos opcionales:\n${values}` : "  Pasos opcionales: -",
                     ].join("\n");
@@ -798,19 +839,19 @@ export default function DetallesPage() {
                             const opts = item.options
                                 .map((opt, optIdx) => {
                                     const marker =
-                                        item.correctIndex === optIdx ? "*" : "-";
-                                    return `${marker} ${opt || "(vacia)"}`;
+                                        item.correctIndex === optIdx ? "✓" : "-";
+                                    return `     ${marker} ${opt || "(vacía)"}`;
                                 })
-                                .join(" | ");
+                                .join("\n");
                             const desc = item.description?.trim();
                             const descLine = desc
-                                ? `\n     Descripcion (al acertar): ${desc}`
+                                ? `\n     DESCRIPCIÓN (AL ACERTAR): ${desc}`
                                 : "";
-                            return `  ${idx + 1}) ${item.question}\n     ${opts}${descLine}`;
+                            return `  ${idx + 1}) ${item.question}\n${opts}${descLine}`;
                         })
                         .join("\n");
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         values || "  - Sin preguntas cargadas",
                     ].join("\n");
                 }
@@ -823,7 +864,7 @@ export default function DetallesPage() {
                         )
                         .join("\n");
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         values || "  - Sin FAQ cargadas",
                     ].join("\n");
                 }
@@ -836,32 +877,32 @@ export default function DetallesPage() {
                         )
                         .join("\n");
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         values || "  - Sin alojamientos cargados",
                     ].join("\n");
                 }
                 if (section.id === "adultos") {
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         `  Mensaje: ${kidsMessage || "-"}`,
                     ].join("\n");
                 }
                 if (section.id === "fotos10") {
                     return [
-                        `- ${section.title}:`,
-                        "  Se aclara por chat que las fotos se suben en album compartido.",
+                        `- ${sectionTitleUpper}:`,
+                        "  Se aclara por chat que las fotos se suben en álbum compartido.",
                     ].join("\n");
                 }
                 if (section.id === "fotos") {
                     return [
-                        `- ${section.title}:`,
+                        `- ${sectionTitleUpper}:`,
                         hasFotos10Section
-                            ? "  Incluye hasta 10 fotos. En el chat se comparte album de Drive para subirlas."
-                            : "  Incluye hasta 5 fotos. En el chat se comparte album de Drive para subirlas.",
+                            ? "  Incluye hasta 10 fotos. En el chat se comparte álbum de Drive para subirlas."
+                            : "  Incluye hasta 5 fotos. En el chat se comparte álbum de Drive para subirlas.",
                     ].join("\n");
                 }
                 return [
-                    `- ${section.title}:`,
+                    `- ${sectionTitleUpper}:`,
                     `  Detalle: ${note || "-"}`,
                 ].join("\n");
             })
@@ -891,28 +932,29 @@ export default function DetallesPage() {
     ]);
 
     const finalMessage = [
-        `Hola! Completo detalles de invitacion.`,
+        `¡Hola! Completo detalles de invitación.`,
         `ID: ${detailsId}`,
         "",
-        "Datos principales:",
-        `- Tipo evento: ${eventType || "No definido"}${eventOther ? ` (${eventOther})` : ""}`,
-        `- ${eventNameLabel}: ${primaryName || "-"}`,
-        `- ${eventSecondaryLabel}: ${secondaryName || "-"}`,
-        `- Fecha evento: ${eventDate || "-"}`,
-        `- Fecha limite confirmar asistencia: ${rsvpDeadline || "-"}`,
-        "- Eventos:",
+        "===== DATOS PRINCIPALES =====",
+        `- TIPO EVENTO: ${eventType || "NO DEFINIDO"}${eventOther ? ` (${eventOther})` : ""}`,
+        `- ${eventNameLabel.toUpperCase()}: ${primaryName || "-"}`,
+        `- ${eventSecondaryLabel.toUpperCase()}: ${secondaryName || "-"}`,
+        `- FECHA EVENTO: ${eventDate || "-"}`,
+        `- FECHA LÍMITE CONFIRMAR ASISTENCIA: ${rsvpDeadline || "-"}`,
+        "",
+        "===== EVENTOS =====",
         ...events.map(
             (item, idx) =>
                 `  ${idx + 1}) ${item.name || "-"} | ${item.hour || "-"} | ${item.address || "-"}${hasMapSection ? ` | Maps: ${item.maps || "-"}` : ""}`,
         ),
         "",
-        "Secciones:",
+        "===== SECCIONES =====",
         sectionMessageBlocks || "- Sin secciones",
         "",
-        "Fotos:",
+        "===== FOTOS =====",
         hasFotos10Section
-            ? "- Incluye hasta 10 fotos (se comparte album de Drive por chat)."
-            : "- Incluye hasta 5 fotos (se comparte album de Drive por chat).",
+            ? "- Incluye hasta 10 fotos (se comparte álbum de Drive por chat)."
+            : "- Incluye hasta 5 fotos (se comparte álbum de Drive por chat).",
     ].join("\n");
 
     const isStepComplete = (stepId: string) => {
@@ -1002,7 +1044,7 @@ export default function DetallesPage() {
         setItinerary("");
         setGiftAliases([{ alias: "", owner: "", bank: "", cbu: "" }]);
         setGiftListLink("");
-        setCardPrices([{ amount: "", note: "" }]);
+        setCardPrices([{ amount: "", note: "", paymentDeadline: "" }]);
         setDriveAlbumLink("");
         setMusicYoutube("");
         setMusicNotes("");
@@ -1027,6 +1069,7 @@ export default function DetallesPage() {
         setKidsMessage("");
         setSectionNotes({});
         setReturnToSummary(false);
+        setTouchedRequiredSteps({});
     };
 
     useEffect(() => {
@@ -1061,6 +1104,7 @@ export default function DetallesPage() {
                 kidsMessage: string;
                 sectionNotes: Record<string, string>;
                 returnToSummary: boolean;
+                touchedRequiredSteps: Record<string, boolean>;
             }>;
 
             if (typeof draft.stepIdx === "number") {
@@ -1116,6 +1160,12 @@ export default function DetallesPage() {
             }
             if (typeof draft.returnToSummary === "boolean") {
                 setReturnToSummary(draft.returnToSummary);
+            }
+            if (
+                draft.touchedRequiredSteps &&
+                typeof draft.touchedRequiredSteps === "object"
+            ) {
+                setTouchedRequiredSteps(draft.touchedRequiredSteps);
             }
         } catch {
             // Ignore invalid cached drafts.
@@ -1200,6 +1250,7 @@ export default function DetallesPage() {
             kidsMessage,
             sectionNotes,
             returnToSummary,
+            touchedRequiredSteps,
         };
         window.localStorage.setItem(draftStorageKey, JSON.stringify(draft));
     }, [
@@ -1228,6 +1279,7 @@ export default function DetallesPage() {
         storyBrief,
         storyDetailsOpen,
         storySteps,
+        touchedRequiredSteps,
         triviaItems,
         returnToSummary,
     ]);
@@ -1236,7 +1288,7 @@ export default function DetallesPage() {
         <main className="min-h-svh overflow-x-hidden bg-[#FDFBF7] px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] pb-[calc(17rem+env(safe-area-inset-bottom,0px))] text-[#3F332B]">
             <section className="mx-auto max-w-3xl pt-6">
                 <p className="text-center text-xs uppercase tracking-[0.12em] text-[#7A5F45]">
-                    Detalles de invitacion
+                    Detalles de invitación
                 </p>
                 <div
                     className="mt-2 w-screen max-w-[100vw] shrink-0"
@@ -1251,6 +1303,7 @@ export default function DetallesPage() {
                                 <button
                                     type="button"
                                     onClick={() => {
+                                        markCurrentStepTouched();
                                         setReturnToSummary(false);
                                         setStepIdx(
                                             summaryStepIdx >= 0
@@ -1324,7 +1377,7 @@ export default function DetallesPage() {
                 </h1>
                 <p className="mt-2 text-sm text-[#6A5C52]">
                     {STEP_HELP_TEXT[activeStep.id] ??
-                        "Este formulario se adapta a las secciones elegidas en tu configuracion."}
+                        "Este formulario se adapta a las secciones elegidas en tu configuración."}
                 </p>
 
                 <div className="details-form mt-5 space-y-4 rounded-2xl border border-[#DCCFC0] bg-white p-4 sm:p-5">
@@ -1366,7 +1419,7 @@ export default function DetallesPage() {
                                 </p>
                             ) : null}
                             <Input
-                                label="Fecha limite para confirmar asistencia"
+                                label="Fecha límite para confirmar asistencia"
                                 value={rsvpDeadline}
                                 onChange={setRsvpDeadline}
                                 type="date"
@@ -1376,7 +1429,7 @@ export default function DetallesPage() {
                     {activeStep.id === "eventos" ? (
                         <>
                             <p className="text-sm text-[#6A5C52]">
-                                Agrega de 1 a 3 eventos con horario y direccion.
+                                Agrega de 1 a 3 eventos con horario y dirección.
                             </p>
                             {events.map((item, idx) => (
                                 <div
@@ -1741,7 +1794,24 @@ export default function DetallesPage() {
                                                 ),
                                             )
                                         }
-                                        placeholder="Ej: adultos / ninos / por pareja"
+                                        placeholder="Ej: adultos / niños / por pareja"
+                                    />
+                                    <Input
+                                        label="Fecha límite de pago (opcional)"
+                                        value={item.paymentDeadline || ""}
+                                        onChange={(value) =>
+                                            setCardPrices((prev) =>
+                                                prev.map((entry, entryIdx) =>
+                                                    entryIdx === idx
+                                                        ? {
+                                                              ...entry,
+                                                              paymentDeadline: value,
+                                                          }
+                                                        : entry,
+                                                ),
+                                            )
+                                        }
+                                        type="date"
                                     />
                                 </div>
                             ))}
@@ -1751,7 +1821,7 @@ export default function DetallesPage() {
                                     onClick={() =>
                                         setCardPrices((prev) => [
                                             ...prev,
-                                            { amount: "", note: "" },
+                                            { amount: "", note: "", paymentDeadline: "" },
                                         ])
                                     }
                                     className="rounded-full border border-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-[#5A4A3F]"
@@ -1771,7 +1841,7 @@ export default function DetallesPage() {
                     {activeStep.id === "album" ? (
                         <>
                             <Input
-                                label="Link de album compartido de Drive"
+                                label="Link de álbum compartido de Drive"
                                 value={driveAlbumLink}
                                 onChange={setDriveAlbumLink}
                                 placeholder="https://drive.google.com/..."
@@ -1782,6 +1852,9 @@ export default function DetallesPage() {
                                     * Campo obligatorio
                                 </p>
                             ) : null}
+                            <p className="text-sm font-medium text-[#5A4A3F]">
+                                Cómo crear el link:
+                            </p>
                             <div className="overflow-x-auto pb-1">
                                 <div className="flex min-w-max gap-3">
                                     {[1, 2, 3].map((step) => (
@@ -1802,7 +1875,7 @@ export default function DetallesPage() {
                                                     ? "Abris Google Drive, tocas + y creas una carpeta."
                                                     : step === 2
                                                       ? "Dentro de la carpeta tocas los 3 puntitos y vas a administrar acceso."
-                                                      : "Seleccionas 'cualquier usuario con el vinculo', copias el enlace y lo pegas aqui en el formulario."}
+                                                      : "Seleccionás 'cualquier usuario con el vínculo', copiás el enlace y lo pegás aquí en el formulario."}
                                             </p>
                                         </article>
                                     ))}
@@ -1814,7 +1887,7 @@ export default function DetallesPage() {
                     {activeStep.id === "musica" ? (
                         <>
                             <Input
-                                label="Link de YouTube o nombre cancion"
+                                label="Link de YouTube o nombre canción"
                                 value={musicYoutube}
                                 onChange={setMusicYoutube}
                                 placeholder="Ej: https://youtube.com/... o Perfect - Ed Sheeran"
@@ -1854,8 +1927,8 @@ export default function DetallesPage() {
                         <>
                             <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3">
                                 <p className="text-sm text-[#6A5C52]">
-                                    Si queres, podes ver un ejemplo de esta
-                                    seccion antes de completar.
+                                    Si querés, podés ver un ejemplo de esta
+                                    sección antes de completar.
                                 </p>
                                 <a
                                     href={storyExampleHref}
@@ -1990,7 +2063,7 @@ export default function DetallesPage() {
                             </p>
                             <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3">
                                 <p className="text-sm text-[#6A5C52]">
-                                    Si queres, mira una trivia real antes de
+                                    Si querés, mirá una trivia real antes de
                                     completarla.
                                 </p>
                                 <a
@@ -2251,7 +2324,7 @@ export default function DetallesPage() {
                                                 ),
                                             )
                                         }
-                                        placeholder="Ej: Se puede llevar acompanantes?"
+                                        placeholder="Ej: ¿Se puede llevar acompañantes?"
                                     />
                                     {showRequiredHints &&
                                     item.question.trim().length === 0 ? (
@@ -2274,7 +2347,7 @@ export default function DetallesPage() {
                                                 ),
                                             )
                                         }
-                                        placeholder="Ej: Si, hasta 2 acompanantes por invitado."
+                                        placeholder="Ej: Sí, hasta 2 acompañantes por invitado."
                                     />
                                     {showRequiredHints &&
                                     item.answer.trim().length === 0 ? (
@@ -2390,7 +2463,7 @@ export default function DetallesPage() {
                     {activeStep.id === "adultos" ? (
                         <>
                             <Textarea
-                                label="Mensaje sobre ninos y cuidados"
+                                label="Mensaje sobre niños y cuidados"
                                 value={kidsMessage}
                                 onChange={setKidsMessage}
                                 placeholder="Ej: Evento solo para adultos / Habra espacio kids"
@@ -2444,8 +2517,8 @@ export default function DetallesPage() {
                             ))}
                             <p className="rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3 text-sm text-[#6A5C52]">
                                 {hasFotos10Section
-                                    ? "Fotos: esta invitacion incluye hasta 10 fotos. Te voy a compartir por chat un album de Drive para que las subas."
-                                    : "Fotos: esta invitacion incluye hasta 5 fotos. Te voy a compartir por chat un album de Drive para que las subas."}
+                                    ? "Fotos: esta invitación incluye hasta 10 fotos. Te compartiremos por chat un álbum de Drive para que las subas."
+                                    : "Fotos: esta invitación incluye hasta 5 fotos. Te compartiremos por chat un álbum de Drive para que las subas."}
                             </p>
                         </div>
                     ) : null}
@@ -2456,7 +2529,7 @@ export default function DetallesPage() {
                                 Seccion personalizada: {activeStep.title}
                             </p>
                             <Textarea
-                                label="Explicanos que queres incluir"
+                                label="Explicanos qué querés incluir"
                                 value={sectionNotes[activeStep.id] || ""}
                                 onChange={(value) => setNote(activeStep.id, value)}
                             />
@@ -2476,7 +2549,7 @@ export default function DetallesPage() {
                         disabled={stepIdx === 0}
                         style={{ opacity: stepIdx === 0 ? 0.45 : 1 }}
                     >
-                        Atras
+                        Atrás
                     </button>
                     {activeStep.id === "resumen" ? (
                         <button
@@ -2490,6 +2563,7 @@ export default function DetallesPage() {
                         <button
                             type="button"
                             onClick={() => {
+                                markCurrentStepTouched();
                                 setReturnToSummary(false);
                                 setStepIdx(summaryStepIdx >= 0 ? summaryStepIdx : steps.length - 1);
                             }}
@@ -2517,6 +2591,7 @@ export default function DetallesPage() {
                         <button
                             type="button"
                             onClick={() => {
+                                markCurrentStepTouched();
                                 const next = Math.min(
                                     steps.length - 1,
                                     stepIdx + 1,
