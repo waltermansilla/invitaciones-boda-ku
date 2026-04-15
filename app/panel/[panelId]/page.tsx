@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import useSWR from "swr"
-import { Copy, Trash2, Edit2, Plus, Users, User, Check, X, Utensils, Music, MessageSquare, Settings } from "lucide-react"
+import { Trash2, Edit2, Plus, Users, User, Check, X, Utensils, Music, MessageSquare, Settings, Send } from "lucide-react"
 
 interface Integrante { id: string; nombre: string; estado: "pendiente" | "confirmado" | "no_asiste"; restricciones?: string }
 interface Invitado { id: string; nombre: string; codigo?: string; tipo: "persona" | "familia" | "integrante"; estado: "pendiente" | "confirmado" | "no_asiste"; pago_tarjeta?: boolean; confirmado_manual?: boolean; restricciones?: string; mensaje?: string; cancion?: string; fecha_confirmacion?: string; integrantes?: Integrante[]; familiaId?: string; familiaNombre?: string; pago?: boolean }
 interface Evento { id: string; panel_id: string; fecha_evento?: string; nombre_evento?: string; tipo_evento?: string }
 interface PanelTheme { primaryColor?: string; backgroundColor?: string }
-interface PanelLabels { title?: string; totalLabel?: string; confirmedLabel?: string; pendingLabel?: string; declinedLabel?: string; paymentPending?: string; addGuest?: string; copyLink?: string; manualConfirm?: string; paidButton?: string; unpaidButton?: string }
+interface PanelLabels { title?: string; totalLabel?: string; confirmedLabel?: string; pendingLabel?: string; declinedLabel?: string; paymentPending?: string; addGuest?: string; copyLink?: string; sendInvite?: string; manualConfirm?: string; paidButton?: string; unpaidButton?: string }
 interface PanelData { evento: Evento; invitados: Invitado[]; stats: { confirmados: number; noAsisten: number; pendientes: number }; panelConfig?: { theme?: PanelTheme; labels?: PanelLabels } }
 
 const fetcher = async (url: string) => {
@@ -48,7 +48,6 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingInvitado, setEditingInvitado] = useState<Invitado | null>(null)
   const [confirmManualInvitado, setConfirmManualInvitado] = useState<Invitado | null>(null)
-  const [copiedId, setCopiedId] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const giftCardEnabled = true
@@ -62,15 +61,27 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const labels = data?.panelConfig?.labels
   const primaryColor = theme?.primaryColor || "#b8a88a"
 
-  const handleCopyLink = useCallback((invitado: Invitado) => {
+  const handleSendInvitation = useCallback((invitado: Invitado) => {
     // Inferir slug y tipo del panelId (ej: "anto-walter-boda" -> "anto-walter", tipo "boda")
     const slug = panelId?.replace(/-boda$/, "").replace(/-xv$/, "") || ""
     const tipo = panelId?.includes("-xv") ? "xv" : "boda"
     const link = `${window.location.origin}/${tipo}/${slug}?c=${invitado.codigo || ""}`
-    navigator.clipboard.writeText(link)
-    setCopiedId(invitado.id)
-    setTimeout(() => setCopiedId(null), 2000)
-  }, [panelId])
+    const tipoEvento = (data?.evento?.tipo_evento || tipo).toLowerCase()
+    const eventoTexto =
+      tipoEvento === "xv"
+        ? "XV"
+        : tipoEvento === "boda"
+          ? "Boda"
+          : data?.evento?.nombre_evento?.trim() || "evento"
+    const nombreEvento = data?.evento?.nombre_evento?.trim() || ""
+    const eventoDetalle = nombreEvento ? `${eventoTexto} ${nombreEvento} ♥️` : `${eventoTexto} ♥️`
+    const message = `¡Hola, ${invitado.nombre}! Estás invitado a nuestra ${eventoTexto} 🫶🏼\nIngresá al enlace para ver tu invitación:\n\n${eventoDetalle}\n${link}`
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(message)}`,
+      "_blank",
+      "noopener,noreferrer",
+    )
+  }, [panelId, data?.evento?.nombre_evento, data?.evento?.tipo_evento])
 
   const handleDelete = useCallback(async (invitadoId: string) => {
     if (!confirm("¿Eliminar este invitado?")) return
@@ -164,7 +175,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
           <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-12 text-center"><p className="text-neutral-500">{searchTerm ? "No se encontraron resultados" : "No hay invitados"}</p></div>
         ) : (
           <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
-            {invitadosFiltrados.map((inv, idx) => <InvitadoRow key={inv.id} invitado={inv} isLast={idx === invitadosFiltrados.length - 1} copiedId={copiedId} giftCardEnabled={giftCardEnabled} primaryColor={primaryColor} labels={labels} expanded={expandedId === inv.id} onToggleExpand={() => setExpandedId(expandedId === inv.id ? null : inv.id)} onCopyLink={handleCopyLink} onDelete={handleDelete} onEdit={() => setEditingInvitado(inv)} onTogglePago={handleTogglePago} onOpenConfirmManual={() => setConfirmManualInvitado(inv)} />)}
+            {invitadosFiltrados.map((inv, idx) => <InvitadoRow key={inv.id} invitado={inv} isLast={idx === invitadosFiltrados.length - 1} giftCardEnabled={giftCardEnabled} primaryColor={primaryColor} labels={labels} expanded={expandedId === inv.id} onToggleExpand={() => setExpandedId(expandedId === inv.id ? null : inv.id)} onSendInvitation={handleSendInvitation} onDelete={handleDelete} onEdit={() => setEditingInvitado(inv)} onTogglePago={handleTogglePago} onOpenConfirmManual={() => setConfirmManualInvitado(inv)} />)}
           </div>
         )}
       </div>
@@ -176,7 +187,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   )
 }
 
-function InvitadoRow({ invitado, isLast, copiedId, giftCardEnabled, primaryColor, labels, expanded, onToggleExpand, onCopyLink, onDelete, onEdit, onTogglePago, onOpenConfirmManual }: { invitado: Invitado; isLast: boolean; copiedId: string | null; giftCardEnabled: boolean; primaryColor: string; labels?: PanelLabels; expanded: boolean; onToggleExpand: () => void; onCopyLink: (inv: Invitado) => void; onDelete: (id: string) => void; onEdit: () => void; onTogglePago: (inv: Invitado) => void; onOpenConfirmManual: () => void }) {
+function InvitadoRow({ invitado, isLast, giftCardEnabled, primaryColor, labels, expanded, onToggleExpand, onSendInvitation, onDelete, onEdit, onTogglePago, onOpenConfirmManual }: { invitado: Invitado; isLast: boolean; giftCardEnabled: boolean; primaryColor: string; labels?: PanelLabels; expanded: boolean; onToggleExpand: () => void; onSendInvitation: (inv: Invitado) => void; onDelete: (id: string) => void; onEdit: () => void; onTogglePago: (inv: Invitado) => void; onOpenConfirmManual: () => void }) {
   const estadoBg: Record<string, string> = { confirmado: "#d4edda", pendiente: "#f5f5f5", no_asiste: "#f5d5d5" }
   const estadoText: Record<string, string> = { confirmado: "#155724", pendiente: "#888", no_asiste: "#8b6b6b" }
   const bgColor = estadoBg[invitado.estado] || "#f5f5f5"
@@ -244,7 +255,7 @@ function InvitadoRow({ invitado, isLast, copiedId, giftCardEnabled, primaryColor
       {expanded && (
         <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3">
           <div className="flex flex-wrap gap-2">
-            {invitado.codigo && <button onClick={(e) => { e.stopPropagation(); onCopyLink(invitado) }} className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white" style={{ backgroundColor: primaryColor }}><Copy className="h-3 w-3" />{copiedId === invitado.id ? "Copiado!" : (labels?.copyLink || "Copiar link")}</button>}
+            {invitado.codigo && <button onClick={(e) => { e.stopPropagation(); onSendInvitation(invitado) }} className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white" style={{ backgroundColor: primaryColor }}><Send className="h-3 w-3" />{labels?.sendInvite || "Enviar invitación"}</button>}
             {invitado.estado === "pendiente" && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onOpenConfirmManual() }} className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"><Settings className="h-3 w-3" />{labels?.manualConfirm || "Confirmación manual"}</button>}
             {giftCardEnabled && invitado.tipo !== "integrante" && <button onClick={(e) => { e.stopPropagation(); onTogglePago(invitado) }} className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}><Check className="h-3 w-3" />{invitado.pago_tarjeta ? (labels?.paidButton || "Ya pagó") : (labels?.unpaidButton || "¿Pagó tarjeta?")}</button>}
             {invitado.tipo !== "integrante" && <><button onClick={(e) => { e.stopPropagation(); onEdit() }} className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"><Edit2 className="h-3 w-3" />Editar</button><button onClick={(e) => { e.stopPropagation(); onDelete(invitado.id) }} className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600"><Trash2 className="h-3 w-3" />Eliminar</button></>}
