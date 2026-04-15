@@ -1,0 +1,335 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Muna - Mi primer añito",
+        "description": "Estás invitado a celebrar el Cumple de 1 añito de Muna.",
+        "lang": "es",
+        "quinceaneraName": "Muna",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Muna",
+            "separator": ""
+        }
+    },
+
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA / d8a5a2 globos / ea9ab2 rosa ": "",
+    "// ==========================================..": "",
+
+    "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
+    "theme": {
+        "primaryColor": "#ffb3c1",
+        "backgroundColor": "#FFF9F7",
+        "primaryImage": "/clientes/cumple/19-muna/images/primary2.PNG",
+        "textColor": "#3a3a3a",
+        "lightBgTextColor": "#ff8da1",
+        "darkBgTextColor": "#fff",
+        "accentBackground": "#FDF0EE",
+        "modalTextColor": "#fff",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Hoy celebramos el primer añito de nuestra princesita.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "70px",
+            "weight": "600",
+            "color": "#000",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
+    },
+
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/cumple/19-muna/music/she-lovely.mp3",
+        "autoplay": true
+    },
+
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "hero": {
+        "coupleImage": "/clientes/cumple/19-muna/images/hero.jpeg",
+        "headline": "Mi primer añito",
+        "showNamesOnPhoto": true,
+        "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
+        "namesDisplay": {
+            "enabled": true,
+            "position": "bottom",
+            "letterSpacing": "none",
+            "font": "Dancing Script",
+            "lowercase": true,
+            "weight": "700",
+            "size": "4xl",
+            "style": "normal",
+            "color": "#FFF9F7",
+            "decorativeLines": false,
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-07-25T12:30:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
+        }
+    },
+
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Un año de miradas llenas de amor, de risitas que iluminan el alma y de pequeños momentos que se volvieron eternos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "25 de Julio de 2026"
+            }
+        },
+
+        {
+            "// --- UBICACION: FIESTA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "bgColor": "primary",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "¿Dónde?",
+                "address": "'Chilca Eventos', Juan Manuel de Rosas 43",
+                "showButton": true,
+                "order": ["address", "time"],
+                "datetime": {
+                    "time": "A las 12:30 hs"
+                },
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/G1L1q6Juj6nktVY19?g_st=aw",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "// --- PADRES ---": "",
+            "_comment": "Seccion con los nombres de los padres de la quinceanera. title = titulo. parents = array de padres con nombre y role.",
+            "type": "parents",
+            "id": "parents",
+            "bgColor": "primary",
+            "blocks": ["title", "parents"],
+            "data": {
+                "title": "Papá y mamá",
+                "subtitle": "Con amor te vimos crecer día a día, y hoy, con el corazón lleno, celebramos tu primer añito",
+                "parents": [
+                    { "name": "Sol", "role": "Mamá" },
+                    { "name": "Kevin", "role": "Papá" }
+                ]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final",
+            "enabled": true,
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Llegaste a cambiarlo todo, a enseñarnos el amor más puro y a llenar cada día de magia.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
+            "type": "honeymoon",
+            "id": "dream-trip",
+            "bgColor": "background",
+
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Nada es más importante que tu presencia. Si deseas hacerle un regalito, podrás hacerlo el día del evento o, si lo preferís, a través de este alias:",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "background"
+                },
+                "modal": {
+                    "title": "Nuestros datos datos",
+                    "description": "Gracias por tu cariño y por ser parte de este momento tan especial para nosotros.",
+                    "bankData": [
+                        { "label": "Alias", "value": "muna.sol.kevin26" }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "PHOTOS: Invitar a subir fotos.",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Si tenés fotos de Muna, o sacás fotos durante el cumple, podés subirlos acá para que juntos guardemos los mejores recuerdos.",
+                "button": {
+                    "text": "Subir fotos",
+                    "url": "https://drive.google.com/drive/folders/10X0tiu0xGcNYh_MQ6TbIjeud6lz11Pt-",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "// --- FORMULARIO RSVP ---": "",
+            "_comment": "Fondo rosa. Formulario de confirmacion. Todos los labels, opciones y textos son editables.",
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "background",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 10 de Julio",
+                "guestCountLabel": "Numero de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "¿Vas a poder venir?",
+                    "attendanceYes": "¡Confirmo!",
+                    "attendanceNo": "No voy a poder",
+                    "dietary": "¿Algun requerimiento de alimentación?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celíaco",
+                        "Otro"
+                    ],
+                    "songRequest": "Algún mensajito para Muna o sus papás?",
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "542954374325",
+                    "messageTemplate": "Hola! Confirmo asistencia para el primer añito de Muna:\n{resumen}\n¡Gracias por la invitación a este momento tan especial! 🫶🏼"
+                }
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Que tu vida esté siempre rodeada de felicidad, dulzura y sueños por cumplir. Te amamos con todo el corazón, hoy y siempre 💕",
+                "author": "Papá & Mamá",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/cumple/19-muna/images/hero.jpeg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "700",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#000",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}
