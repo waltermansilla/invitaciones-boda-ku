@@ -174,7 +174,8 @@ const OTHER_SECTION_ADDER_BASE = {
 const REQUIRED_SECTION_ID = "mapa";
 const PANEL_INCLUDED_GUESTS = 150;
 const PANEL_STEP_GUESTS = 100;
-const PANEL_STEP_PRICE_ARS = pricingData.configurator.extras.panelPer100 ?? 9000;
+const PANEL_STEP_PRICE_ARS =
+    pricingData.configurator.extras.panelPer100 ?? 9000;
 const PANEL_MAX_GUESTS = 1000;
 const PANEL_GUEST_PRESETS = [150, 250, 350, 500] as const;
 
@@ -298,7 +299,9 @@ function ConfiguradorPageContent() {
     const [extras, setExtras] = useState<string[]>(
         INCLUDED_EXTRAS_BY_PLAN[plan],
     );
-    const [panelGuests, setPanelGuests] = useState<number>(PANEL_INCLUDED_GUESTS);
+    const [panelGuests, setPanelGuests] = useState<number>(
+        PANEL_INCLUDED_GUESTS,
+    );
     const [name1, setName1] = useState("");
     const [name2, setName2] = useState("");
     const [email, setEmail] = useState("");
@@ -368,7 +371,9 @@ function ConfiguradorPageContent() {
         }
         const base = SECTION_OPTIONS.find((s) => s.id === sectionId);
         if (!base) return sectionId;
-        return useEnglish ? (SECTION_LABEL_EN[sectionId] ?? base.label) : base.label;
+        return useEnglish
+            ? (SECTION_LABEL_EN[sectionId] ?? base.label)
+            : base.label;
     };
     const sectionOptions = useMemo<SectionOption[]>(
         () => [
@@ -440,14 +445,19 @@ function ConfiguradorPageContent() {
     const includedExtraIds = INCLUDED_EXTRAS_BY_PLAN[plan];
     const clampedPanelGuests = Math.max(
         PANEL_INCLUDED_GUESTS,
-        Math.min(PANEL_MAX_GUESTS, Math.round(panelGuests || PANEL_INCLUDED_GUESTS)),
+        Math.min(
+            PANEL_MAX_GUESTS,
+            Math.round(panelGuests || PANEL_INCLUDED_GUESTS),
+        ),
     );
     const panelExtraGuests = Math.max(
         0,
         clampedPanelGuests - PANEL_INCLUDED_GUESTS,
     );
     const panelExtraGuestsCost = toPrice(
-        Math.round((panelExtraGuests * PANEL_STEP_PRICE_ARS) / PANEL_STEP_GUESTS),
+        Math.round(
+            (panelExtraGuests * PANEL_STEP_PRICE_ARS) / PANEL_STEP_GUESTS,
+        ),
     )[currency];
     const panelBasePrice =
         extrasList.find((e) => e.id === "panel")?.price[currency] ?? 0;
@@ -792,7 +802,9 @@ function ConfiguradorPageContent() {
                         </div>
                         <button
                             type="button"
-                            onClick={() => setStyleSelected(styleNoneOptionLabel)}
+                            onClick={() =>
+                                setStyleSelected(styleNoneOptionLabel)
+                            }
                             className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-2xl border px-4 py-3 text-center text-sm font-semibold transition-colors"
                             style={{
                                 borderColor:
@@ -807,7 +819,11 @@ function ConfiguradorPageContent() {
                             }}
                         >
                             {styleNoneOptionLabel}
-                            <ChevronRight size={16} className="shrink-0" aria-hidden />
+                            <ChevronRight
+                                size={16}
+                                className="shrink-0"
+                                aria-hidden
+                            />
                         </button>
                     </>
                 ) : null}
@@ -925,7 +941,8 @@ function ConfiguradorPageContent() {
                         <div className="mt-4 grid w-full min-w-0 grid-cols-4 gap-x-4 gap-y-7 pt-3 sm:gap-x-3 sm:gap-y-5 sm:pt-2">
                             {sectionOptions.map((s) => {
                                 const on = sections.includes(s.id);
-                                const isRequiredSection = s.id === REQUIRED_SECTION_ID;
+                                const isRequiredSection =
+                                    s.id === REQUIRED_SECTION_ID;
                                 const isPaid =
                                     !s.isAdder &&
                                     on &&
