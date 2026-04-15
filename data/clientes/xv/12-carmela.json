@@ -24,7 +24,7 @@
     "theme": {
         "primaryColor": "#d8a5a2",
         "backgroundColor": "#eee",
-        "primaryImage": "/clientes/xv/pili/background/bg3.jpg",
+        "primaryImage": "/clientes/xv/11-pili/background/bg3.jpg",
         "textColor": "#000",
         "lightBgTextColor": "#b87a76",
         "darkBgTextColor": "#fff",
@@ -62,7 +62,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/xv/carmela/music/perfect.mp3",
+        "src": "/clientes/xv/12-carmela/music/perfect.mp3",
         "autoplay": true
     },
 
@@ -72,7 +72,7 @@
 
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
-        "coupleImage": "/clientes/xv/carmela/images/img1.jpeg",
+        "coupleImage": "/clientes/xv/12-carmela/images/img1.jpeg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
         "namesDisplay": {
@@ -224,7 +224,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/xv/carmela/images/img2.jpeg"]
+                "images": ["/clientes/xv/12-carmela/images/img2.jpeg"]
             }
         },
 
@@ -315,7 +315,7 @@
             "blocks": ["image", "name"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/xv/carmela/images/img1.jpeg",
+                "image": "/clientes/xv/12-carmela/images/img1.jpeg",
                 "namesDisplay": {
                     "enabled": true,
                     "font": "Dancing Script",

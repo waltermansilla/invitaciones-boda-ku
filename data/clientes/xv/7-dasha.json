@@ -53,7 +53,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/xv/dasha/music/gimme.mp3",
+        "src": "/clientes/xv/7-dasha/music/gimme.mp3",
         "autoplay": true
     },
 
@@ -63,7 +63,7 @@
 
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
-        "coupleImage": "/clientes/xv/dasha/images/img-hero.jpeg",
+        "coupleImage": "/clientes/xv/7-dasha/images/img-hero.jpeg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
         "namesDisplay": {
@@ -148,7 +148,7 @@
             "id": "presentation",
             "blocks": ["image", "name", "description"],
             "data": {
-                "image": "/clientes/xv/dasha/images/galeria-1.jpeg",
+                "image": "/clientes/xv/7-dasha/images/galeria-1.jpeg",
                 "name": "Dasha",
                 "description": "Mis 15 finalmente llegaron. Ésta es una noche única que quiero compartir con las personas que forman parte de mi vida.",
                 "aspectRatio": "4/3"
@@ -207,7 +207,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/xv/dasha/images/galeria-2.jpeg"]
+                "images": ["/clientes/xv/7-dasha/images/galeria-2.jpeg"]
             }
         },
 
@@ -251,7 +251,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/xv/dasha/images/final.jpeg"]
+                "images": ["/clientes/xv/7-dasha/images/final.jpeg"]
             }
         },
 
@@ -403,7 +403,7 @@
             "blocks": ["image", "name"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/xv/dasha/images/img-hero.jpeg"
+                "image": "/clientes/xv/7-dasha/images/img-hero.jpeg"
             }
         },
 

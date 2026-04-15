@@ -6,6 +6,10 @@ import type { AdminData, DetectedProject } from "@/lib/admin-types"
 const DATA_PATH = path.join(process.cwd(), "data", "admin", "admin.json")
 const CLIENTS_PATH = path.join(process.cwd(), "data", "clientes")
 
+function slugFromFileName(fileName: string): string {
+    return fileName.replace(/\.json$/i, "").replace(/^\d+-/, "")
+}
+
 async function getAdminData(): Promise<AdminData> {
     try {
         const data = await fs.readFile(DATA_PATH, "utf-8")
@@ -26,7 +30,7 @@ async function detectProjects(): Promise<DetectedProject[]> {
             const bodaFiles = await fs.readdir(bodaPath)
             for (const file of bodaFiles) {
                 if (file.endsWith(".json") && !file.startsWith("_")) {
-                    const slug = file.replace(".json", "")
+                    const slug = slugFromFileName(file)
                     const filePath = path.join(bodaPath, file)
                     const content = await fs.readFile(filePath, "utf-8")
                     const json = JSON.parse(content)
@@ -57,7 +61,7 @@ async function detectProjects(): Promise<DetectedProject[]> {
             const xvFiles = await fs.readdir(xvPath)
             for (const file of xvFiles) {
                 if (file.endsWith(".json") && !file.startsWith("_")) {
-                    const slug = file.replace(".json", "")
+                    const slug = slugFromFileName(file)
                     const filePath = path.join(xvPath, file)
                     const content = await fs.readFile(filePath, "utf-8")
                     const json = JSON.parse(content)

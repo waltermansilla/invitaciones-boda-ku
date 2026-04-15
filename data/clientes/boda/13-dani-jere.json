@@ -46,7 +46,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": false,
-        "src": "/clientes/boda/anto-walter/music/Para-Siempre.mp3",
+        "src": "/clientes/boda/0-anto-walter/music/Para-Siempre.mp3",
         "autoplay": false
     },
     "// ==========================================-": "",
@@ -54,7 +54,7 @@
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/anto-walter/images/img-hero.jpg",
+        "coupleImage": "/clientes/boda/0-anto-walter/images/img-hero.jpg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm','base','lg','xl','2xl','3xl','4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
@@ -124,9 +124,9 @@
             "data": {
                 "aspectRatio": "4/3",
                 "images": [
-                    "/clientes/boda/anto-walter/images/galeria-1.jpg",
-                    "/clientes/boda/anto-walter/images/galeria-2.jpg",
-                    "/clientes/boda/anto-walter/images/galeria-3.jpg"
+                    "/clientes/boda/0-anto-walter/images/galeria-1.jpg",
+                    "/clientes/boda/0-anto-walter/images/galeria-2.jpg",
+                    "/clientes/boda/0-anto-walter/images/galeria-3.jpg"
                 ]
             }
         },
@@ -372,7 +372,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/anto-walter/images/final.jpg"
+                "image": "/clientes/boda/0-anto-walter/images/final.jpg"
             }
         },
         {

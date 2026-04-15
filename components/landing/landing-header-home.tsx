@@ -105,7 +105,7 @@ export function LandingHeader({
       <div className="mx-auto max-w-6xl px-5 py-2.5 md:px-8 md:py-3">
         <div className="flex items-center justify-between gap-3">
           <a
-            href="#"
+            href="/"
             className="shrink-0 text-lg font-normal tracking-tight transition-opacity hover:opacity-80 md:text-xl"
             style={{ fontFamily: theme.typography.headingFont, color: tx.heading }}
             onClick={closeMenu}

@@ -2,74 +2,96 @@
     "// ==========================================": "",
     "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
     "// ==========================================.": "",
-    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
     "meta": {
-        "title": "Nuestra Boda - Belén & Agustín",
-        "description": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "title": "Baby Shower - Máxima",
+        "description": "Estás invitado a celebrar el Baby Shower de Máxima.",
         "lang": "es",
+        "quinceaneraName": "Máxima",
         "coupleNames": {
-            "groomName": "Agustín",
-            "brideName": "Belén",
-            "separator": "&"
+            "groomName": "",
+            "brideName": "Máxima",
+            "separator": ""
         }
     },
+
     "// ==========================================,": "",
-    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA / d8a5a2 globos / ea9ab2 rosa ": "",
     "// ==========================================..": "",
-    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. verde grisaceo: 59695c, marron: 735751, gris oscuro 333, verde oliva 607119",
+
+    "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
     "theme": {
-        "primaryColor": "#5b6d5b",
-        "backgroundColor": "#f2f4ee",
-        "textColor": "#4a5d4e",
-        "lightBgTextColor": "#5b6d5b",
-        "darkBgTextColor": "#FFFFFF",
-        "accentBackground": "#EDF2E8",
-        "modalTextColor": "#FFFFFF",
+        "primaryColor": "#C4788A",
+        "backgroundColor": "#FFF9F7",
+
+        "textColor": "#3a3a3a",
+        "lightBgTextColor": "#C4788A",
+        "darkBgTextColor": "#fff",
+        "accentBackground": "#FDF0EE",
+        "modalTextColor": "#fff",
         "font": {
             "family": "Josefin Sans",
             "weights": "100,200,300,400,500,600,700"
         }
     },
+
     "// ==========================================;": "",
     "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
     "// ==========================================...": "",
+
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
-        "phrase": "",
-        "buttonText": "Ingresar"
+        "phrase": "Te invitamos a compartir con nosotros su dulce espera.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "70px",
+            "weight": "600",
+            "color": "#000",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
     },
+
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
     "// ==========================================....": "",
+
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/boda/belen-agustin/music/perfect.mp3",
-        "autoplay": true
+        "src": "/clientes/baby/15-maxima/music/here-comes.mp3",
+        "autoplay": true,
+        "startTime": 9
     },
+
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
     "// ==========================================.....": "",
+
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/belen-agustin/images/img-hero.jpeg",
-        "headline": "¡Nos casamos!",
-        "showNamesOnPhoto": false,
+        "coupleImage": "/clientes/baby/15-maxima/images/1.jpeg",
+        "headline": "Baby Shower",
+        "showNamesOnPhoto": true,
         "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
         "namesDisplay": {
-            "enabled": false,
+            "enabled": true,
             "position": "bottom",
-            "font": "",
-            "weight": "300",
-            "size": "lg",
+            "letterSpacing": "none",
+            "font": "Dancing Script",
+            "lowercase": true,
+            "weight": "700",
+            "size": "3xl",
             "style": "normal",
-            "color": "rgba(255,255,255,0.9)",
+            "color": "#FFF9F7",
             "decorativeLines": false,
             "logo": ""
         },
         "countdownPrefix": "Faltan",
-        "eventDate": "2026-11-21T20:00:00",
+        "eventDate": "2026-04-18T18:00:00",
         "countdownLabels": {
             "days": "Dias",
             "hours": "Horas",
@@ -77,15 +99,15 @@
             "seconds": "Segundos"
         },
         "countdownStyle": {
-            "background": "primary",
-            "shape": "rounded",
-            "layout": "overlay",
-            "overlayStyle": "floating"
+            "background": "none",
+            "shape": "rounded"
         }
     },
+
     "// ==========================================+": "",
     "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
     "// ==========================================......": "",
+
     "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
     "sections": [
         {
@@ -96,7 +118,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Los momentos más importantes de la vida se vuelven aún más especiales cuando se comparten con quienes más queremos. Por eso nos encantaría que seas parte de este día tan importante para nosotros.",
+                "text": "Si recibiste esta invitación, es porque sos parte importante de nuestra historia y queremos compartir con vos la dulce espera de nuestra hija Máxima. Tu compañía hará este momento aún más especial.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -110,57 +132,46 @@
             "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
-                "value": "21 de Noviembre 2026"
+                "value": "18 de Abril de 2026"
             }
         },
         {
-            "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
-            "type": "gallery",
-            "id": "gallery-photos",
-            "blocks": ["slider"],
+            "// --- PRESENTACION DE LA QUINCEANERA ---": "",
+            "_comment": "Seccion para presentar a la quinceanera con una foto y un texto personal. image = foto en /public/images/. description = texto de presentacion.",
+            "type": "presentation",
+            "id": "presentation",
+            "blocks": ["image", "name", "description"],
             "data": {
-                "aspectRatio": "3/4",
-                "images": ["/clientes/boda/belen-agustin/images/fija.jpeg"]
+                "image": "/clientes/baby/15-maxima/images/2.jpeg",
+                "name": "Máxima",
+                "description": "Nuestra familia está creciendo... y con ella, el amor más lindo que pudimos imaginar.",
+                "aspectRatio": "3/4"
             }
         },
 
         {
-            "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
+            "// --- UBICACION: FIESTA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
-            "enabled": false,
-            "id": "location-ceremonia",
-            "bgColor": "background",
-            "blocks": ["title", "address", "button"],
-            "data": {
-                "title": "Ceremonia religiosa",
-                "address": "Parroquia San Pedro y San Pablo",
-                "button": {
-                    "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/f5c2xKsVRKJgitNC9",
-                    "variant": "primary"
-                }
-            }
-        },
-        {
-            "// --- UBICACION: CIVIL y RECEPCION ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "enabled": false,
-            "id": "location-recepcion",
+            "id": "location-fiesta",
             "bgColor": "primary",
             "blocks": ["title", "address", "button"],
             "data": {
-                "title": "Civil y ¡Fiesta!",
-                "address": "Salón de eventos 'San Cayetano'",
+                "title": "¿Dónde?",
+                "address": "'La Restinga Espacio', Eva Perón 1873",
+                "showButton": true,
+                "order": ["address", "time"],
+                "datetime": {
+                    "time": "18:00 hs"
+                },
                 "button": {
                     "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/s3hhbVMq5JojVsRU6",
+                    "url": "https://maps.app.goo.gl/FnDC2HBpA3Z1LWN97?g_st=iw",
                     "variant": "background"
                 }
             }
         },
+
         {
             "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
@@ -169,30 +180,34 @@
             "bgColor": "background",
             "blocks": ["title", "timeline"],
             "data": {
-                "title": "Te invitamos a estos dos eventos",
+                "title": "Itinerario",
                 "events": [
                     {
-                        "icon": "church",
-                        "name": "Ceremonia religiosa",
-                        "address": "Colegio Don Bosco",
-                        "time": "20:00 hs",
+                        "icon": "heart",
+                        "name": "Recepción y bebidas",
+                        "time": "18:00 hs"
+                    },
+                    {
+                        "icon": "sparkles",
+                        "name": "Primer momento: Finger Food y juegos",
 
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/gERzsrvRwNZ77ctc8?g_st=aw",
-                            "variant": "primary"
-                        }
+                        "time": "19:00 hs"
+                    },
+                    {
+                        "icon": "sidra",
+                        "name": "Segundo momento: Servicio salado y brindis",
+                        "time": "21:00 hs"
                     },
                     {
                         "icon": "party",
-                        "name": "Recepción",
-                        "address": "Salón monumental",
-                        "time": "21:00 hs",
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/EMtMyQTZG7eT54g98?g_st=aw",
-                            "variant": "primary"
-                        }
+                        "name": "Tercer momento: Mesa dulce, pachanga y cierre",
+                        "time": "22:30 hs"
+                    },
+                    {
+                        "icon": "clock",
+                        "name": "Fin",
+
+                        "time": "00:00 hs"
                     }
                 ]
             }
@@ -213,32 +228,27 @@
             ],
             "data": {
                 "icons": ["gem"],
-                "title": "Vestimenta",
-                "subtitle": "Los colores BLANCO y CREMA son exclusivos de la novia",
-                "description": "Por favor, evitar esos colores. Los hombres sí pueden traer camisa blanca.",
-                "showButton": false,
-                "colorSwatches": {
-                    "enabled": true,
-                    "shape": "circle",
-                    "colors": ["#fff", "#fdecda"]
-                },
-                "button": {
-                    "text": "Ver consejos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Consejos de vestimenta",
-                    "sections": [
-                        {
-                            "heading": "Color de vestimenta",
-                            "text": "Te pedimos amablemente evitar los colores BLANCO y VERDE"
-                        }
-                    ]
-                }
+                "title": "Código de vestimenta",
+                "subtitle": "Casual Chic",
+                "description": "Look cómodo y festivo",
+                "showButton": false
             }
         },
 
+        {
+            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modals"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Máxima ya tiene sus primeros meses cubiertos. Si desean traer un regalito, les proponemos pensar en cositas a partir de los 3 meses en adelante.",
+                "showButton": false
+            }
+        },
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
@@ -247,11 +257,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": [
-                    "/clientes/boda/belen-agustin/images/galeria-1.jpeg",
-                    "/clientes/boda/belen-agustin/images/galeria-2.jpeg",
-                    "/clientes/boda/belen-agustin/images/galeria-3.jpeg"
-                ]
+                "images": ["/clientes/baby/15-maxima/images/3.jpeg"]
             }
         },
 
@@ -260,55 +266,32 @@
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-final",
+            "enabled": false,
             "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Hoy comenzamos el capítulo más importante de nuestra historia.",
+                "text": "Antes de tenerte en brazos, ya te sentimos en cada latido, y te esperamos con un amor que no deja de crecer.",
                 "author": "",
                 "decorativeLines": true
             }
         },
+
         {
-            "_comment": "GIFT CARD: Tarjeta de regalo con modal. ICONOS: gift (caja regalo), creditCard (tarjeta), heart (corazon), star (estrella), sparkles (brillos), handHeart (mano corazon), dollar (signo pesos). suggestedValue = valor sugerido (dejar '' si no queres mostrar).",
-            "type": "giftCard",
-            "id": "gift-card",
+            "_comment": "PHOTOS: Invitar a subir fotos.",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": ["icon", "title", "description", "button"],
             "data": {
-                "icon": "heart",
-                "title": "Valor Tarjeta",
-                "description": "Agradecemos que confirmes tu asistencia antes del 31 de Agosto",
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Si sacás fotos o videos durante este momento, podés subirlos acá para que juntos guardemos los mejores momentos.",
                 "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Datos de transferencia",
-                    "suggestedValue": "$80.000",
-                    "description": "Te recomendamos abonar antes de Agosto para mantener el valor indicado. Luego de esa fecha, la tarjeta tendrá un nuevo valor.",
-                    "transferData": [
-                        { "label": "Alias", "value": "belen35." },
-                        {
-                            "label": "Titular",
-                            "value": "Belén Guadalupe Guidi"
-                        }
-                    ]
+                    "text": "Subir fotos",
+                    "url": "https://drive.google.com/drive/folders/1yKtaX-OQZEW_5NCjevYgDvrqouhZe_lp?usp=sharing",
+                    "variant": "background"
                 }
-            }
-        },
-        {
-            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
-            "type": "confirmarWhatsapp",
-            "id": "confirmar-whatsapp",
-            "bgColor": "primary",
-            "blocks": ["title", "button"],
-            "data": {
-                "title": "Confirmar asistencia",
-                "subtitle": "",
-                "buttonText": "Voy a asistir!",
-                "whatsappNumber": "543424620848",
-                "message": "Hola Belén y Agustín! Confirmo mi asistencia a su boda. Ya aboné el valor de la tarjeta. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗"
             }
         },
 
@@ -320,8 +303,41 @@
             "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Con amor, ilusión y felicidad, los invitamos a compartir con nosotros este momento que recordaremos para siempre.",
-                "author": "Belén & Agustín",
+                "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
+                "author": "Laura & Carlos",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "primary",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "subtitle": "",
+                "buttonText": "¡Confirmo!",
+                "whatsappNumber": "542974429467",
+                "message": "Hola Laura y Carlos! Confirmo mi asistencia al Baby Shower de Máxima. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Hola Laura y Carlos! Lamentablemente no podré asistir al Baby Shower de Máxima. Gracias por tenerme en cuenta 🫶🏼"
+                }
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Esta invitación está hecha con mucho amor. Te pedimos con cariño que la mantengas de forma personal y no la compartas. ¡Te esperamos para compartir un momento único!",
+                "author": "",
                 "decorativeLines": true
             }
         },
@@ -333,8 +349,21 @@
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
             "data": {
-                "aspectRatio": "3/4",
-                "image": "/clientes/boda/belen-agustin/images/final.jpeg"
+                "aspectRatio": "4/3",
+                "image": "/clientes/baby/15-maxima/images/4.jpeg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "700",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#000",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
             }
         },
         {

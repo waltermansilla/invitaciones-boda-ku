@@ -24,7 +24,7 @@
     "theme": {
         "primaryColor": "#a189bc",
         "backgroundColor": "#eee",
-        "primaryImage": "/clientes/xv/pili/background/bg3.jpg",
+        "primaryImage": "/clientes/xv/11-pili/background/bg3.jpg",
         "textColor": "#8c6eb8",
         "lightBgTextColor": "#8c6eb8",
         "darkBgTextColor": "#FFFFFF",
@@ -54,7 +54,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/xv/pili/music/music.mp3",
+        "src": "/clientes/xv/11-pili/music/music.mp3",
         "autoplay": true,
         "startTime": 237
     },
@@ -65,7 +65,7 @@
 
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
-        "coupleImage": "/clientes/xv/pili/images/img-hero.jpeg",
+        "coupleImage": "/clientes/xv/11-pili/images/img-hero.jpeg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
         "namesDisplay": {
@@ -151,7 +151,7 @@
             "id": "presentation",
             "blocks": ["image", "name", "description"],
             "data": {
-                "image": "/clientes/xv/pili/images/bebe3.jpeg",
+                "image": "/clientes/xv/11-pili/images/bebe3.jpeg",
                 "name": "Pili",
                 "description": "Pasé mucho tiempo imaginando cómo sería este día, mirando por la ventana y soñando con este momento. Hoy cumplo mis 15 años y por fin siento que mi aventura más grande está empezando.",
                 "aspectRatio": "3/4"
@@ -234,7 +234,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/xv/pili/images/bebe2.jpeg"]
+                "images": ["/clientes/xv/11-pili/images/bebe2.jpeg"]
             }
         },
 
@@ -278,7 +278,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/xv/pili/images/img2.jpg"]
+                "images": ["/clientes/xv/11-pili/images/img2.jpg"]
             }
         },
 
@@ -433,7 +433,7 @@
             "blocks": ["image", "name"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/xv/pili/images/img1.jpeg"
+                "image": "/clientes/xv/11-pili/images/img1.jpeg"
             }
         },
 

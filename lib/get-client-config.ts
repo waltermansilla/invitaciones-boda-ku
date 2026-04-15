@@ -30,13 +30,31 @@ export interface ClientConfig {
   [key: string]: unknown
 }
 
+function slugFromFileName(fileName: string): string {
+  const withoutExt = fileName.replace(/\.json$/i, "")
+  return withoutExt.replace(/^\d+-/, "")
+}
+
+function resolveClientFilePath(tipo: string, slug: string): string | null {
+  const tipoDir = path.join(process.cwd(), "data", "clientes", tipo)
+  if (!fs.existsSync(tipoDir)) return null
+
+  const direct = path.join(tipoDir, `${slug}.json`)
+  if (fs.existsSync(direct)) return direct
+
+  const files = fs.readdirSync(tipoDir).filter((f) => f.endsWith(".json"))
+  const match = files.find((file) => slugFromFileName(file) === slug)
+  if (!match) return null
+  return path.join(tipoDir, match)
+}
+
 /**
  * Loads a client config JSON from data/clientes/{tipo}/{slug}.json
  * Throws notFound() if the file doesn't exist.
  */
 export function getClientConfig(tipo: string, slug: string): ClientConfig {
-  const filePath = path.join(process.cwd(), "data", "clientes", tipo, `${slug}.json`)
-  if (!fs.existsSync(filePath)) {
+  const filePath = resolveClientFilePath(tipo, slug)
+  if (!filePath || !fs.existsSync(filePath)) {
     notFound()
   }
   const raw = fs.readFileSync(filePath, "utf-8")
@@ -59,7 +77,7 @@ export function getAllClientParams(): { tipo: string; slug: string }[] {
     const tipoDir = path.join(clientesDir, tipo)
     const files = fs.readdirSync(tipoDir).filter((f) => f.endsWith(".json"))
     for (const file of files) {
-      params.push({ tipo, slug: file.replace(".json", "") })
+      params.push({ tipo, slug: slugFromFileName(file) })
     }
   }
   return params

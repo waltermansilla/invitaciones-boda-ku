@@ -1,6 +1,5 @@
-import fs from "fs"
-import path from "path"
 import QRCardXV from "@/components/wedding/qr-card-xv"
+import { getClientConfig, type ClientConfig } from "@/lib/get-client-config"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -14,14 +13,12 @@ function BlankPage() {
 export default async function QRPage({ params }: PageProps) {
   const { slug } = await params
   
-  // Load client JSON
-  const filePath = path.join(process.cwd(), "data", "clientes", "xv", `${slug}.json`)
-  
-  if (!fs.existsSync(filePath)) {
+  let data: ClientConfig
+  try {
+    data = getClientConfig("xv", slug)
+  } catch {
     return <BlankPage />
   }
-
-  const data = JSON.parse(fs.readFileSync(filePath, "utf-8"))
   
   // Get QR config from JSON
   const qrConfig = data.qrCard

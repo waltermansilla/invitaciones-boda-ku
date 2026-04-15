@@ -4,12 +4,12 @@
     "// ==========================================.": "",
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
     "meta": {
-        "title": "Nuestra Boda - Yesica & Hernán",
+        "title": "Nuestra Boda - Priscila & Agustín",
         "description": "Estamos felices de invitarte a celebrar nuestro amor.",
         "lang": "es",
         "coupleNames": {
-            "groomName": "Hernán",
-            "brideName": "Yesica",
+            "groomName": "Agustín",
+            "brideName": "Priscila",
             "separator": "&"
         }
     },
@@ -18,12 +18,10 @@
     "// ==========================================..": "",
     "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Azul q le pase al msj 003049",
     "theme": {
-        "primaryColor": "#709775",
+        "primaryColor": "#013a63",
         "backgroundColor": "#fff",
-        "primaryImage": "/clientes/boda/yesica-hernan/background/primary.PNG",
-        "backgroundImage": "/clientes/boda/yesica-hernan/background/background.PNG",
-        "textColor": "#777",
-        "lightBgTextColor": "#c5a059",
+        "textColor": "#3A3A3A",
+        "lightBgTextColor": "#013a63",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
@@ -39,11 +37,7 @@
     "overlay": {
         "enabled": true,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
-        "buttonText": "Ingresar",
-        "bgImage": "/clientes/boda/yesica-hernan/background/welcome.jpg",
-        "showNames": false,
-        "showPhrase": false,
-        "buttonPosition": "59"
+        "buttonText": "Ingresar"
     },
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
@@ -51,7 +45,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/boda/yesica-hernan/music/ladygaga.mp3",
+        "src": "/clientes/boda/4-priscila-agustin/music/Casate-conmigo.mp3",
         "autoplay": true
     },
     "// ==========================================-": "",
@@ -59,29 +53,23 @@
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/yesica-hernan/images/img-hero.jpeg",
+        "coupleImage": "/clientes/boda/4-priscila-agustin/images/img-hero.jpeg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
         "namesDisplay": {
-            "enabled": false,
+            "enabled": true,
             "position": "bottom",
-            "font": "Cinzel",
+            "font": "",
             "logo": ""
         },
         "countdownPrefix": "Faltan",
-        "eventDate": "2026-10-24T19:20:00",
+        "eventDate": "2026-10-24T22:00:00",
         "countdownLabels": {
             "days": "Dias",
             "hours": "Horas",
             "minutes": "Minutos",
             "seconds": "Segundos"
-        },
-        "countdownStyle": {
-            "background": "primary",
-            "shape": "rounded",
-            "layout": "overlay",
-            "overlayStyle": "floating"
         }
     },
     "// ==========================================+": "",
@@ -95,10 +83,9 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "bgImage": "primaryImage",
             "blocks": ["text", "author"],
             "data": {
-                "text": "¡Con mucha alegría te invitamos a festejar nuestra boda!",
+                "text": "Después de tantos años compartiendo la vida juntos, llegó el momento de celebrar nuestro amor. Y no podemos imaginar este día sin vos",
                 "author": "",
                 "decorativeLines": true
             }
@@ -112,7 +99,7 @@
             "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
-                "value": "24 de Octubre 2026"
+                "value": "24 de Octubre de 2026"
             }
         },
         {
@@ -122,8 +109,11 @@
             "id": "gallery-photos",
             "blocks": ["slider"],
             "data": {
-                "aspectRatio": "3/4",
-                "images": ["/clientes/boda/yesica-hernan/images/img-1.PNG"]
+                "aspectRatio": "4/3",
+                "images": [
+                    "/clientes/boda/4-priscila-agustin/images/galeria1.jpeg",
+                    "/clientes/boda/4-priscila-agustin/images/galeria2.jpeg"
+                ]
             }
         },
         {
@@ -132,30 +122,40 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "bgImage": "backgroundImage",
             "blocks": ["title", "timeline"],
             "data": {
-                "title": "Horarios",
+                "title": "Itinerario",
                 "events": [
                     {
-                        "icon": "church",
-                        "name": "Ceremonia religiosa",
-                        "time": "19:20 hs",
-                        "address": "Parroquia Nuestra Sra. de Loreto, Castellanos 56, Ezeiza",
+                        "icon": "heart",
+                        "name": "Civil",
+                        "time": "Horario a definir",
+                        "address": "Registro Civil, Brandsen",
                         "button": {
                             "text": "Cómo llegar",
-                            "url": "https://maps.google.com/maps/place//data=!4m2!3m1!1s0x95bcd03ae16aaaab:0x65e12b9f1d7193b1?entry=s&sa=X&ved=2ahUKEwj8x-Xl0aqTAxUCq5UCHQNPICkQ4kB6BAgUEAA",
+                            "url": "https://maps.app.goo.gl/gGDzMSZvu6rHjLE6A?g_st=aw",
                             "variant": "primary"
                         }
                     },
                     {
-                        "icon": "party",
-                        "name": "¡Fiesta!",
-                        "time": "21:30 hs",
-                        "address": "Lorenza Zenavilla 443, Canning",
+                        "icon": "church",
+                        "name": "Iglesia",
+                        "time": "Horario a definir",
+                        "address": "Parroquia San José, Jeppener",
                         "button": {
                             "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/8hCUH1WG93P5dDXH6?g_st=ic",
+                            "url": "https://maps.app.goo.gl/7irnKePtfSyFk3Sa9?g_st=iw",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "sparkles",
+                        "name": "Recepción",
+                        "time": "22:00 hs",
+                        "address": "Club Jubilados, Jeppener",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/dvdbthmm6YpSWJpw6?g_st=iw",
                             "variant": "primary"
                         }
                     }
@@ -168,7 +168,6 @@
             "type": "dressCode",
             "id": "dress-code",
             "bgColor": "background",
-            "bgImage": "backgroundImage",
             "blocks": [
                 "title",
                 "subtitle",
@@ -181,11 +180,11 @@
             "data": {
                 "icons": ["gem"],
                 "title": "Vestimenta",
-                "subtitle": "Elegante",
-                "description": "",
+                "subtitle": "Evitar el blanco y beige",
+                "description": "Si podés, traé algo con tonos azules:",
                 "showButton": false,
                 "colorSwatches": {
-                    "enabled": false,
+                    "enabled": true,
                     "shape": "square",
                     "colors": ["#012a4a", "#013a63", "#01497c", "#2a6f97"]
                 },
@@ -200,34 +199,30 @@
                 }
             }
         },
-
         {
-            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
-            "type": "honeymoon",
-            "id": "honeymoon",
-            "bgColor": "primary",
-            "bgImage": "primaryImage",
-            "blocks": ["icon", "title", "description", "modal"],
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
             "data": {
-                "icon": "",
-                "title": "Regalos",
-                "description": "Tu presencia en este día es lo más importante para nosotros. Pero si además querés hacernos un regalo, podés acompañarnos con un aporte para nuestros proyectos futuros",
-                "showButton": true,
-                "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Datos bancarios",
-                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
-                    "bankData": [
-                        { "label": "Alias", "value": "hernandariofalcone" },
-                        { "label": "CVU", "value": "0000003100097882232195" },
-                        { "label": "Titular", "value": "Hernán Darío Falcone" }
-                    ],
-                    "thankYouText": "¡Gracias de corazón!"
-                }
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/4-priscila-agustin/images/galeria3.jpeg"
+                ]
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "A veces el amor no es un camino perfecto, pero cuando es verdadero siempre encuentra la forma de seguir adelante.",
+                "author": "",
+                "decorativeLines": true
             }
         },
 
@@ -237,73 +232,56 @@
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
-            "bgImage": "",
             "blocks": ["title", "moments"],
             "data": {
                 "aspectRatio": "1/1",
                 "title": "Nuestra historia",
                 "moments": [
                     {
-                        "image": "/clientes/boda/yesica-hernan/images/historia-1.jpg",
-                        "title": "Nos elegimos",
-                        "text": "Nos encontramos sin saber que ese momento iba a cambiarlo todo. En una mirada, en algo simple… sentimos que había algo distinto. Y sin entender mucho cómo, empezamos a elegirnos."
+                        "image": "/clientes/boda/4-priscila-agustin/images/historia1.jpeg",
+                        "title": "Donde todo empezó",
+                        "text": "Nos conocimos siendo muy jóvenes, casi sin imaginar todo lo que la vida tenía preparado para nosotros. Desde ese primer momento empezó una historia llena de emociones, aprendizajes y momentos que nos fueron uniendo cada vez más."
                     },
                     {
-                        "image": "/clientes/boda/yesica-hernan/images/historia-2.jpeg",
-                        "title": "Nuestro mayor regalo",
-                        "text": "No siempre fue fácil, pero nunca dejamos de tomarnos de la mano. Crecimos, aprendimos, nos volvimos a elegir… una y otra vez. Y en medio de ese amor, llegaron Lara e Isabella. Ellas nos enseñaron lo que realmente significa el amor más puro e inocente. Nos regalaron lo más hermoso que tenemos: NUESTRA FAMILIA."
+                        "image": "/clientes/boda/4-priscila-agustin/images/historia2.jpeg",
+                        "title": "El camino juntos",
+                        "text": "Con el tiempo entendimos que amar también es acompañarse en cada paso. La vida nos puso desafíos, subidas y bajadas, pero siempre elegimos seguir adelante juntos, apoyándonos y encontrando fuerzas el uno en el otro."
                     },
                     {
-                        "image": "/clientes/boda/yesica-hernan/images/historia-3.jpeg",
-                        "title": "Nuestro sí",
-                        "text": "Hoy nos miramos, después de todo lo vivido… y sabemos que volveríamos a elegirnos en cada paso. Porque este amor nos transformó, nos hizo más fuertes, más unidos… más nosotros. Y ahora queremos decir “sí”, para seguir caminando juntos, para siempre."
+                        "image": "/clientes/boda/4-priscila-agustin/images/historia3.jpeg",
+                        "title": "Una historia que continúa",
+                        "text": "Hoy, después de 11 años compartidos, con dos hijos hermosos que llenan nuestra vida de amor, miramos hacia atrás y entendemos que cada momento vivido nos trajo hasta acá. Y con el mismo amor que nos unió desde el principio, elegimos seguir caminando juntos para siempre."
                     }
                 ]
             }
         },
         {
-            "_comment": "PHOTOS: Invitar a subir fotos al album compartido. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
-            "type": "photos",
-            "id": "shared-photos",
-            "enabled": true,
-            "bgColor": "background",
-            "bgImage": "backgroundImage",
-            "blocks": ["icon", "title", "description", "button"],
-            "data": {
-                "icon": "camera",
-                "title": "Compartí tus fotos",
-                "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
-                "button": {
-                    "text": "Ir al álbum",
-                    "url": "https://drive.google.com/drive/folders/1JhRAsVxVJGlBepH2EdWlEgakZFjpTdX4",
-                    "variant": "primary"
-                }
-            }
-        },
-
-        {
-            "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
-            "type": "gallery",
-            "id": "gallery-photos2",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "3/4",
-                "images": ["/clientes/boda/yesica-hernan/images/img-2.jpeg"]
-            }
-        },
-        {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-welcome2",
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
             "bgColor": "primary",
-            "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": ["icon", "title", "description", "modal"],
             "data": {
-                "text": "En sus risas encontramos nuestro hogar, y en sus pequeños abrazos… el amor más grande que alguna vez imaginamos.",
-                "author": "",
-                "decorativeLines": true
+                "icon": "",
+                "title": "Regalos",
+                "description": "Tu presencia es el mejor regalo que podríamos recibir. Si querés hacernos un obsequio, preferimos que sea en un SOBRE el día de la fiesta.",
+                "showButton": false,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos bancarios",
+                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
+                    "bankData": [
+                        { "label": "Alias", "value": "LUNA.DE.MIEL" },
+                        { "label": "CBU", "value": "0000000000000000000000" },
+                        { "label": "Titular", "value": "Nombre Completo" },
+                        { "label": "Banco", "value": "Nombre del Banco" }
+                    ],
+                    "thankYouText": "¡Muchas gracias!"
+                }
             }
         },
 
@@ -316,7 +294,7 @@
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 31 de Julio",
+                "deadline": "Antes del 20 de Agosto",
                 "guestCountLabel": "Número de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
@@ -330,15 +308,15 @@
                         "Ninguno",
                         "Vegetariano",
                         "Vegano",
-                        "Celíaco",
+                        "Celiaco",
                         "Otro"
                     ],
                     "songRequest": "Que canción no puede faltar?",
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "541166678476",
-                    "messageTemplate": "Hola Yesica & Hernán! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
+                    "number": "542223515132",
+                    "messageTemplate": "Hola Pri y Agus! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
                 }
             }
         },
@@ -348,11 +326,10 @@
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "primary",
-            "bgImage": "primaryImage",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Gracias por acompañarnos, por ser parte de nuestra historia y por estar en uno de los días más importantes de nuestras vidas. Tenerlos cerca hace que este momento sea aún más especial.",
-                "author": "",
+                "text": "Hoy celebramos nuestra historia, nuestra familia y el amor que nos trajo hasta acá. Nos haría muy felices compartir este día tan especial con vos.",
+                "author": "Pri & Agus",
                 "decorativeLines": true
             }
         },
@@ -364,7 +341,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/yesica-hernan/images/img-hero.jpeg"
+                "image": "/clientes/boda/4-priscila-agustin/images/final.jpeg"
             }
         },
         {

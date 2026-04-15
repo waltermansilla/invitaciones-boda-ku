@@ -4,12 +4,12 @@
     "// ==========================================.": "",
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
     "meta": {
-        "title": "Nuestra Boda - Fany & Denis",
+        "title": "Nuestra Boda - Quique & Vero",
         "description": "Estamos felices de invitarte a celebrar nuestro amor.",
         "lang": "es",
         "coupleNames": {
-            "groomName": "Denis",
-            "brideName": "Fany",
+            "groomName": "Vero",
+            "brideName": "Quique",
             "separator": "&"
         }
     },
@@ -18,12 +18,12 @@
     "// ==========================================..": "",
     "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Colores: rosa pastel bb8588, azul verdoso 15616d, celeste verdoso pastel 588b8b, deep taupe 785964",
     "theme": {
-        "primaryColor": "#588b8b",
+        "primaryColor": "#e0a3a4",
         "backgroundColor": "#FAF8F5",
         "textColor": "#3A3A3A",
-        "lightBgTextColor": "#888",
+        "lightBgTextColor": "#d29696",
         "darkBgTextColor": "#fff",
-        "accentBackground": "#EDF2E8",
+        "accentBackground": "#fff",
         "modalTextColor": "#FFFFFF",
         "font": {
             "family": "Josefin Sans",
@@ -53,18 +53,18 @@
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/fany-denis/images/img-hero.jpeg",
+        "coupleImage": "/clientes/boda/2-quique-vero/images/img-hero.PNG",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
         "namesDisplay": {
-            "enabled": true,
+            "enabled": false,
             "position": "bottom",
             "font": "",
             "logo": ""
         },
         "countdownPrefix": "Faltan",
-        "eventDate": "2026-11-14T00:00:00",
+        "eventDate": "2026-12-26T21:00:00",
         "countdownLabels": {
             "days": "Dias",
             "hours": "Horas",
@@ -85,7 +85,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "LLEGÓ EL MOMENTO! ESTAMOS MUY FELICES DE PODER COMPARTIR ESTE DÍA TAN ESPECIAL CON VOS.",
+                "text": "Hay momentos en la vida en los que el amor de las personas que nos rodean se vuelve lo más importante. Nos haría muy bien compartir este día con vos.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -99,7 +99,23 @@
             "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
-                "value": "14 de Noviembre de 2026"
+                "value": "26 de Diciembre 2026"
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "1/1",
+                "images": [
+                    "/clientes/boda/2-quique-vero/images/galeria1.jpg",
+                    "/clientes/boda/2-quique-vero/images/galeria2.jpg",
+                    "/clientes/boda/2-quique-vero/images/vertical1.jpeg",
+                    "/clientes/boda/2-quique-vero/images/vertical2.jpeg"
+                ]
             }
         },
         {
@@ -110,92 +126,27 @@
             "bgColor": "background",
             "blocks": ["title", "timeline"],
             "data": {
-                "title": "Te invitamos a estos dos eventos",
+                "title": "Horario",
                 "events": [
                     {
-                        "icon": "church",
-                        "name": "Ceremonia religiosa",
-                        "time": "19:00 hs",
+                        "icon": "civil",
+                        "name": "Ceremonia civil",
+                        "time": "21:00 hs",
+                        "address": "Salón 'La Madre Selva', Av. Yrigoyen 27749",
                         "date": "",
                         "button": {
                             "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/D8wYcnPjMbY6u9s86?g_st=iw",
+                            "url": "https://maps.app.goo.gl/PeaZ1rzqytUU21Q5A?g_st=iw",
                             "variant": "primary"
                         }
                     },
                     {
                         "icon": "party",
                         "name": "¡Fiesta!",
-                        "time": "21:00 hs",
-                        "date": "",
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/D8wYcnPjMbY6u9s86?g_st=iw",
-                            "variant": "primary"
-                        }
+                        "time": "Celebremos juntos",
+                        "date": ""
                     }
                 ]
-            }
-        },
-        {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-welcome2",
-            "bgColor": "primary",
-            "blocks": ["text", "author"],
-            "data": {
-                "text": "ALGUNAS HISTORIAS COMIENZAN SIN SABERLO… Y TERMINAN SIENDO PARA TODA LA VIDA.",
-                "author": "",
-                "decorativeLines": true
-            }
-        },
-        {
-            "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
-            "type": "gallery",
-            "id": "gallery-photos",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "4/3",
-                "images": []
-            }
-        },
-
-        {
-            "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "enabled": false,
-            "id": "location-discurso",
-            "bgColor": "background",
-            "blocks": ["title", "address", "button"],
-            "data": {
-                "title": "Ceremonia religiosa",
-                "address": "Parroquia San Cayetano",
-                "button": {
-                    "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/D8wYcnPjMbY6u9s86?g_st=iw",
-                    "variant": "primary"
-                }
-            }
-        },
-        {
-            "// --- UBICACION: FIESTA ---": "",
-            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
-            "type": "locationInfo",
-            "enabled": false,
-            "id": "location-recepcion",
-            "bgColor": "primary",
-            "blocks": ["title", "address", "button"],
-            "data": {
-                "title": "¡Fiesta!",
-                "address": "Salón San Cayetano",
-                "button": {
-                    "text": "Cómo llegar",
-                    "url": "https://maps.app.goo.gl/D8wYcnPjMbY6u9s86?g_st=iw",
-                    "variant": "background"
-                }
             }
         },
 
@@ -216,13 +167,13 @@
             "data": {
                 "icons": ["gem"],
                 "title": "Vestimenta",
-                "subtitle": "",
-                "description": "Por favor, evitar el azul marino",
-                "showButton": false,
+                "subtitle": "Elegante Sport",
+                "description": "",
+                "showButton": true,
                 "colorSwatches": {
-                    "enabled": true,
+                    "enabled": false,
                     "shape": "square",
-                    "colors": ["#ffffff", "#162b4e", "#004f8c"]
+                    "colors": ["#ffffff"]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -234,10 +185,42 @@
                     "sections": [
                         {
                             "heading": "",
-                            "text": ""
+                            "text": "La vestimenta es elegante sport, pero lo más importante es que te sientas cómodo. No hace falta comprar ropa nueva ni algo muy formal: con algo prolijo y acorde a la ocasión está perfecto. Lo que realmente importa es poder compartir este momento juntos."
                         }
                     ]
                 }
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Hay caminos que no se recorren solos. Son las personas que están cerca las que nos sostienen y nos recuerdan que el amor siempre encuentra la forma de seguir.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "1/1",
+                "images": [
+                    "/clientes/boda/2-quique-vero/images/galeria3.jpg",
+                    "/clientes/boda/2-quique-vero/images/galeria4.jpg",
+                    "/clientes/boda/2-quique-vero/images/family1.jpeg",
+                    "/clientes/boda/2-quique-vero/images/vertical3.jpeg",
+                    "/clientes/boda/2-quique-vero/images/family2.jpeg"
+                ]
             }
         },
 
@@ -249,38 +232,44 @@
             "bgColor": "background",
             "blocks": ["icon", "title", "description", "button"],
             "data": {
+                "icon": "camera",
                 "title": "Compartí tus fotos",
                 "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
                 "button": {
                     "text": "Ir al album",
-                    "url": "https://drive.google.com/drive/folders/1hKjjgQgLON0NP4xIvgDlxeXWgotSEytc",
+                    "url": "https://drive.google.com/drive/folders/170IvXDCau4314nO7_pySlJPm07_jDVru",
                     "variant": "primary"
                 }
             }
         },
         {
-            "_comment": "GIFT CARD: Tarjeta de regalo con modal. ICONOS: gift (caja regalo), creditCard (tarjeta), heart (corazon), star (estrella), sparkles (brillos), handHeart (mano corazon), dollar (signo pesos). suggestedValue = valor sugerido (dejar '' si no queres mostrar).",
-            "type": "giftCard",
-            "id": "gift-card",
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": ["icon", "title", "description", "modal"],
             "data": {
-                "icon": "heart",
-                "title": "Valor Tarjeta",
-                "description": "Agradecemos que confirmes tu asistencia antes del 15 de Agosto.",
+                "icon": "",
+                "title": "Regalos",
+                "description": "Tu presencia es el mejor regalo que podríamos recibir. Si querés hacernos un obsequio, podés hacerlo en un sobre el día de la fiesta o, si te resulta más cómodo, a través de nuestro alias:",
+                "showButton": true,
                 "button": {
                     "text": "Ver datos",
                     "url": "#",
                     "variant": "secondary"
                 },
                 "modal": {
-                    "title": "Datos de transferencia",
-                    "suggestedValue": "$85.000",
-                    "suggestedValueLabel": "Valor tarjeta por persona",
-                    "description": "No olvides enviarnos el comprobante.",
-                    "transferData": [
-                        { "label": "Alias", "value": "fanywalter.mp" }
-                    ]
+                    "title": "Datos para transferencia",
+                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
+                    "bankData": [
+                        { "label": "Alias", "value": "lucia.veronica.1977" },
+                        { "label": "CBU", "value": "0140092203703150117529" },
+                        {
+                            "label": "Titular",
+                            "value": "Lucia Veronica Alvariño"
+                        }
+                    ],
+                    "thankYouText": "¡Muchas gracias!"
                 }
             }
         },
@@ -289,11 +278,11 @@
             "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
             "type": "rsvp",
             "id": "rsvp-form",
-            "bgColor": "primary",
+            "bgColor": "background",
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 15 de agosto",
+                "deadline": "Antes del 30 de Septiembre",
                 "guestCountLabel": "Número de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
@@ -302,33 +291,28 @@
                     "attendance": "Confirmás tu asistencia?",
                     "attendanceYes": "Confirmo!",
                     "attendanceNo": "No podré asistir",
-                    "dietary": "Algún requerimiento en la alimentacion?",
-                    "dietaryOptions": [
-                        "Ninguno",
-                        "Vegetariano",
-                        "Vegano",
-                        "Celiaco",
-                        "Otro"
-                    ],
+                    "dietary": "Sos celíaco o tenés algún requerimiento en la alimentacion?",
+                    "dietaryOptions": ["No", "Sí, soy celíaco", "Otro"],
                     "songRequest": "Que canción no puede faltar?",
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "543492634710",
-                    "messageTemplate": "Hola Fany y Denis! Confirmo la asistencia a su boda. Ya aboné el valor de la tarjeta por persona.\n\n{resumen}\n\nGracias! 🫶🏼🤗"
+                    "number": "541132420652",
+                    "messageTemplate": "Hola Quique y Vero! Confirmo la asistencia a su boda.\n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
                 }
             }
         },
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
+            "type": "specialMessage",
             "id": "quote-welcome3",
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "UNA NUEVA ETAPA COMIENZA… Y QUEREMOS COMPARTIRLA CON VOS. GRACIAS POR ESTAR",
-                "author": "Fany & Denis",
+                "title": "Gracias por estar",
+                "text": "Hay presencias que sostienen, acompañan y abrazan incluso en los momentos más difíciles. Poder compartir este día con vos lo vuelve aún más especial para nosotros.",
+                "signature": "Quique & Vero",
                 "decorativeLines": false
             }
         },
@@ -339,8 +323,8 @@
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
             "data": {
-                "aspectRatio": "3/4",
-                "image": "/clientes/boda/fany-denis/images/img-hero.jpeg"
+                "aspectRatio": "1/1",
+                "image": "/clientes/boda/2-quique-vero/images/final.jpg"
             }
         },
         {

@@ -24,7 +24,7 @@
     "theme": {
         "primaryColor": "#555",
         "backgroundColor": "#eee",
-        "primaryImage": "/clientes/xv/camila/background/bg3.jpg",
+        "primaryImage": "/clientes/xv/10-camila/background/bg3.jpg",
         "textColor": "#3A3A3A",
         "lightBgTextColor": "#666",
         "darkBgTextColor": "#fff",
@@ -62,7 +62,7 @@
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
-        "src": "/clientes/xv/camila/music/rihanna.mp3",
+        "src": "/clientes/xv/10-camila/music/rihanna.mp3",
         "autoplay": true,
         "startTime": 16
     },
@@ -73,7 +73,7 @@
 
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
-        "coupleImage": "/clientes/xv/camila/images/1.jpg",
+        "coupleImage": "/clientes/xv/10-camila/images/1.jpg",
         "headline": "Mis 15!",
         "showNamesOnPhoto": true,
         "namesDisplay": {
@@ -164,7 +164,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/xv/camila/images/2.jpg"]
+                "images": ["/clientes/xv/10-camila/images/2.jpg"]
             }
         },
 
@@ -198,7 +198,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/xv/camila/images/3.jpg"]
+                "images": ["/clientes/xv/10-camila/images/3.jpg"]
             }
         },
 
@@ -234,7 +234,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/xv/camila/images/4.jpg"]
+                "images": ["/clientes/xv/10-camila/images/4.jpg"]
             }
         },
 
@@ -279,7 +279,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/xv/camila/images/5.jpg"]
+                "images": ["/clientes/xv/10-camila/images/5.jpg"]
             }
         },
 
@@ -368,7 +368,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/xv/camila/images/6.jpg"]
+                "images": ["/clientes/xv/10-camila/images/6.jpg"]
             }
         },
 
@@ -466,7 +466,7 @@
             "blocks": ["image", "name"],
             "data": {
                 "aspectRatio": "4/3",
-                "image": "/clientes/xv/camila/images/7.jpg",
+                "image": "/clientes/xv/10-camila/images/7.jpg",
                 "namesDisplay": {
                     "enabled": true,
                     "font": "Dancing Script",

@@ -23,6 +23,10 @@ interface EventConfig {
 // Todos los tipos de eventos soportados
 const TIPOS_EVENTO = ["boda", "xv", "baby", "cumple", "evento"] as const
 
+function slugFromFileName(fileName: string): string {
+  return fileName.replace(/\.json$/i, "").replace(/^\d+-/, "")
+}
+
 // Busca el JSON que tenga el panelId especificado
 export function findConfigByPanelId(panelId: string): EventConfig | null {
   const dataDir = path.join(process.cwd(), "data", "clientes")
@@ -37,7 +41,7 @@ export function findConfigByPanelId(panelId: string): EventConfig | null {
           const content = fs.readFileSync(path.join(tipoDir, file), "utf-8")
           const config = JSON.parse(content) as EventConfig
           if (config.rsvpPanel?.panelId === panelId) {
-            return { ...config, slug: file.replace(".json", ""), tipo }
+            return { ...config, slug: slugFromFileName(file), tipo }
           }
         } catch { /* ignore */ }
       }
