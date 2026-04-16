@@ -1,4 +1,5 @@
-import pricingData from "@/data/config/pricing.json";
+import configuradorEs from "@/data/landing/configurador-es.json";
+import pricingData from "@/data/landing/pricing.json";
 
 export type ConfiguratorLang = "es" | "en";
 
@@ -10,7 +11,16 @@ const toPrice = (ars: number): Price => ({
     USD: Math.ceil(ars / USD_ARS),
 });
 
-const EXTRA_SECTION_PRICE: Price = toPrice(pricingData.configurator.extraSection);
+function configuratorExtraPriceKey(
+    id: string,
+): keyof typeof pricingData.configurator.extras {
+    if (id === "rapida") return "rapida24h";
+    return id as keyof typeof pricingData.configurator.extras;
+}
+
+const EXTRA_SECTION_PRICE: Price = toPrice(
+    pricingData.configurator.extraSection,
+);
 const SECOND_LANGUAGE_PRICE: Price = toPrice(
     pricingData.configurator.secondLanguage,
 );
@@ -25,6 +35,12 @@ export interface ExtraOption {
 export function getExtrasForLang(lang: ConfiguratorLang): ExtraOption[] {
     if (lang === "en") {
         return [
+            {
+                id: "bienvenida",
+                label: "Custom welcome screen",
+                subtitle: "Tailored entry overlay",
+                price: toPrice(pricingData.configurator.extras.bienvenida),
+            },
             {
                 id: "panel",
                 label: "Guest dashboard",
@@ -45,26 +61,14 @@ export function getExtrasForLang(lang: ConfiguratorLang): ExtraOption[] {
             },
         ];
     }
-    return [
-        {
-            id: "panel",
-            label: "Panel de invitados",
-            subtitle: "Confirmaciones en tiempo real",
-            price: toPrice(pricingData.configurator.extras.panel),
-        },
-        {
-            id: "dominio",
-            label: "Dominio personalizado",
-            subtitle: "Ej: meliza-ivan.com",
-            price: toPrice(pricingData.configurator.extras.dominio),
-        },
-        {
-            id: "rapida",
-            label: "Entrega rápida 24hs",
-            subtitle: "Prioridad máxima (normal: 3 a 5 días hábiles)",
-            price: toPrice(pricingData.configurator.extras.rapida24h),
-        },
-    ];
+    return configuradorEs.extras.map((ex) => ({
+        id: ex.id,
+        label: ex.label,
+        subtitle: ex.subtitle,
+        price: toPrice(
+            pricingData.configurator.extras[configuratorExtraPriceKey(ex.id)],
+        ),
+    }));
 }
 
 export function getExtraDetailById(
@@ -72,10 +76,16 @@ export function getExtraDetailById(
 ): Record<string, { title: string; summary: string; body: string }> {
     if (lang === "en") {
         return {
+            bienvenida: {
+                title: "Custom welcome screen",
+                summary:
+                    "The first screen when opening the link, with bespoke design",
+                body: "This is the welcome overlay: when guests open the invitation they first see names, the phrase, and the button to enter. That flow is already included with styling that matches your invite. This add-on is for going further—a special background image, a more crafted graphic layout, or a prominent logo, built to order. It takes extra design and polish time, so it’s priced separately.",
+            },
             panel: {
                 title: "Guest dashboard",
                 summary: "Automatic, end-to-end RSVP management",
-                body: "With WhatsApp (included), messages arrive but you track everything manually. With the dashboard, each guest confirms and your board updates automatically: who’s in, who’s pending, filters by status, and clear totals. Includes up to 150 guests; then +9,000 ARS for each extra 100 guests.",
+                body: "With WhatsApp (included), messages arrive but you track everything manually. With the dashboard, each guest confirms and your board updates automatically: who’s in, who’s pending, filters by status, and clear totals. You can also see dietary requirements (vegetarian, celiac, etc.) and guest song requests. Includes up to 150 guests; then +9,000 ARS for each extra 100 guests.",
             },
             dominio: {
                 title: "Custom domain",
@@ -89,23 +99,10 @@ export function getExtraDetailById(
             },
         };
     }
-    return {
-        panel: {
-            title: "Panel de invitados",
-            summary: "Gestión automática y completa de confirmaciones",
-            body: "Con WhatsApp (incluido) recibís los mensajes, pero tenés que anotar y ordenar todo a mano. Con Panel, cada invitado confirma y el tablero se actualiza solo: quién confirmó, cuántos faltan, pendientes y filtros por estado. Incluye hasta 150 invitados; luego suma +9.000 ARS cada 100 invitados extra.",
-        },
-        dominio: {
-            title: "Dominio personalizado",
-            summary: "Tu link propio, más prolijo y fácil de compartir",
-            body: "En lugar de un enlace largo, usás un dominio corto y memorable (ej: tusnombres.com). Da imagen más premium, se recuerda mejor y simplifica compartir por WhatsApp o redes.",
-        },
-        rapida: {
-            title: "Entrega rápida 24hs",
-            summary: "Prioridad total para tenerla lista en 1 día",
-            body: "Con este extra tu invitación pasa al frente de la cola de trabajo. El tiempo habitual es de 3 a 5 días hábiles; con entrega rápida se prioriza para salir en 24hs.",
-        },
-    };
+    return configuradorEs.extraDetails as Record<
+        string,
+        { title: string; summary: string; body: string }
+    >;
 }
 
 /** Section id → English label (Spanish defaults stay in page for es). */
@@ -131,31 +128,14 @@ export { EXTRA_SECTION_PRICE, SECOND_LANGUAGE_PRICE };
 
 /** Preset second-language options (labels match UI language). */
 export const PRESET_LANGUAGES: Record<ConfiguratorLang, string[]> = {
-    es: [
-        "Inglés",
-        "Portugués",
-        "Francés",
-        "Alemán",
-        "Italiano",
-        "Chino",
-    ],
-    en: [
-        "English",
-        "Portuguese",
-        "French",
-        "German",
-        "Italian",
-        "Chinese",
-    ],
+    es: configuradorEs.presetLanguages,
+    en: ["English", "Portuguese", "French", "German", "Italian", "Chinese"],
 };
 
-export function getEventLabels(lang: ConfiguratorLang): Record<
-    | "boda"
-    | "xv"
-    | "cumpleanos"
-    | "baby-shower"
-    | "corporativo"
-    | "otro",
+export function getEventLabels(
+    lang: ConfiguratorLang,
+): Record<
+    "boda" | "xv" | "cumpleanos" | "baby-shower" | "corporativo" | "otro",
     string
 > {
     if (lang === "en") {
@@ -168,14 +148,10 @@ export function getEventLabels(lang: ConfiguratorLang): Record<
             otro: "Other",
         };
     }
-    return {
-        boda: "Boda",
-        xv: "XV",
-        cumpleanos: "Cumpleaños",
-        "baby-shower": "Baby Shower",
-        corporativo: "Corporativo",
-        otro: "Otro",
-    };
+    return configuradorEs.eventLabels as Record<
+        "boda" | "xv" | "cumpleanos" | "baby-shower" | "corporativo" | "otro",
+        string
+    >;
 }
 
 export function getUiStrings(lang: ConfiguratorLang) {
@@ -187,7 +163,8 @@ export function getUiStrings(lang: ConfiguratorLang) {
             eventTitle: "What type of event is it?",
             eventOtherPh: "Tell us what kind of event…",
             styleTitle: "Which style do you like most?",
-            styleBodyBefore: "Pick the sample that fits you best or your vision—it becomes our",
+            styleBodyBefore:
+                "Pick the sample that fits you best or your vision—it becomes our",
             styleBodyRef: "reference",
             styleBodyAfter:
                 "to build your invitation. You’ll choose sections, languages, and add-ons in the next steps.",
@@ -260,100 +237,20 @@ export function getUiStrings(lang: ConfiguratorLang) {
             none: "None",
             extrasLine: "Add-ons",
             noneExtras: "None",
-            uniqueExtrasNote:
-                "(dashboard included; other add-ons optional)",
+            uniqueExtrasNote: "(dashboard included; other add-ons optional)",
             name1Line: "Name 1",
             name2Line: "Name 2",
             emailLine: "Email",
             eventDateLine: "Event date",
         };
     }
+    const u = configuradorEs.ui;
+    const tpl = configuradorEs.templates;
     return {
-        headerClose: "Cerrar",
-        planPremium: "Premium",
-        planUnique: "Diseño único",
-        eventTitle: "¿Qué evento es?",
-        eventOtherPh: "Contanos qué evento es...",
-        styleTitle: "¿Qué estilo te gusta más?",
-        styleBodyBefore: "Elegí la muestra que más te represente o que mejor vaya con lo que buscás: nos queda como",
-        styleBodyRef: "referencia",
-        styleBodyAfter:
-            "para trabajar tu invitación. Más adelante vas a definir secciones, idiomas y extras con calma.",
-        styleView: "Ver",
-        seccionesTitle: "Secciones de tu invitación",
-        incluyeTitle: "¿Qué incluye tu invitación?",
-        incluyeOpen: "Tocá para cerrar",
-        incluyeClosed:
-            "Te explicamos lo que ya está incluido y cómo funcionan los bloques.",
-        incluyeP1Before: "Tu invitación ya incluye:",
-        incluyeP1Bold:
-            "confirmación de asistencia por WhatsApp, hasta 5 fotos, cuenta regresiva, colores personalizados y frases personalizadas",
-        incluyeP1After: ". Todo eso ya viene incluido.",
-        incluyeP2Before: "En esta grilla podés sumar",
-        incluyeP2Free: "4 secciones gratis",
-        incluyeP2Mid: "(dress code, más fotos, historia, etc.).",
-        incluyeP2From5: "A partir del 5.º bloque",
-        incluyeP2After: "que marques, se suma",
-        incluyeP2Each: "por cada uno.",
-        seccionesCountFoot: "incluidos · Extra",
-        seccionesMinThree: "Elegí al menos 3 bloques para continuar.",
-        perBlock: "/bloque",
-        sinExtras: "(sin extras)",
-        seccionOtroPh: "Contanos qué sección querés agregar...",
-        seccionOtroAria: "Contanos qué sección querés agregar",
-        idiomaTitle: "Idioma",
-        idiomaLead:
-            "Español viene por defecto. Podés sumar un segundo idioma.",
-        idiomaDefault: "Español (incluido por defecto)",
-        noLanguage: "¿No encontrás tu idioma?",
-        typeLanguage: "Escribilo acá",
-        addBtn: "Cargar",
-        secondLangUnique: "2do idioma incluido en este plan.",
-        secondLangPremiumPrefix: "2do idioma:",
-        extrasTitle: "Extras",
-        included: "Incluido",
-        verDetalle: "Ver detalle",
-        ocultarDetalle: "Ocultar detalle",
-        datosTitle: "Tus datos",
-        datosIntro:
-            "Completá estos datos para avanzar con tu reserva. Una vez que recibimos tu envío, te compartimos los datos bancarios para la transferencia de la seña y luego coordinamos por mensaje todos los detalles de tu invitación paso a paso.",
-        name1: "Nombre 1 *",
-        name1Ph: "Ej: María",
-        name2: "Nombre 2",
-        name2Ph: "Opcional",
-        email: "Email *",
-        emailPh: "ejemplo@mail.com",
-        emailInvalid: "Ingresá un email válido para continuar.",
-        dateLabel: "Fecha del evento *",
-        datePlaceholder: "Seleccioná la fecha del evento",
-        dateAria: "Fecha del evento",
-        dateHelp:
-            "Tocá el campo para abrir el calendario y seleccionar la fecha.",
-        back: "Atrás",
-        next: "Siguiente",
-        goWhatsapp: "Señar 50%",
-        totalDeposit: (total: string) => `Total ${total} | Señar 50%`,
-        footerNote: "El 50% restante se abona en la entrega final.",
+        ...u,
+        totalDeposit: (total: string) =>
+            tpl.totalDeposit.replace(/\{\{total\}\}/g, total),
         summaryHi: (planLabel: string) =>
-            `Hola! Quiero señar mi invitación (${planLabel}).`,
-        currency: "Moneda",
-        total: "Total",
-        deposit50: "Seña 50%",
-        event: "Evento",
-        style: "Estilo",
-        sections: "Secciones",
-        tbd: "A definir",
-        primaryLang: "Idioma principal",
-        spanish: "Español",
-        secondLang: "2do idioma",
-        none: "No",
-        extrasLine: "Extras",
-        noneExtras: "Ninguno",
-        uniqueExtrasNote:
-            " (panel incluido; otros extras opcionales)",
-        name1Line: "Nombre 1",
-        name2Line: "Nombre 2",
-        emailLine: "Email",
-        eventDateLine: "Fecha del evento",
+            tpl.summaryHi.replace(/\{\{planLabel\}\}/g, planLabel),
     };
 }

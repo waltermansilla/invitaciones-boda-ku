@@ -57,11 +57,41 @@ function WeddingInvitationContent() {
                 .finally(() => setLoadingInvitado(false));
         }
     }, [codigoInvitado, rsvpPanel?.enabled]);
-    
+
     // Si hay código y estamos cargando, mostrar pantalla de carga en lugar del overlay
     const showOverlay =
         overlay.enabled && !overlayDismissed && !loadingInvitado && !skipOverlay;
-    
+
+    // Deep link (#section-id): el scroll nativo del navegador corre antes de que existan
+    // los nodos client-side; en producción suele fallar. Reintentamos tras hidratar y cuando
+    // el overlay ya no tapa el contenido.
+    useEffect(() => {
+        if (showOverlay) return;
+
+        const scrollToHash = () => {
+            const raw = window.location.hash;
+            if (!raw || raw.length <= 1) return;
+            const id = decodeURIComponent(raw.slice(1));
+            if (!id) return;
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        };
+
+        scrollToHash();
+        const timeouts = [50, 200, 500, 1000].map((ms) =>
+            window.setTimeout(() => scrollToHash(), ms),
+        );
+        const onHashChange = () => scrollToHash();
+        window.addEventListener("hashchange", onHashChange);
+
+        return () => {
+            timeouts.forEach(clearTimeout);
+            window.removeEventListener("hashchange", onHashChange);
+        };
+    }, [showOverlay]);
+
     // Handle overlay dismiss - start music if autoplay is enabled (not in muestra mode)
     const handleOverlayDismiss = () => {
         setOverlayDismissed(true);

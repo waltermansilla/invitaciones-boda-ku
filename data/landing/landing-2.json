@@ -92,7 +92,7 @@
         "brand": "Momento Único",
         "nav": [
             { "label": "Inicio", "anchor": "#" },
-            { "label": "Modelos", "anchor": "#estilos" },
+            { "label": "Modelos", "anchor": "#muestras" },
             { "label": "Precios", "anchor": "#planes" },
             { "label": "Cómo funciona", "anchor": "#proceso" }
         ],
@@ -121,7 +121,7 @@
         "heroSecondary": {
             "text": "Ver muestras",
             "type": "anchor",
-            "anchor": "#estilos"
+            "anchor": "#muestras"
         },
         "planPremium": {
             "text": "Elegir Premium",
@@ -279,7 +279,7 @@
             "ecoNote": "Cada invitación digital evita papel y reduce el impacto ambiental."
         },
         "estilos": {
-            "id": "estilos",
+            "id": "muestras",
             "eyebrow": "Modelos",
             "title": "Mirá nuestras invitaciones ya diseñadas",
             "subtitle": "Elegí la que más te guste y usala como referencia para crear la tuya.",
@@ -322,7 +322,7 @@
                 {
                     "image": "/landing/media/images/carmela-xv.jpg",
                     "titulo": "Carmela",
-                    "descripcion": "XV · Elegante y luminosa, con detalles personalizados.",
+                    "descripcion": "XV · Sin fotos, con portada y diseños elegantes.",
                     "href": "/m/xv/carmela"
                 },
                 {
@@ -429,7 +429,7 @@
             "notice": "Normalmente, sin Entrega Rápida tu invitación puede demorar entre 3 y 5 días hábiles.",
             "modelsLinkPrompt": "¿Querés ver los modelos que ya diseñamos?",
             "modelsLinkCta": "Ver modelos",
-            "modelsLinkAnchor": "#estilos",
+            "modelsLinkAnchor": "#muestras",
             "planes": [
                 {
                     "name": "Premium",

@@ -9,6 +9,7 @@
         "extraSection": 4500,
         "secondLanguage": 12000,
         "extras": {
+            "bienvenida": 9000,
             "panel": 20000,
             "panelPer100": 9000,
             "dominio": 45000,

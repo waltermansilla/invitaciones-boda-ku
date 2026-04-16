@@ -207,9 +207,7 @@ data/
       otra-pareja.json
     xv/
       valentina.json       <- Invitacion de XV
-  landing/                 <- Landings comerciales (/, /landing)
-  config/
-    pricing.json           <- Precios globales
+  landing/                 <- Landings comerciales (/, /landing), pricing.json, configurador-es.json
   templates/
     _TEMPLATE_BODA.json    <- Template de referencia para bodas
     _TEMPLATE_XV.json      <- Template de referencia para XV

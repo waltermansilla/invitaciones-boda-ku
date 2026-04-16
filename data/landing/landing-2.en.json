@@ -90,7 +90,7 @@
         "brand": "Momento Único",
         "nav": [
             { "label": "Home", "anchor": "#" },
-            { "label": "Samples", "anchor": "#estilos" },
+            { "label": "Samples", "anchor": "#muestras" },
             { "label": "Pricing", "anchor": "#planes" },
             { "label": "How it works", "anchor": "#proceso" }
         ],
@@ -119,7 +119,7 @@
         "heroSecondary": {
             "text": "View samples",
             "type": "anchor",
-            "anchor": "#estilos"
+            "anchor": "#muestras"
         },
         "planPremium": {
             "text": "Choose Premium",
@@ -242,7 +242,7 @@
             "ecoNote": "Every digital invitation avoids paper and reduces your event’s environmental impact."
         },
         "estilos": {
-            "id": "estilos",
+            "id": "muestras",
             "eyebrow": "Samples",
             "title": "See our invitations we’ve already designed",
             "subtitle": "Pick the one you like most and use it as a reference to build yours.",
@@ -392,7 +392,7 @@
             "notice": "Normally, without Rush Delivery your invitation may take between 3 and 5 business days.",
             "modelsLinkPrompt": "Want to see the samples we’ve already designed?",
             "modelsLinkCta": "View samples",
-            "modelsLinkAnchor": "#estilos",
+            "modelsLinkAnchor": "#muestras",
             "planes": [
                 {
                     "name": "Premium",

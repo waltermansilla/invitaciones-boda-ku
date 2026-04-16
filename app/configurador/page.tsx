@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import {
+    Suspense,
+    useEffect,
+    useMemo,
+    useState,
+    type ReactNode,
+} from "react";
 import { useSearchParams } from "next/navigation";
 import {
     Baby,
@@ -26,7 +32,9 @@ import {
     Wallet,
 } from "lucide-react";
 import landingHomeData from "@/data/landing/landing-2.json";
-import pricingData from "@/data/config/pricing.json";
+import landingHomeDataEn from "@/data/landing/landing-2.en.json";
+import configuradorEs from "@/data/landing/configurador-es.json";
+import pricingData from "@/data/landing/pricing.json";
 import {
     EXTRA_SECTION_PRICE,
     PRESET_LANGUAGES,
@@ -77,92 +85,44 @@ const INCLUDED_EXTRAS_BY_PLAN: Record<PlanKey, string[]> = {
     "diseno-unico": ["panel"],
 };
 
-const SECTION_OPTIONS: SectionOption[] = [
-    {
-        id: "mapa",
-        label: "Ubicación y cómo llegar",
-        icon: <MapPin size={15} />,
-        price: EXTRA_SECTION_PRICE,
+function HelpIcon() {
+    return (
+        <span className="inline-flex h-[15px] w-[15px] items-center justify-center rounded-full border border-current text-[10px] font-bold">
+            ?
+        </span>
+    );
+}
+
+const SECTION_ICONS: Record<string, React.ReactNode> = {
+    mapa: <MapPin size={15} />,
+    dress: <Shirt size={15} />,
+    itinerario: <Timer size={15} />,
+    regalos: <Gift size={15} />,
+    tarjeta: <Wallet size={15} />,
+    album: <Users size={15} />,
+    musica: <Music size={15} />,
+    playlist: <Disc3 size={15} />,
+    historia: <Heart size={15} />,
+    trivia: <Star size={15} />,
+    fotos10: <ImageLucide size={15} />,
+    faq: <HelpIcon />,
+    alojamiento: <MapPin size={15} />,
+    adultos: <Baby size={15} />,
+};
+
+const SECTION_OPTIONS: SectionOption[] = configuradorEs.sectionOrder.map(
+    (id) => {
+        const meta = configuradorEs.sections[
+            id as keyof typeof configuradorEs.sections
+        ];
+        return {
+            id,
+            label: meta.label,
+            icon: SECTION_ICONS[id] ?? <Sparkles size={15} />,
+            price: EXTRA_SECTION_PRICE,
+        };
     },
-    {
-        id: "dress",
-        label: "Dress code",
-        icon: <Shirt size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "itinerario",
-        label: "Itinerario",
-        icon: <Timer size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "regalos",
-        label: "Regalos / Alias",
-        icon: <Gift size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "tarjeta",
-        label: "Valor de tarjeta",
-        icon: <Wallet size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "album",
-        label: "Álbum Drive (fotos)",
-        icon: <Users size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "musica",
-        label: "Música en la invitación",
-        icon: <Music size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "playlist",
-        label: "Playlist colaborativa Spotify",
-        icon: <Disc3 size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "historia",
-        label: "Nuestra historia",
-        icon: <Heart size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "trivia",
-        label: "Trivia interactiva",
-        icon: <Star size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "fotos10",
-        label: "Hasta 10 fotos",
-        icon: <ImageLucide size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "faq",
-        label: "Preguntas frecuentes",
-        icon: <HelpIcon />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "alojamiento",
-        label: "Alojamientos",
-        icon: <MapPin size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-    {
-        id: "adultos",
-        label: "Niños y cuidados",
-        icon: <Baby size={15} />,
-        price: EXTRA_SECTION_PRICE,
-    },
-];
+);
 
 const OTHER_SECTION_ADDER_BASE = {
     id: "otro",
@@ -198,18 +158,59 @@ const BTN_SELECTED = {
     background: "rgba(122,95,69,0.12)",
 } as const;
 
-function HelpIcon() {
-    return (
-        <span className="inline-flex h-[15px] w-[15px] items-center justify-center rounded-full border border-current text-[10px] font-bold">
-            ?
-        </span>
-    );
-}
-
 function formatMoney(amount: number, currency: Currency) {
     if (currency === "ARS") return `$${amount.toLocaleString("es-AR")}`;
     return `$${amount.toLocaleString("en-US")}`;
 }
+
+/** `*fragmento*` en textos de extraDetails → negrita (pares de un solo asterisco). */
+function renderTextWithBoldMarkers(
+    text: string,
+    plainClassName?: string,
+): ReactNode {
+    const parts = text.split("*");
+    return parts.map((part, i) =>
+        i % 2 === 1 ? (
+            <strong key={i} className="font-medium text-[#5A4A3F]">
+                {part}
+            </strong>
+        ) : (
+            <span key={i} className={plainClassName}>
+                {part}
+            </span>
+        ),
+    );
+}
+
+/** Extras en “Ver detalle” con imagen a la izquierda (mismo layout que bienvenida). */
+const EXTRA_VER_DETALLE_IMAGE: Record<
+    string,
+    {
+        src: string;
+        width: number;
+        height: number;
+        altEs: string;
+        altEn: string;
+        /** Marco fijo tipo móvil (~9:15), cover anclado arriba (el recorte cae abajo). */
+        crop916Top?: boolean;
+    }
+> = {
+    bienvenida: {
+        src: "/landing/media/images/overlay-diseño.jpg",
+        width: 1179,
+        height: 1902,
+        altEs: "Ejemplo de diseño de pantalla de bienvenida (overlay)",
+        altEn: "Example of a custom welcome overlay layout",
+    },
+    panel: {
+        src: "/landing/media/images/panel.PNG",
+        width: 940,
+        height: 1920,
+        altEs: "Ejemplo del panel de invitados",
+        altEn: "Example of the guest dashboard",
+        crop916Top: true,
+    },
+};
 
 function WhatsAppHref(number: string, message: string) {
     return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
@@ -262,6 +263,20 @@ function usesOurStoryLabel(eventType: EventTypeSelection): boolean {
     );
 }
 
+/** "Boda · …" → tipo + detalle (landing estilos). */
+function splitEstiloDescripcion(desc: string | undefined): {
+    tipo: string;
+    detalle: string;
+} {
+    if (!desc) return { tipo: "", detalle: "" };
+    const idx = desc.indexOf(" · ");
+    if (idx === -1) return { tipo: "", detalle: desc.trim() };
+    return {
+        tipo: desc.slice(0, idx).trim(),
+        detalle: desc.slice(idx + 3).trim(),
+    };
+}
+
 function ConfiguradorPageContent() {
     const params = useSearchParams();
     const uiLang = params.get("lang") === "en" ? "en" : "es";
@@ -308,12 +323,18 @@ function ConfiguradorPageContent() {
     const [eventDate, setEventDate] = useState("");
     const [seccionesInfoOpen, setSeccionesInfoOpen] = useState(false);
     const [seccionesMinErrorShown, setSeccionesMinErrorShown] = useState(false);
+    const [panelSkipModalOpen, setPanelSkipModalOpen] = useState(false);
     const [detailsId] = useState(
         () =>
             `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
     );
 
-    const styleItems = landingHomeData.sections.estilos.items ?? [];
+    const styleItems = useMemo(
+        () =>
+            (uiLang === "en" ? landingHomeDataEn : landingHomeData).sections
+                .estilos.items ?? [],
+        [uiLang],
+    );
     const waNumber = landingHomeData.whatsapp.number;
 
     const steps: readonly string[] =
@@ -342,23 +363,41 @@ function ConfiguradorPageContent() {
         window.scrollTo({ top: 0, behavior: "auto" });
     }, [stepIdx]);
 
+    useEffect(() => {
+        if (!panelSkipModalOpen) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, [panelSkipModalOpen]);
+
     const t = useMemo(() => getUiStrings(uiLang), [uiLang]);
     const tWa = useMemo(() => getUiStrings("es"), []);
     const styleNoneOptionLabel =
         uiLang === "en"
             ? "None represents what I am looking for"
-            : "Ninguno representa lo que busco";
+            : configuradorEs.misc.styleNoneOption;
     const extrasList = useMemo(() => getExtrasForLang(uiLang), [uiLang]);
     const extrasListWa = useMemo(() => getExtrasForLang("es"), []);
     const extraDetails = useMemo(() => getExtraDetailById(uiLang), [uiLang]);
+    const panelSkipModalCopy =
+        configuradorEs.panelSkipModal[uiLang === "en" ? "en" : "es"];
     const eventLabelMap = useMemo(() => getEventLabels(uiLang), [uiLang]);
     const eventLabelMapWa = useMemo(() => getEventLabels("es"), []);
+    const eventTypeDescriptions = useMemo(
+        () =>
+            configuradorEs.eventTypeDescriptions[
+                uiLang === "en" ? "en" : "es"
+            ] as Record<EventType, string>,
+        [uiLang],
+    );
 
     const selectedExtras = extrasList.filter((e) => extras.includes(e.id));
     const isBoda = eventType === "boda";
     const storyLabelEs = usesOurStoryLabel(eventType)
-        ? "Nuestra historia"
-        : "Mi historia";
+        ? configuradorEs.story.our
+        : configuradorEs.story.my;
     const storyLabelEn = usesOurStoryLabel(eventType)
         ? "Our story"
         : "My story";
@@ -389,7 +428,10 @@ function ConfiguradorPageContent() {
             })),
             {
                 ...OTHER_SECTION_ADDER_BASE,
-                label: uiLang === "en" ? SECTION_LABEL_EN.otro : "Otro",
+                label:
+                    uiLang === "en"
+                        ? SECTION_LABEL_EN.otro
+                        : configuradorEs.misc.otroSection,
             },
         ],
         [uiLang, customSections, storyLabelEs, storyLabelEn],
@@ -478,13 +520,19 @@ function ConfiguradorPageContent() {
 
     const planLabel = plan === "premium" ? t.planPremium : t.planUnique;
     const planLabelWa = plan === "premium" ? tWa.planPremium : tWa.planUnique;
+    const waEx = configuradorEs.waExtras;
     const selectedExtraLabelsWa = selectedExtras.map((e) => {
         const match = extrasListWa.find((x) => x.id === e.id);
         const label = match?.label ?? e.label;
         if (e.id !== "panel") return label;
-        const panelLine = `${label} (${clampedPanelGuests} invitados)`;
+        const panelLine = waEx.panelLine
+            .replace(/\{\{label\}\}/g, label)
+            .replace(/\{\{guests\}\}/g, String(clampedPanelGuests));
         if (panelExtraGuestsCost <= 0) return panelLine;
-        return `${panelLine} + ${formatMoney(panelExtraGuestsCost, currency)} por capacidad`;
+        return `${panelLine}${waEx.panelCapacitySuffix.replace(
+            /\{\{price\}\}/g,
+            formatMoney(panelExtraGuestsCost, currency),
+        )}`;
     });
     const detailsToken = useMemo(() => {
         const selectedSet = new Set(sections);
@@ -526,16 +574,16 @@ function ConfiguradorPageContent() {
         typeof window !== "undefined"
             ? `${window.location.origin}/detalles/${detailsPathId}${detailsQuery ? `?${detailsQuery}` : ""}`
             : `/detalles/${detailsPathId}${detailsQuery ? `?${detailsQuery}` : ""}`;
-    const name1Label = isBoda ? "Nombre novio/novia 1" : "Nombre";
-    const name1Placeholder = isBoda
-        ? "Nombre como deberia figurar"
-        : "Nombre como deberia figurar";
-    const name2Label = "Nombre novio/novia 2";
-    const name2Placeholder = "Nombre como deberia figurar";
+    const nf = configuradorEs.nameFields;
+    const name1Label = isBoda ? nf.name1LabelBoda : nf.name1LabelDefault;
+    const name1Placeholder = nf.name1Placeholder;
+    const name2Label = nf.name2Label;
+    const name2Placeholder = nf.name2Placeholder;
+    const wah = configuradorEs.whatsapp;
     const summary = [
         tWa.summaryHi(planLabelWa),
         "",
-        "CONFIGURACION",
+        wah.headingConfig,
         ...(plan === "premium"
             ? [
                   `- ${tWa.event}: ${eventType ? `${eventLabelMapWa[eventType]}${eventType === "otro" && eventOther ? ` (${eventOther})` : ""}` : tWa.tbd}`,
@@ -547,28 +595,28 @@ function ConfiguradorPageContent() {
               ]
             : []),
         "",
-        "IDIOMAS",
+        wah.headingLanguages,
         `- ${tWa.primaryLang}: ${tWa.spanish}`,
         `- ${tWa.secondLang}: ${secondLanguage || tWa.none}`,
         "",
-        "EXTRAS",
+        wah.headingExtras,
         ...(selectedExtraLabelsWa.length
             ? selectedExtraLabelsWa.map((label) => `  - ${label}`)
             : [`  - ${tWa.noneExtras}`]),
         ...(plan === "diseno-unico" ? [`  - ${tWa.uniqueExtrasNote}`] : []),
         "",
-        "DATOS DE CONTACTO",
-        `- ${isBoda ? "Nombre novio/novia 1" : "Nombre"}: ${name1 || "-"}`,
-        ...(isBoda ? [`- Nombre novio/novia 2: ${name2 || "-"}`] : []),
+        wah.headingContact,
+        `- ${isBoda ? wah.name1Boda : wah.nameSolo}: ${name1 || "-"}`,
+        ...(isBoda ? [`- ${wah.name2Boda}: ${name2 || "-"}`] : []),
         `- ${tWa.emailLine}: ${email || "-"}`,
         `- ${tWa.eventDateLine}: ${eventDate || "-"}`,
         "",
-        "*RESUMEN DE PRESUPUESTO*",
+        wah.headingBudget,
         `- ${tWa.currency}: ${currency}`,
         `- *${tWa.total}: ${formatMoney(total, currency)}*`,
         `- *${tWa.deposit50}: ${formatMoney(downPayment, currency)}*`,
         "",
-        "COMPLETAR DETALLES DE LA INVITACION",
+        wah.headingComplete,
         detailsUrl,
     ].join("\n");
 
@@ -612,6 +660,27 @@ function ConfiguradorPageContent() {
     const isLastStep = stepIdx === steps.length - 1;
 
     const step = steps[stepIdx];
+
+    const advanceOneStep = () => {
+        setStepIdx((s) => Math.min(steps.length - 1, s + 1));
+    };
+
+    const handleFooterNextClick = () => {
+        const cur = steps[stepIdx];
+        if (cur === "secciones" && sections.length < MIN_SECTION_BLOCKS) {
+            setSeccionesMinErrorShown(true);
+            return;
+        }
+        if (
+            cur === "extras" &&
+            plan === "premium" &&
+            !extras.includes("panel")
+        ) {
+            setPanelSkipModalOpen(true);
+            return;
+        }
+        advanceOneStep();
+    };
 
     useEffect(() => {
         if (sections.length >= MIN_SECTION_BLOCKS) {
@@ -683,18 +752,16 @@ function ConfiguradorPageContent() {
                                     "var(--font-landing-hero), Georgia, serif",
                             }}
                         >
-                            ¿Qué evento es?
+                            {t.eventTitle}
                         </h2>
-                        <div
-                            className={`mt-5 grid grid-cols-2 sm:grid-cols-3 ${BLOCK_GAP}`}
-                        >
+                        <div className="mx-auto mt-5 flex w-full max-w-xl flex-col gap-2.5">
                             {(Object.keys(eventLabelMap) as EventType[]).map(
                                 (ev) => (
                                     <button
                                         key={ev}
                                         type="button"
                                         onClick={() => setEventType(ev)}
-                                        className="rounded-xl border px-3 py-3 text-sm font-medium"
+                                        className="w-full rounded-xl border px-4 py-3.5 text-left transition-[border-color,background-color] duration-150"
                                         style={{
                                             borderColor:
                                                 eventType === ev
@@ -706,7 +773,12 @@ function ConfiguradorPageContent() {
                                                     : "#FFF",
                                         }}
                                     >
-                                        {eventLabelMap[ev]}
+                                        <span className="block text-sm font-semibold text-[#4A3A2F]">
+                                            {eventLabelMap[ev]}
+                                        </span>
+                                        <span className="mt-1 block text-[11px] leading-snug text-[#8A7B6E]">
+                                            {eventTypeDescriptions[ev]}
+                                        </span>
                                     </button>
                                 ),
                             )}
@@ -747,6 +819,13 @@ function ConfiguradorPageContent() {
                         <div className={`mt-5 grid grid-cols-2 ${BLOCK_GAP}`}>
                             {styleItems.map((item) => {
                                 const selected = styleSelected === item.titulo;
+                                const { tipo, detalle } = splitEstiloDescripcion(
+                                    (
+                                        item as {
+                                            descripcion?: string;
+                                        }
+                                    ).descripcion,
+                                );
                                 return (
                                     <button
                                         key={item.titulo}
@@ -754,7 +833,7 @@ function ConfiguradorPageContent() {
                                         onClick={() =>
                                             setStyleSelected(item.titulo)
                                         }
-                                        className="relative overflow-hidden rounded-2xl border text-left"
+                                        className="relative flex flex-col overflow-hidden rounded-2xl border text-left"
                                         style={{
                                             borderColor: selected
                                                 ? "#7A5F45"
@@ -762,7 +841,7 @@ function ConfiguradorPageContent() {
                                             background: "#FFF",
                                         }}
                                     >
-                                        <div className="relative aspect-[4/5] w-full bg-[#EFE8DF]">
+                                        <div className="relative aspect-[4/5] w-full shrink-0 bg-[#EFE8DF]">
                                             {item.image ? (
                                                 <Image
                                                     src={item.image}
@@ -771,9 +850,6 @@ function ConfiguradorPageContent() {
                                                     className="object-cover"
                                                 />
                                             ) : null}
-                                            <span className="absolute bottom-2 left-2 rounded-full bg-black/65 px-2 py-1 text-xs text-white">
-                                                {item.titulo}
-                                            </span>
                                             {item.href ? (
                                                 <a
                                                     href={item.href}
@@ -782,7 +858,7 @@ function ConfiguradorPageContent() {
                                                     onClick={(e) =>
                                                         e.stopPropagation()
                                                     }
-                                                    className="absolute right-2 top-2 rounded-full border bg-white/90 px-2 py-1 text-[11px] font-medium"
+                                                    className="absolute right-2 top-2 z-[1] rounded-full border bg-white/90 px-2 py-1 text-[11px] font-medium"
                                                     style={{
                                                         borderColor: "#DCCFC0",
                                                     }}
@@ -790,12 +866,29 @@ function ConfiguradorPageContent() {
                                                     {t.styleView}
                                                 </a>
                                             ) : null}
+                                            {selected ? (
+                                                <span className="absolute bottom-2 right-2 z-[1] rounded-full bg-[#7A5F45] p-1 text-white shadow-sm">
+                                                    <Check size={12} />
+                                                </span>
+                                            ) : null}
                                         </div>
-                                        {selected ? (
-                                            <span className="absolute right-2 bottom-2 rounded-full bg-[#7A5F45] p-1 text-white">
-                                                <Check size={12} />
+                                        <div className="flex min-h-0 flex-1 flex-col border-t border-[#EFE8E4] px-1.5 py-1.5">
+                                            {tipo ? (
+                                                <span className="text-[9px] font-semibold uppercase leading-none tracking-[0.08em] text-[#7A5F45]">
+                                                    {tipo}
+                                                </span>
+                                            ) : null}
+                                            <span
+                                                className={`line-clamp-2 text-xs font-semibold leading-tight text-[#4A3A2F] ${tipo ? "mt-0.5" : ""}`}
+                                            >
+                                                {item.titulo}
                                             </span>
-                                        ) : null}
+                                            {detalle ? (
+                                                <span className="mt-0.5 line-clamp-2 text-[10px] leading-tight text-[#6A5C52]">
+                                                    {detalle}
+                                                </span>
+                                            ) : null}
+                                        </div>
                                     </button>
                                 );
                             })}
@@ -1279,6 +1372,8 @@ function ConfiguradorPageContent() {
                                 ].includes(ex.id);
                                 const info = extraDetails[ex.id];
                                 const infoOpen = openExtraInfoId === ex.id;
+                                const verDetalleImg =
+                                    EXTRA_VER_DETALLE_IMAGE[ex.id];
                                 return (
                                     <div
                                         key={ex.id}
@@ -1368,12 +1463,36 @@ function ConfiguradorPageContent() {
                                                 <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
                                                     {uiLang === "en"
                                                         ? "Estimated guests for dashboard"
-                                                        : "Invitados estimados para panel"}
+                                                        : configuradorEs.panelUi
+                                                              .estimatedGuestsTitle}
                                                 </span>
                                                 <p className="mb-2 text-[11px] leading-relaxed text-[#6A5C52]">
                                                     {uiLang === "en"
                                                         ? `Includes up to ${PANEL_INCLUDED_GUESTS} guests. Then +${formatMoney(toPrice(PANEL_STEP_PRICE_ARS)[currency], currency)} every ${PANEL_STEP_GUESTS} extra guests.`
-                                                        : `Incluye hasta ${PANEL_INCLUDED_GUESTS} invitados. Luego suma +${formatMoney(toPrice(PANEL_STEP_PRICE_ARS)[currency], currency)} cada ${PANEL_STEP_GUESTS} invitados extra.`}
+                                                        : configuradorEs.panelUi.includesLine
+                                                              .replace(
+                                                                  /\{\{included\}\}/g,
+                                                                  String(
+                                                                      PANEL_INCLUDED_GUESTS,
+                                                                  ),
+                                                              )
+                                                              .replace(
+                                                                  /\{\{stepPrice\}\}/g,
+                                                                  formatMoney(
+                                                                      toPrice(
+                                                                          PANEL_STEP_PRICE_ARS,
+                                                                      )[
+                                                                          currency
+                                                                      ],
+                                                                      currency,
+                                                                  ),
+                                                              )
+                                                              .replace(
+                                                                  /\{\{stepGuests\}\}/g,
+                                                                  String(
+                                                                      PANEL_STEP_GUESTS,
+                                                                  ),
+                                                              )}
                                                 </p>
                                                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                                                     {PANEL_GUEST_PRESETS.map(
@@ -1408,7 +1527,12 @@ function ConfiguradorPageContent() {
                                                                     {uiLang ===
                                                                     "en"
                                                                         ? `Up to ${guestCount}`
-                                                                        : `Hasta ${guestCount}`}
+                                                                        : configuradorEs.panelUi.hastaPreset.replace(
+                                                                              /\{\{n\}\}/g,
+                                                                              String(
+                                                                                  guestCount,
+                                                                              ),
+                                                                          )}
                                                                 </button>
                                                             );
                                                         },
@@ -1418,12 +1542,37 @@ function ConfiguradorPageContent() {
                                                     <p className="mt-1 font-medium text-[#4A3A2F]">
                                                         {uiLang === "en"
                                                             ? `Capacity surcharge (${clampedPanelGuests}): ${formatMoney(panelExtraGuestsCost, currency)}`
-                                                            : `Recargo por capacidad (${clampedPanelGuests}): ${formatMoney(panelExtraGuestsCost, currency)}`}
+                                                            : configuradorEs.panelUi.capacitySurcharge
+                                                                  .replace(
+                                                                      /\{\{guests\}\}/g,
+                                                                      String(
+                                                                          clampedPanelGuests,
+                                                                      ),
+                                                                  )
+                                                                  .replace(
+                                                                      /\{\{price\}\}/g,
+                                                                      formatMoney(
+                                                                          panelExtraGuestsCost,
+                                                                          currency,
+                                                                      ),
+                                                                  )}
                                                     </p>
                                                     <p className="mt-1 rounded-md bg-[#F3EBDD] px-2 py-1 text-sm font-bold text-[#4A3A2F]">
                                                         {uiLang === "en"
                                                             ? `Panel total: ${formatMoney((locked ? 0 : ex.price[currency]) + panelExtraGuestsCost, currency)}`
-                                                            : `Total panel: ${formatMoney((locked ? 0 : ex.price[currency]) + panelExtraGuestsCost, currency)}`}
+                                                            : configuradorEs.panelUi.panelTotal.replace(
+                                                                  /\{\{total\}\}/g,
+                                                                  formatMoney(
+                                                                      (locked
+                                                                          ? 0
+                                                                          : ex
+                                                                                .price[
+                                                                                currency
+                                                                            ]) +
+                                                                          panelExtraGuestsCost,
+                                                                      currency,
+                                                                  ),
+                                                              )}
                                                     </p>
                                                 </div>
                                             </div>
@@ -1440,24 +1589,91 @@ function ConfiguradorPageContent() {
                                                                     : ex.id,
                                                         )
                                                     }
-                                                    className="inline-flex items-center gap-1 text-[11px] font-medium text-[#7A5F45]"
+                                                    className="ml-2 inline-flex items-center gap-1.5 text-xs font-medium text-[#7A5F45] sm:text-[13px]"
                                                 >
                                                     {infoOpen
                                                         ? t.ocultarDetalle
                                                         : t.verDetalle}
                                                     <ChevronDown
-                                                        size={14}
+                                                        size={16}
                                                         className={`transition-transform duration-200 ${infoOpen ? "rotate-180" : ""}`}
                                                         aria-hidden
                                                     />
                                                 </button>
                                                 {infoOpen ? (
-                                                    <p className="mt-1 text-[11px] leading-relaxed text-[#6A5C52]">
-                                                        <span className="font-medium text-[#5A4A3F]">
-                                                            {info.summary}:
-                                                        </span>{" "}
-                                                        {info.body}
-                                                    </p>
+                                                    verDetalleImg ? (
+                                                        <article className="mt-2 flex flex-row gap-3 rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3 items-start">
+                                                            <div
+                                                                className={`w-[50%] min-w-[8rem] max-w-[20rem] shrink-0 overflow-hidden rounded-lg sm:w-72 ${
+                                                                    verDetalleImg.crop916Top
+                                                                        ? "relative aspect-[9/15]"
+                                                                        : "border border-[#E1D7C9]"
+                                                                }`}
+                                                            >
+                                                                {verDetalleImg.crop916Top ? (
+                                                                    <Image
+                                                                        src={
+                                                                            verDetalleImg.src
+                                                                        }
+                                                                        alt={
+                                                                            uiLang ===
+                                                                            "en"
+                                                                                ? verDetalleImg.altEn
+                                                                                : verDetalleImg.altEs
+                                                                        }
+                                                                        fill
+                                                                        className="object-cover object-top"
+                                                                        sizes="(max-width: 640px) 50vw, 288px"
+                                                                    />
+                                                                ) : (
+                                                                    <Image
+                                                                        src={
+                                                                            verDetalleImg.src
+                                                                        }
+                                                                        alt={
+                                                                            uiLang ===
+                                                                            "en"
+                                                                                ? verDetalleImg.altEn
+                                                                                : verDetalleImg.altEs
+                                                                        }
+                                                                        width={
+                                                                            verDetalleImg.width
+                                                                        }
+                                                                        height={
+                                                                            verDetalleImg.height
+                                                                        }
+                                                                        className="h-auto w-full"
+                                                                        sizes="(max-width: 640px) 50vw, 288px"
+                                                                    />
+                                                                )}
+                                                            </div>
+                                                            <p className="min-w-0 flex-1 text-[11px] leading-relaxed text-[#6A5C52]">
+                                                                <span className="text-[#5A4A3F]">
+                                                                    {renderTextWithBoldMarkers(
+                                                                        info.summary,
+                                                                        "font-medium",
+                                                                    )}
+                                                                    :
+                                                                </span>{" "}
+                                                                {renderTextWithBoldMarkers(
+                                                                    info.body,
+                                                                )}
+                                                            </p>
+                                                        </article>
+                                                    ) : (
+                                                        <p className="mt-1 text-[11px] leading-relaxed text-[#6A5C52]">
+                                                            <span className="text-[#5A4A3F]">
+                                                                {renderTextWithBoldMarkers(
+                                                                    info.summary,
+                                                                    "font-medium",
+                                                                )}
+                                                                :
+                                                            </span>{" "}
+                                                            {renderTextWithBoldMarkers(
+                                                                info.body,
+                                                            )}
+                                                        </p>
+                                                    )
                                                 ) : null}
                                             </div>
                                         ) : null}
@@ -1658,19 +1874,7 @@ function ConfiguradorPageContent() {
                         {!isLastStep ? (
                             <button
                                 type="button"
-                                onClick={() => {
-                                    const cur = steps[stepIdx];
-                                    if (
-                                        cur === "secciones" &&
-                                        sections.length < MIN_SECTION_BLOCKS
-                                    ) {
-                                        setSeccionesMinErrorShown(true);
-                                        return;
-                                    }
-                                    setStepIdx((s) =>
-                                        Math.min(steps.length - 1, s + 1),
-                                    );
-                                }}
+                                onClick={handleFooterNextClick}
                                 disabled={!canContinue}
                                 className="inline-flex items-center gap-1 rounded-full bg-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-45"
                             >
@@ -1701,6 +1905,98 @@ function ConfiguradorPageContent() {
                     ) : null}
                 </div>
             </footer>
+
+            {panelSkipModalOpen ? (
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="panel-skip-modal-title"
+                    className="fixed inset-0 z-[200] flex items-end justify-center bg-black/45 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:items-center sm:p-6"
+                    onClick={() => setPanelSkipModalOpen(false)}
+                >
+                    <div
+                        className="max-h-[min(92dvh,880px)] w-full max-w-lg overflow-y-auto rounded-2xl border border-[#E7DFD4] bg-[#FDFBF7] p-4 shadow-xl sm:max-w-xl sm:p-5"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2
+                            id="panel-skip-modal-title"
+                            className="text-center text-lg font-normal leading-snug text-[#4A3A2F] sm:text-xl"
+                            style={{
+                                fontFamily:
+                                    "var(--font-landing-hero), Georgia, serif",
+                            }}
+                        >
+                            {panelSkipModalCopy.title}
+                        </h2>
+                        <p className="mt-2 text-center text-xs text-[#6A5C52] sm:text-sm">
+                            {panelSkipModalCopy.lead}
+                        </p>
+                        <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-start md:gap-5">
+                            <div className="relative mx-auto aspect-[9/15] w-full max-w-[11rem] shrink-0 overflow-hidden rounded-lg sm:max-w-[12rem] md:mx-0">
+                                <Image
+                                    src={EXTRA_VER_DETALLE_IMAGE.panel.src}
+                                    alt={panelSkipModalCopy.withTitle}
+                                    fill
+                                    className="object-cover object-top"
+                                    sizes="(max-width: 768px) 44vw, 192px"
+                                />
+                            </div>
+                            <div className="min-w-0 flex-1 space-y-4">
+                                <div>
+                                    <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
+                                        {panelSkipModalCopy.withTitle}
+                                    </h3>
+                                    <ul className="mt-1.5 list-disc space-y-1 pl-4 text-[11px] leading-relaxed text-[#6A5C52] sm:text-xs">
+                                        {panelSkipModalCopy.withPoints.map(
+                                            (line, i) => (
+                                                <li key={i}>{line}</li>
+                                            ),
+                                        )}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
+                                        {panelSkipModalCopy.withoutTitle}
+                                    </h3>
+                                    <ul className="mt-1.5 list-disc space-y-1 pl-4 text-[11px] leading-relaxed text-[#6A5C52] sm:text-xs">
+                                        {panelSkipModalCopy.withoutPoints.map(
+                                            (line, i) => (
+                                                <li key={i}>{line}</li>
+                                            ),
+                                        )}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setPanelSkipModalOpen(false);
+                                    advanceOneStep();
+                                }}
+                                className="rounded-full border border-[#DCCFC0] bg-white px-4 py-2.5 text-sm font-semibold text-[#5A4A3F] transition-colors hover:bg-[#FCF8F2]"
+                            >
+                                {panelSkipModalCopy.btnContinue}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setExtras((prev) =>
+                                        prev.includes("panel")
+                                            ? prev
+                                            : [...prev, "panel"],
+                                    );
+                                    setPanelSkipModalOpen(false);
+                                }}
+                                className="rounded-full bg-[#7A5F45] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-95"
+                            >
+                                {panelSkipModalCopy.btnAdd}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
         </main>
     );
 }

@@ -44,7 +44,7 @@ import {
     type LandingLocale,
 } from "@/components/landing/landing-header-home";
 import FooterSection from "@/components/wedding/footer-section";
-import pricingData from "@/data/config/pricing.json";
+import pricingData from "@/data/landing/pricing.json";
 
 /** sessionStorage: posición vertical al abrir /configurador (restaurar al volver). */
 const MU_LANDING_RETURN_SCROLL_KEY = "mu-landing-return-scroll";
@@ -330,7 +330,7 @@ export interface LandingData {
             subtitle: string;
             showPrices: boolean;
             notice?: string;
-            /** Bloque opcional bajo las tarjetas de planes (enlace ancla, p. ej. a #estilos). */
+            /** Bloque opcional bajo las tarjetas de planes (enlace ancla, p. ej. a #muestras). */
             modelsLinkPrompt?: string;
             modelsLinkCta?: string;
             modelsLinkAnchor?: string;
@@ -1801,11 +1801,11 @@ function HeroTdy({
                             waNumber={waNumber}
                         />
                         <a
-                            href={secondary?.anchor ?? "#estilos"}
+                            href={secondary?.anchor ?? "#muestras"}
                             onClick={(event) =>
                                 handleLocalAnchorClick(
                                     event,
-                                    secondary?.anchor ?? "#estilos",
+                                    secondary?.anchor ?? "#muestras",
                                 )
                             }
                             className="inline-flex min-h-[56px] items-center justify-center rounded-full border px-6 py-3 text-[15px] font-semibold shadow-sm transition-colors duration-200 hover:brightness-[0.98]"
@@ -3074,7 +3074,7 @@ function EstilosCarousel({
 
     return (
         <section
-            id={data.id || "estilos"}
+            id={data.id || "muestras"}
             className="px-0 py-20 md:py-28"
             style={{ background: theme.surfaceAlt }}
         >
@@ -4412,7 +4412,7 @@ export default function LandingPageHome({
             return {
                 prompt: s.modelsLinkPrompt,
                 cta: s.modelsLinkCta,
-                anchor: s.modelsLinkAnchor?.trim() || "#estilos",
+                anchor: s.modelsLinkAnchor?.trim() || "#muestras",
             };
         }
         if (compactHeroLayout) {
@@ -4422,7 +4422,7 @@ export default function LandingPageHome({
                         ? "Want to see the designs we've already made?"
                         : "¿Querés ver los modelos que ya diseñamos?",
                 cta: loc === "en" ? "View models" : "Ver modelos",
-                anchor: "#estilos",
+                anchor: "#muestras",
             };
         }
         return undefined;

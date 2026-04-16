@@ -5,8 +5,8 @@ Todo el contenido editable por “dato” vive acá, agrupado por uso.
 | Carpeta / archivo | Para qué es |
 |-------------------|-------------|
 | **`clientes/`** | Invitaciones reales: `boda/slug.json`, `xv/slug.json`, etc. El sitio lee `data/clientes/{tipo}/{slug}.json`. |
-| **`landing/`** | Landings comerciales: `landing-2.json` + `landing-2.en.json` (home `/`), `landing-1.json` (`/landing`), `landing-2-theme.json` (referencia de tema). |
-| **`config/`** | Ajustes globales del negocio: `pricing.json` (ARS, USD, planes, extras, tabla “papel”). |
+| **`landing/`** | Landings comerciales: `landing-2.json` + `landing-2.en.json` (home `/`), `landing-1.json` (`/landing`), `landing-2-theme.json` (referencia de tema), `pricing.json` (precios globales) y `configurador-es.json` (textos del configurador en español). |
+| **`config/`** | Reservado para ajustes globales adicionales (si aplica). |
 | **`templates/`** | Plantillas para **copiar** al crear un cliente: `_TEMPLATE_BODA.json`, `_TEMPLATE_XV.json`. |
 | **`reference/`** | Ejemplos o legacy: `wedding-config.json` (no es la fuente de una URL). |
 | **`admin/`** | `admin.json` — datos del panel admin (rutas API bajo `app/api/admin/`). |

@@ -66,7 +66,7 @@ components/
 data/
   README.md                    <- Indice de carpetas
   landing/                     <- Landings comerciales (landing-2.json = home /)
-  config/pricing.json          <- Precios globales (landing + configurador)
+  landing/pricing.json         <- Precios globales (landing + configurador)
   templates/                   <- Plantillas para copiar a clientes/
   admin/admin.json             <- Panel admin (API)
   docs/                        <- Manuales operativos

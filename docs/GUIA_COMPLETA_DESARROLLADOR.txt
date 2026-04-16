@@ -201,9 +201,7 @@ PARTE 2 - ESTRUCTURA DE CARPETAS Y ARCHIVOS
 │
 ├── data/
 │   ├── README.md                     <- Indice de carpetas
-│   ├── landing/                      <- Landings comerciales (home y clasica)
-│   ├── config/
-│   │   └── pricing.json              <- Precios globales
+│   ├── landing/                      <- Landings comerciales (home y clasica), pricing.json, configurador-es.json
 │   ├── templates/                    <- Plantillas para copiar a clientes/
 │   ├── reference/
 │   │   └── wedding-config.json       <- Ejemplo legacy (referencia)
