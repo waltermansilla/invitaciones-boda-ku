@@ -147,22 +147,36 @@ export default function HeroOverlay({
     return /^\d+(\.\d+)?$/.test(trimmed) ? `${trimmed}px` : trimmed
   }
 
-  const brideY = toPxValue(textPositionsPx?.brideY)
-  const separatorY = toPxValue(textPositionsPx?.separatorY)
-  const groomY = toPxValue(textPositionsPx?.groomY)
-  const phraseY = toPxValue(textPositionsPx?.phraseY)
-  const topLineY = toPxValue(textPositionsPx?.topLineY)
-  const bottomLineY = toPxValue(textPositionsPx?.bottomLineY)
-  const buttonY = toPxValue(textPositionsPx?.buttonY)
-  const hasCustomTextPositions = Boolean(brideY || separatorY || groomY || phraseY || topLineY || bottomLineY)
+  const parsePosition = (value?: number | string) => {
+    if (value === undefined || value === null || value === "") return null
+    if (typeof value === "number") {
+      return { top: `${value}px`, left: "50%", centered: true }
+    }
+    const trimmed = value.trim()
+    if (!trimmed) return null
+    const [rawY, rawX] = trimmed.split(",").map((part) => part.trim())
+    const top = toPxValue(rawY)
+    if (!top) return null
+    const left = toPxValue(rawX)
+    if (left) return { top, left, centered: false }
+    return { top, left: "50%", centered: true }
+  }
 
-  if (buttonY) {
+  const bridePos = parsePosition(textPositionsPx?.brideY)
+  const separatorPos = parsePosition(textPositionsPx?.separatorY)
+  const groomPos = parsePosition(textPositionsPx?.groomY)
+  const phrasePos = parsePosition(textPositionsPx?.phraseY)
+  const topLinePos = parsePosition(textPositionsPx?.topLineY)
+  const bottomLinePos = parsePosition(textPositionsPx?.bottomLineY)
+  const buttonPos = parsePosition(textPositionsPx?.buttonY)
+
+  if (buttonPos) {
     justifyClass = ""
     buttonStyle = {
       position: "absolute",
-      top: buttonY,
-      left: "50%",
-      transform: "translateX(-50%)",
+      top: buttonPos.top,
+      left: buttonPos.left,
+      transform: buttonPos.centered ? "translateX(-50%)" : undefined,
     }
   }
 
@@ -175,6 +189,8 @@ export default function HeroOverlay({
   } else if (bgColor) {
     bgStyles.backgroundColor = bgColor
   }
+
+  const hasCustomTextPositions = Boolean(bridePos || separatorPos || groomPos || phrasePos || topLinePos || bottomLinePos)
 
   return (
     <div
@@ -232,7 +248,7 @@ export default function HeroOverlay({
 
           {/* Romantic phrase */}
           {showPhrase && !invitado && (
-            <p className="mx-auto max-w-xs px-6 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:text-base">
+            <p className="mx-auto w-[88vw] max-w-md px-5 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:w-auto sm:px-8 sm:text-base">
               {phrase}
             </p>
           )}
@@ -257,17 +273,23 @@ export default function HeroOverlay({
         <div className="pointer-events-none absolute inset-0">
           {showNames && (
             <>
-              {topLineY && (
+              {topLinePos && (
                 <div
-                  className="absolute left-1/2 z-10 h-px w-12 -translate-x-1/2 bg-primary/30"
-                  style={{ top: topLineY }}
+                  className="absolute z-10 h-px w-12 bg-primary/30"
+                  style={{
+                    top: topLinePos?.top,
+                    left: topLinePos?.left,
+                    transform: topLinePos?.centered ? "translateX(-50%)" : undefined,
+                  }}
                 />
               )}
-              {brideY && (
+              {bridePos && (
                 <h1
-                  className={`absolute left-1/2 -translate-x-1/2 text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                  className={`absolute text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
                   style={{
-                    top: brideY,
+                    top: bridePos.top,
+                    left: bridePos.left,
+                    transform: bridePos.centered ? "translateX(-50%)" : undefined,
                     fontFamily: nameFontFamily,
                     color: nameColor,
                     textTransform: nameStyle?.lowercase ? "none" : "uppercase",
@@ -278,19 +300,25 @@ export default function HeroOverlay({
                   {brideName}
                 </h1>
               )}
-              {separator && separatorY && (
+              {separator && separatorPos && (
                 <span
-                  className="absolute left-1/2 -translate-x-1/2 text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl md:text-4xl"
-                  style={{ top: separatorY }}
+                  className="absolute text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl md:text-4xl"
+                  style={{
+                    top: separatorPos.top,
+                    left: separatorPos.left,
+                    transform: separatorPos.centered ? "translateX(-50%)" : undefined,
+                  }}
                 >
                   {separator}
                 </span>
               )}
-              {groomName && groomY && (
+              {groomName && groomPos && (
                 <h1
-                  className={`absolute left-1/2 -translate-x-1/2 text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                  className={`absolute text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
                   style={{
-                    top: groomY,
+                    top: groomPos.top,
+                    left: groomPos.left,
+                    transform: groomPos.centered ? "translateX(-50%)" : undefined,
                     fontFamily: nameFontFamily,
                     color: nameColor,
                     textTransform: nameStyle?.lowercase ? "none" : "uppercase",
@@ -301,19 +329,27 @@ export default function HeroOverlay({
                   {groomName}
                 </h1>
               )}
-              {bottomLineY && (
+              {bottomLinePos && (
                 <div
-                  className="absolute left-1/2 z-10 h-px w-12 -translate-x-1/2 bg-primary/30"
-                  style={{ top: bottomLineY }}
+                  className="absolute z-10 h-px w-12 bg-primary/30"
+                  style={{
+                    top: bottomLinePos.top,
+                    left: bottomLinePos.left,
+                    transform: bottomLinePos.centered ? "translateX(-50%)" : undefined,
+                  }}
                 />
               )}
             </>
           )}
 
-          {showPhrase && !invitado && phraseY && (
+          {showPhrase && !invitado && phrasePos && (
             <p
-              className="absolute left-1/2 mx-auto max-w-xs -translate-x-1/2 px-6 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:text-base"
-              style={{ top: phraseY }}
+              className="absolute mx-auto w-[88vw] max-w-md px-5 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:w-auto sm:px-8 sm:text-base"
+              style={{
+                top: phrasePos.top,
+                left: phrasePos.left,
+                transform: phrasePos.centered ? "translateX(-50%)" : undefined,
+              }}
             >
               {phrase}
             </p>
@@ -324,7 +360,7 @@ export default function HeroOverlay({
       {/* Enter button */}
       <button
         onClick={handleEnter}
-        className={`${typeof numPosition === "number" || buttonY ? "" : "mt-14"} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
+        className={`${typeof numPosition === "number" || buttonPos ? "" : "mt-14"} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
         style={buttonStyle}
         aria-label={buttonText}
       >

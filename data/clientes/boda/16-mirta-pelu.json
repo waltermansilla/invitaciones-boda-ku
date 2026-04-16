@@ -48,13 +48,13 @@
         },
         "bgImage": "/clientes/boda/16-mirta-pelu/images/overlay2.jpeg",
         "textPositionsPx": {
-            "topLineY": 130,
-            "brideY": 310,
-            "separatorY": 390,
-            "groomY": 408,
-            "phraseY": "",
-            "bottomLineY": 508,
-            "buttonY": 545
+            "topLineY": "",
+            "brideY": "315, 60",
+            "separatorY": "352, 204",
+            "groomY": "315, 240",
+            "bottomLineY": 410,
+            "phraseY": 435,
+            "buttonY": 530
         }
     },
     "// ==========================================:": "",
@@ -71,7 +71,7 @@
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/16-mirta-pelu/images/1.jpg",
+        "coupleImage": "/clientes/boda/16-mirta-pelu/images/hero.jpeg",
         "headline": "¡Bodas de oro!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
@@ -81,7 +81,7 @@
             "font": "Dancing Script",
             "lowercase": true,
             "weight": "600",
-            "size": "4xl",
+            "size": "3xl",
             "letterSpacing": "none",
             "style": "normal",
             "color": "#fff",
@@ -174,7 +174,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/boda/16-mirta-pelu/images/2.jpeg"]
+                "images": ["/clientes/boda/16-mirta-pelu/images/1.jpeg"]
             }
         },
 
@@ -242,6 +242,33 @@
                 }
             }
         },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/16-mirta-pelu/images/2.jpeg"]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por acompañarnos, por ser parte de nuestra historia y por compartir con nosotros este momento tan especial que guardaremos por siempre en el corazón.",
+                "author": "Mirta & Pelu",
+                "decorativeLines": true
+            }
+        },
+
         {
             "_comment": "UNIVERSAL INFO: Seccion flexible para avisos importantes con modal de consejos.",
             "type": "universalInfo",
@@ -323,28 +350,14 @@
         },
 
         {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-final2",
-            "bgColor": "primary",
-            "blocks": ["text", "author"],
-            "data": {
-                "text": "Gracias por acompañarnos, por ser parte de nuestra historia y por compartir con nosotros este momento tan especial que guardaremos por siempre en el corazón.",
-                "author": "Mirta & Pelu",
-                "decorativeLines": true
-            }
-        },
-
-        {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
             "data": {
-                "aspectRatio": "3/4",
-                "image": "/clientes/boda/16-mirta-pelu/images/1.jpg",
+                "aspectRatio": "4/3",
+                "image": "/clientes/boda/16-mirta-pelu/images/final.jpeg",
                 "namesDisplay": {
                     "enabled": true,
                     "position": "bottom",
