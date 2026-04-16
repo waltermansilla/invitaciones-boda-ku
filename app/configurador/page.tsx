@@ -108,7 +108,6 @@ const SECTION_ICONS: Record<string, React.ReactNode> = {
     faq: <HelpIcon />,
     alojamiento: <MapPin size={15} />,
     adultos: <Baby size={15} />,
-    "rsvp-detallado": <Check size={15} />,
 };
 
 const SECTION_OPTIONS: SectionOption[] = configuradorEs.sectionOrder.map(
@@ -244,7 +243,6 @@ const DETAILS_SECTION_ORDER = [
     "faq",
     "alojamiento",
     "adultos",
-    // NOTE: "rsvp-detallado" stays out on purpose (no /detalles fields).
 ] as const;
 
 const EVENT_TYPE_CODE: Record<EventType | "", string> = {
