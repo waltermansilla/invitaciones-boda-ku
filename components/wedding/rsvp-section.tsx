@@ -26,12 +26,19 @@ interface RSVPSectionProps {
         attendanceNo: string;
         dietary: string;
         dietaryOptions: string[];
+        songRequestLabel?: string;
         songRequest: string;
+        extraInputs?: {
+            id: string;
+            label: string;
+            placeholder?: string;
+        }[];
         submitButton: string;
     };
     whatsapp?: {
         number: string;
         messageTemplate: string;
+        noAttendanceMessageTemplate?: string;
     };
     panel?: {
         enabled: boolean;
@@ -47,18 +54,53 @@ interface GuestForm {
     attendance: string;
     dietary: string;
     songRequest: string;
+    extraValues?: Record<string, string>;
 }
 
 function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
     const lines = guests.map((g, i) => {
-        const prefix = guests.length > 1 ? `*Invitado ${i + 1}:* ` : "";
-        const attendance = g.attendance === "yes" ? "Confirma asistencia" : "No asiste";
-        let line = `*${prefix}${g.firstName} ${g.lastName}* - ${attendance}`;
-        if (g.dietary && g.dietary !== "Ninguno") line += ` | Alimentacion: ${g.dietary}`;
-        if (g.songRequest) line += ` | Cancion: ${g.songRequest}`;
-        return line;
+        const prefix = guests.length > 1 ? `${i + 1}:` : "1:";
+        const attendance = g.attendance === "yes" ? "Asiste" : "No asiste";
+        const fullName = `${g.firstName} ${g.lastName}`.trim();
+        const detailLines: string[] = [
+            `${prefix} *${fullName}*`,
+            `*${attendance}*`,
+        ];
+        if (g.attendance === "no") return detailLines.join("\n");
+        if (g.dietary && g.dietary !== "Ninguno") detailLines.push(`- Alimentacion: ${g.dietary}`);
+        if (g.songRequest) detailLines.push(`- Cancion: ${g.songRequest}`);
+        if (g.extraValues) {
+            Object.entries(g.extraValues).forEach(([label, value]) => {
+                if (value) detailLines.push(`- ${label}: ${value}`);
+            });
+        }
+        return detailLines.join("\n");
     });
-    return template.replace("{resumen}", lines.join("\n"));
+    return template.replace("{resumen}", lines.join("\n\n"));
+}
+
+function buildNamesOnlySummary(guests: GuestForm[]): string {
+    return guests
+        .map((g) => `${g.firstName} ${g.lastName}`.trim())
+        .filter(Boolean)
+        .map((name) => `*${name}*`)
+        .join("\n");
+}
+
+function applySingularPluralAdjustments(message: string, guestCount: number): string {
+    if (guestCount > 1) {
+        return message
+            .replace(/\bConfirmo\b/g, "Confirmamos")
+            .replace(/\bconfirmo\b/g, "confirmamos")
+            .replace(/\bPodre\b/g, "Podremos")
+            .replace(/\bpodre\b/g, "podremos");
+    }
+
+    return message
+        .replace(/\bConfirmamos\b/g, "Confirmo")
+        .replace(/\bconfirmamos\b/g, "confirmo")
+        .replace(/\bPodremos\b/g, "Podre")
+        .replace(/\bpodremos\b/g, "podre");
 }
 
 export default function RSVPSection({
@@ -73,8 +115,14 @@ export default function RSVPSection({
     const isMuestra = useIsMuestra();
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     const [guestCount, setGuestCount] = useState(1);
+    const extraInputs = fields.extraInputs ?? [];
+    const createEmptyExtraValues = () =>
+        extraInputs.reduce<Record<string, string>>((acc, item) => {
+            acc[item.label] = "";
+            return acc;
+        }, {});
     const [guests, setGuests] = useState<GuestForm[]>([
-        { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "" },
+        { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "", extraValues: createEmptyExtraValues() },
     ]);
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
@@ -112,6 +160,7 @@ export default function RSVPSection({
                                     attendance: int.estado === "confirmado" ? "yes" : int.estado === "no_asiste" ? "no" : "",
                                     dietary: int.restricciones || "Ninguno",
                                     songRequest: inv.cancion || "",
+                                    extraValues: createEmptyExtraValues(),
                                 };
                             }));
                         } else if (inv.tipo === "persona") {
@@ -122,19 +171,20 @@ export default function RSVPSection({
                                 attendance: inv.estado === "confirmado" ? "yes" : inv.estado === "no_asiste" ? "no" : "",
                                 dietary: "Ninguno",
                                 songRequest: inv.cancion || "",
+                                extraValues: createEmptyExtraValues(),
                             }]);
                         }
                     }
                 })
                 .catch(() => {});
         }
-    }, [panel?.enabled, panel?.codigo, editing]);
+    }, [panel?.enabled, panel?.codigo, editing, fields.extraInputs]);
 
     const handleGuestCountChange = (count: number) => {
         setGuestCount(count);
         const newGuests: GuestForm[] = [];
         for (let i = 0; i < count; i++) {
-            newGuests.push(guests[i] || { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "" });
+            newGuests.push(guests[i] || { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "", extraValues: createEmptyExtraValues() });
         }
         setGuests(newGuests);
     };
@@ -142,6 +192,19 @@ export default function RSVPSection({
     const updateGuest = (index: number, field: keyof GuestForm, value: string) => {
         const newGuests = [...guests];
         newGuests[index] = { ...newGuests[index], [field]: value };
+        setGuests(newGuests);
+    };
+
+    const updateGuestExtraValue = (index: number, label: string, value: string) => {
+        const newGuests = [...guests];
+        const prevExtraValues = newGuests[index].extraValues || {};
+        newGuests[index] = {
+            ...newGuests[index],
+            extraValues: {
+                ...prevExtraValues,
+                [label]: value,
+            },
+        };
         setGuests(newGuests);
     };
 
@@ -184,7 +247,12 @@ export default function RSVPSection({
         }
 
         if (whatsapp?.number && whatsapp?.messageTemplate) {
-            const message = buildWhatsAppMessage(whatsapp.messageTemplate, guests);
+            const everyoneDeclined = guests.length > 0 && guests.every((g) => g.attendance === "no");
+            const baseMessage =
+                everyoneDeclined && whatsapp.noAttendanceMessageTemplate
+                    ? whatsapp.noAttendanceMessageTemplate.replace("{resumen}", buildNamesOnlySummary(guests))
+                    : buildWhatsAppMessage(whatsapp.messageTemplate, guests);
+            const message = applySingularPluralAdjustments(baseMessage, guests.length);
             const url = `https://wa.me/${whatsapp.number}?text=${encodeURIComponent(message)}`;
             window.open(url, "_blank");
             setSubmitted(true);
@@ -384,14 +452,36 @@ export default function RSVPSection({
                                     </select>
                                 </div>
 
-                                <input
-                                    type="text"
-                                    placeholder={fields.songRequest}
-                                    value={guest.songRequest}
-                                    onChange={(e) => updateGuest(index, "songRequest", e.target.value)}
-                                    className="w-full bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
-                                    style={{ fontSize: "16px" }}
-                                />
+                                <div className="px-4 py-3">
+                                    {fields.songRequestLabel && (
+                                        <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
+                                            {fields.songRequestLabel}
+                                        </label>
+                                    )}
+                                    <input
+                                        type="text"
+                                        placeholder={fields.songRequest}
+                                        value={guest.songRequest}
+                                        onChange={(e) => updateGuest(index, "songRequest", e.target.value)}
+                                        className="w-full bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
+                                        style={{ fontSize: "16px" }}
+                                    />
+                                </div>
+                                {extraInputs.map((extraInput) => (
+                                    <div key={extraInput.id} className="border-t border-current/10 px-4 py-3">
+                                        <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
+                                            {extraInput.label}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            placeholder={extraInput.placeholder || extraInput.label}
+                                            value={guest.extraValues?.[extraInput.label] || ""}
+                                            onChange={(e) => updateGuestExtraValue(index, extraInput.label, e.target.value)}
+                                            className="w-full bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
+                                            style={{ fontSize: "16px" }}
+                                        />
+                                    </div>
+                                ))}
                             </div>
                         </Fragment>
                     ))}

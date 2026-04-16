@@ -12,6 +12,7 @@ import ItinerarySection from "./itinerary-section"
 import PhotosSection from "./photos-section"
 import GiftCardSection from "./gift-card-section"
 import HoneymoonSection from "./honeymoon-section"
+import UniversalInfoSection from "./universal-info-section"
 import DressCodeSection from "./dress-code-section"
 import EmotionalQuoteSection from "./emotional-quote-section"
 import TriviaSection from "./trivia-section"
@@ -201,6 +202,19 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
           />
         )
 
+      case "universalInfo":
+        return (
+          <UniversalInfoSection
+            icon={data.icon as string | undefined}
+            title={data.title as string | undefined}
+            description={data.description as string | undefined}
+            descriptionSize={data.descriptionSize as "normal" | "large" | undefined}
+            showButton={data.showButton as boolean | undefined}
+            button={data.button as { text: string; variant?: "primary" | "secondary" } | undefined}
+            modal={data.modal as { title?: string; sections?: { heading: string; text: string }[] } | undefined}
+          />
+        )
+
       case "dressCode":
         return (
           <DressCodeSection
@@ -244,11 +258,17 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
                 attendanceNo: string
                 dietary: string
                 dietaryOptions: string[]
+                songRequestLabel?: string
                 songRequest: string
+                extraInputs?: {
+                  id: string
+                  label: string
+                  placeholder?: string
+                }[]
                 submitButton: string
               }
             }
-            whatsapp={data.whatsapp as { number: string; messageTemplate: string } | undefined}
+            whatsapp={data.whatsapp as { number: string; messageTemplate: string; noAttendanceMessageTemplate?: string } | undefined}
             panel={rsvpPanel?.enabled ? {
               enabled: true,
               codigo: codigoInvitado,

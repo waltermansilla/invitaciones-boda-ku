@@ -74,6 +74,16 @@
     "// showNames: true/false                                                     ": "",
     "// showPhrase: true/false                                                    ": "",
     "// buttonPosition: 'center', 'top', 'bottom', o numero 0-100                 ": "",
+    "// textPositionsPx (opcional): posicion vertical individual en pixeles        ": "",
+    "//   brideY: nombre principal                                                 ": "",
+    "//   separatorY: separador '&' (si aplica)                                    ": "",
+    "//   groomY: segundo nombre (si aplica)                                       ": "",
+    "//   phraseY: frase                                                           ": "",
+    "//   topLineY: linea decorativa superior (opcional)                          ": "",
+    "//   bottomLineY: linea decorativa inferior (opcional)                       ": "",
+    "//   buttonY: boton en px (opcional, tiene prioridad sobre buttonPosition)   ": "",
+    "//   Si NO pones topLineY/bottomLineY, las lineas no se muestran en modo px  ": "",
+    "//   IMPORTANTE: si usas textPositionsPx, ajusta cada valor para tu imagen    ": "",
     "// nameStyle: ver documentacion en template BODA                             ": "",
     "// ==========================================================================": "",
 
@@ -93,7 +103,16 @@
             "lowercase": false,
             "letterSpacing": "wide"
         },
-        "buttonPosition": "center"
+        "buttonPosition": "center",
+        "textPositionsPx": {
+            "topLineY": 130,
+            "brideY": 170,
+            "separatorY": 260,
+            "groomY": 310,
+            "phraseY": 430,
+            "bottomLineY": 380,
+            "buttonY": 560
+        }
     },
 
     "// ==========================================================================": "",
@@ -580,6 +599,53 @@
 
         {
             "// ----------------------------------------------------------------------": "",
+            "// UNIVERSAL INFO - Seccion flexible con modal                           ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// icon:                                                                 ": "",
+            "//   car      -> Estacionamiento / auto                                  ": "",
+            "//   bus      -> Shuttle / traslado                                       ": "",
+            "//   info     -> Informacion general                                      ": "",
+            "//   help     -> Ayuda / preguntas frecuentes                             ": "",
+            "//   pin      -> Ubicacion / punto de encuentro                           ": "",
+            "//   party    -> Indicaciones para la fiesta                              ": "",
+            "//   sparkles -> Dato especial / recomendacion                            ": "",
+            "//   alert    -> Aviso importante                                         ": "",
+            "//   clock    -> Horarios / puntualidad                                   ": "",
+            "//   hotel    -> Alojamiento sugerido                                     ": "",
+            "//   drink    -> Barra / consumo responsable                              ": "",
+            "//   kids     -> Info para familias con ninos                             ": "",
+            "// title/description: opcionales                                          ": "",
+            "// descriptionSize: 'normal' (default) o 'large'                          ": "",
+            "// showButton: true/false                                                 ": "",
+            "// button.variant: 'primary' o 'secondary'                                ": "",
+            "// modal: estilo dressCode con sections [{ heading, text }]               ": "",
+            "// ----------------------------------------------------------------------": "",
+            "type": "universalInfo",
+            "id": "universal-info",
+            "enabled": true,
+            "bgColor": "background",
+            "data": {
+                "icon": "info",
+                "title": "Info importante",
+                "description": "Aca podes agregar cualquier aviso util para los invitados.",
+                "descriptionSize": "normal",
+                "showButton": true,
+                "button": {
+                    "text": "Ver detalles",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Mas informacion",
+                    "sections": [
+                        { "heading": "Tip 1", "text": "Detalle o recomendacion." },
+                        { "heading": "Tip 2", "text": "Otro dato importante." }
+                    ]
+                }
+            }
+        },
+
+        {
+            "// ----------------------------------------------------------------------": "",
             "// EMOTIONAL QUOTE - Frase emotiva simple                                ": "",
             "// ----------------------------------------------------------------------": "",
             "type": "emotionalQuote",
@@ -662,12 +728,29 @@
                         "Celiaco",
                         "Otro"
                     ],
+                    "_comment_songRequestLabel": "Opcional: label para el campo de cancion (si no se incluye, solo se muestra el placeholder)",
+                    "songRequestLabel": "Cancion sugerida (opcional)",
                     "songRequest": "Que cancion no puede faltar?",
+                    "_comment_extraInputs": "Opcional: mas campos de texto. Se muestran debajo del campo de cancion.",
+                    "extraInputs": [
+                        {
+                            "id": "mensaje-cumple",
+                            "label": "Mensaje para la cumpleanera",
+                            "placeholder": "Escribi tu mensaje"
+                        },
+                        {
+                            "id": "acompanante",
+                            "label": "Nombre de acompanante (si aplica)",
+                            "placeholder": "Nombre completo"
+                        }
+                    ],
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
                     "number": "NUMERO_WHATSAPP_SIN_MAS",
-                    "messageTemplate": "Hola! Confirmo asistencia para los 15 de NOMBRE:\n{resumen}\nGracias!"
+                    "messageTemplate": "Hola! Confirmo asistencia para los 15 de NOMBRE:\n{resumen}\nGracias!",
+                    "_comment_noAttendanceMessageTemplate": "Opcional: si TODOS marcan que no asisten, se usa este mensaje. {resumen} incluye solo nombres y apellidos.",
+                    "noAttendanceMessageTemplate": "Hola! Lamentablemente no podremos asistir a los 15.\n\n{resumen}\n\nGracias por la invitacion."
                 }
             }
         },

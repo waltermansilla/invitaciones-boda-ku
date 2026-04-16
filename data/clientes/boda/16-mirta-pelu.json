@@ -45,6 +45,16 @@
             "color": "#333",
             "lowercase": true,
             "letterSpacing": "none"
+        },
+        "bgImage": "/clientes/boda/16-mirta-pelu/images/overlay2.jpeg",
+        "textPositionsPx": {
+            "topLineY": 130,
+            "brideY": 310,
+            "separatorY": 390,
+            "groomY": 408,
+            "phraseY": "",
+            "bottomLineY": 508,
+            "buttonY": 545
         }
     },
     "// ==========================================:": "",
@@ -54,7 +64,7 @@
     "music": {
         "enabled": true,
         "src": "/clientes/boda/16-mirta-pelu/music/abelpintos.mp3",
-        "autoplay": true
+        "autoplay": false
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
@@ -79,7 +89,7 @@
             "logo": ""
         },
         "countdownPrefix": "Faltan",
-        "eventDate": "2026-07-08T20:00:00",
+        "eventDate": "2026-07-08T20:30:00",
         "countdownLabels": {
             "days": "Dias",
             "hours": "Horas",
@@ -146,7 +156,7 @@
                 "address": "Av. Costanera Rafael Obligado 1221, Puerto Salguero, C.A.B.A.",
                 "order": ["address", "time"],
                 "datetime": {
-                    "time": "20:00 hs"
+                    "time": "A las 20:30 hs"
                 },
                 "button": {
                     "text": "Cómo llegar",
@@ -206,6 +216,69 @@
         },
 
         {
+            "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
+            "type": "honeymoon",
+            "id": "dream-trip",
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "plane",
+                "title": "Luna de miel",
+                "description": "Tu presencia en este momento es lo más importante. Pero si querés hacernos un regalo, podés ayudarnos con un aporte para nuestro viaje, donde celebraremos este nuevo capítulo juntos.",
+                "button": {
+                    "text": "Ver alias",
+                    "url": "#",
+                    "variant": "background"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para nosotros.",
+                    "bankData": [
+                        { "label": "Alias", "value": "mirtapelu123456" },
+                        { "label": "CBU", "value": "23456789034567890456" },
+                        { "label": "Titular", "value": "qwertyuiop" },
+                        { "label": "Banco", "value": "Nacion" }
+                    ]
+                }
+            }
+        },
+        {
+            "_comment": "UNIVERSAL INFO: Seccion flexible para avisos importantes con modal de consejos.",
+            "type": "universalInfo",
+            "id": "parking-info",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "car",
+                "title": "Estacionamiento",
+                "description": "SI VENÍS EN TU AUTO, POR FAVOR INDICANOS TU PATENTE AL CONFIRMAR TU ASISTENCIA, ASÍ RESERVAMOS TU ESPACIO EN LA COCHERA.",
+                "descriptionSize": "normal",
+                "showButton": false,
+                "button": {
+                    "text": "Ver consejos",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Consejos para estacionar",
+                    "sections": [
+                        {
+                            "heading": "Ingreso",
+                            "text": "Decile al personal de puerta tu patente apenas llegues para agilizar el acceso."
+                        },
+                        {
+                            "heading": "Objetos de valor",
+                            "text": "Te recomendamos no dejar objetos de valor visibles dentro del auto."
+                        },
+                        {
+                            "heading": "Salida",
+                            "text": "Al finalizar el evento, segui las indicaciones del personal para retirar tu vehiculo de forma ordenada."
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
             "// --- FORMULARIO RSVP ---": "",
             "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
             "type": "rsvp",
@@ -216,7 +289,7 @@
                 "title": "Confirmá tu asistencia",
                 "deadline": "",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [1, 2, 3, 4, 5, 6, 7],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -231,12 +304,20 @@
                         "Celíaco",
                         "Otro"
                     ],
-                    "songRequest": "Que canción no puede faltar?",
+                    "songRequest": "¿Que cancion no puede faltar?",
+                    "extraInputs": [
+                        {
+                            "id": "patente",
+                            "label": "Si venís en tu auto, indicanos tu patente",
+                            "placeholder": "Ej: 'ETX547'"
+                        }
+                    ],
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "541151781010",
-                    "messageTemplate": "Hola Mirta & Pelu! 🤗 Confirmo la asistencia a su celebración. \n\n{resumen}\n\nGracias por la invitación a este momento tan especial para ustedes! 🫶🏼"
+                    "number": "543456023759",
+                    "messageTemplate": "Hola Mirta & Pelu! 🤗 Confirmo la asistencia a su celebración. \n\n{resumen}\n\nGracias por la invitación a este momento tan especial para ustedes! 🫶🏼",
+                    "noAttendanceMessageTemplate": "Hola! Lamentablemente no podremos asistir.\n\n{resumen}\n\nGracias por su invitación."
                 }
             }
         },

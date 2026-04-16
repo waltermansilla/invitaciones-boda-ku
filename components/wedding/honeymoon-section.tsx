@@ -102,6 +102,10 @@ export default function HoneymoonSection({
 }: HoneymoonSectionProps) {
   const { openModal } = useModal()
   const isMuestra = useIsMuestra()
+  const buttonVariantClasses =
+    button.variant === "primary"
+      ? "bg-primary text-primary-foreground border-primary hover:opacity-90"
+      : "border-current/30 text-inherit hover:bg-current/5"
 
   const IconComponent = icon ? ICON_MAP[icon] || Gift : Gift
 
@@ -294,8 +298,7 @@ export default function HoneymoonSection({
         {showButton && (
           <button
             onClick={handleOpen}
-            className="inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:opacity-70"
-            style={{ borderColor: "currentColor", borderOpacity: 0.4 }}
+            className={`inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-200 ${buttonVariantClasses}`}
           >
             {button.text}
           </button>

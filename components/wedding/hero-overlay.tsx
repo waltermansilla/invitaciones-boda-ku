@@ -32,6 +32,15 @@ interface HeroOverlayProps {
   showPhrase?: boolean
   nameStyle?: NameStyle
   buttonPosition?: "center" | "top" | "bottom" | number // number = percentage from top (0-100)
+  textPositionsPx?: {
+    brideY?: number | string
+    separatorY?: number | string
+    groomY?: number | string
+    phraseY?: number | string
+    topLineY?: number | string
+    bottomLineY?: number | string
+    buttonY?: number | string
+  }
   onDismiss?: () => void // callback when overlay is dismissed
   invitado?: InvitadoData | null // datos del invitado cuando viene con código
 }
@@ -48,6 +57,7 @@ export default function HeroOverlay({
   showPhrase = true,
   nameStyle,
   buttonPosition = "center",
+  textPositionsPx,
   onDismiss,
   invitado,
 }: HeroOverlayProps) {
@@ -129,6 +139,33 @@ export default function HeroOverlay({
   }
   const nameWeightClass = weightClasses[nameWeight] || "font-extralight"
 
+  const toPxValue = (value?: number | string): string | undefined => {
+    if (value === undefined || value === null || value === "") return undefined
+    if (typeof value === "number") return `${value}px`
+    const trimmed = value.trim()
+    if (!trimmed) return undefined
+    return /^\d+(\.\d+)?$/.test(trimmed) ? `${trimmed}px` : trimmed
+  }
+
+  const brideY = toPxValue(textPositionsPx?.brideY)
+  const separatorY = toPxValue(textPositionsPx?.separatorY)
+  const groomY = toPxValue(textPositionsPx?.groomY)
+  const phraseY = toPxValue(textPositionsPx?.phraseY)
+  const topLineY = toPxValue(textPositionsPx?.topLineY)
+  const bottomLineY = toPxValue(textPositionsPx?.bottomLineY)
+  const buttonY = toPxValue(textPositionsPx?.buttonY)
+  const hasCustomTextPositions = Boolean(brideY || separatorY || groomY || phraseY || topLineY || bottomLineY)
+
+  if (buttonY) {
+    justifyClass = ""
+    buttonStyle = {
+      position: "absolute",
+      top: buttonY,
+      left: "50%",
+      transform: "translateX(-50%)",
+    }
+  }
+
   // Background styles
   const bgStyles: React.CSSProperties = {}
   if (bgImage) {
@@ -148,7 +185,7 @@ export default function HeroOverlay({
       aria-live="polite"
     >
       {/* Content wrapper - only show if names or phrase enabled */}
-      {(showNames || showPhrase) && typeof numPosition !== "number" && (
+      {(showNames || showPhrase) && typeof numPosition !== "number" && !hasCustomTextPositions && (
         <div className="flex flex-col items-center">
           {showNames && (
             <div className="flex flex-col items-center justify-center">
@@ -216,10 +253,78 @@ export default function HeroOverlay({
         </div>
       )}
 
+      {(showNames || showPhrase) && typeof numPosition !== "number" && hasCustomTextPositions && (
+        <div className="pointer-events-none absolute inset-0">
+          {showNames && (
+            <>
+              {topLineY && (
+                <div
+                  className="absolute left-1/2 z-10 h-px w-12 -translate-x-1/2 bg-primary/30"
+                  style={{ top: topLineY }}
+                />
+              )}
+              {brideY && (
+                <h1
+                  className={`absolute left-1/2 -translate-x-1/2 text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                  style={{
+                    top: brideY,
+                    fontFamily: nameFontFamily,
+                    color: nameColor,
+                    textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                    letterSpacing: nameLetterSpacing,
+                    ...nameSizeStyle,
+                  }}
+                >
+                  {brideName}
+                </h1>
+              )}
+              {separator && separatorY && (
+                <span
+                  className="absolute left-1/2 -translate-x-1/2 text-2xl font-extralight tracking-[0.3em] text-primary/60 sm:text-3xl md:text-4xl"
+                  style={{ top: separatorY }}
+                >
+                  {separator}
+                </span>
+              )}
+              {groomName && groomY && (
+                <h1
+                  className={`absolute left-1/2 -translate-x-1/2 text-center ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                  style={{
+                    top: groomY,
+                    fontFamily: nameFontFamily,
+                    color: nameColor,
+                    textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                    letterSpacing: nameLetterSpacing,
+                    ...nameSizeStyle,
+                  }}
+                >
+                  {groomName}
+                </h1>
+              )}
+              {bottomLineY && (
+                <div
+                  className="absolute left-1/2 z-10 h-px w-12 -translate-x-1/2 bg-primary/30"
+                  style={{ top: bottomLineY }}
+                />
+              )}
+            </>
+          )}
+
+          {showPhrase && !invitado && phraseY && (
+            <p
+              className="absolute left-1/2 mx-auto max-w-xs -translate-x-1/2 px-6 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:text-base"
+              style={{ top: phraseY }}
+            >
+              {phrase}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Enter button */}
       <button
         onClick={handleEnter}
-        className={`${typeof numPosition === "number" ? "" : "mt-14"} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
+        className={`${typeof numPosition === "number" || buttonY ? "" : "mt-14"} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
         style={buttonStyle}
         aria-label={buttonText}
       >

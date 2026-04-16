@@ -117,6 +117,15 @@ function WeddingInvitationContent() {
                     showPhrase={(overlay as Record<string, unknown>).showPhrase as boolean | undefined}
                     nameStyle={(overlay as Record<string, unknown>).nameStyle as { font?: string; size?: string; weight?: string; color?: string } | undefined}
                     buttonPosition={(overlay as Record<string, unknown>).buttonPosition as "center" | "top" | "bottom" | number | undefined}
+                    textPositionsPx={(overlay as Record<string, unknown>).textPositionsPx as {
+                        brideY?: number | string
+                        separatorY?: number | string
+                        groomY?: number | string
+                        phraseY?: number | string
+                        topLineY?: number | string
+                        bottomLineY?: number | string
+                        buttonY?: number | string
+                    } | undefined}
                     invitado={invitado}
                 />
             )}
