@@ -121,6 +121,7 @@ export const SECTION_LABEL_EN: Record<string, string> = {
     faq: "FAQ",
     alojamiento: "Accommodations",
     adultos: "Kids & childcare notes",
+    "rsvp-detallado": "Detailed RSVP form",
     otro: "Other",
 };
 
@@ -176,8 +177,9 @@ export function getUiStrings(lang: ConfiguratorLang) {
                 "We explain what’s already included and how blocks work.",
             incluyeP1Before: "Your invitation already includes:",
             incluyeP1Bold:
-                "WhatsApp RSVP, up to 5 photos, countdown, custom colors, and custom wording",
-            incluyeP1After: ". All of that is included.",
+                "simple WhatsApp RSVP (guests tap to confirm or decline), up to 5 photos, countdown, custom colors, and custom wording",
+            incluyeP1After:
+                ". If you want a more detailed RSVP form (vegan/celiac dietary needs, song requests, etc.), select the “Detailed RSVP form” section.",
             incluyeP2Before: "In this grid you can add",
             incluyeP2Free: "4 free sections",
             incluyeP2Mid: "(dress code, more photos, story, etc.).",

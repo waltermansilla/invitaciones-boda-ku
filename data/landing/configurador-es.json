@@ -19,8 +19,8 @@
         "incluyeOpen": "Tocá para cerrar",
         "incluyeClosed": "Te explicamos lo que ya está incluido y cómo funcionan los bloques.",
         "incluyeP1Before": "Tu invitación ya incluye:",
-        "incluyeP1Bold": "confirmación de asistencia por WhatsApp, hasta 5 fotos, cuenta regresiva, colores personalizados y frases personalizadas",
-        "incluyeP1After": ". Todo eso ya viene incluido.",
+        "incluyeP1Bold": "confirmación sencilla por WhatsApp (el invitado toca confirmar o avisar que no asiste), hasta 5 fotos, cuenta regresiva, colores personalizados y frases personalizadas",
+        "incluyeP1After": ". Si querés una confirmación más detallada con formulario (vegano, celíaco, canciones, etc.), seleccioná la sección “Confirmación detallada (RSVP)”.",
         "incluyeP2Before": "En esta grilla podés sumar",
         "incluyeP2Free": "4 secciones gratis",
         "incluyeP2Mid": "(dress code, más fotos, historia, etc.).",
@@ -173,7 +173,8 @@
         "fotos10",
         "faq",
         "alojamiento",
-        "adultos"
+        "adultos",
+        "rsvp-detallado"
     ],
     "sections": {
         "mapa": { "label": "Ubicación y cómo llegar" },
@@ -189,7 +190,8 @@
         "fotos10": { "label": "Hasta 10 fotos" },
         "faq": { "label": "Preguntas frecuentes" },
         "alojamiento": { "label": "Alojamientos" },
-        "adultos": { "label": "Niños y cuidados" }
+        "adultos": { "label": "Niños y cuidados" },
+        "rsvp-detallado": { "label": "Confirmación detallada (RSVP)" }
     },
     "story": {
         "our": "Nuestra historia",
