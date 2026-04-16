@@ -342,7 +342,7 @@
                 {
                     "number": "03",
                     "title": "Receive your invitation",
-                    "description": "Send your summary on WhatsApp, book with a deposit, and in 3–5 business days you’ll have your link ready to share.",
+                    "description": "Send your summary on WhatsApp, book with a deposit, and in {{deliveryRangeEn}} you’ll have your link ready to share.",
                     "icon": "link"
                 }
             ]
@@ -389,7 +389,7 @@
             "title": "Choose your plan",
             "subtitle": "Two ways to build your invitation: block-by-block configuration, or a fully unique design.",
             "showPrices": true,
-            "notice": "Normally, without Rush Delivery your invitation may take between 3 and 5 business days.",
+            "notice": "Normally, without Rush Delivery your invitation may take between {{deliveryRangeEn}}.",
             "modelsLinkPrompt": "Want to see the samples we’ve already designed?",
             "modelsLinkCta": "View samples",
             "modelsLinkAnchor": "#muestras",
@@ -456,7 +456,7 @@
                 },
                 {
                     "question": "How long does delivery take?",
-                    "answer": "The usual timeline is 3 to 5 business days from when we receive all your materials. If you’re in a hurry, you can add 24-hour rush delivery."
+                    "answer": "The usual timeline is {{deliveryRangeEn}} from when we receive all your materials. If you’re in a hurry, you can add 24-hour rush delivery."
                 },
                 {
                     "question": "How does payment work?",

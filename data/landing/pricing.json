@@ -1,6 +1,10 @@
 {
     "usdArs": 1390,
     "usdRounding": "ceil_per_item",
+    "deliveryWindow": {
+        "minBusinessDays": 4,
+        "maxBusinessDays": 6
+    },
     "plans": {
         "premium": 49000,
         "disenoUnico": 109000
@@ -12,7 +16,7 @@
             "bienvenida": 9000,
             "panel": 20000,
             "panelPer100": 9000,
-            "dominio": 45000,
+            "dominio": 48000,
             "rapida24h": 19000
         }
     },

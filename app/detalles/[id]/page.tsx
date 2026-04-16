@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import {
     ChevronDown,
+    ChevronLeft,
     ChevronRight,
     CircleAlert,
     Trash2,
@@ -58,6 +59,7 @@ const SECTION_LABELS: Record<string, string> = {
 
 const DETAILS_SECTION_ORDER = [
     "mapa",
+    "countdown",
     "dress",
     "itinerario",
     "regalos",
@@ -93,7 +95,9 @@ function usesOurStoryLabel(eventType: EventType): boolean {
 
 function defaultSectionTitle(sectionId: string, eventType: EventType): string {
     if (sectionId === "historia") {
-        return usesOurStoryLabel(eventType) ? "Nuestra historia" : "Mi historia";
+        return usesOurStoryLabel(eventType)
+            ? "Nuestra historia"
+            : "Mi historia";
     }
     return SECTION_LABELS[sectionId] ?? sectionId;
 }
@@ -109,21 +113,20 @@ const STEP_HELP_TEXT: Record<string, string> = {
         "Carga alias y datos de transferencia. Solo alias es obligatorio; el resto es opcional.",
     tarjeta:
         "Agrega los valores sugeridos de tarjeta y, si querés, una aclaración opcional.",
-    album:
-        "Pega el link de tu carpeta de Drive para que tus invitados puedan subir fotos.",
-    musica:
-        "Indica la canción o link que querés usar como música de fondo en la invitación.",
+    album: "Pega el link de tu carpeta de Drive para que tus invitados puedan subir fotos.",
+    musica: "Indica la canción o link que querés usar como música de fondo en la invitación.",
     playlist:
         "Comparte la playlist colaborativa para que tus invitados agreguen canciones para el DJ.",
     historia:
         "Contanos una versión breve de tu historia y nosotros te la armamos de forma emotiva. Si querés armarlo vos a tu manera, tocá 'Quiero detallar cada paso'.",
-    trivia:
-        "Crea al menos 3 preguntas con respuestas y marca la correcta en cada una. Máximo 5 preguntas.",
+    trivia: "Crea al menos 3 preguntas con respuestas y marca la correcta en cada una. Máximo 5 preguntas.",
     faq: "Escribe preguntas frecuentes con su respuesta para evitar dudas repetidas.",
     alojamiento:
         "Comparte hasta 5 opciones de alojamiento para invitados que viajan desde otra ciudad.",
     adultos:
         "Aclara si hay políticas sobre niños, cuidados o modalidad del evento.",
+    personalizacion:
+        "Elegí 1 o 2 tonalidades para guiar el diseño y, si querés, dejá una frase o texto especial para incluir en la invitación.",
     resumen:
         "Revisa el estado de cada paso: verde completo, rojo pendiente. Solo cuando todo este en verde se habilita enviar.",
 };
@@ -135,37 +138,39 @@ const STEP_PILL_TODO_BG = "#FFEBEE";
 const STEP_PILL_TODO_FG = "#B71C1C";
 
 /** Placeholders trivia boda (2 opciones) — mismos textos que `data/clientes/boda/anto-walter.json` truths. */
-const TRIVIA_PLACEHOLDERS_BODA: { question: string; options: [string, string] }[] =
-    [
-        {
-            question: "Quien dijo 'te amo' primero?",
-            options: ["Anto", "Walter"],
-        },
-        {
-            question:
-                "Cual es nuestra comida favorita para acompañar con una peli?",
-            options: ["Milanesas", "Pizza"],
-        },
-        {
-            question: "Quién tarda mas en arreglarse?",
-            options: ["Anto", "Walter"],
-        },
-        {
-            question: "Cuál es la canción que identifica su historia de amor?",
-            options: [
-                "Universo Paralelo - Nahuel Pennisi",
-                "Para Siempre - Benjamín Amadeo",
-            ],
-        },
-        {
-            question: "Quien cocina mejor?",
-            options: ["Anto", "Walter"],
-        },
-        {
-            question: "Quien maneja en los viajes largos?",
-            options: ["Anto", "Walter"],
-        },
-    ];
+const TRIVIA_PLACEHOLDERS_BODA: {
+    question: string;
+    options: [string, string];
+}[] = [
+    {
+        question: "Quien dijo 'te amo' primero?",
+        options: ["Anto", "Walter"],
+    },
+    {
+        question:
+            "Cual es nuestra comida favorita para acompañar con una peli?",
+        options: ["Milanesas", "Pizza"],
+    },
+    {
+        question: "Quién tarda mas en arreglarse?",
+        options: ["Anto", "Walter"],
+    },
+    {
+        question: "Cuál es la canción que identifica su historia de amor?",
+        options: [
+            "Universo Paralelo - Nahuel Pennisi",
+            "Para Siempre - Benjamín Amadeo",
+        ],
+    },
+    {
+        question: "Quien cocina mejor?",
+        options: ["Anto", "Walter"],
+    },
+    {
+        question: "Quien maneja en los viajes largos?",
+        options: ["Anto", "Walter"],
+    },
+];
 
 /** Placeholders trivia 4 opciones — mismos textos que `data/clientes/xv/dasha.json` (XV y resto de tipos). */
 const TRIVIA_PLACEHOLDERS_XV: {
@@ -250,14 +255,10 @@ function triviaOptionPlaceholder(
             TRIVIA_PLACEHOLDERS_BODA[
                 questionIndex % TRIVIA_PLACEHOLDERS_BODA.length
             ];
-        return (
-            row?.options[optionIndex] ?? `Opción ${optionIndex + 1}`
-        );
+        return row?.options[optionIndex] ?? `Opción ${optionIndex + 1}`;
     }
     const row =
-        TRIVIA_PLACEHOLDERS_XV[
-            questionIndex % TRIVIA_PLACEHOLDERS_XV.length
-        ];
+        TRIVIA_PLACEHOLDERS_XV[questionIndex % TRIVIA_PLACEHOLDERS_XV.length];
     return row?.options[optionIndex] ?? `Opción ${optionIndex + 1}`;
 }
 
@@ -284,7 +285,10 @@ function isTriviaQuestionCardComplete(
     optCount: number,
 ): boolean {
     if (!item.question.trim()) return false;
-    const opts = Array.from({ length: optCount }, (_, i) => item.options[i] || "");
+    const opts = Array.from(
+        { length: optCount },
+        (_, i) => item.options[i] || "",
+    );
     if (!opts.every((o) => o.trim().length > 0)) return false;
     if (item.correctIndex === null) return false;
     return true;
@@ -299,7 +303,7 @@ function normalizeTriviaItem(
     return {
         question: typeof raw.question === "string" ? raw.question : "",
         options: Array.from({ length: optCount }, (_, i) =>
-            Array.isArray(raw.options) ? raw.options[i] ?? "" : "",
+            Array.isArray(raw.options) ? (raw.options[i] ?? "") : "",
         ),
         correctIndex:
             raw.correctIndex === null || typeof raw.correctIndex === "number"
@@ -350,6 +354,10 @@ function stayRowHasContent(s: StayItem): boolean {
     return s.place.trim().length > 0 || s.maps.trim().length > 0;
 }
 
+function customPhraseHasContent(value: string): boolean {
+    return value.trim().length > 0;
+}
+
 function pruneTriviaItems(prev: TriviaItem[], optCount: number): TriviaItem[] {
     const kept = prev.filter(triviaItemHasContent);
     let out = kept;
@@ -369,8 +377,7 @@ function pruneTriviaItems(prev: TriviaItem[], optCount: number): TriviaItem[] {
         question: t.question,
         correctIndex: t.correctIndex,
         options: Array.from({ length: optCount }, (_, i) => t.options[i] ?? ""),
-        description:
-            typeof t.description === "string" ? t.description : "",
+        description: typeof t.description === "string" ? t.description : "",
         descriptionOpen: false,
     }));
 }
@@ -405,8 +412,9 @@ function fromBase64Url(value: string) {
                 ? window.atob(padded)
                 : Buffer.from(padded, "base64").toString("binary");
         const encoded = Array.from(binary)
-            .map((char) =>
-                `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`,
+            .map(
+                (char) =>
+                    `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`,
             )
             .join("");
         return decodeURIComponent(encoded);
@@ -438,7 +446,9 @@ function Input({
             <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
                 {label}
             </span>
-            <div className={`${isDate ? "flex min-w-0 items-center gap-2" : ""}`}>
+            <div
+                className={`${isDate ? "flex min-w-0 items-center gap-2" : ""}`}
+            >
                 <input
                     type={type}
                     value={value}
@@ -527,7 +537,10 @@ export default function DetallesPage() {
                     eventOtherCode && eventOtherCode !== "-"
                         ? fromBase64Url(eventOtherCode)
                         : "",
-                sections: [...sections, ...customSections.map((item) => item.id)],
+                sections: [
+                    ...sections,
+                    ...customSections.map((item) => item.id),
+                ],
                 customSections,
             };
         }
@@ -550,8 +563,10 @@ export default function DetallesPage() {
     }, [encodedConfig]);
 
     const eventType =
-        decodedConfig?.eventType ?? ((search.get("eventType") as EventType) || "");
-    const eventOther = decodedConfig?.eventOther ?? search.get("eventOther") ?? "";
+        decodedConfig?.eventType ??
+        ((search.get("eventType") as EventType) || "");
+    const eventOther =
+        decodedConfig?.eventOther ?? search.get("eventOther") ?? "";
     const sectionIds = (
         decodedConfig?.sections?.join(",") ??
         search.get("sections") ??
@@ -561,8 +576,10 @@ export default function DetallesPage() {
         .map((value) => value.trim())
         .filter(Boolean);
     const customSections =
-        decodedConfig?.customSections ?? parseCustomSections(search.get("customSections"));
-    const eventDatePreset = decodedConfig?.eventDate ?? search.get("eventDate") ?? "";
+        decodedConfig?.customSections ??
+        parseCustomSections(search.get("customSections"));
+    const eventDatePreset =
+        decodedConfig?.eventDate ?? search.get("eventDate") ?? "";
     const name1Preset = decodedConfig?.name1 ?? search.get("name1") ?? "";
     const name2Preset = decodedConfig?.name2 ?? search.get("name2") ?? "";
     const detailsId = realId || rawRouteId;
@@ -572,7 +589,9 @@ export default function DetallesPage() {
     const hasFotos10Section = sectionIds.includes("fotos10");
     const initialTriviaOptionsCount = eventType === "boda" ? 2 : 4;
     const sectionSteps = useMemo<StepDefinition[]>(() => {
-        const filtered = sectionIds.filter((id) => id !== "fotos10" && id !== "mapa");
+        const filtered = sectionIds.filter(
+            (id) => id !== "fotos10" && id !== "mapa" && id !== "countdown",
+        );
         return filtered.map((id) => ({
             id,
             title:
@@ -586,6 +605,7 @@ export default function DetallesPage() {
             { id: "base", title: "Datos principales" },
             { id: "eventos", title: "Eventos y horarios" },
             ...sectionSteps,
+            { id: "personalizacion", title: "Colores y frases" },
             { id: "resumen", title: "Resumen" },
         ];
     }, [sectionSteps]);
@@ -621,21 +641,30 @@ export default function DetallesPage() {
     const [triviaItems, setTriviaItems] = useState<TriviaItem[]>([
         {
             question: "",
-            options: Array.from({ length: initialTriviaOptionsCount }, () => ""),
+            options: Array.from(
+                { length: initialTriviaOptionsCount },
+                () => "",
+            ),
             correctIndex: null,
             description: "",
             descriptionOpen: false,
         },
         {
             question: "",
-            options: Array.from({ length: initialTriviaOptionsCount }, () => ""),
+            options: Array.from(
+                { length: initialTriviaOptionsCount },
+                () => "",
+            ),
             correctIndex: null,
             description: "",
             descriptionOpen: false,
         },
         {
             question: "",
-            options: Array.from({ length: initialTriviaOptionsCount }, () => ""),
+            options: Array.from(
+                { length: initialTriviaOptionsCount },
+                () => "",
+            ),
             correctIndex: null,
             description: "",
             descriptionOpen: false,
@@ -648,7 +677,11 @@ export default function DetallesPage() {
         { place: "", maps: "" },
     ]);
     const [kidsMessage, setKidsMessage] = useState("");
-    const [sectionNotes, setSectionNotes] = useState<Record<string, string>>({});
+    const [designTones, setDesignTones] = useState("");
+    const [customPhrases, setCustomPhrases] = useState<string[]>([""]);
+    const [sectionNotes, setSectionNotes] = useState<Record<string, string>>(
+        {},
+    );
     const [returnToSummary, setReturnToSummary] = useState(false);
     const [touchedRequiredSteps, setTouchedRequiredSteps] = useState<
         Record<string, boolean>
@@ -718,7 +751,9 @@ export default function DetallesPage() {
               ? "Ej: Recepcion, entrada, fiesta"
               : "Ej: Acto principal, recepcion";
     const storyMainLabel =
-        eventType === "xv" ? "Contanos brevemente tu historia" : "Contanos brevemente su historia";
+        eventType === "xv"
+            ? "Contanos brevemente tu historia"
+            : "Contanos brevemente su historia";
     const storyMainHint =
         eventType === "xv"
             ? "Con esto armamos la sección a tu medida."
@@ -738,7 +773,9 @@ export default function DetallesPage() {
                 const note = sectionNotes[section.id] || "";
                 if (section.id === "mapa") {
                     const rows = events
-                        .filter((item) => item.name || item.address || item.maps)
+                        .filter(
+                            (item) => item.name || item.address || item.maps,
+                        )
                         .map(
                             (item, idx) =>
                                 `  ${idx + 1}) ${item.name || "Evento"} - ${item.address || "-"} - Maps: ${item.maps || "-"}`,
@@ -767,7 +804,10 @@ export default function DetallesPage() {
                     const aliases = giftAliases
                         .filter(
                             (item) =>
-                                item.alias || item.owner || item.bank || item.cbu,
+                                item.alias ||
+                                item.owner ||
+                                item.bank ||
+                                item.cbu,
                         )
                         .map(
                             (item, idx) =>
@@ -784,9 +824,7 @@ export default function DetallesPage() {
                 if (section.id === "tarjeta") {
                     const values = cardPrices
                         .filter(
-                            (item) =>
-                                item.amount.trim() ||
-                                item.note.trim(),
+                            (item) => item.amount.trim() || item.note.trim(),
                         )
                         .map(
                             (item, idx) =>
@@ -820,7 +858,9 @@ export default function DetallesPage() {
                 }
                 if (section.id === "historia") {
                     const values = storySteps
-                        .filter((item) => item.title.trim() || item.message.trim())
+                        .filter(
+                            (item) => item.title.trim() || item.message.trim(),
+                        )
                         .map(
                             (item, idx) =>
                                 `  ${idx + 1}) ${item.title || "Paso"}: ${item.message || "(mensaje a criterio del disenador)"}`,
@@ -829,7 +869,9 @@ export default function DetallesPage() {
                     return [
                         `- ${sectionTitleUpper}:`,
                         `  Relato breve: ${storyBrief || "-"}`,
-                        values ? `  Pasos opcionales:\n${values}` : "  Pasos opcionales: -",
+                        values
+                            ? `  Pasos opcionales:\n${values}`
+                            : "  Pasos opcionales: -",
                     ].join("\n");
                 }
                 if (section.id === "trivia") {
@@ -839,7 +881,9 @@ export default function DetallesPage() {
                             const opts = item.options
                                 .map((opt, optIdx) => {
                                     const marker =
-                                        item.correctIndex === optIdx ? "✓" : "-";
+                                        item.correctIndex === optIdx
+                                            ? "✓"
+                                            : "-";
                                     return `     ${marker} ${opt || "(vacía)"}`;
                                 })
                                 .join("\n");
@@ -857,7 +901,10 @@ export default function DetallesPage() {
                 }
                 if (section.id === "faq") {
                     const values = faqItems
-                        .filter((item) => item.question.trim() || item.answer.trim())
+                        .filter(
+                            (item) =>
+                                item.question.trim() || item.answer.trim(),
+                        )
                         .map(
                             (item, idx) =>
                                 `  ${idx + 1}) Q: ${item.question || "-"} | A: ${item.answer || "-"}`,
@@ -948,6 +995,15 @@ export default function DetallesPage() {
                 `  ${idx + 1}) ${item.name || "-"} | ${item.hour || "-"} | ${item.address || "-"}${hasMapSection ? ` | Maps: ${item.maps || "-"}` : ""}`,
         ),
         "",
+        "===== PERSONALIZACIÓN =====",
+        `- COLORES / TONALIDADES: ${designTones || "-"}`,
+        `- FRASES / TEXTOS: ${
+            customPhrases
+                .map((item) => item.trim())
+                .filter(Boolean)
+                .join(" | ") || "-"
+        }`,
+        "",
         "===== SECCIONES =====",
         sectionMessageBlocks || "- Sin secciones",
         "",
@@ -970,16 +1026,16 @@ export default function DetallesPage() {
                 events.length > 0 &&
                 events.every(
                     (item) =>
-                        item.name.trim() && item.hour.trim() && item.address.trim(),
+                        item.name.trim() &&
+                        item.hour.trim() &&
+                        item.address.trim(),
                 )
             );
         }
         if (stepId === "dress") return dressCode.trim().length > 0;
         if (stepId === "itinerario") return itinerary.trim().length > 0;
         if (stepId === "regalos") {
-            return giftAliases.every(
-                (item) => item.alias.trim().length > 0,
-            );
+            return giftAliases.every((item) => item.alias.trim().length > 0);
         }
         if (stepId === "tarjeta") {
             return (
@@ -1002,15 +1058,18 @@ export default function DetallesPage() {
         if (stepId === "faq") {
             return faqItems.every(
                 (item) =>
-                    item.question.trim().length > 0 && item.answer.trim().length > 0,
+                    item.question.trim().length > 0 &&
+                    item.answer.trim().length > 0,
             );
         }
         if (stepId === "alojamiento") {
             return stayItems.every(
-                (item) => item.place.trim().length > 0 && item.maps.trim().length > 0,
+                (item) =>
+                    item.place.trim().length > 0 && item.maps.trim().length > 0,
             );
         }
         if (stepId === "adultos") return kidsMessage.trim().length > 0;
+        if (stepId === "personalizacion") return designTones.trim().length > 0;
         if (stepId === "resumen") return true;
         return (sectionNotes[stepId] || "").trim().length > 0;
     };
@@ -1067,6 +1126,8 @@ export default function DetallesPage() {
         setFaqItems([{ question: "", answer: "" }]);
         setStayItems([{ place: "", maps: "" }]);
         setKidsMessage("");
+        setDesignTones("");
+        setCustomPhrases([""]);
         setSectionNotes({});
         setReturnToSummary(false);
         setTouchedRequiredSteps({});
@@ -1102,42 +1163,73 @@ export default function DetallesPage() {
                 faqItems: FaqItem[];
                 stayItems: StayItem[];
                 kidsMessage: string;
+                designTones: string;
+                customPhrases: string[];
                 sectionNotes: Record<string, string>;
                 returnToSummary: boolean;
                 touchedRequiredSteps: Record<string, boolean>;
             }>;
 
             if (typeof draft.stepIdx === "number") {
-                setStepIdx(Math.max(0, Math.min(steps.length - 1, draft.stepIdx)));
+                setStepIdx(
+                    Math.max(0, Math.min(steps.length - 1, draft.stepIdx)),
+                );
             }
-            if (typeof draft.primaryName === "string") setPrimaryName(draft.primaryName);
-            if (typeof draft.secondaryName === "string") setSecondaryName(draft.secondaryName);
-            if (typeof draft.eventDate === "string") setEventDate(draft.eventDate);
-            if (typeof draft.rsvpDeadline === "string") setRsvpDeadline(draft.rsvpDeadline);
-            if (Array.isArray(draft.events) && draft.events.length > 0) setEvents(draft.events);
-            if (typeof draft.dressCode === "string") setDressCode(draft.dressCode);
-            if (typeof draft.colorsToAvoid === "string") setColorsToAvoid(draft.colorsToAvoid);
-            if (typeof draft.dressTips === "string") setDressTips(draft.dressTips);
-            if (typeof draft.itinerary === "string") setItinerary(draft.itinerary);
-            if (Array.isArray(draft.giftAliases) && draft.giftAliases.length > 0) {
+            if (typeof draft.primaryName === "string")
+                setPrimaryName(draft.primaryName);
+            if (typeof draft.secondaryName === "string")
+                setSecondaryName(draft.secondaryName);
+            if (typeof draft.eventDate === "string")
+                setEventDate(draft.eventDate);
+            if (typeof draft.rsvpDeadline === "string")
+                setRsvpDeadline(draft.rsvpDeadline);
+            if (Array.isArray(draft.events) && draft.events.length > 0)
+                setEvents(draft.events);
+            if (typeof draft.dressCode === "string")
+                setDressCode(draft.dressCode);
+            if (typeof draft.colorsToAvoid === "string")
+                setColorsToAvoid(draft.colorsToAvoid);
+            if (typeof draft.dressTips === "string")
+                setDressTips(draft.dressTips);
+            if (typeof draft.itinerary === "string")
+                setItinerary(draft.itinerary);
+            if (
+                Array.isArray(draft.giftAliases) &&
+                draft.giftAliases.length > 0
+            ) {
                 setGiftAliases(draft.giftAliases);
             }
-            if (typeof draft.giftListLink === "string") setGiftListLink(draft.giftListLink);
-            if (Array.isArray(draft.cardPrices) && draft.cardPrices.length > 0) {
+            if (typeof draft.giftListLink === "string")
+                setGiftListLink(draft.giftListLink);
+            if (
+                Array.isArray(draft.cardPrices) &&
+                draft.cardPrices.length > 0
+            ) {
                 setCardPrices(draft.cardPrices);
             }
-            if (typeof draft.driveAlbumLink === "string") setDriveAlbumLink(draft.driveAlbumLink);
-            if (typeof draft.musicYoutube === "string") setMusicYoutube(draft.musicYoutube);
-            if (typeof draft.musicNotes === "string") setMusicNotes(draft.musicNotes);
-            if (typeof draft.spotifyPlaylist === "string") setSpotifyPlaylist(draft.spotifyPlaylist);
-            if (typeof draft.storyBrief === "string") setStoryBrief(draft.storyBrief);
+            if (typeof draft.driveAlbumLink === "string")
+                setDriveAlbumLink(draft.driveAlbumLink);
+            if (typeof draft.musicYoutube === "string")
+                setMusicYoutube(draft.musicYoutube);
+            if (typeof draft.musicNotes === "string")
+                setMusicNotes(draft.musicNotes);
+            if (typeof draft.spotifyPlaylist === "string")
+                setSpotifyPlaylist(draft.spotifyPlaylist);
+            if (typeof draft.storyBrief === "string")
+                setStoryBrief(draft.storyBrief);
             if (typeof draft.storyDetailsOpen === "boolean") {
                 setStoryDetailsOpen(draft.storyDetailsOpen);
             }
-            if (Array.isArray(draft.storySteps) && draft.storySteps.length > 0) {
+            if (
+                Array.isArray(draft.storySteps) &&
+                draft.storySteps.length > 0
+            ) {
                 setStorySteps(draft.storySteps);
             }
-            if (Array.isArray(draft.triviaItems) && draft.triviaItems.length > 0) {
+            if (
+                Array.isArray(draft.triviaItems) &&
+                draft.triviaItems.length > 0
+            ) {
                 const optCount = eventType === "boda" ? 2 : 4;
                 setTriviaItems(
                     draft.triviaItems.map((raw) =>
@@ -1154,7 +1246,16 @@ export default function DetallesPage() {
             if (Array.isArray(draft.stayItems) && draft.stayItems.length > 0) {
                 setStayItems(draft.stayItems);
             }
-            if (typeof draft.kidsMessage === "string") setKidsMessage(draft.kidsMessage);
+            if (typeof draft.kidsMessage === "string")
+                setKidsMessage(draft.kidsMessage);
+            if (typeof draft.designTones === "string")
+                setDesignTones(draft.designTones);
+            if (
+                Array.isArray(draft.customPhrases) &&
+                draft.customPhrases.length > 0
+            ) {
+                setCustomPhrases(draft.customPhrases.slice(0, 3));
+            }
             if (draft.sectionNotes && typeof draft.sectionNotes === "object") {
                 setSectionNotes(draft.sectionNotes);
             }
@@ -1196,28 +1297,24 @@ export default function DetallesPage() {
         });
         setCardPrices((prev) => {
             const kept = prev.filter(cardPriceHasContent);
-            return kept.length > 0
-                ? kept
-                : [{ amount: "", note: "" }];
+            return kept.length > 0 ? kept : [{ amount: "", note: "" }];
         });
         setStorySteps((prev) => {
             const kept = prev.filter(storyStepHasContent);
-            return kept.length > 0
-                ? kept
-                : [{ title: "", message: "" }];
+            return kept.length > 0 ? kept : [{ title: "", message: "" }];
         });
         setTriviaItems((prev) => pruneTriviaItems(prev, triviaOptionsCount));
         setFaqItems((prev) => {
             const kept = prev.filter(faqRowHasContent);
-            return kept.length > 0
-                ? kept
-                : [{ question: "", answer: "" }];
+            return kept.length > 0 ? kept : [{ question: "", answer: "" }];
         });
         setStayItems((prev) => {
             const kept = prev.filter(stayRowHasContent);
-            return kept.length > 0
-                ? kept
-                : [{ place: "", maps: "" }];
+            return kept.length > 0 ? kept : [{ place: "", maps: "" }];
+        });
+        setCustomPhrases((prev) => {
+            const kept = prev.filter(customPhraseHasContent).slice(0, 3);
+            return kept.length > 0 ? kept : [""];
         });
     }, [stepIdx, triviaOptionsCount]);
 
@@ -1248,6 +1345,8 @@ export default function DetallesPage() {
             faqItems,
             stayItems,
             kidsMessage,
+            designTones,
+            customPhrases,
             sectionNotes,
             returnToSummary,
             touchedRequiredSteps,
@@ -1276,6 +1375,8 @@ export default function DetallesPage() {
         spotifyPlaylist,
         stayItems,
         stepIdx,
+        designTones,
+        customPhrases,
         storyBrief,
         storyDetailsOpen,
         storySteps,
@@ -1323,48 +1424,51 @@ export default function DetallesPage() {
                                 </button>
                             </div>
                         ) : null}
-                    <div className="flex h-5 w-full min-w-0 gap-1">
-                        {stepsWithoutSummary.map((s, i) => {
-                            const onSummary = activeStep.id === "resumen";
-                            const isCurrent = !onSummary && formStepIndex === i;
-                            const done = isStepComplete(s.id);
-                            const targetIdx = steps.findIndex(
-                                (step) => step.id === s.id,
-                            );
-                            return (
-                                <button
-                                    key={s.id}
-                                    type="button"
-                                    title={s.title}
-                                    aria-label={`Ir a ${s.title}`}
-                                    aria-current={isCurrent ? "step" : undefined}
-                                    onClick={() => {
-                                        if (targetIdx >= 0) {
-                                            setStepIdx(targetIdx);
+                        <div className="flex h-5 w-full min-w-0 gap-1">
+                            {stepsWithoutSummary.map((s, i) => {
+                                const onSummary = activeStep.id === "resumen";
+                                const isCurrent =
+                                    !onSummary && formStepIndex === i;
+                                const done = isStepComplete(s.id);
+                                const targetIdx = steps.findIndex(
+                                    (step) => step.id === s.id,
+                                );
+                                return (
+                                    <button
+                                        key={s.id}
+                                        type="button"
+                                        title={s.title}
+                                        aria-label={`Ir a ${s.title}`}
+                                        aria-current={
+                                            isCurrent ? "step" : undefined
                                         }
-                                    }}
-                                    className={[
-                                        "inline-flex h-5 min-h-5 min-w-0 flex-1 cursor-pointer items-center justify-center rounded-full font-medium leading-none tracking-tight text-[10px] transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7A5F45]",
-                                        isCurrent
-                                            ? "ring-2 ring-[#7A5F45] ring-offset-2 ring-offset-[#FDFBF7]"
-                                            : "",
-                                    ]
-                                        .filter(Boolean)
-                                        .join(" ")}
-                                    style={{
-                                        backgroundColor: done
-                                            ? STEP_PILL_DONE_BG
-                                            : STEP_PILL_TODO_BG,
-                                        color: done
-                                            ? STEP_PILL_DONE_FG
-                                            : STEP_PILL_TODO_FG,
-                                    }}
-                                >
-                                    {i + 1}
-                                </button>
-                            );
-                        })}
-                    </div>
+                                        onClick={() => {
+                                            if (targetIdx >= 0) {
+                                                setStepIdx(targetIdx);
+                                            }
+                                        }}
+                                        className={[
+                                            "inline-flex h-5 min-h-5 min-w-0 flex-1 cursor-pointer items-center justify-center rounded-full font-medium leading-none tracking-tight text-[10px] transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7A5F45]",
+                                            isCurrent
+                                                ? "ring-2 ring-[#7A5F45] ring-offset-2 ring-offset-[#FDFBF7]"
+                                                : "",
+                                        ]
+                                            .filter(Boolean)
+                                            .join(" ")}
+                                        style={{
+                                            backgroundColor: done
+                                                ? STEP_PILL_DONE_BG
+                                                : STEP_PILL_TODO_BG,
+                                            color: done
+                                                ? STEP_PILL_DONE_FG
+                                                : STEP_PILL_TODO_FG,
+                                        }}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
                 <h1
@@ -1389,7 +1493,8 @@ export default function DetallesPage() {
                                 onChange={setPrimaryName}
                                 placeholder={eventNamePlaceholder}
                             />
-                            {showRequiredHints && primaryName.trim().length <= 1 ? (
+                            {showRequiredHints &&
+                            primaryName.trim().length <= 1 ? (
                                 <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                     * Campo obligatorio
                                 </p>
@@ -1413,7 +1518,8 @@ export default function DetallesPage() {
                                 onChange={setEventDate}
                                 type="date"
                             />
-                            {showRequiredHints && eventDate.trim().length === 0 ? (
+                            {showRequiredHints &&
+                            eventDate.trim().length === 0 ? (
                                 <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                     * Campo obligatorio
                                 </p>
@@ -1444,7 +1550,8 @@ export default function DetallesPage() {
                                                     setEvents((prev) =>
                                                         prev.filter(
                                                             (_, entryIdx) =>
-                                                                entryIdx !== idx,
+                                                                entryIdx !==
+                                                                idx,
                                                         ),
                                                     )
                                                 }
@@ -1463,14 +1570,18 @@ export default function DetallesPage() {
                                             setEvents((prev) =>
                                                 prev.map((entry, entryIdx) =>
                                                     entryIdx === idx
-                                                        ? { ...entry, name: value }
+                                                        ? {
+                                                              ...entry,
+                                                              name: value,
+                                                          }
                                                         : entry,
                                                 ),
                                             )
                                         }
                                         placeholder={eventPlaceholder}
                                     />
-                                    {showRequiredHints && item.name.trim().length === 0 ? (
+                                    {showRequiredHints &&
+                                    item.name.trim().length === 0 ? (
                                         <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                             * Campo obligatorio
                                         </p>
@@ -1482,14 +1593,18 @@ export default function DetallesPage() {
                                             setEvents((prev) =>
                                                 prev.map((entry, entryIdx) =>
                                                     entryIdx === idx
-                                                        ? { ...entry, hour: value }
+                                                        ? {
+                                                              ...entry,
+                                                              hour: value,
+                                                          }
                                                         : entry,
                                                 ),
                                             )
                                         }
                                         placeholder="Ej: 20:30"
                                     />
-                                    {showRequiredHints && item.hour.trim().length === 0 ? (
+                                    {showRequiredHints &&
+                                    item.hour.trim().length === 0 ? (
                                         <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                             * Campo obligatorio
                                         </p>
@@ -1523,13 +1638,14 @@ export default function DetallesPage() {
                                             value={item.maps}
                                             onChange={(value) =>
                                                 setEvents((prev) =>
-                                                    prev.map((entry, entryIdx) =>
-                                                        entryIdx === idx
-                                                            ? {
-                                                                  ...entry,
-                                                                  maps: value,
-                                                              }
-                                                            : entry,
+                                                    prev.map(
+                                                        (entry, entryIdx) =>
+                                                            entryIdx === idx
+                                                                ? {
+                                                                      ...entry,
+                                                                      maps: value,
+                                                                  }
+                                                                : entry,
                                                     ),
                                                 )
                                             }
@@ -1568,7 +1684,8 @@ export default function DetallesPage() {
                                 onChange={setDressCode}
                                 placeholder="Ej: Elegante sport"
                             />
-                            {showRequiredHints && dressCode.trim().length === 0 ? (
+                            {showRequiredHints &&
+                            dressCode.trim().length === 0 ? (
                                 <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                     * Campo obligatorio
                                 </p>
@@ -1614,7 +1731,8 @@ export default function DetallesPage() {
                                                     setGiftAliases((prev) =>
                                                         prev.filter(
                                                             (_, entryIdx) =>
-                                                                entryIdx !== idx,
+                                                                entryIdx !==
+                                                                idx,
                                                         ),
                                                     )
                                                 }
@@ -1643,7 +1761,8 @@ export default function DetallesPage() {
                                         }
                                         placeholder="Ej: tumomento.caja"
                                     />
-                                    {showRequiredHints && item.alias.trim().length === 0 ? (
+                                    {showRequiredHints &&
+                                    item.alias.trim().length === 0 ? (
                                         <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                             * Campo obligatorio
                                         </p>
@@ -1689,7 +1808,10 @@ export default function DetallesPage() {
                                             setGiftAliases((prev) =>
                                                 prev.map((entry, entryIdx) =>
                                                     entryIdx === idx
-                                                        ? { ...entry, cbu: value }
+                                                        ? {
+                                                              ...entry,
+                                                              cbu: value,
+                                                          }
                                                         : entry,
                                                 ),
                                             )
@@ -1751,7 +1873,8 @@ export default function DetallesPage() {
                                                     setCardPrices((prev) =>
                                                         prev.filter(
                                                             (_, entryIdx) =>
-                                                                entryIdx !== idx,
+                                                                entryIdx !==
+                                                                idx,
                                                         ),
                                                     )
                                                 }
@@ -1770,14 +1893,18 @@ export default function DetallesPage() {
                                             setCardPrices((prev) =>
                                                 prev.map((entry, entryIdx) =>
                                                     entryIdx === idx
-                                                        ? { ...entry, amount: value }
+                                                        ? {
+                                                              ...entry,
+                                                              amount: value,
+                                                          }
                                                         : entry,
                                                 ),
                                             )
                                         }
                                         placeholder="$45000"
                                     />
-                                    {showRequiredHints && item.amount.trim().length === 0 ? (
+                                    {showRequiredHints &&
+                                    item.amount.trim().length === 0 ? (
                                         <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                             * Campo obligatorio
                                         </p>
@@ -1789,7 +1916,10 @@ export default function DetallesPage() {
                                             setCardPrices((prev) =>
                                                 prev.map((entry, entryIdx) =>
                                                     entryIdx === idx
-                                                        ? { ...entry, note: value }
+                                                        ? {
+                                                              ...entry,
+                                                              note: value,
+                                                          }
                                                         : entry,
                                                 ),
                                             )
@@ -1805,7 +1935,8 @@ export default function DetallesPage() {
                                                     entryIdx === idx
                                                         ? {
                                                               ...entry,
-                                                              paymentDeadline: value,
+                                                              paymentDeadline:
+                                                                  value,
                                                           }
                                                         : entry,
                                                 ),
@@ -1821,7 +1952,11 @@ export default function DetallesPage() {
                                     onClick={() =>
                                         setCardPrices((prev) => [
                                             ...prev,
-                                            { amount: "", note: "", paymentDeadline: "" },
+                                            {
+                                                amount: "",
+                                                note: "",
+                                                paymentDeadline: "",
+                                            },
                                         ])
                                     }
                                     className="rounded-full border border-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-[#5A4A3F]"
@@ -1892,7 +2027,8 @@ export default function DetallesPage() {
                                 onChange={setMusicYoutube}
                                 placeholder="Ej: https://youtube.com/... o Perfect - Ed Sheeran"
                             />
-                            {showRequiredHints && musicYoutube.trim().length === 0 ? (
+                            {showRequiredHints &&
+                            musicYoutube.trim().length === 0 ? (
                                 <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                     * Campo obligatorio
                                 </p>
@@ -1948,20 +2084,25 @@ export default function DetallesPage() {
                                 </span>
                                 <textarea
                                     value={storyBrief}
-                                    onChange={(e) => setStoryBrief(e.target.value)}
+                                    onChange={(e) =>
+                                        setStoryBrief(e.target.value)
+                                    }
                                     placeholder={storyPlaceholder}
                                     rows={4}
                                     className="w-full rounded-xl border border-[#DCCFC0] bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45]"
                                 />
                             </label>
-                            {showRequiredHints && storyBrief.trim().length === 0 ? (
+                            {showRequiredHints &&
+                            storyBrief.trim().length === 0 ? (
                                 <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                     * Campo obligatorio
                                 </p>
                             ) : null}
                             <button
                                 type="button"
-                                onClick={() => setStoryDetailsOpen((prev) => !prev)}
+                                onClick={() =>
+                                    setStoryDetailsOpen((prev) => !prev)
+                                }
                                 className="inline-flex items-center gap-1 text-sm font-semibold text-[#7A5F45]"
                             >
                                 {storyDetailsOpen
@@ -1983,15 +2124,16 @@ export default function DetallesPage() {
                                                   <button
                                                       type="button"
                                                       onClick={() =>
-                                                          setStorySteps((prev) =>
-                                                              prev.filter(
-                                                                  (
-                                                                      _,
-                                                                      entryIdx,
-                                                                  ) =>
-                                                                      entryIdx !==
-                                                                      idx,
-                                                              ),
+                                                          setStorySteps(
+                                                              (prev) =>
+                                                                  prev.filter(
+                                                                      (
+                                                                          _,
+                                                                          entryIdx,
+                                                                      ) =>
+                                                                          entryIdx !==
+                                                                          idx,
+                                                                  ),
                                                           )
                                                       }
                                                       aria-label="Eliminar paso"
@@ -2007,13 +2149,14 @@ export default function DetallesPage() {
                                               value={item.title}
                                               onChange={(value) =>
                                                   setStorySteps((prev) =>
-                                                      prev.map((entry, entryIdx) =>
-                                                          entryIdx === idx
-                                                              ? {
-                                                                    ...entry,
-                                                                    title: value,
-                                                                }
-                                                              : entry,
+                                                      prev.map(
+                                                          (entry, entryIdx) =>
+                                                              entryIdx === idx
+                                                                  ? {
+                                                                        ...entry,
+                                                                        title: value,
+                                                                    }
+                                                                  : entry,
                                                       ),
                                                   )
                                               }
@@ -2023,14 +2166,15 @@ export default function DetallesPage() {
                                               value={item.message}
                                               onChange={(value) =>
                                                   setStorySteps((prev) =>
-                                                      prev.map((entry, entryIdx) =>
-                                                          entryIdx === idx
-                                                              ? {
-                                                                    ...entry,
-                                                                    message:
-                                                                        value,
-                                                                }
-                                                              : entry,
+                                                      prev.map(
+                                                          (entry, entryIdx) =>
+                                                              entryIdx === idx
+                                                                  ? {
+                                                                        ...entry,
+                                                                        message:
+                                                                            value,
+                                                                    }
+                                                                  : entry,
                                                       ),
                                                   )
                                               }
@@ -2088,7 +2232,8 @@ export default function DetallesPage() {
                                                     setTriviaItems((prev) =>
                                                         prev.filter(
                                                             (_, entryIdx) =>
-                                                                entryIdx !== idx,
+                                                                entryIdx !==
+                                                                idx,
                                                         ),
                                                     )
                                                 }
@@ -2129,26 +2274,46 @@ export default function DetallesPage() {
                                             className="flex items-center gap-2 rounded-xl border border-[#E7DFD4] p-2"
                                         >
                                             <input
-                                                value={item.options[optionIdx] || ""}
+                                                value={
+                                                    item.options[optionIdx] ||
+                                                    ""
+                                                }
                                                 onChange={(e) =>
                                                     setTriviaItems((prev) =>
                                                         prev.map(
-                                                            (entry, entryIdx) => {
-                                                                if (entryIdx !== idx) {
+                                                            (
+                                                                entry,
+                                                                entryIdx,
+                                                            ) => {
+                                                                if (
+                                                                    entryIdx !==
+                                                                    idx
+                                                                ) {
                                                                     return entry;
                                                                 }
-                                                                const updated = Array.from(
-                                                                    {
-                                                                        length: triviaOptionsCount,
-                                                                    },
-                                                                    (_, i) =>
-                                                                        entry.options[i] || "",
-                                                                );
-                                                                updated[optionIdx] =
+                                                                const updated =
+                                                                    Array.from(
+                                                                        {
+                                                                            length: triviaOptionsCount,
+                                                                        },
+                                                                        (
+                                                                            _,
+                                                                            i,
+                                                                        ) =>
+                                                                            entry
+                                                                                .options[
+                                                                                i
+                                                                            ] ||
+                                                                            "",
+                                                                    );
+                                                                updated[
+                                                                    optionIdx
+                                                                ] =
                                                                     e.target.value;
                                                                 return {
                                                                     ...entry,
-                                                                    options: updated,
+                                                                    options:
+                                                                        updated,
                                                                 };
                                                             },
                                                         ),
@@ -2209,10 +2374,11 @@ export default function DetallesPage() {
                                                     entryIdx === idx
                                                         ? {
                                                               ...entry,
-                                                              descriptionOpen: !(
-                                                                  entry.descriptionOpen ??
-                                                                  false
-                                                              ),
+                                                              descriptionOpen:
+                                                                  !(
+                                                                      entry.descriptionOpen ??
+                                                                      false
+                                                                  ),
                                                           }
                                                         : entry,
                                                 ),
@@ -2235,14 +2401,15 @@ export default function DetallesPage() {
                                             value={item.description}
                                             onChange={(value) =>
                                                 setTriviaItems((prev) =>
-                                                    prev.map((entry, entryIdx) =>
-                                                        entryIdx === idx
-                                                            ? {
-                                                                  ...entry,
-                                                                  description:
-                                                                      value,
-                                                              }
-                                                            : entry,
+                                                    prev.map(
+                                                        (entry, entryIdx) =>
+                                                            entryIdx === idx
+                                                                ? {
+                                                                      ...entry,
+                                                                      description:
+                                                                          value,
+                                                                  }
+                                                                : entry,
                                                     ),
                                                 )
                                             }
@@ -2297,7 +2464,8 @@ export default function DetallesPage() {
                                                     setFaqItems((prev) =>
                                                         prev.filter(
                                                             (_, entryIdx) =>
-                                                                entryIdx !== idx,
+                                                                entryIdx !==
+                                                                idx,
                                                         ),
                                                     )
                                                 }
@@ -2389,7 +2557,8 @@ export default function DetallesPage() {
                                                     setStayItems((prev) =>
                                                         prev.filter(
                                                             (_, entryIdx) =>
-                                                                entryIdx !== idx,
+                                                                entryIdx !==
+                                                                idx,
                                                         ),
                                                     )
                                                 }
@@ -2408,7 +2577,10 @@ export default function DetallesPage() {
                                             setStayItems((prev) =>
                                                 prev.map((entry, entryIdx) =>
                                                     entryIdx === idx
-                                                        ? { ...entry, place: value }
+                                                        ? {
+                                                              ...entry,
+                                                              place: value,
+                                                          }
                                                         : entry,
                                                 ),
                                             )
@@ -2428,7 +2600,10 @@ export default function DetallesPage() {
                                             setStayItems((prev) =>
                                                 prev.map((entry, entryIdx) =>
                                                     entryIdx === idx
-                                                        ? { ...entry, maps: value }
+                                                        ? {
+                                                              ...entry,
+                                                              maps: value,
+                                                          }
                                                         : entry,
                                                 ),
                                             )
@@ -2468,21 +2643,137 @@ export default function DetallesPage() {
                                 onChange={setKidsMessage}
                                 placeholder="Ej: Evento solo para adultos / Habra espacio kids"
                             />
-                            {showRequiredHints && kidsMessage.trim().length === 0 ? (
+                            {showRequiredHints &&
+                            kidsMessage.trim().length === 0 ? (
                                 <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                     * Campo obligatorio
                                 </p>
                             ) : null}
                         </>
                     ) : null}
+                    {activeStep.id === "personalizacion" ? (
+                        <>
+                            <div className="space-y-1">
+                                <p className="text-sm font-semibold text-[#5A4A3F]">
+                                    Colores
+                                </p>
+                                <p className="text-xs text-[#7A6A5D]">
+                                    Indicanos 1 o 2 tonalidades para orientar el
+                                    diseño visual de toda la invitación.
+                                </p>
+                            </div>
+                            <label className="block">
+                                <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
+                                    Tonalidades deseadas
+                                </span>
+                                <textarea
+                                    value={designTones}
+                                    onChange={(e) =>
+                                        setDesignTones(e.target.value)
+                                    }
+                                    onInput={(e) => {
+                                        const target = e.currentTarget;
+                                        target.style.height = "auto";
+                                        target.style.height = `${target.scrollHeight}px`;
+                                    }}
+                                    rows={2}
+                                    placeholder="Ej: tonos azul y terracota."
+                                    className="w-full resize-none overflow-hidden rounded-xl border border-[#DCCFC0] bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45]"
+                                />
+                            </label>
+                            {showRequiredHints &&
+                            designTones.trim().length === 0 ? (
+                                <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
+                                    * Campo obligatorio
+                                </p>
+                            ) : null}
 
-                    {activeStep.id === "fotos10" ? (
-                        <></>
+                            <div className="space-y-1 pt-1">
+                                <p className="text-sm font-semibold text-[#5A4A3F]">
+                                    Frase o texto (opcional)
+                                </p>
+                                <p className="text-xs text-[#7A6A5D]">
+                                    Si querés sumar una frase especial,
+                                    escribila acá. Si no sabés qué poner,
+                                    nosotros la armamos para que quede linda y
+                                    emotiva.
+                                </p>
+                            </div>
+                            {customPhrases.map((phrase, idx) => (
+                                <div
+                                    key={`custom-phrase-${idx}`}
+                                    className="relative rounded-xl border border-[#E7DFD4] p-3"
+                                >
+                                    {customPhrases.length > 1 ? (
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setCustomPhrases((prev) =>
+                                                    prev.filter(
+                                                        (_, phraseIdx) =>
+                                                            phraseIdx !== idx,
+                                                    ),
+                                                )
+                                            }
+                                            className="absolute right-2 top-2 rounded-full border border-[#C86C6C] p-1 text-[#A44343]"
+                                            aria-label="Eliminar frase"
+                                            title="Eliminar frase"
+                                        >
+                                            <Trash2 size={12} />
+                                        </button>
+                                    ) : null}
+                                    <label className="block">
+                                        <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
+                                            {idx === 0
+                                                ? "Frase/texto"
+                                                : `Frase/texto ${idx + 1}`}
+                                        </span>
+                                        <textarea
+                                            value={phrase}
+                                            onChange={(e) =>
+                                                setCustomPhrases((prev) =>
+                                                    prev.map(
+                                                        (entry, phraseIdx) =>
+                                                            phraseIdx === idx
+                                                                ? e.target.value
+                                                                : entry,
+                                                    ),
+                                                )
+                                            }
+                                            onInput={(e) => {
+                                                const target = e.currentTarget;
+                                                target.style.height = "auto";
+                                                target.style.height = `${target.scrollHeight}px`;
+                                            }}
+                                            rows={2}
+                                            placeholder="Ej: 'Nos encantaría que seas parte de esta noche tan especial.'"
+                                            className="w-full resize-none overflow-hidden rounded-xl border border-[#DCCFC0] bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45]"
+                                        />
+                                    </label>
+                                </div>
+                            ))}
+                            {customPhrases.length < 3 ? (
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setCustomPhrases((prev) => [
+                                            ...prev,
+                                            "",
+                                        ])
+                                    }
+                                    className="rounded-full border border-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-[#5A4A3F]"
+                                >
+                                    Agregar otra frase
+                                </button>
+                            ) : null}
+                        </>
                     ) : null}
+                    {activeStep.id === "fotos10" ? <></> : null}
                     {activeStep.id === "resumen" ? (
                         <div className="space-y-2">
                             <p className="text-sm text-[#6A5C52]">
-                                Revisa cada punto. Verde = completo. Rojo = faltan datos.
+                                Revisa cada punto. Verde = completo. Rojo =
+                                faltan datos.
                             </p>
                             {checklistItems.length === 0 ? (
                                 <p className="rounded-xl border border-[#E7DFD4] bg-white px-3 py-2 text-sm text-[#6A5C52]">
@@ -2505,7 +2796,8 @@ export default function DetallesPage() {
                                     >
                                         {item.done ? (
                                             <>
-                                                <CircleCheckBig size={14} /> Completo
+                                                <CircleCheckBig size={14} />{" "}
+                                                Completo
                                             </>
                                         ) : (
                                             <>
@@ -2523,7 +2815,13 @@ export default function DetallesPage() {
                         </div>
                     ) : null}
 
-                    {!["base", "eventos", "resumen", ...Object.keys(SECTION_LABELS)].includes(activeStep.id) ? (
+                    {![
+                        "base",
+                        "eventos",
+                        "personalizacion",
+                        "resumen",
+                        ...Object.keys(SECTION_LABELS),
+                    ].includes(activeStep.id) ? (
                         <>
                             <p className="text-sm text-[#6A5C52]">
                                 Seccion personalizada: {activeStep.title}
@@ -2531,7 +2829,9 @@ export default function DetallesPage() {
                             <Textarea
                                 label="Explicanos qué querés incluir"
                                 value={sectionNotes[activeStep.id] || ""}
-                                onChange={(value) => setNote(activeStep.id, value)}
+                                onChange={(value) =>
+                                    setNote(activeStep.id, value)
+                                }
                             />
                         </>
                     ) : null}
@@ -2545,10 +2845,11 @@ export default function DetallesPage() {
                         onClick={() => {
                             setStepIdx((prev) => Math.max(0, prev - 1));
                         }}
-                        className="justify-self-start text-sm font-medium text-[#6A5C52]"
+                        className="inline-flex items-center gap-1 justify-self-start text-sm font-medium text-[#6A5C52]"
                         disabled={stepIdx === 0}
                         style={{ opacity: stepIdx === 0 ? 0.45 : 1 }}
                     >
+                        <ChevronLeft size={14} />
                         Atrás
                     </button>
                     {activeStep.id === "resumen" ? (
@@ -2565,7 +2866,11 @@ export default function DetallesPage() {
                             onClick={() => {
                                 markCurrentStepTouched();
                                 setReturnToSummary(false);
-                                setStepIdx(summaryStepIdx >= 0 ? summaryStepIdx : steps.length - 1);
+                                setStepIdx(
+                                    summaryStepIdx >= 0
+                                        ? summaryStepIdx
+                                        : steps.length - 1,
+                                );
                             }}
                             className="justify-self-center rounded-full border border-[#2F7E56] bg-[#EAF6EF] px-3 py-1 text-xs font-semibold text-[#2F7E56]"
                         >
@@ -2601,9 +2906,9 @@ export default function DetallesPage() {
                                 }
                                 setStepIdx(next);
                             }}
-                            className="justify-self-end rounded-full bg-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-white"
+                            className="inline-flex items-center gap-0.5 justify-self-end rounded-full bg-[#7A5F45] pl-4 pr-2 py-1.5 text-sm font-semibold text-white"
                         >
-                            Siguiente
+                            Siguiente <ChevronRight size={16} />
                         </button>
                     ) : null}
                 </div>

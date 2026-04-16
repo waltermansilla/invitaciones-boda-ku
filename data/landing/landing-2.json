@@ -379,7 +379,7 @@
                 {
                     "number": "03",
                     "title": "Recibís tu invitación",
-                    "description": "Enviás tu resumen por WhatsApp, reservás con seña y en 3 a 5 días hábiles tenés tu link listo para compartir.",
+                    "description": "Enviás tu resumen por WhatsApp, reservás con seña y en {{deliveryRangeEs}} tenés tu link listo para compartir.",
                     "icon": "link"
                 }
             ]
@@ -426,7 +426,7 @@
             "title": "Elegí tu plan",
             "subtitle": "Dos formas de trabajar tu invitación: configurable por bloques o diseño totalmente único.",
             "showPrices": true,
-            "notice": "Normalmente, sin Entrega Rápida tu invitación puede demorar entre 3 y 5 días hábiles.",
+            "notice": "Normalmente, sin Entrega Rápida tu invitación puede demorar entre {{deliveryRangeEs}}.",
             "modelsLinkPrompt": "¿Querés ver los modelos que ya diseñamos?",
             "modelsLinkCta": "Ver modelos",
             "modelsLinkAnchor": "#muestras",
@@ -493,7 +493,7 @@
                 },
                 {
                     "question": "¿Cuánto tarda la entrega?",
-                    "answer": "El plazo normal es de 3 a 5 días hábiles desde que recibimos todo el material. Si necesitás urgencia, podés sumar entrega rápida en 24 hs."
+                    "answer": "El plazo normal es de {{deliveryRangeEs}} desde que recibimos todo el material. Si necesitás urgencia, podés sumar entrega rápida en 24 hs."
                 },
                 {
                     "question": "¿Cómo es la forma de pago?",

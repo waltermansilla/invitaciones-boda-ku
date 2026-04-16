@@ -448,6 +448,37 @@ function toUsdPerItem(ars: number): number {
     return Math.ceil(ars / pricingData.usdArs);
 }
 
+function replaceDeliveryWindowTokens(
+    value: string,
+    locale: LandingLocale,
+): string {
+    const min = pricingData.deliveryWindow.minBusinessDays;
+    const max = pricingData.deliveryWindow.maxBusinessDays;
+    const deliveryRangeEs = `${min} a ${max} días hábiles`;
+    const deliveryRangeEn = `${min}\u2013${max} business days`;
+    return value
+        .replace(/\{\{deliveryRangeEs\}\}/g, deliveryRangeEs)
+        .replace(/\{\{deliveryRangeEn\}\}/g, deliveryRangeEn)
+        .replace(/\{\{deliveryRange\}\}/g, locale === "en" ? deliveryRangeEn : deliveryRangeEs);
+}
+
+function applyDeliveryWindowTokens<T>(input: T, locale: LandingLocale): T {
+    if (typeof input === "string") {
+        return replaceDeliveryWindowTokens(input, locale) as T;
+    }
+    if (Array.isArray(input)) {
+        return input.map((item) => applyDeliveryWindowTokens(item, locale)) as T;
+    }
+    if (input && typeof input === "object") {
+        const out: Record<string, unknown> = {};
+        Object.entries(input as Record<string, unknown>).forEach(([k, v]) => {
+            out[k] = applyDeliveryWindowTokens(v, locale);
+        });
+        return out as T;
+    }
+    return input;
+}
+
 function applyPricingToLandingData(
     raw: LandingData,
     locale: LandingLocale,
@@ -492,7 +523,10 @@ function applyPricingToLandingData(
         locale === "en" ? paperLineLabelsEn : paperLineLabelsEs;
     const usdVariant = locale === "en" ? "US$" : "USD";
 
-    const next = structuredClone(raw) as LandingData;
+    const next = applyDeliveryWindowTokens(
+        structuredClone(raw) as LandingData,
+        locale,
+    );
 
     Object.values(next.ctaButtons).forEach((btn) => {
         if (btn.type !== "link" || !btn.url?.startsWith("/configurador"))

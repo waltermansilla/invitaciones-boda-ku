@@ -2,18 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-    Suspense,
-    useEffect,
-    useMemo,
-    useState,
-    type ReactNode,
-} from "react";
+import { Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useSearchParams } from "next/navigation";
 import {
     Baby,
     Check,
     ChevronDown,
+    ChevronLeft,
     ChevronRight,
     Disc3,
     Gift,
@@ -21,6 +16,7 @@ import {
     Heart,
     Image as ImageLucide,
     Languages,
+    List,
     Mail,
     MapPin,
     Music,
@@ -28,6 +24,7 @@ import {
     Sparkles,
     Star,
     Timer,
+    Utensils,
     Users,
     Wallet,
 } from "lucide-react";
@@ -78,7 +75,7 @@ const PLAN_BASE: Record<PlanKey, Price> = {
     "diseno-unico": toPrice(pricingData.plans.disenoUnico),
 };
 
-const FREE_SECTIONS = 4;
+const FREE_SECTIONS = 5;
 
 const INCLUDED_EXTRAS_BY_PLAN: Record<PlanKey, string[]> = {
     premium: [],
@@ -95,8 +92,9 @@ function HelpIcon() {
 
 const SECTION_ICONS: Record<string, React.ReactNode> = {
     mapa: <MapPin size={15} />,
+    countdown: <Timer size={15} />,
     dress: <Shirt size={15} />,
-    itinerario: <Timer size={15} />,
+    itinerario: <List size={15} />,
     regalos: <Gift size={15} />,
     tarjeta: <Wallet size={15} />,
     album: <Users size={15} />,
@@ -108,13 +106,13 @@ const SECTION_ICONS: Record<string, React.ReactNode> = {
     faq: <HelpIcon />,
     alojamiento: <MapPin size={15} />,
     adultos: <Baby size={15} />,
+    dietas: <Utensils size={15} />,
 };
 
 const SECTION_OPTIONS: SectionOption[] = configuradorEs.sectionOrder.map(
     (id) => {
-        const meta = configuradorEs.sections[
-            id as keyof typeof configuradorEs.sections
-        ];
+        const meta =
+            configuradorEs.sections[id as keyof typeof configuradorEs.sections];
         return {
             id,
             label: meta.label,
@@ -132,6 +130,11 @@ const OTHER_SECTION_ADDER_BASE = {
 } as const;
 
 const REQUIRED_SECTION_ID = "mapa";
+const DEFAULT_SELECTED_SECTION_IDS = [
+    REQUIRED_SECTION_ID,
+    "countdown",
+] as const;
+const NON_REMOVABLE_SECTION_IDS = new Set<string>(DEFAULT_SELECTED_SECTION_IDS);
 const PANEL_INCLUDED_GUESTS = 150;
 const PANEL_STEP_GUESTS = 100;
 const PANEL_STEP_PRICE_ARS =
@@ -230,6 +233,7 @@ function toBase64Url(value: string) {
 
 const DETAILS_SECTION_ORDER = [
     "mapa",
+    "countdown",
     "dress",
     "itinerario",
     "regalos",
@@ -299,7 +303,9 @@ function ConfiguradorPageContent() {
     const [eventType, setEventType] = useState<EventTypeSelection>("");
     const [eventOther, setEventOther] = useState("");
     const [styleSelected, setStyleSelected] = useState<string>("");
-    const [sections, setSections] = useState<string[]>([REQUIRED_SECTION_ID]);
+    const [sections, setSections] = useState<string[]>([
+        ...DEFAULT_SELECTED_SECTION_IDS,
+    ]);
     const [sectionOther, setSectionOther] = useState("");
     const [customSections, setCustomSections] = useState<
         Array<{ id: string; label: string }>
@@ -625,7 +631,7 @@ function ConfiguradorPageContent() {
         return v.length > 5 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     }, [email]);
 
-    const MIN_SECTION_BLOCKS = 3;
+    const MIN_SECTION_BLOCKS = 4;
 
     const canContinue = useMemo(() => {
         const step = steps[stepIdx];
@@ -696,9 +702,11 @@ function ConfiguradorPageContent() {
 
     useEffect(() => {
         setSections((prev) =>
-            prev.includes(REQUIRED_SECTION_ID)
-                ? prev
-                : [REQUIRED_SECTION_ID, ...prev],
+            DEFAULT_SELECTED_SECTION_IDS.reduce<string[]>(
+                (acc, sectionId) =>
+                    acc.includes(sectionId) ? acc : [sectionId, ...acc],
+                prev,
+            ),
         );
     }, []);
 
@@ -819,13 +827,14 @@ function ConfiguradorPageContent() {
                         <div className={`mt-5 grid grid-cols-2 ${BLOCK_GAP}`}>
                             {styleItems.map((item) => {
                                 const selected = styleSelected === item.titulo;
-                                const { tipo, detalle } = splitEstiloDescripcion(
-                                    (
-                                        item as {
-                                            descripcion?: string;
-                                        }
-                                    ).descripcion,
-                                );
+                                const { tipo, detalle } =
+                                    splitEstiloDescripcion(
+                                        (
+                                            item as {
+                                                descripcion?: string;
+                                            }
+                                        ).descripcion,
+                                    );
                                 return (
                                     <button
                                         key={item.titulo}
@@ -992,12 +1001,6 @@ function ConfiguradorPageContent() {
                                                     {t.incluyeP2From5}
                                                 </span>{" "}
                                                 {t.incluyeP2After}{" "}
-                                                {formatMoney(
-                                                    EXTRA_SECTION_PRICE[
-                                                        currency
-                                                    ],
-                                                    currency,
-                                                )}{" "}
                                                 {t.incluyeP2Each}
                                             </p>
                                         </div>
@@ -1013,7 +1016,7 @@ function ConfiguradorPageContent() {
                             </p>
                         ) : null}
                         <p
-                            className={`text-base font-semibold text-[#3F332B] ${plan === "premium" ? "mt-3" : "mt-2"}`}
+                            className={`text-base font-semibold text-[#3F332B] ${plan === "premium" ? "mt-0.5" : "mt-2"}`}
                         >
                             {sections.length}/{FREE_SECTIONS}{" "}
                             <span className="font-medium text-[#2F7E56]">
@@ -1021,6 +1024,9 @@ function ConfiguradorPageContent() {
                                     ? `(+${formatMoney(sectionsCost, currency)})`
                                     : t.sinExtras}
                             </span>
+                        </p>
+                        <p className="mt-3 text-xs leading-snug text-[#6A5C52]">
+                            {t.seccionesTopNote}
                         </p>
                         {seccionesMinErrorShown &&
                         sections.length < MIN_SECTION_BLOCKS ? (
@@ -1031,11 +1037,11 @@ function ConfiguradorPageContent() {
                                 {t.seccionesMinThree}
                             </p>
                         ) : null}
-                        <div className="mt-4 grid w-full min-w-0 grid-cols-4 gap-x-4 gap-y-7 pt-3 sm:gap-x-3 sm:gap-y-5 sm:pt-2">
+                        <div className="mt-2.5 grid w-full min-w-0 grid-cols-4 gap-x-4 gap-y-5 pt-3 sm:gap-x-3 sm:gap-y-4 sm:pt-2">
                             {sectionOptions.map((s) => {
                                 const on = sections.includes(s.id);
                                 const isRequiredSection =
-                                    s.id === REQUIRED_SECTION_ID;
+                                    NON_REMOVABLE_SECTION_IDS.has(s.id);
                                 const isPaid =
                                     !s.isAdder &&
                                     on &&
@@ -1440,10 +1446,10 @@ function ConfiguradorPageContent() {
                                             ) : null}
                                             <div className="flex items-start justify-between gap-3 pr-7">
                                                 <span className="min-w-0">
-                                                    <span className="block text-sm font-semibold text-[#4A3A2F]">
+                                                    <span className="block text-sm font-semibold leading-tight text-[#4A3A2F]">
                                                         {ex.label}
                                                     </span>
-                                                    <span className="block text-xs text-[#6A5C52]">
+                                                    <span className="block text-xs leading-tight text-[#6A5C52]">
                                                         {ex.subtitle}
                                                     </span>
                                                 </span>
@@ -1865,10 +1871,11 @@ function ConfiguradorPageContent() {
                             onClick={() =>
                                 setStepIdx((s) => Math.max(0, s - 1))
                             }
-                            className="text-sm font-medium text-[#6A5C52]"
+                            className="inline-flex items-center gap-1 text-sm font-medium text-[#6A5C52]"
                             disabled={stepIdx === 0}
                             style={{ opacity: stepIdx === 0 ? 0.45 : 1 }}
                         >
+                            <ChevronLeft size={14} />
                             {t.back}
                         </button>
                         {!isLastStep ? (
@@ -1876,7 +1883,7 @@ function ConfiguradorPageContent() {
                                 type="button"
                                 onClick={handleFooterNextClick}
                                 disabled={!canContinue}
-                                className="inline-flex items-center gap-1 rounded-full bg-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-45"
+                                className="inline-flex items-center gap-0.5 rounded-full bg-[#7A5F45] pl-4 pr-2 py-1.5 text-sm font-semibold text-white disabled:opacity-45"
                             >
                                 {t.next} <ChevronRight size={16} />
                             </button>

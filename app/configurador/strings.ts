@@ -6,6 +6,10 @@ export type ConfiguratorLang = "es" | "en";
 type Price = { ARS: number; USD: number };
 
 const USD_ARS = pricingData.usdArs;
+const DELIVERY_MIN_DAYS = pricingData.deliveryWindow.minBusinessDays;
+const DELIVERY_MAX_DAYS = pricingData.deliveryWindow.maxBusinessDays;
+const DELIVERY_RANGE_ES = `${DELIVERY_MIN_DAYS} a ${DELIVERY_MAX_DAYS} días hábiles`;
+const DELIVERY_RANGE_EN = `${DELIVERY_MIN_DAYS}–${DELIVERY_MAX_DAYS} business days`;
 const toPrice = (ars: number): Price => ({
     ARS: ars,
     USD: Math.ceil(ars / USD_ARS),
@@ -56,7 +60,7 @@ export function getExtrasForLang(lang: ConfiguratorLang): ExtraOption[] {
             {
                 id: "rapida",
                 label: "24-hour rush delivery",
-                subtitle: "Top priority (standard: 3–5 business days)",
+                subtitle: `Top priority (standard: ${DELIVERY_RANGE_EN})`,
                 price: toPrice(pricingData.configurator.extras.rapida24h),
             },
         ];
@@ -64,7 +68,10 @@ export function getExtrasForLang(lang: ConfiguratorLang): ExtraOption[] {
     return configuradorEs.extras.map((ex) => ({
         id: ex.id,
         label: ex.label,
-        subtitle: ex.subtitle,
+        subtitle: ex.subtitle.replace(
+            /\{\{deliveryRangeEs\}\}/g,
+            DELIVERY_RANGE_ES,
+        ),
         price: toPrice(
             pricingData.configurator.extras[configuratorExtraPriceKey(ex.id)],
         ),
@@ -95,19 +102,31 @@ export function getExtraDetailById(
             rapida: {
                 title: "24-hour rush delivery",
                 summary: "Top priority to ship in one day",
-                body: "This add-on moves your invitation to the front of the queue. Standard timing is 3–5 business days; with rush delivery we prioritize to target a 24-hour turnaround.",
+                body: `This add-on moves your invitation to the front of the queue. Standard timing is ${DELIVERY_RANGE_EN}; with rush delivery we prioritize to target a 24-hour turnaround.`,
             },
         };
     }
-    return configuradorEs.extraDetails as Record<
+    const details = structuredClone(configuradorEs.extraDetails) as Record<
         string,
         { title: string; summary: string; body: string }
     >;
+    Object.values(details).forEach((detail) => {
+        detail.summary = detail.summary.replace(
+            /\{\{deliveryRangeEs\}\}/g,
+            DELIVERY_RANGE_ES,
+        );
+        detail.body = detail.body.replace(
+            /\{\{deliveryRangeEs\}\}/g,
+            DELIVERY_RANGE_ES,
+        );
+    });
+    return details;
 }
 
 /** Section id → English label (Spanish defaults stay in page for es). */
 export const SECTION_LABEL_EN: Record<string, string> = {
     mapa: "Map & directions",
+    countdown: "Countdown",
     dress: "Dress code",
     itinerario: "Itinerary",
     regalos: "Gifts / payment info",
@@ -121,6 +140,7 @@ export const SECTION_LABEL_EN: Record<string, string> = {
     faq: "FAQ",
     alojamiento: "Accommodations",
     adultos: "Kids & childcare notes",
+    dietas: "Detailed RSVP (vegan, celiac, etc.)",
     otro: "Other",
 };
 
@@ -170,6 +190,8 @@ export function getUiStrings(lang: ConfiguratorLang) {
                 "to build your invitation. You’ll choose sections, languages, and add-ons in the next steps.",
             styleView: "View",
             seccionesTitle: "Invitation sections",
+            seccionesTopNote:
+                "Your invitation already includes up to 5 photos and RSVP confirmation",
             incluyeTitle: "What’s included in your invitation?",
             incluyeOpen: "Tap to close",
             incluyeClosed:
@@ -179,13 +201,13 @@ export function getUiStrings(lang: ConfiguratorLang) {
                 "WhatsApp RSVP, up to 5 photos, countdown, custom colors, and custom wording",
             incluyeP1After: ". All of that is included.",
             incluyeP2Before: "In this grid you can add",
-            incluyeP2Free: "4 free sections",
+            incluyeP2Free: "5 free sections",
             incluyeP2Mid: "(dress code, more photos, story, etc.).",
-            incluyeP2From5: "From the 5th block you select onward,",
+            incluyeP2From5: "From the 6th block you select onward,",
             incluyeP2After: "we add",
             incluyeP2Each: "each.",
             seccionesCountFoot: "included · Extra",
-            seccionesMinThree: "Pick at least 3 blocks to continue.",
+            seccionesMinThree: "Pick at least 4 blocks to continue.",
             perBlock: "/block",
             sinExtras: "(no extras)",
             seccionOtroPh: "Describe the section you want to add…",

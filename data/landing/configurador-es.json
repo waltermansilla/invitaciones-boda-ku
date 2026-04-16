@@ -15,20 +15,21 @@
         "styleBodyAfter": "para trabajar tu invitación. Más adelante vas a definir secciones, idiomas y extras con calma.",
         "styleView": "Ver",
         "seccionesTitle": "Secciones de tu invitación",
+        "seccionesTopNote": "Tu invitación ya incluye hasta 5 fotos, confirmación de asistencia y colores personalizados.",
         "incluyeTitle": "¿Qué incluye tu invitación?",
         "incluyeOpen": "Tocá para cerrar",
         "incluyeClosed": "Te explicamos lo que ya está incluido y cómo funcionan los bloques.",
         "incluyeP1Before": "Tu invitación ya incluye:",
-        "incluyeP1Bold": "confirmación de asistencia por WhatsApp, hasta 5 fotos, cuenta regresiva, colores personalizados y frases personalizadas",
+        "incluyeP1Bold": "Confirmación sencilla por WhatsApp (asiste/no asiste), hasta 5 fotos, colores personalizados y frases personalizadas",
         "incluyeP1After": ". Todo eso ya viene incluido.",
         "incluyeP2Before": "En esta grilla podés sumar",
-        "incluyeP2Free": "4 secciones gratis",
-        "incluyeP2Mid": "(dress code, más fotos, historia, etc.).",
-        "incluyeP2From5": "A partir del 5.º bloque",
-        "incluyeP2After": "que marques, se suma",
-        "incluyeP2Each": "por cada uno.",
+        "incluyeP2Free": "5 secciones gratis",
+        "incluyeP2Mid": "(dress code, más fotos, historia, etc.). Si querés confirmación más Premium (formulario con requerimientos alimentarios, sugerencias de canciones, etc.), sumá la sección ",
+        "incluyeP2From5": "\"RSVP celíaco, veg., etc\".",
+        "incluyeP2After": "Podés sumar más secciones con costo extra.",
+        "incluyeP2Each": "",
         "seccionesCountFoot": "incluidos · Extra",
-        "seccionesMinThree": "Elegí al menos 3 bloques para continuar.",
+        "seccionesMinThree": "Elegí al menos 4 bloques para continuar.",
         "perBlock": "/bloque",
         "sinExtras": "(sin extras)",
         "seccionOtroPh": "Contanos qué sección querés agregar...",
@@ -100,7 +101,7 @@
         {
             "id": "rapida",
             "label": "Entrega rápida 24hs",
-            "subtitle": "Prioridad máxima (normal: 3 a 5 días hábiles)"
+            "subtitle": "Prioridad máxima (normal: {{deliveryRangeEs}})"
         }
     ],
     "extraDetails": {
@@ -122,7 +123,7 @@
         "rapida": {
             "title": "Entrega rápida 24hs",
             "summary": "Prioridad total para tenerla lista en 1 día",
-            "body": "Con este extra tu invitación pasa al frente de la cola de trabajo. El tiempo habitual es de 3 a 5 días hábiles; con entrega rápida se prioriza para salir en 24hs."
+            "body": "Con este extra tu invitación pasa al frente de la cola de trabajo. El tiempo habitual es de {{deliveryRangeEs}}; con entrega rápida se prioriza para salir en 24hs."
         }
     },
     "eventLabels": {
@@ -161,22 +162,25 @@
     ],
     "sectionOrder": [
         "mapa",
+        "countdown",
         "dress",
-        "itinerario",
+        "musica",
         "regalos",
         "tarjeta",
         "album",
-        "musica",
-        "playlist",
+        "fotos10",
+        "dietas",
         "historia",
         "trivia",
-        "fotos10",
+        "itinerario",
+        "playlist",
         "faq",
         "alojamiento",
         "adultos"
     ],
     "sections": {
         "mapa": { "label": "Ubicación y cómo llegar" },
+        "countdown": { "label": "Cuenta regresiva" },
         "dress": { "label": "Dress code" },
         "itinerario": { "label": "Itinerario" },
         "regalos": { "label": "Regalos / Alias" },
@@ -186,10 +190,11 @@
         "playlist": { "label": "Playlist colaborativa Spotify" },
         "historia": { "label": "Nuestra historia" },
         "trivia": { "label": "Trivia interactiva" },
-        "fotos10": { "label": "Hasta 10 fotos" },
+        "fotos10": { "label": "De 6 a 10 fotos" },
         "faq": { "label": "Preguntas frecuentes" },
         "alojamiento": { "label": "Alojamientos" },
-        "adultos": { "label": "Niños y cuidados" }
+        "adultos": { "label": "Niños y cuidados" },
+        "dietas": { "label": "RSVP celíaco, veg., etc." }
     },
     "story": {
         "our": "Nuestra historia",
