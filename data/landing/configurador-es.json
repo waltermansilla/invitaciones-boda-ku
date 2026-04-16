@@ -191,7 +191,7 @@
         "faq": { "label": "Preguntas frecuentes" },
         "alojamiento": { "label": "Alojamientos" },
         "adultos": { "label": "Niños y cuidados" },
-        "rsvp-detallado": { "label": "Confirmación detallada (vegano, celíaco, etc.)" }
+        "rsvp-detallado": { "label": "Confirmación detallada (RSVP)" }
     },
     "story": {
         "our": "Nuestra historia",
