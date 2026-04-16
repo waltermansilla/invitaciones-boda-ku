@@ -112,7 +112,7 @@
         "panel": {
             "title": "Panel de invitados",
             "summary": "Gestión automática y completa de confirmaciones",
-            "body": "Con WhatsApp (incluido) recibís los mensajes, pero tenés que anotar y ordenar todo a mano. Con Panel, cada invitado confirma y el tablero se actualiza solo: quién confirmó, cuántos faltan, pendientes y filtros por estado. También podés ver requerimientos alimentarios (vegetariano, celíaco, etc.) y las canciones que sugieren los invitados. Incluye hasta 150 invitados; luego suma +9.000 ARS cada 100 invitados extra."
+            "body": "Con WhatsApp (incluido) recibís los mensajes, pero tenés que anotar y ordenar todo a mano. Con Panel, cada invitado confirma y el tablero se actualiza solo: quién confirmó, cuántos faltan e incluso si pagaron tarjeta. También podés ver requerimientos alimentarios (vegetariano, celíaco, etc.) y las canciones que sugieren los invitados."
         },
         "dominio": {
             "title": "Dominio personalizado",
@@ -241,7 +241,7 @@
             ],
             "withoutTitle": "Solo WhatsApp (ya incluido)",
             "withoutPoints": [
-                "Los mensajes llegan al teléfono y el orden lo llevás vos.",
+                "Las confirmaciones llegan al teléfono y el orden lo llevás vos.",
                 "Más tiempo cruzando listas, capturas y respuestas sueltas.",
                 "Si más adelante querés el panel, se puede sumar, pero conviene decidirlo ahora."
             ],

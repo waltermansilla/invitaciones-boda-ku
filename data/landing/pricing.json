@@ -2,8 +2,8 @@
     "usdArs": 1390,
     "usdRounding": "ceil_per_item",
     "plans": {
-        "premium": 55000,
-        "disenoUnico": 110000
+        "premium": 49000,
+        "disenoUnico": 109000
     },
     "configurator": {
         "extraSection": 4500,
