@@ -62,6 +62,21 @@ function WeddingInvitationContent() {
     const showOverlay =
         overlay.enabled && !overlayDismissed && !loadingInvitado && !skipOverlay;
 
+    // Si el overlay está activo, al recargar siempre arrancamos desde arriba.
+    // Si overlay.enabled = false, no intervenimos el scroll (útil para trabajo operativo).
+    useEffect(() => {
+        if (!overlay.enabled || skipOverlay) return;
+        if (typeof window === "undefined") return;
+
+        const previousScrollRestoration = window.history.scrollRestoration;
+        window.history.scrollRestoration = "manual";
+        window.scrollTo(0, 0);
+
+        return () => {
+            window.history.scrollRestoration = previousScrollRestoration;
+        };
+    }, [overlay.enabled, skipOverlay]);
+
     // Deep link (#section-id): el scroll nativo del navegador corre antes de que existan
     // los nodos client-side; en producción suele fallar. Reintentamos tras hidratar y cuando
     // el overlay ya no tapa el contenido.
@@ -89,6 +104,27 @@ function WeddingInvitationContent() {
         return () => {
             timeouts.forEach(clearTimeout);
             window.removeEventListener("hashchange", onHashChange);
+        };
+    }, [showOverlay]);
+
+    // Bloquear scroll del documento mientras el overlay está visible.
+    // Evita que se desplace el contenido de fondo antes de presionar "Ingresar".
+    useEffect(() => {
+        if (!showOverlay) return;
+
+        const previousHtmlOverflow = document.documentElement.style.overflow;
+        const previousBodyOverflow = document.body.style.overflow;
+        const previousBodyTouchAction = document.body.style.touchAction;
+
+        window.scrollTo(0, 0);
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+        document.body.style.touchAction = "none";
+
+        return () => {
+            document.documentElement.style.overflow = previousHtmlOverflow;
+            document.body.style.overflow = previousBodyOverflow;
+            document.body.style.touchAction = previousBodyTouchAction;
         };
     }, [showOverlay]);
 

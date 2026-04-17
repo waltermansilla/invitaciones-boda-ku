@@ -824,6 +824,31 @@ function ConfiguradorPageContent() {
                             </span>{" "}
                             {t.styleBodyAfter}
                         </p>
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setStyleSelected(styleNoneOptionLabel)
+                            }
+                            className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-2xl border px-4 py-3 text-center text-sm font-semibold transition-colors"
+                            style={{
+                                borderColor:
+                                    styleSelected === styleNoneOptionLabel
+                                        ? "#7A5F45"
+                                        : "#DCCFC0",
+                                background:
+                                    styleSelected === styleNoneOptionLabel
+                                        ? "#F3EBDD"
+                                        : "#FFF",
+                                color: "#4A3A2F",
+                            }}
+                        >
+                            {styleNoneOptionLabel}
+                            <ChevronRight
+                                size={16}
+                                className="shrink-0"
+                                aria-hidden
+                            />
+                        </button>
                         <div className={`mt-5 grid grid-cols-2 ${BLOCK_GAP}`}>
                             {styleItems.map((item) => {
                                 const selected = styleSelected === item.titulo;
@@ -902,31 +927,6 @@ function ConfiguradorPageContent() {
                                 );
                             })}
                         </div>
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setStyleSelected(styleNoneOptionLabel)
-                            }
-                            className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-2xl border px-4 py-3 text-center text-sm font-semibold transition-colors"
-                            style={{
-                                borderColor:
-                                    styleSelected === styleNoneOptionLabel
-                                        ? "#7A5F45"
-                                        : "#DCCFC0",
-                                background:
-                                    styleSelected === styleNoneOptionLabel
-                                        ? "#F3EBDD"
-                                        : "#FFF",
-                                color: "#4A3A2F",
-                            }}
-                        >
-                            {styleNoneOptionLabel}
-                            <ChevronRight
-                                size={16}
-                                className="shrink-0"
-                                aria-hidden
-                            />
-                        </button>
                     </>
                 ) : null}
 

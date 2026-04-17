@@ -41,20 +41,20 @@ type FaqItem = { question: string; answer: string };
 type StayItem = { place: string; maps: string };
 
 const SECTION_LABELS: Record<string, string> = {
-    mapa: "Mapa y como llegar",
+    mapa: "Mapa y cómo llegar",
     dress: "Dress code",
     itinerario: "Itinerario",
     regalos: "Regalos / Alias",
     tarjeta: "Valor tarjeta",
     album: "Álbum Drive fotos",
-    musica: "Musica de fondo",
+    musica: "Música de fondo",
     playlist: "Playlist Spotify",
     historia: "Nuestra historia",
     trivia: "Trivia interactiva",
     fotos10: "Fotos (te compartimos álbum por chat)",
     faq: "Preguntas frecuentes",
     alojamiento: "Alojamientos",
-    adultos: "Ninos y cuidados",
+    adultos: "Niños y cuidados",
 };
 
 const DETAILS_SECTION_ORDER = [
@@ -108,7 +108,7 @@ const STEP_HELP_TEXT: Record<string, string> = {
         "Agrega los eventos con horario y dirección. Si activaste la sección 'Mapa: cómo llegar' podés agregar el link de Google Maps para que tus invitados sepan cómo llegar.",
     dress: "Define el estilo de vestimenta para orientar a tus invitados.",
     itinerario:
-        "Detalla el orden o cronograma del evento para que los invitados sepan como sera la noche.",
+        "Detalla el orden o cronograma del evento para que los invitados sepan cómo será la noche.",
     regalos:
         "Carga alias y datos de transferencia. Solo alias es obligatorio; el resto es opcional.",
     tarjeta:
@@ -128,7 +128,7 @@ const STEP_HELP_TEXT: Record<string, string> = {
     personalizacion:
         "Elegí 1 o 2 tonalidades para guiar el diseño y, si querés, dejá una frase o texto especial para incluir en la invitación.",
     resumen:
-        "Revisa el estado de cada paso: verde completo, rojo pendiente. Solo cuando todo este en verde se habilita enviar.",
+        "Revisa el estado de cada paso: verde completo, rojo pendiente. Solo cuando todo esté en verde se habilita enviar.",
 };
 
 /** Mismos fondos que los circulos Check / X de la tabla "Ventajas que solo tiene lo digital" (theme.comparativa). */
@@ -143,16 +143,16 @@ const TRIVIA_PLACEHOLDERS_BODA: {
     options: [string, string];
 }[] = [
     {
-        question: "Quien dijo 'te amo' primero?",
+        question: "¿Quién dijo 'te amo' primero?",
         options: ["Anto", "Walter"],
     },
     {
         question:
-            "Cual es nuestra comida favorita para acompañar con una peli?",
+            "¿Cuál es nuestra comida favorita para acompañar con una peli?",
         options: ["Milanesas", "Pizza"],
     },
     {
-        question: "Quién tarda mas en arreglarse?",
+        question: "¿Quién tarda más en arreglarse?",
         options: ["Anto", "Walter"],
     },
     {
@@ -163,11 +163,11 @@ const TRIVIA_PLACEHOLDERS_BODA: {
         ],
     },
     {
-        question: "Quien cocina mejor?",
+        question: "¿Quién cocina mejor?",
         options: ["Anto", "Walter"],
     },
     {
-        question: "Quien maneja en los viajes largos?",
+        question: "¿Quién maneja en los viajes largos?",
         options: ["Anto", "Walter"],
     },
 ];
@@ -215,7 +215,7 @@ const TRIVIA_DESCRIPTION_PLACEHOLDERS_BODA: string[] = [
     "Milanesas. Aunque si hay cervecita o vino tinto, cualquier cosa les viene bien.",
     "Walter. Tarda 80 años, se toma todo su tiempo. ¡Y que no lo atrase el remolino del cabello!",
     "Universo Paralelo. Refleja lo que sentían el uno por el otro cuando eran amigos.",
-    "Walter una vez quemo agua hirviendo. No pregunten como, pero paso. (Se le derritio la pava)",
+    "Walter una vez quemó agua hirviendo. No pregunten cómo, pero pasó. (Se le derritió la pava)",
     "Walter maneja y Anto va de DJ, copiloto y encargada de snacks. Un equipo imbatible.",
 ];
 
@@ -735,7 +735,7 @@ export default function DetallesPage() {
               ? "Nombre de la quinceanera"
               : "Titulo o nombre principal";
     const eventSecondaryLabel =
-        eventType === "boda" ? "Nombre novio/a 2" : "Subtitulo (opcional)";
+        eventType === "boda" ? "Nombre novio/a 2" : "Subtítulo (opcional)";
     const eventNamePlaceholder =
         eventType === "boda"
             ? "Nombre como debería figurar"
@@ -746,10 +746,10 @@ export default function DetallesPage() {
         eventType === "boda" ? "Nombre como debería figurar" : "Opcional";
     const eventPlaceholder =
         eventType === "boda"
-            ? "Ej: Civil, Ceremonia, Recepcion"
+            ? "Ej: Civil, Ceremonia, Recepción"
             : eventType === "xv"
-              ? "Ej: Recepcion, entrada, fiesta"
-              : "Ej: Acto principal, recepcion";
+              ? "Ej: Recepción, entrada, fiesta"
+              : "Ej: Acto principal, recepción";
     const storyMainLabel =
         eventType === "xv"
             ? "Contanos brevemente tu historia"
@@ -760,8 +760,8 @@ export default function DetallesPage() {
             : "Con esto armamos la sección a tu medida.";
     const storyPlaceholder =
         eventType === "xv"
-            ? "Ej: Desde chiquita soñe este dia. Me encanta bailar, compartir con mi familia y celebrar esta etapa con mis amigos."
-            : "Ej: Nos conocimos en 2019, nos hicimos amigos y con el tiempo entendimos que queriamos caminar juntos.";
+            ? "Ej: Desde chiquita soñé este día. Me encanta bailar, compartir con mi familia y celebrar esta etapa con mis amigos."
+            : "Ej: Nos conocimos en 2019, nos hicimos amigos y con el tiempo entendimos que queríamos caminar juntos.";
 
     const setNote = (sectionId: string, value: string) =>
         setSectionNotes((prev) => ({ ...prev, [sectionId]: value }));
@@ -1711,7 +1711,7 @@ export default function DetallesPage() {
                                 label="Itinerario del evento"
                                 value={itinerary}
                                 onChange={setItinerary}
-                                placeholder="Ej: 20:00 recepcion, 21:00 cena..."
+                                placeholder="Ej: 20:00 recepción, 21:00 cena..."
                             />
                         </>
                     ) : null}
@@ -2387,8 +2387,8 @@ export default function DetallesPage() {
                                         className="inline-flex items-center gap-1 text-sm font-semibold text-[#7A5F45]"
                                     >
                                         {(item.descriptionOpen ?? false)
-                                            ? "Ocultar descripcion"
-                                            : "Agregar descripcion"}
+                                            ? "Ocultar descripción"
+                                            : "Agregar descripción"}
                                         <ChevronDown
                                             size={14}
                                             className={`transition-transform ${(item.descriptionOpen ?? false) ? "rotate-180" : ""}`}
@@ -2397,7 +2397,7 @@ export default function DetallesPage() {
                                     </button>
                                     {(item.descriptionOpen ?? false) ? (
                                         <Textarea
-                                            label="Descripcion al responder (opcional)"
+                                            label="Descripción al responder (opcional)"
                                             value={item.description}
                                             onChange={(value) =>
                                                 setTriviaItems((prev) =>
@@ -2777,7 +2777,7 @@ export default function DetallesPage() {
                             </p>
                             {checklistItems.length === 0 ? (
                                 <p className="rounded-xl border border-[#E7DFD4] bg-white px-3 py-2 text-sm text-[#6A5C52]">
-                                    Aun no hay pasos para mostrar.
+                                    Aún no hay pasos para mostrar.
                                 </p>
                             ) : null}
                             {checklistItems.map((item) => (

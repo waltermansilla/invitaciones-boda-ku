@@ -171,11 +171,26 @@
             "imageSrc": "/landing/media/videos/video-landing.mov",
             "imageAlt": "Digital invitation animation on a transparent background",
             "items": [
-                { "text": "Custom design that fits your event", "icon": "palette" },
-                { "text": "RSVP with a clear confirmation message for you", "icon": "mailCheck" },
-                { "text": "Guest list and tracking in one place", "icon": "users" },
-                { "text": "Map, schedule, and key details always at hand", "icon": "mapPin" },
-                { "text": "Two languages of your choice for guests coming from afar", "icon": "languages" }
+                {
+                    "text": "Custom design that fits your event",
+                    "icon": "palette"
+                },
+                {
+                    "text": "RSVP with a clear confirmation message for you",
+                    "icon": "mailCheck"
+                },
+                {
+                    "text": "Guest list and tracking in one place",
+                    "icon": "users"
+                },
+                {
+                    "text": "Map, schedule, and key details always at hand",
+                    "icon": "mapPin"
+                },
+                {
+                    "text": "Two languages of your choice for guests coming from afar",
+                    "icon": "languages"
+                }
             ]
         },
         "comparativa": {
@@ -233,11 +248,31 @@
             },
             "tableTitle": "Advantages only digital offers",
             "tableRows": [
-                { "feature": "Update details after sending", "paper": "No", "digital": "Yes" },
-                { "feature": "Track confirmations", "paper": "No", "digital": "Yes" },
-                { "feature": "Interactive map & schedule", "paper": "No", "digital": "Yes" },
-                { "feature": "Countdown & ambience", "paper": "No", "digital": "Yes" },
-                { "feature": "Gallery & music", "paper": "No", "digital": "Yes" }
+                {
+                    "feature": "Update details after sending",
+                    "paper": "No",
+                    "digital": "Yes"
+                },
+                {
+                    "feature": "Track confirmations",
+                    "paper": "No",
+                    "digital": "Yes"
+                },
+                {
+                    "feature": "Interactive map & schedule",
+                    "paper": "No",
+                    "digital": "Yes"
+                },
+                {
+                    "feature": "Countdown & ambience",
+                    "paper": "No",
+                    "digital": "Yes"
+                },
+                {
+                    "feature": "Gallery & music",
+                    "paper": "No",
+                    "digital": "Yes"
+                }
             ],
             "ecoNote": "Every digital invitation avoids paper and reduces your event’s environmental impact."
         },
@@ -402,11 +437,11 @@
                     "priceUsd": "",
                     "description": "Configure your invitation step by step based on what you really need.",
                     "features": [
-                        "RSVP confirmation. Optional private dashboard.",
-                        "Up to 5 photos free + countdown",
+                        "RSVP confirmation. Optional private dashboard",
+                        "Up to 5 photos free",
                         "Custom colours and phrases",
-                        "4 sections included free, optional extras",
-                        "You can add a second language."
+                        "5 sections included free, optional extras",
+                        "You can add a second language"
                     ]
                 },
                 {
@@ -447,32 +482,32 @@
             "footerCtaTitle": "Ready for the invitation you’ll love sharing?",
             "items": [
                 {
-                    "question": "Can I make changes after I receive the invitation?",
-                    "answer": "Yes. We include one round of tweaks to get it just how you want. If you later need small extra changes, we can arrange those too."
+                    "question": "What’s the step-by-step process after I choose a plan?",
+                    "answer": "You complete the booking form, send your summary, and pay a 50% deposit. Then we align details with you on WhatsApp, design your invitation, and deliver the final link."
                 },
                 {
-                    "question": "How do guests share the link?",
-                    "answer": "We give you a unique link you can send by WhatsApp, social media, or email. Guests don’t need to download any app."
+                    "question": "What is included in Premium, and what can I add as extras?",
+                    "answer": "Premium includes 5 sections, up to 5 photos, custom colors/phrases, and WhatsApp confirmations. You can add extras like the dashboard, a second language, or additional sections."
+                },
+                {
+                    "question": "What’s the difference between RSVP confirmations by WhatsApp and using the Dashboard?",
+                    "answer": "With WhatsApp, confirmations arrive as messages. That’s often enough, but if you have many guests or want to avoid tracking responses manually, we recommend the Dashboard. It keeps everything organized in real time (attending, pending, not attending, and dietary needs)."
+                },
+                {
+                    "question": "Can I make changes after sending the booking form?",
+                    "answer": "Yes. Before final delivery, we coordinate content and visual finish adjustments."
                 },
                 {
                     "question": "How long does delivery take?",
-                    "answer": "The usual timeline is {{deliveryRangeEn}} from when we receive all your materials. If you’re in a hurry, you can add 24-hour rush delivery."
+                    "answer": "The usual timeline is {{deliveryRangeEn}}. If you need it urgently, you can add 24-hour rush delivery."
                 },
                 {
                     "question": "How does payment work?",
-                    "answer": "You book with a 50% deposit and pay the balance when your final link is delivered."
+                    "answer": "You book with a 50% deposit, and the remaining 50% is paid when your final invitation is delivered."
                 },
                 {
-                    "question": "What’s the difference between confirming via WhatsApp and adding the dashboard?",
-                    "answer": "With WhatsApp you get the messages and manage them yourself. With the dashboard, confirmations update automatically on your board with statuses and metrics."
-                },
-                {
-                    "question": "Can I choose more than 4 sections or add another language?",
-                    "answer": "Yes. The configurator walks you through everything: the Premium plan includes 4 sections, and you can add extras plus a second language."
-                },
-                {
-                    "question": "Does the link expire after the event?",
-                    "answer": "Yes. The link stays active for up to 3 months after the event. If you want to keep it permanently, we can extend it for an extra storage fee."
+                    "question": "How is the invitation shared, and how long does it stay active?",
+                    "answer": "We deliver a unique link you can share via WhatsApp, social media, or email (no app needed). The link stays active for up to 3 months after the event."
                 }
             ]
         }

@@ -1,6 +1,7 @@
 "use client";
 
 import landingConfig from "@/data/landing/landing-1.json";
+import landingHomeConfig from "@/data/landing/landing-2.json";
 
 /* ───────────────────────────────────────────────
  * DATOS DE MARCA - Se leen desde landing-1.json (seccion "brand").
@@ -46,6 +47,13 @@ const SOCIAL_LINKS = brandConfig?.socialLinks || [
         label: "WhatsApp",
     },
 ];
+
+const landingTheme = (landingHomeConfig as Record<string, unknown>).theme as
+    | { typography?: { headingFont?: string } }
+    | undefined;
+const LANDING_HEADER_BRAND_FONT =
+    landingTheme?.typography?.headingFont ||
+    "var(--font-landing-hero), Georgia, serif";
 /* ─────────────────────────────────────────────── */
 
 function InstagramIcon() {
@@ -96,6 +104,20 @@ const iconMap: Record<string, () => React.JSX.Element> = {
  */
 export default function FooterSection() {
     const currentYear = new Date().getFullYear();
+    const handleSocialClick = (
+        e: React.MouseEvent<HTMLAnchorElement>,
+        socialIcon: "instagram" | "whatsapp",
+    ) => {
+        const message =
+            socialIcon === "whatsapp"
+                ? "Serás redirigido al WhatsApp del diseñador. ¿Querés continuar?"
+                : "Serás redirigido al Instagram de Momento unico. ¿Querés continuar?";
+        const shouldContinue = window.confirm(message);
+        if (!shouldContinue) {
+            e.preventDefault();
+        }
+    };
+
     return (
         <footer className="bg-primary px-6 py-14 text-center md:py-16">
             <div className="mb-6 flex items-center justify-center gap-6">
@@ -108,6 +130,7 @@ export default function FooterSection() {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={(e) => handleSocialClick(e, link.icon)}
                             className="inline-flex min-h-[46px] min-w-[46px] items-center justify-center text-primary-foreground/78 transition-opacity hover:opacity-100"
                             aria-label={link.label}
                         >
@@ -119,7 +142,9 @@ export default function FooterSection() {
             <a
                 href="/"
                 className={`${BRAND_FONT} ${BRAND_SIZE} inline-flex items-center gap-2 font-normal not-italic tracking-[0.02em] text-primary-foreground/92 transition-opacity hover:opacity-85`}
-                style={{ fontFamily: "var(--font-landing-hero), var(--font-landing-price), Georgia, serif" }}
+                style={{
+                    fontFamily: LANDING_HEADER_BRAND_FONT,
+                }}
             >
                 {BRAND_ICON && (
                     <img

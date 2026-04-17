@@ -440,9 +440,9 @@
                     "description": "Configurá tu invitación paso a paso según lo que realmente necesitás.",
                     "features": [
                         "Confirmación de asistencia. Opción de panel privado.",
-                        "Hasta 5 fotos gratis + cuenta regresiva",
+                        "Hasta 5 fotos gratis",
                         "Colores y frases personalizadas",
-                        "4 secciones gratis y extras opcionales",
+                        "5 secciones gratis y extras opcionales",
                         "Podés agregar un segundo idioma."
                     ]
                 },
@@ -484,32 +484,32 @@
             "footerCtaTitle": "¿Lista para la invitación que vas a amar compartir?",
             "items": [
                 {
-                    "question": "¿Puedo hacer cambios después de recibir la invitación?",
-                    "answer": "Sí. Incluimos una ronda de ajustes para dejarla como querés. Si después querés sumar cambios puntuales, también se pueden coordinar."
+                    "question": "¿Cómo es el paso a paso desde que elijo un plan?",
+                    "answer": "Completás el formulario de reserva, enviás el resumen y señás el 50%. Después coordinamos los detalles por WhatsApp, diseñamos tu invitación y te entregamos el link final."
                 },
                 {
-                    "question": "¿Cómo comparten el enlace los invitados?",
-                    "answer": "Te entregamos un link único que podés enviar por WhatsApp, redes o mail. No requiere descargar ninguna app."
+                    "question": "¿Qué incluye Premium y qué se suma como extra?",
+                    "answer": "Premium incluye 5 secciones, hasta 5 fotos, colores/frases personalizadas y confirmación por WhatsApp. Podés sumar extras como panel, segundo idioma o más bloques."
+                },
+                {
+                    "question": "¿Qué diferencia hay entre confirmaciones de asistencia por WhatsApp y usar Panel?",
+                    "answer": "Con WhatsApp te llegan las confirmaciones por mensaje. Muchas veces es suficiente, pero si tenés muchos invitados o querés evitar llevar la cuenta de quienes confirmaron, te recomendamos el Panel. Con panel, todo se ordena en un tablero en tiempo real (asisten, pendientes, no asisten y dietas)."
+                },
+                {
+                    "question": "¿Puedo hacer cambios después de enviar el formulario de reserva?",
+                    "answer": "Sí. Antes de la entrega final coordinamos ajustes de contenido y terminación visual."
                 },
                 {
                     "question": "¿Cuánto tarda la entrega?",
-                    "answer": "El plazo normal es de {{deliveryRangeEs}} desde que recibimos todo el material. Si necesitás urgencia, podés sumar entrega rápida en 24 hs."
+                    "answer": "El plazo normal es de {{deliveryRangeEs}}. Si necesitás urgencia, podés sumar entrega rápida en 24 hs."
                 },
                 {
                     "question": "¿Cómo es la forma de pago?",
-                    "answer": "Reservás con una seña del 50% y el saldo se completa al entregar tu link final."
+                    "answer": "Se reserva con seña del 50% y el 50% restante se abona al entregar tu invitación final."
                 },
                 {
-                    "question": "¿Qué cambia entre confirmar por WhatsApp y sumar panel?",
-                    "answer": "Con WhatsApp recibís los mensajes y gestionás manualmente. Con panel, las confirmaciones se actualizan automáticamente en tu tablero con estados y métricas."
-                },
-                {
-                    "question": "¿Puedo elegir más de 4 secciones o agregar otro idioma?",
-                    "answer": "Sí. En el configurador ves todo paso a paso: el plan Premium incluye 4 secciones y podés sumar extras, además de un segundo idioma."
-                },
-                {
-                    "question": "¿El link vence después del evento?",
-                    "answer": "Sí. El enlace queda activo hasta 3 meses después del evento. Si querés conservarlo de forma permanente, se puede extender con un costo extra por almacenamiento."
+                    "question": "¿Cómo se comparte la invitación y cuánto tiempo queda activa?",
+                    "answer": "Te entregamos un enlace único para enviar por WhatsApp, redes o mail (sin app). El link queda activo hasta 3 meses después del evento."
                 }
             ]
         }
