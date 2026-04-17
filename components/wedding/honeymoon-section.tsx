@@ -72,12 +72,18 @@ interface LegacyModal {
   thankYouText?: string
 }
 
+const DEFAULT_BUTTON = {
+  text: "",
+  url: "#",
+  variant: "secondary" as const,
+}
+
 interface HoneymoonSectionProps {
   icon?: string
   title: string
   description: string
   showButton?: boolean
-  button: { 
+  button?: {
     text: string
     url: string
     variant: "primary" | "secondary"
@@ -102,8 +108,9 @@ export default function HoneymoonSection({
 }: HoneymoonSectionProps) {
   const { openModal } = useModal()
   const isMuestra = useIsMuestra()
+  const resolvedButton = button ?? DEFAULT_BUTTON
   const buttonVariantClasses =
-    button.variant === "primary"
+    resolvedButton.variant === "primary"
       ? "bg-primary text-primary-foreground border-primary hover:opacity-90"
       : "border-current/30 text-inherit hover:bg-current/5"
 
@@ -195,11 +202,11 @@ export default function HoneymoonSection({
 
   const handleOpen = () => {
     // Si button.action es "url", abrir link directo
-    if (button.action === "url") {
+    if (resolvedButton.action === "url") {
       if (isMuestra) {
         alert("Modo muestra: en la invitacion real se abrira el link configurado.")
       } else {
-        window.open(button.url, "_blank")
+        window.open(resolvedButton.url, "_blank")
       }
       return
     }
@@ -300,7 +307,7 @@ export default function HoneymoonSection({
             onClick={handleOpen}
             className={`inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-200 ${buttonVariantClasses}`}
           >
-            {button.text}
+            {resolvedButton.text}
           </button>
         )}
     </section>

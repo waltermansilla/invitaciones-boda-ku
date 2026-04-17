@@ -332,7 +332,7 @@
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
-            "id": "quote-final2",
+            "id": "quote-privacy",
             "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
