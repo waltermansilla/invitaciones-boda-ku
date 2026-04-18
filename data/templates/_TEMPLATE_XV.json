@@ -137,7 +137,7 @@
     "// ==========================================================================": "",
     "// QR CARD - Tarjeta imprimible con QR                                       ": "",
     "// ==========================================================================": "",
-    "// Accede en: /xv/[slug]/qr                                                  ": "",
+    "// Accede en: /xv/{slug}/qr (misma regla que otros tipos)                    ": "",
     "//                                                                            ": "",
     "// enabled: true/false (false = pagina 404)                                  ": "",
     "// names: text1 (titulo chico), text2 (nombre grande)                        ": "",
@@ -246,6 +246,9 @@
     "// TIPOS EXCLUSIVOS DE XV:                                                    ": "",
     "//   presentation: foto + nombre + descripcion                               ": "",
     "//   parents: nombre de los padres                                           ": "",
+    "//                                                                            ": "",
+    "// Pie de marca: no va en sections; se muestra siempre al final (landing-1  ": "",
+    "//   -> brand), colores del primary del theme de la invitacion.               ": "",
     "// ==========================================================================": "",
 
     "sections": [
@@ -835,16 +838,6 @@
                     "letterSpacing": "wide"
                 }
             }
-        },
-
-        {
-            "// ----------------------------------------------------------------------": "",
-            "// FOOTER - Pie de pagina                                                ": "",
-            "// ----------------------------------------------------------------------": "",
-            "type": "footer",
-            "id": "footer-credits",
-            "enabled": true,
-            "data": {}
         }
     ]
 }

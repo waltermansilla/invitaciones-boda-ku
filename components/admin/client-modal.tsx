@@ -16,7 +16,13 @@ interface ClientModalProps {
     onClose: () => void
 }
 
-const eventTypes: EventType[] = ["Boda", "XV", "Otro"]
+const eventTypeSuggestions: EventType[] = [
+    "Boda",
+    "XV",
+    "Baby shower",
+    "Cumpleaños",
+    "Otro",
+]
 const planTypes: PlanType[] = ["Esencial", "Premium"]
 const paymentStatuses: PaymentStatus[] = ["Pendiente", "Señado", "Pagado completo"]
 const projectStatuses: ProjectStatus[] = ["En proceso", "Terminado", "Terminado con detalles pendientes"]
@@ -105,15 +111,20 @@ export function ClientModal({ client, onSave, onClose }: ClientModalProps) {
                             <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-neutral-500">
                                 Tipo de evento
                             </label>
-                            <select
+                            <input
+                                type="text"
+                                name="eventType"
+                                list="admin-event-type-suggestions"
                                 value={form.eventType}
                                 onChange={(e) => handleChange("eventType", e.target.value)}
                                 className="w-full rounded border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
-                            >
-                                {eventTypes.map((type) => (
-                                    <option key={type} value={type}>{type}</option>
+                                placeholder="Ej. Boda, XV, Baby shower…"
+                            />
+                            <datalist id="admin-event-type-suggestions">
+                                {eventTypeSuggestions.map((type) => (
+                                    <option key={type} value={type} />
                                 ))}
-                            </select>
+                            </datalist>
                         </div>
 
                         {/* Plan */}
@@ -251,7 +262,7 @@ export function ClientModal({ client, onSave, onClose }: ClientModalProps) {
                                 type="text"
                                 value={form.realInvitationLink}
                                 onChange={(e) => handleChange("realInvitationLink", e.target.value)}
-                                placeholder="/boda/nombre"
+                                placeholder="/tipo/slug (ej. /boda/anto-walter)"
                                 className="w-full rounded border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
                             />
                         </div>
@@ -265,7 +276,7 @@ export function ClientModal({ client, onSave, onClose }: ClientModalProps) {
                                 type="text"
                                 value={form.sampleInvitationLink}
                                 onChange={(e) => handleChange("sampleInvitationLink", e.target.value)}
-                                placeholder="/m/boda/nombre"
+                                placeholder="/m/tipo/slug (ej. /m/baby/maxima)"
                                 className="w-full rounded border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
                             />
                         </div>

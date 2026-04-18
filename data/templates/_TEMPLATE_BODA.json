@@ -142,7 +142,7 @@
     "// ==========================================================================": "",
     "// QR CARD - Tarjeta imprimible con QR                                       ": "",
     "// ==========================================================================": "",
-    "// Accede en: /boda/[slug]/qr                                                ": "",
+    "// Accede en: /{tipo}/{slug}/qr (ej. /boda/novia-novio/qr)                      ": "",
     "//                                                                            ": "",
     "// enabled: true/false (false = pagina 404)                                  ": "",
     "// variant: 'classic' (hojas), 'romantic' (decorado), 'minimal' (simple)     ": "",
@@ -284,7 +284,9 @@
     "//   dressCode, photos, truths, giftCard, honeymoon, universalInfo,          ": "",
     "//   emotionalQuote,                                                          ": "",
     "//   trivia, playlist, rsvp, confirmarWhatsapp, adultsOnly,                  ": "",
-    "//   specialMessage, closingImage, footer                                    ": "",
+    "//   specialMessage, closingImage                                            ": "",
+    "//   (El pie de marca no va en sections: se muestra siempre al final,        ": "",
+    "//    desde landing-1.json -> brand, con colores del theme.primaryColor.)    ": "",
     "// ==========================================================================": "",
 
     "sections": [
@@ -1020,18 +1022,6 @@
                     "letterSpacing": "wide"
                 }
             }
-        },
-
-        {
-            "// ----------------------------------------------------------------------": "",
-            "// FOOTER - Pie de pagina                                                ": "",
-            "// ----------------------------------------------------------------------": "",
-            "// La marca se configura en landing.json                                 ": "",
-            "// ----------------------------------------------------------------------": "",
-            "type": "footer",
-            "id": "footer-credits",
-            "enabled": true,
-            "data": {}
         }
     ]
 }

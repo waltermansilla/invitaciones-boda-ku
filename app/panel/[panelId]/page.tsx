@@ -3,13 +3,24 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import useSWR from "swr"
 import { Trash2, Edit2, Plus, Users, User, Check, X, Utensils, Music, MessageSquare, Settings, Send } from "lucide-react"
+import {
+  eventTypeLabelFromFolderTipo,
+  invitationPathFromPanelIdSlug,
+} from "@/lib/client-helpers-shared"
 
 interface Integrante { id: string; nombre: string; estado: "pendiente" | "confirmado" | "no_asiste"; restricciones?: string }
 interface Invitado { id: string; nombre: string; codigo?: string; tipo: "persona" | "familia" | "integrante"; estado: "pendiente" | "confirmado" | "no_asiste"; pago_tarjeta?: boolean; confirmado_manual?: boolean; restricciones?: string; mensaje?: string; cancion?: string; fecha_confirmacion?: string; integrantes?: Integrante[]; familiaId?: string; familiaNombre?: string; pago?: boolean }
 interface Evento { id: string; panel_id: string; fecha_evento?: string; nombre_evento?: string; tipo_evento?: string }
 interface PanelTheme { primaryColor?: string; backgroundColor?: string }
 interface PanelLabels { title?: string; totalLabel?: string; confirmedLabel?: string; pendingLabel?: string; declinedLabel?: string; paymentPending?: string; addGuest?: string; copyLink?: string; sendInvite?: string; manualConfirm?: string; paidButton?: string; unpaidButton?: string }
-interface PanelData { evento: Evento; invitados: Invitado[]; stats: { confirmados: number; noAsisten: number; pendientes: number }; panelConfig?: { theme?: PanelTheme; labels?: PanelLabels } }
+interface PanelData {
+  evento: Evento
+  invitados: Invitado[]
+  stats: { confirmados: number; noAsisten: number; pendientes: number }
+  /** Ruta invitación pública, ej. `/baby/maxima` (viene de la API). */
+  invitationPath?: string | null
+  panelConfig?: { theme?: PanelTheme; labels?: PanelLabels }
+}
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
@@ -61,27 +72,28 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const labels = data?.panelConfig?.labels
   const primaryColor = theme?.primaryColor || "#b8a88a"
 
-  const handleSendInvitation = useCallback((invitado: Invitado) => {
-    // Inferir slug y tipo del panelId (ej: "anto-walter-boda" -> "anto-walter", tipo "boda")
-    const slug = panelId?.replace(/-boda$/, "").replace(/-xv$/, "") || ""
-    const tipo = panelId?.includes("-xv") ? "xv" : "boda"
-    const link = `${window.location.origin}/${tipo}/${slug}?c=${invitado.codigo || ""}`
-    const tipoEvento = (data?.evento?.tipo_evento || tipo).toLowerCase()
-    const eventoTexto =
-      tipoEvento === "xv"
-        ? "XV"
-        : tipoEvento === "boda"
-          ? "Boda"
-          : data?.evento?.nombre_evento?.trim() || "evento"
-    const nombreEvento = data?.evento?.nombre_evento?.trim() || ""
-    const eventoDetalle = nombreEvento ? `${eventoTexto} ${nombreEvento} ♥️` : `${eventoTexto} ♥️`
-    const message = `¡Hola, ${invitado.nombre}! Estás invitado a nuestra ${eventoTexto} 🫶🏼\nIngresá al enlace para ver tu invitación:\n\n${eventoDetalle}\n${link}`
-    window.open(
-      `https://wa.me/?text=${encodeURIComponent(message)}`,
-      "_blank",
-      "noopener,noreferrer",
-    )
-  }, [panelId, data?.evento?.nombre_evento, data?.evento?.tipo_evento])
+  const handleSendInvitation = useCallback(
+    (invitado: Invitado) => {
+      const path =
+        data?.invitationPath?.trim() ||
+        (panelId ? invitationPathFromPanelIdSlug(panelId) : null) ||
+        ""
+      const link = path
+        ? `${window.location.origin}${path}?c=${invitado.codigo || ""}`
+        : `${window.location.origin}?c=${invitado.codigo || ""}`
+      const tipoEvento = String(data?.evento?.tipo_evento || "boda").toLowerCase()
+      const eventoTexto = eventTypeLabelFromFolderTipo(tipoEvento)
+      const nombreEvento = data?.evento?.nombre_evento?.trim() || ""
+      const eventoDetalle = nombreEvento ? `${eventoTexto} ${nombreEvento} ♥️` : `${eventoTexto} ♥️`
+      const message = `¡Hola, ${invitado.nombre}! Estás invitado a nuestra ${eventoTexto} 🫶🏼\nIngresá al enlace para ver tu invitación:\n\n${eventoDetalle}\n${link}`
+      window.open(
+        `https://wa.me/?text=${encodeURIComponent(message)}`,
+        "_blank",
+        "noopener,noreferrer",
+      )
+    },
+    [panelId, data?.invitationPath, data?.evento?.nombre_evento, data?.evento?.tipo_evento],
+  )
 
   const handleDelete = useCallback(async (invitadoId: string) => {
     if (!confirm("¿Eliminar este invitado?")) return
@@ -109,9 +121,9 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   if (evento.fecha_evento) { diasRestantes = Math.ceil((new Date(evento.fecha_evento).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) }
 
   // Nombre del evento (sin "La boda de" ni "Los XV de")
-  const tipoEvento = evento.tipo_evento || "boda"
+  const tipoEvento = String(evento.tipo_evento || "boda").toLowerCase()
   const nombreEvento = evento.nombre_evento || "Anto & Walter"
-  const tituloEvento = tipoEvento === "xv" ? `XV ${nombreEvento}` : `Boda ${nombreEvento}`
+  const tituloEvento = `${eventTypeLabelFromFolderTipo(tipoEvento)} ${nombreEvento}`.trim()
 
   const estadoFilter = filterToEstado[filter] || filter
   let itemsToDisplay: Invitado[] = []

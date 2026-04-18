@@ -19,7 +19,7 @@
         "enabled": true,
         "_comment_enabled": "true = usa panel con base de datos. false = usa WhatsApp como siempre.",
         "panelId": "anto-walter-boda",
-        "_comment_panelId": "ID unico del panel. El anfitrion accede en /panel/[panelId]",
+        "_comment_panelId": "ID del panel = URL /panel/[panelId]. Legado predecible (prueba). Nuevos clientes: npm run panel:gen-id -- slug (ver docs/PANEL_INVITADOS.md).",
         "fechaEvento": "2027-02-16",
         "_comment_fechaEvento": "Fecha del evento para calcular dias restantes. Formato: YYYY-MM-DD",
         "confirmationMessage": "Gracias por confirmar! Nos vemos el 16 de febrero.",
@@ -47,7 +47,7 @@
         }
     },
 
-    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /boda/[slug]/qr para captura de pantalla.",
+    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /boda/anto-walter/qr (/{tipo}/{slug}/qr) para captura.",
     "qrCard": {
         "enabled": true,
         "_comment_enabled": "true = pagina /qr existe. false = pagina desactivada (404).",

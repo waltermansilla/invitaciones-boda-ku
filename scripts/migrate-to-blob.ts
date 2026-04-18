@@ -25,7 +25,7 @@
  * 1. Busca todos los archivos en public/clientes/ (jpg, png, mp3, etc)
  * 2. Consulta Blob para ver cuales ya estan subidos
  * 3. Sube SOLO los archivos nuevos (no duplica)
- * 4. Actualiza los JSONs con las nuevas URLs de Blob
+ * 4. Actualiza los JSONs con las nuevas URLs de Blob (todos los tipos en data/clientes/*/)
  * 5. Guarda un mapeo de URLs en scripts/url-mapping.json
  * 
  * ============================================================
@@ -102,6 +102,22 @@ async function getAllFiles(dir: string): Promise<string[]> {
   }
   
   return files;
+}
+
+/** Todos los data/clientes/[tipo]/*.json (boda, xv, baby, cumple, etc.) */
+function listAllClientJsonFiles(): string[] {
+  const clientesDataDir = path.join(DATA_DIR, 'clientes');
+  const out: string[] = [];
+  if (!fs.existsSync(clientesDataDir)) return out;
+
+  for (const tipo of fs.readdirSync(clientesDataDir)) {
+    const tipoPath = path.join(clientesDataDir, tipo);
+    if (!fs.statSync(tipoPath).isDirectory()) continue;
+    for (const f of fs.readdirSync(tipoPath)) {
+      if (f.endsWith('.json')) out.push(path.join(tipoPath, f));
+    }
+  }
+  return out;
 }
 
 function updateJsonUrls(jsonPath: string) {
@@ -198,22 +214,8 @@ async function main() {
   console.log('--- ACTUALIZANDO JSONs ---');
   console.log('');
   
-  const bodaDir = path.join(DATA_DIR, 'clientes', 'boda');
-  const xvDir = path.join(DATA_DIR, 'clientes', 'xv');
-  
-  const jsonFiles: string[] = [];
-  
-  if (fs.existsSync(bodaDir)) {
-    jsonFiles.push(...fs.readdirSync(bodaDir)
-      .filter(f => f.endsWith('.json'))
-      .map(f => path.join(bodaDir, f)));
-  }
-  
-  if (fs.existsSync(xvDir)) {
-    jsonFiles.push(...fs.readdirSync(xvDir)
-      .filter(f => f.endsWith('.json'))
-      .map(f => path.join(xvDir, f)));
-  }
+  const jsonFiles = listAllClientJsonFiles();
+  console.log(`  Revisando ${jsonFiles.length} JSON(s) en data/clientes/*/`);
   
   for (const jsonFile of jsonFiles) {
     updateJsonUrls(jsonFile);

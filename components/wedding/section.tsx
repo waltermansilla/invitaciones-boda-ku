@@ -17,7 +17,6 @@ import DressCodeSection from "./dress-code-section"
 import EmotionalQuoteSection from "./emotional-quote-section"
 import TriviaSection from "./trivia-section"
 import RSVPSection from "./rsvp-section"
-import FooterSection from "./footer-section"
 import ClosingSection from "./closing-section"
 import OurStorySection from "./our-story-section"
 import TruthsSection from "./truths-section"
@@ -91,7 +90,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
   const continuesBgImage = resolvedBgImage && bgImage && prevBgImage === bgImage
 
   // Show a subtle divider line when this section has the same bgColor as the previous one
-  const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
+  const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage"]
   const skipWrapper = selfStyledTypes.includes(type)
   const effectiveBg = skipWrapper ? null : (bgColor || "background")
   const prevEffective = prevBgColor || null
@@ -381,9 +380,6 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
             } | undefined}
           />
         )
-
-      case "footer":
-        return <FooterSection />
 
       default:
         return null

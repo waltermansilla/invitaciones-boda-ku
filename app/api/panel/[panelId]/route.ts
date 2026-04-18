@@ -1,7 +1,12 @@
 import { createApiClient } from "@/lib/supabase/api"
 import { NextRequest, NextResponse } from "next/server"
 import { nanoid } from "nanoid"
-import { findConfigByPanelId, getEventDataFromConfig } from "@/lib/config-loader"
+import { inferInvitationPathFromPanelId } from "@/lib/client-json-helpers"
+import {
+  findConfigByPanelId,
+  getEventDataFromConfig,
+  invitationPublicPathFromConfig,
+} from "@/lib/config-loader"
 
 type EventoRow = Record<string, unknown> & {
   id?: string
@@ -58,6 +63,10 @@ export async function GET(
           slug: undefined as string | undefined,
         }
 
+    const invitationPath =
+      invitationPublicPathFromConfig(config) ??
+      inferInvitationPathFromPanelId(panelId)
+
     const { data: evento, error: eventoError } = await supabase
       .from("eventos")
       .select("*")
@@ -105,6 +114,7 @@ export async function GET(
         evento: eventoMerged,
         invitados: [],
         stats: { confirmados: 0, noAsisten: 0, pendientes: 0 },
+        invitationPath,
         panelConfig: {
           theme: configData.panel_theme,
           labels: configData.panel_labels,
@@ -155,6 +165,7 @@ export async function GET(
       evento: eventoMerged,
       invitados: invitados || [],
       stats: { confirmados, noAsisten, pendientes },
+      invitationPath,
       panelConfig: {
         theme: configData.panel_theme,
         labels: configData.panel_labels,

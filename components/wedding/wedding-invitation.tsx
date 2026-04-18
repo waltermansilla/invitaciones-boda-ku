@@ -7,6 +7,7 @@ import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
 import HeroSection from "./hero-section";
 import Section from "./section";
+import FooterSection from "./footer-section";
 import MusicPlayer from "./music-player";
 
 interface InvitadoData {
@@ -27,6 +28,10 @@ function WeddingInvitationContent() {
         searchParams.get("noOverlay") === "1";
     const hero = config.hero;
     const sections = config.sections ?? [];
+    // El pie de marca es global (landing); si el JSON aún trae type "footer", no lo duplicamos.
+    const sectionsForLayout = sections.filter(
+        (s) => (s as { type?: string }).type !== "footer",
+    );
     const meta = config.meta;
     const music = config.music;
     const overlay = config.overlay;
@@ -62,10 +67,13 @@ function WeddingInvitationContent() {
     const showOverlay =
         overlay.enabled && !overlayDismissed && !loadingInvitado && !skipOverlay;
 
+    const overlayWantsFullBleedEntry =
+        overlay.enabled === true && !skipOverlay;
+
     // Si el overlay está activo, al recargar siempre arrancamos desde arriba.
-    // Si overlay.enabled = false, no intervenimos el scroll (útil para trabajo operativo).
+    // Si overlay.enabled !== true, no forzamos scroll aquí (trabajo operativo / sin pantalla de ingreso).
     useEffect(() => {
-        if (!overlay.enabled || skipOverlay) return;
+        if (!overlayWantsFullBleedEntry) return;
         if (typeof window === "undefined") return;
 
         const previousScrollRestoration = window.history.scrollRestoration;
@@ -75,7 +83,86 @@ function WeddingInvitationContent() {
         return () => {
             window.history.scrollRestoration = previousScrollRestoration;
         };
-    }, [overlay.enabled, skipOverlay]);
+    }, [overlayWantsFullBleedEntry]);
+
+    // Sin overlay de ingreso: el navegador a veces no restaura bien el scroll al recargar
+    // (p. ej. smooth scroll en html + hidratación). Guardamos en pagehide y reaplicamos en reload.
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const path = window.location.pathname + window.location.search;
+        const key = `mu:inv-scroll:${path}`;
+
+        if (overlayWantsFullBleedEntry) {
+            try {
+                sessionStorage.removeItem(key);
+            } catch {
+                /* private mode / quota */
+            }
+            return;
+        }
+
+        const nav = performance.getEntriesByType(
+            "navigation",
+        )[0] as PerformanceNavigationTiming | undefined;
+        const hasMeaningfulHash =
+            typeof window.location.hash === "string" &&
+            window.location.hash.length > 1;
+
+        if (nav?.type === "reload" && !hasMeaningfulHash) {
+            try {
+                const raw = sessionStorage.getItem(key);
+                if (raw != null) {
+                    const y = Number.parseInt(raw, 10);
+                    if (!Number.isNaN(y) && y > 0) {
+                        const scrollInstant = (top: number) => {
+                            const html = document.documentElement;
+                            const prev = html.style.scrollBehavior;
+                            html.style.scrollBehavior = "auto";
+                            try {
+                                window.scrollTo({
+                                    top,
+                                    left: 0,
+                                    behavior: "instant",
+                                });
+                            } catch {
+                                window.scrollTo(0, top);
+                            }
+                            html.style.scrollBehavior = prev;
+                        };
+                        const apply = () => scrollInstant(y);
+                        apply();
+                        requestAnimationFrame(apply);
+                        [50, 200, 500].forEach((ms) => {
+                            window.setTimeout(apply, ms);
+                        });
+                    }
+                }
+            } catch {
+                /* ignore */
+            }
+        } else if (nav?.type === "navigate") {
+            try {
+                sessionStorage.removeItem(key);
+            } catch {
+                /* ignore */
+            }
+        }
+
+        const persist = () => {
+            try {
+                sessionStorage.setItem(key, String(window.scrollY));
+            } catch {
+                /* ignore */
+            }
+        };
+        window.addEventListener("pagehide", persist);
+        window.addEventListener("beforeunload", persist);
+
+        return () => {
+            window.removeEventListener("pagehide", persist);
+            window.removeEventListener("beforeunload", persist);
+        };
+    }, [overlayWantsFullBleedEntry]);
 
     // Deep link (#section-id): el scroll nativo del navegador corre antes de que existan
     // los nodos client-side; en producción suele fallar. Reintentamos tras hidratar y cuando
@@ -229,9 +316,9 @@ function WeddingInvitationContent() {
                 {/* Group consecutive sections with same bgImage */}
                 {(() => {
                     const theme = config.theme as Record<string, unknown>
-                    const groups: { bgImage: string | null; sections: typeof sections }[] = []
+                    const groups: { bgImage: string | null; sections: typeof sectionsForLayout }[] = []
                     
-                    sections.forEach((section) => {
+                    sectionsForLayout.forEach((section) => {
                         let resolvedBgImage = section.bgImage
                         if (section.bgImage === "backgroundImage") {
                             resolvedBgImage = (theme.backgroundImage as string) || undefined
@@ -264,7 +351,7 @@ function WeddingInvitationContent() {
                                 >
                                     {group.sections.map((section, index) => {
                                         const prev = group.sections[index - 1]
-                                        const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
+                                        const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage"]
                                         const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
                                         return (
                                             <Section
@@ -281,9 +368,9 @@ function WeddingInvitationContent() {
                         } else {
                             // Single section or no bgImage
                             return group.sections.map((section, index) => {
-                                const globalIndex = sections.indexOf(section)
-                                const prev = sections[globalIndex - 1]
-                                const selfStyledTypes = ["gallery", "closingImage", "footer", "presentation", "specialMessage"]
+                                const globalIndex = sectionsForLayout.indexOf(section)
+                                const prev = sectionsForLayout[globalIndex - 1]
+                                const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage"]
                                 const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
                                 const prevBgImg = prev && !selfStyledTypes.includes(prev.type) ? prev.bgImage : undefined
                                 return (
@@ -299,6 +386,8 @@ function WeddingInvitationContent() {
                         }
                     })
                 })()}
+
+                <FooterSection />
 
                 {music.enabled && (
                     <MusicPlayer 

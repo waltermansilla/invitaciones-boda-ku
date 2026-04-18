@@ -487,27 +487,6 @@
         "aspectRatio": "3/4",
         "image": "/images/gallery-3.jpg"
       }
-    },
-
-    {
-      "// --- FOOTER / PIE DE PAGINA ---": "",
-      "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
-      "type": "footer",
-      "id": "footer-credits",
-      "blocks": ["socialLinks", "brandName"],
-      "data": {
-        "brandName": "walter invitaciones",
-        "socialLinks": [
-          {
-            "icon": "instagram",
-            "url": "#"
-          },
-          {
-            "icon": "whatsapp",
-            "url": "https://wa.me/3456023759"
-          }
-        ]
-      }
     }
   ]
 }

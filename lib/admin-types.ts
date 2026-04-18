@@ -1,4 +1,5 @@
-export type EventType = "Boda" | "XV" | "Otro"
+/** Texto libre (ej. "Boda", "Baby shower", "Corporativo"); sugerencias en el modal admin. */
+export type EventType = string
 export type PlanType = "Esencial" | "Premium"
 export type PaymentStatus = "Pendiente" | "Señado" | "Pagado completo"
 export type ProjectStatus = "En proceso" | "Terminado" | "Terminado con detalles pendientes"
@@ -34,7 +35,8 @@ export interface Ad {
 }
 
 export interface DetectedProject {
-    tipo: "boda" | "xv"
+    /** Carpeta bajo data/clientes/ */
+    tipo: string
     slug: string
     name: string
     realLink: string

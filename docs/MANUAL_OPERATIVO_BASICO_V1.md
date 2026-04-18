@@ -210,7 +210,7 @@ Listo. No hay que tocar ningun otro archivo.
 | `rsvp`              | Formulario de confirmacion            |                                    |
 | `specialMessage`    | Mensaje personal con firma            |                                    |
 | `closingImage`      | Foto de cierre                        |                                    |
-| `footer`            | Footer de marca                       |                                    |
+| `footer`            | (opcional / legado) Ignorado si está en el JSON; el pie se pinta siempre al final desde la landing |                                    |
 
 ### Secciones exclusivas de XV
 
@@ -327,7 +327,7 @@ Cada seccion tiene `"enabled": true/false`. Poner `false` para ocultarla.
 
 ## 9. FOOTER GLOBAL (MARCA)
 
-El footer es **identico en todas las invitaciones y la landing**. No se configura desde JSON.
+El footer es **el mismo en todas las invitaciones y la landing** (marca en `data/landing/landing-1.json` → `brand`). **No hace falta** agregar una sección `footer` en el JSON del cliente: la app lo inserta siempre al final; si un archivo viejo todavía la incluye, se omite para no duplicar. Los colores siguen el `primary` del theme de cada invitación.
 
 ### Archivo
 
@@ -572,6 +572,10 @@ El formulario RSVP ahora envia los datos por WhatsApp al confirmar. Se configura
 - El `{resumen}` se reemplaza automaticamente con nombre, apellido, asistencia, dieta y cancion de cada invitado
 - Si hay multiples invitados, aparece cada uno en su linea
 
+### Panel de invitados (Premium, Supabase)
+
+Si la invitación usa **`rsvpPanel`** (confirmación con código y lista en base de datos), los anfitriones entran a **`/panel/{panelId}`**. No hay usuario/contraseña: el **secreto es la URL**; conviene un `panelId` con sufijo aleatorio. Guía paso a paso, checklist y comando **`npm run panel:gen-id`**: [`PANEL_INVITADOS.md`](./PANEL_INVITADOS.md).
+
 ### Confirmacion simple por WhatsApp (Plan Base)
 
 Para el plan base (sin formulario), usar `confirmarWhatsapp` en vez de `rsvp`:
@@ -748,12 +752,22 @@ Si `logo` tiene valor, se muestra la imagen en vez de los nombres como texto.
 | Ruta con /public        | `"/public/clientes/..."` | `"/clientes/boda/slug/img.jpg"` |
 | Link sin https          | `"wa.me/3456023759"`     | `"https://wa.me/3456023759"`    |
 
+### Tarjeta que no carga (revisar muchas invitaciones de una vez)
+
+En la carpeta del proyecto, en la terminal:
+
+- `npm run validate:clientes` — recorre **todos** los JSON en `data/clientes/` y lista errores (JSON roto, archivos que faltan en `public/`, ids duplicados, etc.).
+- `npm run build:ci` — lo mismo y además `next build` (como en deploy).
+
+Guía dedicada: **`docs/VALIDAR_INVITACIONES_CLIENTES.md`** (comandos, qué cubre y qué no). Si no recordás el nombre: en `package.json` buscá el script `validate:clientes`.
+
 ---
 
 ## 14. CHECKLIST FINAL
 
 ### Datos
 
+- [ ] `npm run validate:clientes` sin errores (o `npm run build:ci` antes de subir a producción)
 - [ ] Nombres correctos en `meta.coupleNames`
 - [ ] Titulo de pestana correcto en `meta.title`
 - [ ] Fecha en formato ISO en `hero.eventDate`

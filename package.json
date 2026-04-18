@@ -7,8 +7,11 @@
     "dev:webpack": "next dev --webpack",
     "dev:local": "next dev -H 127.0.0.1",
     "build": "next build",
+    "build:ci": "npm run validate:clientes && npm run build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "validate:clientes": "node scripts/validate-client-invitations.mjs",
+    "panel:gen-id": "node scripts/generate-panel-id.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

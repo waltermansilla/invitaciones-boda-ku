@@ -9,6 +9,10 @@ import landingHomeConfig from "@/data/landing/landing-2.json";
  *
  * La marca es igual en TODAS las invitaciones y en la landing.
  * Solo cambia el color de fondo que se adapta al tema de cada invitacion.
+ *
+ * Este bloque NO se configura con una seccion "footer" en el JSON del cliente:
+ * wedding-invitation.tsx lo inserta siempre al final. Si un JSON viejo aun
+ * incluye type "footer", se ignora al armar el layout para no duplicar.
  * ─────────────────────────────────────────────── */
 
 // Leer configuracion de marca desde landing-1.json
@@ -119,7 +123,10 @@ export default function FooterSection() {
     };
 
     return (
-        <footer className="bg-primary px-6 py-14 text-center md:py-16">
+        <footer
+            id="footer-credits"
+            className="bg-primary px-6 py-14 text-center md:py-16"
+        >
             <div className="mb-6 flex items-center justify-center gap-6">
                 {SOCIAL_LINKS.map((link) => {
                     const Icon = iconMap[link.icon];

@@ -1,5 +1,6 @@
 import fs from "fs"
 import path from "path"
+import { listClienteTipoDirNames } from "@/lib/client-json-helpers"
 
 interface EventConfig {
   meta?: {
@@ -8,6 +9,7 @@ interface EventConfig {
       brideName?: string
       name?: string // para XV
     }
+    quinceaneraName?: string
   }
   rsvpPanel?: {
     enabled?: boolean
@@ -17,11 +19,9 @@ interface EventConfig {
     labels?: Record<string, unknown>
   }
   slug?: string
-  tipo?: "boda" | "xv" | "baby" | "cumple" | "evento"
+  /** Carpeta bajo data/clientes/ (boda, xv, baby, cumple, …) */
+  tipo?: string
 }
-
-// Todos los tipos de eventos soportados
-const TIPOS_EVENTO = ["boda", "xv", "baby", "cumple", "evento"] as const
 
 function slugFromFileName(fileName: string): string {
   return fileName.replace(/\.json$/i, "").replace(/^\d+-/, "")
@@ -30,9 +30,8 @@ function slugFromFileName(fileName: string): string {
 // Busca el JSON que tenga el panelId especificado
 export function findConfigByPanelId(panelId: string): EventConfig | null {
   const dataDir = path.join(process.cwd(), "data", "clientes")
-  
-  // Buscar en todos los tipos de eventos
-  for (const tipo of TIPOS_EVENTO) {
+
+  for (const tipo of listClienteTipoDirNames()) {
     const tipoDir = path.join(dataDir, tipo)
     if (fs.existsSync(tipoDir)) {
       const files = fs.readdirSync(tipoDir).filter(f => f.endsWith(".json"))
@@ -54,10 +53,12 @@ export function findConfigByPanelId(panelId: string): EventConfig | null {
 // Extrae los datos relevantes para el evento
 export function getEventDataFromConfig(config: EventConfig) {
   const tipo = config.tipo || "boda"
-  
+
   let nombreEvento = ""
   if (tipo === "xv" && config.meta?.coupleNames?.name) {
-    nombreEvento = config.meta.coupleNames.name
+    nombreEvento = String(config.meta.coupleNames.name).trim()
+  } else if (config.meta?.quinceaneraName) {
+    nombreEvento = String(config.meta.quinceaneraName).trim()
   } else if (config.meta?.coupleNames) {
     const { groomName, brideName } = config.meta.coupleNames
     nombreEvento = `${brideName || ""} & ${groomName || ""}`.trim()
@@ -71,4 +72,12 @@ export function getEventDataFromConfig(config: EventConfig) {
     panel_theme: config.rsvpPanel?.theme ?? null,
     panel_labels: config.rsvpPanel?.labels ?? null,
   }
+}
+
+/** Ruta pública de la invitación (`/boda/slug`, `/baby/maxima`, …). */
+export function invitationPublicPathFromConfig(
+  config: Pick<EventConfig, "tipo" | "slug"> | null,
+): string | null {
+  if (!config?.tipo || !config.slug) return null
+  return `/${config.tipo}/${config.slug}`
 }

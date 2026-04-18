@@ -81,7 +81,7 @@ npx tsx scripts/migrate-to-blob.ts
    - Si el archivo es NUEVO -> lo sube a Blob
 
 4. **Actualiza los JSONs**
-   - Recorre todos los JSONs en `data/clientes/boda/` y `data/clientes/xv/`
+   - Recorre todos los JSONs en `data/clientes/*/` (boda, xv, baby, cumple, etc.)
    - Reemplaza las rutas locales por las URLs de Blob
    - Ejemplo: `/clientes/boda/juan/hero.jpg` -> `https://xxx.blob.vercel-storage.com/clientes/boda/juan/hero.jpg`
 
@@ -241,7 +241,7 @@ scripts/
 Produccion:
 - Boda: `https://momentounico.com/boda/[slug]`
 - XV: `https://momentounico.com/xv/[slug]`
-- QR Card: `https://momentounico.com/boda/[slug]/qr`
+- QR Card: `https://momentounico.com/{tipo}/{slug}/qr` (ej. `/boda/anto-walter/qr`, `/baby/maxima/qr`)
 
 Desarrollo local:
 - Boda: `http://localhost:3000/boda/[slug]`

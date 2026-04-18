@@ -64,7 +64,7 @@
     "music": {
         "enabled": true,
         "src": "/clientes/boda/16-mirta-pelu/music/abelpintos.mp3",
-        "autoplay": false
+        "autoplay": true
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
@@ -234,10 +234,9 @@
                     "title": "Datos de transferencia",
                     "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para nosotros.",
                     "bankData": [
-                        { "label": "Alias", "value": "mirtapelu123456" },
-                        { "label": "CBU", "value": "23456789034567890456" },
-                        { "label": "Titular", "value": "qwertyuiop" },
-                        { "label": "Banco", "value": "Nacion" }
+                        { "label": "Alias", "value": "monatoledo" },
+                        { "label": "CBU", "value": "0000003100018680657928" },
+                        { "label": "Titular", "value": "Mirta Beatriz Vazquez" }
                     ]
                 }
             }

@@ -43,6 +43,7 @@ import {
     LandingHeader,
     type LandingLocale,
 } from "@/components/landing/landing-header-home";
+import { eventTypeLabelFromFolderTipo } from "@/lib/client-helpers-shared";
 import FooterSection from "@/components/wedding/footer-section";
 import pricingData from "@/data/landing/pricing.json";
 
@@ -2917,13 +2918,14 @@ function CatalogMedia({
     );
 }
 
-type EstiloCatalogKind = "boda" | "xv" | "baby";
+/** Segmento de tipo en href de muestra: `/m/{tipo}/...` */
+type EstiloCatalogKind = string;
 
 function estiloKindFromHref(href: string | undefined): EstiloCatalogKind | null {
     if (!href) return null;
-    const m = href.trim().match(/^\/m\/(boda|xv|baby)(\/|$)/i);
+    const m = href.trim().match(/^\/m\/([^/]+)(\/|$)/i);
     if (!m) return null;
-    return m[1].toLowerCase() as EstiloCatalogKind;
+    return m[1].toLowerCase();
 }
 
 function estiloItemsGroupedByKind(
@@ -2950,7 +2952,7 @@ function estiloItemsGroupedByKind(
     if (orphans.length) {
         if (out[0]) out[0].items.unshift(...orphans);
         else if (orphans.length)
-            out.push({ kind: "boda", items: [...orphans] });
+            out.push({ kind: "otros", items: [...orphans] });
     }
     return out;
 }
@@ -2959,14 +2961,24 @@ function estiloCatalogGroupTitle(
     kind: EstiloCatalogKind,
     locale: LandingLocale,
 ): string {
+    if (kind === "otros") {
+        return locale === "en" ? "More samples" : "Más modelos";
+    }
     if (locale === "en") {
-        if (kind === "boda") return "Weddings";
-        if (kind === "xv") return "XV";
-        return "Baby shower";
+        const en: Record<string, string> = {
+            boda: "Weddings",
+            xv: "XV",
+            baby: "Baby shower",
+            cumple: "Birthdays",
+        };
+        const k = kind.toLowerCase();
+        if (en[k]) return en[k];
+        return kind.charAt(0).toUpperCase() + kind.slice(1).replace(/-/g, " ");
     }
     if (kind === "boda") return "Bodas";
     if (kind === "xv") return "XV años";
-    return "Baby shower";
+    if (kind === "baby") return "Baby shower";
+    return eventTypeLabelFromFolderTipo(kind);
 }
 
 function scrollToEstilosGrupo(kind: EstiloCatalogKind) {

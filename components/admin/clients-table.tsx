@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { 
-    type Client, 
+import {
+    type Client,
     type DetectedProject,
-    type PaymentStatus, 
+    type PaymentStatus,
     type ProjectStatus,
-    calculateRemaining 
+    calculateRemaining,
 } from "@/lib/admin-types"
+import { eventTypeLabelFromFolderTipo } from "@/lib/client-helpers-shared"
 import { ClientModal } from "./client-modal"
 import { Plus, Pencil, Trash2, ExternalLink } from "lucide-react"
 
@@ -91,7 +92,7 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
 
     const handleAddFromDetected = (project: DetectedProject) => {
         const newClient: Omit<Client, "id"> = {
-            eventType: project.tipo === "boda" ? "Boda" : "XV",
+            eventType: eventTypeLabelFromFolderTipo(project.tipo),
             projectName: project.name,
             plan: "Esencial",
             totalPrice: 0,
@@ -131,7 +132,7 @@ export function ClientsTable({ clients, detectedProjects, onUpdate, onAdd, onDel
                     <div className="flex flex-wrap gap-2">
                         {unregisteredProjects.map((project) => (
                             <button
-                                key={project.slug}
+                                key={`${project.tipo}-${project.slug}`}
                                 onClick={() => handleAddFromDetected(project)}
                                 className="inline-flex items-center gap-1 rounded border border-neutral-200 bg-white px-3 py-1 text-xs font-medium text-neutral-600 hover:bg-neutral-100"
                             >
