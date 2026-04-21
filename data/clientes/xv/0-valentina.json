@@ -15,6 +15,31 @@
             "separator": ""
         }
     },
+    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - Confirmacion comun (Plan Base) integrada con panel.",
+    "rsvpPanel": {
+        "enabled": true,
+        "confirmacion": "comun",
+
+        "panelId": "valentina-xv-hola",
+        "fechaEvento": "2026-09-19",
+        "confirmationMessage": "Gracias por confirmar! Te espero en mis 15.",
+        "theme": {
+            "primaryColor": "#C4788A"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Pago pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmaci\u00f3n manual",
+            "paidButton": "Ya pag\u00f3",
+            "unpaidButton": "\u00bfPag\u00f3 tarjeta?"
+        }
+    },
 
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
@@ -407,37 +432,21 @@
         },
 
         {
-            "// --- FORMULARIO RSVP ---": "",
-            "_comment": "Fondo rosa. Formulario de confirmacion. Todos los labels, opciones y textos son editables.",
-            "type": "rsvp",
-            "id": "rsvp-form",
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Con rsvpPanel.confirmacion='comun' registra en panel antes de abrir WA.",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
             "bgColor": "primary",
-            "blocks": ["title", "form"],
+            "blocks": ["title", "button"],
             "data": {
-                "title": "Confirma tu asistencia",
-                "deadline": "Antes del 20 de agosto",
-                "guestCountLabel": "Numero de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
-                "fields": {
-                    "firstName": "Nombre",
-                    "lastName": "Apellido",
-                    "attendance": "Vas a poder venir?",
-                    "attendanceYes": "Ahi voy!",
-                    "attendanceNo": "No voy a poder",
-                    "dietary": "Algun requerimiento alimentario?",
-                    "dietaryOptions": [
-                        "Ninguno",
-                        "Vegetariano",
-                        "Vegano",
-                        "Celiaco",
-                        "Otro"
-                    ],
-                    "songRequest": "Que cancion te gustaria que suene?",
-                    "submitButton": "Confirmar"
-                },
-                "whatsapp": {
-                    "number": "3456023759",
-                    "messageTemplate": "Hola! Confirmo asistencia para los 15 de Valentina:\n{resumen}\nGracias!"
+                "title": "Confirmar asistencia",
+                "subtitle": "Antes del 20 de agosto",
+                "buttonText": "Voy a asistir!",
+                "whatsappNumber": "543456023759",
+                "message": "Hola! Confirmo mi asistencia a los 15 de Valentina. Gracias!",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Hola! Lamentablemente no podré asistir a los 15 de Valentina."
                 }
             }
         },

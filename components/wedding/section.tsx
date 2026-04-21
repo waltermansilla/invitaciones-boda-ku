@@ -27,6 +27,10 @@ import SpecialMessageSection from "./special-message-section"
 import ConfirmarWhatsappSection from "./confirmar-whatsapp-section"
 import AdultsOnlySection from "./adults-only-section"
 import { useConfig } from "@/lib/config-context"
+import {
+  confirmarComunUsesPanelApi,
+  rsvpFormUsesPanelApi,
+} from "@/lib/panel-confirmacion"
 
 export interface SectionConfig {
   type: string
@@ -59,7 +63,15 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
   const config = useConfig()
   const { type, id, data, bgColor, bgImage, textColor, enabled = true } = section
   const theme = config.theme as Record<string, unknown>
-  const rsvpPanel = config.rsvpPanel as { enabled?: boolean; panelId?: string; confirmationMessage?: string } | undefined
+  const rsvpPanel = config.rsvpPanel as
+    | {
+        enabled?: boolean
+        panelId?: string
+        confirmationMessage?: string
+        confirmacion?: string
+        registrarSinCodigoEnPanel?: boolean
+      }
+    | undefined
   const codigoInvitado = useCodigoInvitado()
 
   // Si enabled es false, no renderizar la seccion
@@ -268,11 +280,23 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
               }
             }
             whatsapp={data.whatsapp as { number: string; messageTemplate: string; noAttendanceMessageTemplate?: string } | undefined}
-            panel={rsvpPanel?.enabled ? {
-              enabled: true,
-              codigo: codigoInvitado,
-              confirmationMessage: rsvpPanel.confirmationMessage || "Gracias por confirmar!"
-            } : undefined}
+            panel={
+              rsvpFormUsesPanelApi(rsvpPanel) &&
+              (Boolean(codigoInvitado) ||
+                (Boolean(rsvpPanel?.panelId) &&
+                  Boolean(rsvpPanel?.registrarSinCodigoEnPanel)))
+                ? {
+                      enabled: true,
+                      codigo: codigoInvitado || undefined,
+                      panelId: rsvpPanel?.panelId,
+                      allowAnonymousToPanel: Boolean(
+                        rsvpPanel?.registrarSinCodigoEnPanel,
+                      ),
+                      confirmationMessage:
+                          rsvpPanel.confirmationMessage || "Gracias por confirmar!",
+                  }
+                : undefined
+            }
           />
         )
 
@@ -285,6 +309,16 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
             whatsappNumber={data.whatsappNumber as string}
             message={data.message as string}
             noAsiste={data.noAsiste as { enabled: boolean; buttonText: string; message: string } | undefined}
+            panelSync={
+              confirmarComunUsesPanelApi(rsvpPanel) && codigoInvitado
+                ? {
+                    codigo: codigoInvitado,
+                    confirmationMessage:
+                      rsvpPanel?.confirmationMessage ||
+                      "Gracias por confirmar!",
+                  }
+                : undefined
+            }
           />
         )
 

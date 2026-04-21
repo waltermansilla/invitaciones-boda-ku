@@ -14,24 +14,25 @@
         }
     },
 
-    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - Activa el sistema de panel para gestionar invitados.",
+    "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "access": {
+        "tokenEnabled": true,
+        "token": "LqOC7v",
+        "allowLegacyUntil": ""
+    },
+
+    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,
-        "_comment_enabled": "true = usa panel con base de datos. false = usa WhatsApp como siempre.",
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": true,
+        "limiteInvitados": 150,
         "panelId": "anto-walter-boda",
-        "_comment_panelId": "ID del panel = URL /panel/[panelId]. Legado predecible (prueba). Nuevos clientes: npm run panel:gen-id -- slug (ver docs/PANEL_INVITADOS.md).",
         "fechaEvento": "2027-02-16",
-        "_comment_fechaEvento": "Fecha del evento para calcular dias restantes. Formato: YYYY-MM-DD",
         "confirmationMessage": "Gracias por confirmar! Nos vemos el 16 de febrero.",
-        "_comment_confirmationMessage": "Mensaje que ve el invitado despues de confirmar.",
-        
-        "_comment_theme": "TEMA VISUAL DEL PANEL - Colores personalizados.",
         "theme": {
-            "primaryColor": "#b8a88a",
-            "_comment_primaryColor": "Color principal del panel (header, botones, filtros activos)."
+            "primaryColor": "#b8a88a"
         },
-        
-        "_comment_labels": "TEXTOS DEL PANEL - Todos los textos estaticos son configurables.",
         "labels": {
             "title": "Panel de Invitados",
             "totalLabel": "Total invitados",
@@ -487,7 +488,7 @@
         },
         {
             "// --- FORMULARIO RSVP ---": "",
-            "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
+            "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros. En fields.extraInputs podes usar tituloPanel para definir como se guarda/muestra ese dato en el panel (ej: tituloPanel='Patente').",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
@@ -512,6 +513,14 @@
                         "Otro"
                     ],
                     "songRequest": "Que canción no puede faltar?",
+                    "extraInputs": [
+                        {
+                            "id": "patente",
+                            "label": "Si venís en tu auto, indicanos tu patente",
+                            "placeholder": "Ej: AB123CD",
+                            "tituloPanel": "Patente"
+                        }
+                    ],
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {

@@ -631,7 +631,7 @@ function ConfiguradorPageContent() {
         return v.length > 5 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     }, [email]);
 
-    const MIN_SECTION_BLOCKS = 4;
+    const MIN_SECTION_BLOCKS = FREE_SECTIONS;
 
     const canContinue = useMemo(() => {
         const step = steps[stepIdx];

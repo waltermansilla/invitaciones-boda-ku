@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import fs from "fs"
 import path from "path"
+import { createHash } from "crypto"
 
 export interface ClientConfig {
   meta: {
@@ -27,7 +28,50 @@ export interface ClientConfig {
   hero: Record<string, unknown>
   music: Record<string, unknown>
   sections: Array<Record<string, unknown>>
+  access?: {
+    tokenEnabled?: boolean
+    /** Token real (opcional, útil para admin interno). */
+    token?: string
+    tokenHash?: string
+    /** Compatibilidad: permite entrar sin token hasta esta fecha (YYYY-MM-DD). */
+    allowLegacyUntil?: string
+  }
   [key: string]: unknown
+}
+
+export function sha256Hex(value: string): string {
+  return createHash("sha256").update(value).digest("hex")
+}
+
+function isBeforeOrEqualToday(dateIso: string): boolean {
+  const d = new Date(`${dateIso}T23:59:59.999Z`)
+  if (Number.isNaN(d.getTime())) return false
+  return Date.now() <= d.getTime()
+}
+
+export function accessTokenRequired(config: ClientConfig): boolean {
+  const access = config.access
+  if (!access?.tokenEnabled) return false
+  if (
+    (!access.tokenHash || access.tokenHash.length < 32) &&
+    (!access.token || !/^[A-Za-z0-9]{6}$/.test(access.token))
+  ) {
+    return false
+  }
+  if (access.allowLegacyUntil && isBeforeOrEqualToday(access.allowLegacyUntil)) {
+    return false
+  }
+  return true
+}
+
+export function isAccessTokenValid(config: ClientConfig, token: string | undefined): boolean {
+  if (!accessTokenRequired(config)) return true
+  if (!token) return false
+  if (!/^[A-Za-z0-9]{6}$/.test(token)) return false
+  const expected =
+    config.access?.tokenHash?.toLowerCase() ||
+    (config.access?.token ? sha256Hex(config.access.token).toLowerCase() : "")
+  return sha256Hex(token).toLowerCase() === expected
 }
 
 function slugFromFileName(fileName: string): string {

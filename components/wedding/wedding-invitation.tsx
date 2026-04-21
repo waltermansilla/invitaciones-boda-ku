@@ -35,7 +35,14 @@ function WeddingInvitationContent() {
     const meta = config.meta;
     const music = config.music;
     const overlay = config.overlay;
-    const rsvpPanel = config.rsvpPanel as { enabled?: boolean; panelId?: string; confirmationMessage?: string } | undefined;
+    const rsvpPanel = config.rsvpPanel as
+        | {
+              enabled?: boolean;
+              panelId?: string;
+              confirmationMessage?: string;
+              confirmacion?: "formulario" | "comun";
+          }
+        | undefined;
     
     // Datos del invitado (cuando viene con código)
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
@@ -66,6 +73,8 @@ function WeddingInvitationContent() {
     // Si hay código y estamos cargando, mostrar pantalla de carga en lugar del overlay
     const showOverlay =
         overlay.enabled && !overlayDismissed && !loadingInvitado && !skipOverlay;
+    const shouldBlockMainUntilEntry =
+        overlay.enabled && !overlayDismissed && !skipOverlay;
 
     const overlayWantsFullBleedEntry =
         overlay.enabled === true && !skipOverlay;
@@ -252,12 +261,15 @@ function WeddingInvitationContent() {
                     invitado={invitado}
                 />
             )}
+            {shouldBlockMainUntilEntry && loadingInvitado && (
+                <div className="fixed inset-0 z-[9998] bg-[#F7F3EE]" />
+            )}
 
             {/* Hide main content until overlay is dismissed - fade in when overlay exits */}
             <main 
                 className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl transition-opacity duration-700 ease-out"
                 style={{ 
-                    opacity: showOverlay ? 0 : 1,
+                    opacity: shouldBlockMainUntilEntry ? 0 : 1,
                 }}
             >
                 {/* Hero is always rendered first */}

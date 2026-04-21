@@ -14,13 +14,22 @@ interface EventConfig {
   rsvpPanel?: {
     enabled?: boolean
     panelId?: string
+    /** "formulario" (default) = bloque rsvp + API. "comun" = confirmar por WA pero sincroniza panel; solo personas en el panel. */
+    confirmacion?: "formulario" | "comun"
     fechaEvento?: string
     theme?: Record<string, unknown>
     labels?: Record<string, unknown>
+    confirmationMessage?: string
+    /** Tope de plazas en el panel (persona=1; familia=cantidad de integrantes). Sin clave = sin límite. */
+    limiteInvitados?: number
   }
   slug?: string
   /** Carpeta bajo data/clientes/ (boda, xv, baby, cumple, …) */
   tipo?: string
+  access?: {
+    tokenEnabled?: boolean
+    token?: string
+  }
 }
 
 function slugFromFileName(fileName: string): string {
@@ -80,4 +89,16 @@ export function invitationPublicPathFromConfig(
 ): string | null {
   if (!config?.tipo || !config.slug) return null
   return `/${config.tipo}/${config.slug}`
+}
+
+/** Token público de acceso para la invitación (`?k=`), si existe en el JSON. */
+export function invitationAccessTokenFromConfig(
+  config: Pick<EventConfig, "access"> | null,
+): string | null {
+  const token = config?.access?.token
+  if (!config?.access?.tokenEnabled) return null
+  if (typeof token !== "string") return null
+  const clean = token.trim()
+  if (!/^[A-Za-z0-9]{6}$/.test(clean)) return null
+  return clean
 }

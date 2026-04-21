@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { createContext, useContext } from "react"
-import type { ClientConfig } from "./get-client-config"
+import { createContext, useContext } from "react";
+import type { ClientConfig } from "./get-client-config";
 
 interface ConfigContextValue {
-  config: ClientConfig
-  isMuestra: boolean
+    config: ClientConfig;
+    isMuestra: boolean;
 }
 
-const ConfigContext = createContext<ConfigContextValue | null>(null)
+const ConfigContext = createContext<ConfigContextValue | null>(null);
 
 /**
  * Hook to access the current client config from any component.
  * Must be used within a ConfigProvider.
  */
 export function useConfig(): ClientConfig {
-  const ctx = useContext(ConfigContext)
-  if (!ctx) {
-    throw new Error("useConfig must be used within a ConfigProvider")
-  }
-  return ctx.config
+    const ctx = useContext(ConfigContext);
+    if (!ctx) {
+        throw new Error("useConfig must be used within a ConfigProvider");
+    }
+    return ctx.config;
 }
 
 /**
@@ -27,8 +27,8 @@ export function useConfig(): ClientConfig {
  * In muestra mode, sensitive links and forms are disabled.
  */
 export function useIsMuestra(): boolean {
-  const ctx = useContext(ConfigContext)
-  return ctx?.isMuestra ?? false
+    const ctx = useContext(ConfigContext);
+    return ctx?.isMuestra ?? false;
 }
 
 /**
@@ -36,17 +36,17 @@ export function useIsMuestra(): boolean {
  * Pass isMuestra={true} for portfolio/demo routes (/m/...).
  */
 export function ConfigProvider({
-  config,
-  isMuestra = false,
-  children,
+    config,
+    isMuestra = false,
+    children,
 }: {
-  config: ClientConfig
-  isMuestra?: boolean
-  children: React.ReactNode
+    config: ClientConfig;
+    isMuestra?: boolean;
+    children: React.ReactNode;
 }) {
-  return (
-    <ConfigContext.Provider value={{ config, isMuestra }}>
-      {children}
-    </ConfigContext.Provider>
-  )
+    return (
+        <ConfigContext.Provider value={{ config, isMuestra }}>
+            {children}
+        </ConfigContext.Provider>
+    );
 }

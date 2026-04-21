@@ -1,10 +1,16 @@
 import { notFound } from "next/navigation"
 import QRCard from "@/components/wedding/qr-card"
 import QRCardXV from "@/components/wedding/qr-card-xv"
-import { getAllClientParams, getClientConfig, type ClientConfig } from "@/lib/get-client-config"
+import {
+  getAllClientParams,
+  getClientConfig,
+  isAccessTokenValid,
+  type ClientConfig,
+} from "@/lib/get-client-config"
 
 interface PageProps {
   params: Promise<{ tipo: string; slug: string }>
+  searchParams: Promise<{ k?: string }>
 }
 
 function BlankPage() {
@@ -15,8 +21,9 @@ export function generateStaticParams() {
   return getAllClientParams()
 }
 
-export default async function QRPage({ params }: PageProps) {
+export default async function QRPage({ params, searchParams }: PageProps) {
   const { tipo, slug } = await params
+  const { k } = await searchParams
 
   let data: ClientConfig
   try {
@@ -24,6 +31,7 @@ export default async function QRPage({ params }: PageProps) {
   } catch {
     notFound()
   }
+  if (!isAccessTokenValid(data, k)) notFound()
 
   const qrRaw = data.qrCard as Record<string, unknown> | undefined
   const meta = data.meta
@@ -31,8 +39,12 @@ export default async function QRPage({ params }: PageProps) {
   const couple = meta.coupleNames as { brideName?: string; groomName?: string } | undefined
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://momentounico.com.ar"
-  const invitationUrl =
+  const invitationUrlBase =
     (typeof qrRaw?.qrUrl === "string" && qrRaw.qrUrl) || `${baseUrl}/${tipo}/${slug}`
+  const invitationUrl =
+    k && /^[A-Za-z0-9]{6}$/.test(k)
+      ? `${invitationUrlBase}${invitationUrlBase.includes("?") ? "&" : "?"}k=${k}`
+      : invitationUrlBase
 
   if (tipo === "xv") {
     if (!data.qrCard || qrRaw?.enabled === false) {

@@ -32,6 +32,7 @@ interface RSVPSectionProps {
             id: string;
             label: string;
             placeholder?: string;
+            tituloPanel?: string;
         }[];
         submitButton: string;
     };
@@ -42,7 +43,9 @@ interface RSVPSectionProps {
     };
     panel?: {
         enabled: boolean;
-        codigo: string;
+        codigo?: string;
+        panelId?: string;
+        allowAnonymousToPanel?: boolean;
         confirmationMessage: string;
     };
 }
@@ -51,6 +54,7 @@ interface GuestForm {
     id?: string;
     firstName: string;
     lastName: string;
+    showLastName?: boolean;
     attendance: string;
     dietary: string;
     songRequest: string;
@@ -103,6 +107,45 @@ function applySingularPluralAdjustments(message: string, guestCount: number): st
         .replace(/\bpodremos\b/g, "podre");
 }
 
+function buildSongRequestSummary(guests: GuestForm[]): string | null {
+    const entries = guests
+        .map((g) => {
+            const song = g.songRequest?.trim();
+            if (!song) return null;
+            const fullName = `${g.firstName} ${g.lastName}`.trim();
+            return fullName ? `${fullName}: ${song}` : song;
+        })
+        .filter((value): value is string => Boolean(value));
+
+    if (entries.length === 0) return null;
+    if (entries.length === 1) return entries[0];
+    return entries.join(" | ");
+}
+
+function buildPanelExtraSummary(
+    guests: GuestForm[],
+    extraInputs: { id: string; label: string; placeholder?: string; tituloPanel?: string }[],
+): string | null {
+    const rows: string[] = [];
+    guests.forEach((guest) => {
+        const fullName = `${guest.firstName} ${guest.lastName}`.trim();
+        extraInputs.forEach((input) => {
+            const value = guest.extraValues?.[input.label]?.trim();
+            if (!value) return;
+            const panelTitle = (input.tituloPanel || input.label || "").trim();
+            if (!panelTitle) return;
+            rows.push(
+                guests.length > 1 && fullName
+                    ? `${fullName} - ${panelTitle}: ${value}`
+                    : `${panelTitle}: ${value}`,
+            );
+        });
+    });
+    if (rows.length === 0) return null;
+    if (rows.length === 1) return rows[0];
+    return rows.join(" | ");
+}
+
 export default function RSVPSection({
     title,
     deadline,
@@ -122,7 +165,7 @@ export default function RSVPSection({
             return acc;
         }, {});
     const [guests, setGuests] = useState<GuestForm[]>([
-        { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "", extraValues: createEmptyExtraValues() },
+        { firstName: "", lastName: "", showLastName: true, attendance: "", dietary: "Ninguno", songRequest: "", extraValues: createEmptyExtraValues() },
     ]);
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
@@ -157,6 +200,7 @@ export default function RSVPSection({
                                     id: int.id,
                                     firstName,
                                     lastName: lastParts.join(" "),
+                                    showLastName: lastParts.length > 0,
                                     attendance: int.estado === "confirmado" ? "yes" : int.estado === "no_asiste" ? "no" : "",
                                     dietary: int.restricciones || "Ninguno",
                                     songRequest: inv.cancion || "",
@@ -168,6 +212,7 @@ export default function RSVPSection({
                             setGuests([{
                                 firstName,
                                 lastName: lastParts.join(" "),
+                                showLastName: lastParts.length > 0,
                                 attendance: inv.estado === "confirmado" ? "yes" : inv.estado === "no_asiste" ? "no" : "",
                                 dietary: "Ninguno",
                                 songRequest: inv.cancion || "",
@@ -184,7 +229,7 @@ export default function RSVPSection({
         setGuestCount(count);
         const newGuests: GuestForm[] = [];
         for (let i = 0; i < count; i++) {
-            newGuests.push(guests[i] || { firstName: "", lastName: "", attendance: "", dietary: "Ninguno", songRequest: "", extraValues: createEmptyExtraValues() });
+            newGuests.push(guests[i] || { firstName: "", lastName: "", showLastName: true, attendance: "", dietary: "Ninguno", songRequest: "", extraValues: createEmptyExtraValues() });
         }
         setGuests(newGuests);
     };
@@ -211,6 +256,8 @@ export default function RSVPSection({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (isMuestra) { setSubmitted(true); return; }
+        const songSummary = buildSongRequestSummary(guests);
+        const panelExtraSummary = buildPanelExtraSummary(guests, extraInputs);
 
         if (panel?.enabled && panel?.codigo) {
             setSubmitting(true);
@@ -227,19 +274,124 @@ export default function RSVPSection({
                             restricciones: g.dietary !== "Ninguno" ? g.dietary : null,
                         })),
                         asiste: guests.some((g) => g.attendance === "yes"),
-                        mensaje: guests[0]?.songRequest || null,
-                        cancion: guests[0]?.songRequest || null,
+                        mensaje: panelExtraSummary,
+                        cancion: songSummary,
                     }),
                 });
+                const responseData = await res.json().catch(() => ({} as { error?: string; invitado?: InvitadoData }));
                 if (!res.ok) {
-                    const data = await res.json();
-                    throw new Error(data.error || "Error al enviar confirmacion");
+                    throw new Error(responseData.error || "Error al enviar confirmacion");
+                }
+                if (responseData.invitado) {
+                    setInvitado(responseData.invitado);
                 }
                 setSubmitted(true);
                 setAlreadyConfirmed(true);
                 setEditing(false);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error al enviar confirmacion");
+            } finally {
+                setSubmitting(false);
+            }
+            return;
+        }
+
+        if (
+            panel?.enabled &&
+            !panel?.codigo &&
+            panel?.panelId &&
+            panel?.allowAnonymousToPanel
+        ) {
+            setSubmitting(true);
+            setError(null);
+            try {
+                const principalName = `${guests[0]?.firstName || ""} ${guests[0]?.lastName || ""}`.trim();
+                const createPayload =
+                    guests.length > 1
+                        ? {
+                              nombre: principalName || "Invitado",
+                              tipo: "familia",
+                              integrantes: guests.map((g) =>
+                                  `${g.firstName} ${g.lastName}`.trim(),
+                              ),
+                          }
+                        : {
+                              nombre: principalName || "Invitado",
+                              tipo: "persona",
+                          };
+
+                const createRes = await fetch(`/api/panel/${panel.panelId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(createPayload),
+                });
+                const createData = await createRes
+                    .json()
+                    .catch(
+                        () =>
+                            ({} as {
+                                error?: string;
+                                invitado?: InvitadoData & { codigo?: string };
+                            }),
+                    );
+                if (!createRes.ok || !createData.invitado?.codigo) {
+                    const rawMsg =
+                        createData.error ||
+                        "No se pudo crear el invitado en el panel";
+                    const friendlyMsg = /l[ií]mite de plazas|l[ií]mite/i.test(
+                        rawMsg,
+                    )
+                        ? "Error al registrar confirmación. Contactá con el anfitrión del evento."
+                        : rawMsg;
+                    throw new Error(
+                        friendlyMsg,
+                    );
+                }
+
+                const invitadoCreado = createData.invitado;
+                const confirmRes = await fetch(
+                    `/api/rsvp/${invitadoCreado.codigo}`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            integrantes: guests.map((g, idx) => ({
+                                id: invitadoCreado.integrantes?.[idx]?.id,
+                                nombre: `${g.firstName} ${g.lastName}`.trim(),
+                                asiste: g.attendance === "yes",
+                                restricciones:
+                                    g.dietary !== "Ninguno" ? g.dietary : null,
+                            })),
+                            asiste: guests.some((g) => g.attendance === "yes"),
+                            mensaje: panelExtraSummary,
+                            cancion: songSummary,
+                        }),
+                    },
+                );
+                const confirmData = await confirmRes
+                    .json()
+                    .catch(
+                        () =>
+                            ({} as { error?: string; invitado?: InvitadoData }),
+                    );
+                if (!confirmRes.ok) {
+                    throw new Error(
+                        confirmData.error ||
+                            "Error al guardar la confirmacion en el panel",
+                    );
+                }
+                if (confirmData.invitado) {
+                    setInvitado(confirmData.invitado);
+                }
+                setSubmitted(true);
+                setAlreadyConfirmed(true);
+                setEditing(false);
+            } catch (err) {
+                setError(
+                    err instanceof Error
+                        ? err.message
+                        : "Error al enviar confirmacion",
+                );
             } finally {
                 setSubmitting(false);
             }
@@ -390,18 +542,26 @@ export default function RSVPSection({
                                     required
                                     value={guest.firstName}
                                     onChange={(e) => updateGuest(index, "firstName", e.target.value)}
-                                    className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
+                                    disabled={Boolean(invitado)}
+                                    className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                                     style={{ fontSize: "16px" }}
                                 />
-                                <input
-                                    type="text"
-                                    placeholder={fields.lastName + " *"}
-                                    required
-                                    value={guest.lastName}
-                                    onChange={(e) => updateGuest(index, "lastName", e.target.value)}
-                                    className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
-                                    style={{ fontSize: "16px" }}
-                                />
+                                {guest.showLastName !== false && (
+                                    <input
+                                        type="text"
+                                        placeholder={
+                                            invitado
+                                                ? fields.lastName
+                                                : fields.lastName + " *"
+                                        }
+                                        required={!invitado}
+                                        value={guest.lastName}
+                                        onChange={(e) => updateGuest(index, "lastName", e.target.value)}
+                                        disabled={Boolean(invitado)}
+                                        className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
+                                        style={{ fontSize: "16px" }}
+                                    />
+                                )}
 
                                 <div className="border-b border-current/10 px-4 py-3">
                                     <p className="mb-2 text-[11px] font-medium tracking-wide text-inherit/55">

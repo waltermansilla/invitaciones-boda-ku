@@ -138,6 +138,67 @@ Listo: ese es el flujo completo para “generar y hacer funcionar” el panel en
 
 ---
 
+## Bloque `rsvpPanel` completo (JSON)
+
+Referencia rápida de todas las claves disponibles:
+
+```json
+"rsvpPanel": {
+  "enabled": true,
+  "confirmacion": "formulario",
+  "panelId": "anto-walter-boda",
+  "fechaEvento": "2027-02-16",
+  "confirmationMessage": "Gracias por confirmar! Nos vemos el 16 de febrero.",
+  "limiteInvitados": 120,
+  "registrarSinCodigoEnPanel": false,
+  "theme": {
+    "primaryColor": "#b8a88a"
+  },
+  "labels": {
+    "title": "Panel de Invitados",
+    "totalLabel": "Total invitados",
+    "confirmedLabel": "Confirmados",
+    "pendingLabel": "Pendientes",
+    "declinedLabel": "No asisten",
+    "paymentPending": "Pago pendiente",
+    "addGuest": "Agregar Invitado",
+    "copyLink": "Copiar link",
+    "manualConfirm": "Confirmación manual",
+    "paidButton": "Ya pagó",
+    "unpaidButton": "¿Pagó tarjeta?"
+  }
+}
+```
+
+Qué hace cada clave:
+
+- `enabled`: activa/desactiva el sistema de panel para esa invitación.
+- `confirmacion`:
+  - `formulario`: usa la sección `rsvp` y guarda confirmaciones por API.
+  - `comun`: usa `confirmarWhatsapp` y registra en panel antes de abrir WhatsApp.
+- `panelId`: ID único del panel (URL: `/panel/[panelId]`).
+- `fechaEvento`: fecha para el contador interno del panel (`YYYY-MM-DD`).
+- `confirmationMessage`: texto que ve el invitado al confirmar.
+- `limiteInvitados` (opcional): tope de plazas. Si falta, no hay límite.
+- `registrarSinCodigoEnPanel` (solo `confirmacion: "formulario"`):
+  - `true`: si entran sin `?c=` y envían RSVP, se crea invitado en panel.
+  - `false`: si entran sin `?c=`, el RSVP solo sale por WhatsApp.
+- `theme`: colores del panel.
+- `labels`: textos personalizables del panel.
+
+---
+
+## Comportamiento sin `?c=` (invitado no cargado)
+
+Aplica cuando la invitación tiene sección `rsvp`:
+
+- Si `registrarSinCodigoEnPanel = true`: el envío crea invitado en panel y guarda su confirmación.
+- Si `registrarSinCodigoEnPanel = false` (o no existe): el envío solo va por WhatsApp.
+
+En `confirmacion: "comun"`, el registro en panel ocurre con links personalizados (`?c=`), porque ese flujo trabaja sobre invitados existentes.
+
+---
+
 ## Si el cliente **ya tenía** otro `panelId` y datos en Supabase
 
 Si cambiás solo el JSON y **no** tocás Supabase:

@@ -1,34 +1,42 @@
-import { getClientConfig } from "@/lib/get-client-config"
+import { getClientConfig } from "@/lib/get-client-config";
 
 interface LayoutProps {
-  children: React.ReactNode
-  params: Promise<{ tipo: string; slug: string }>
+    children: React.ReactNode;
+    params: Promise<{ tipo: string; slug: string }>;
 }
 
 export default async function ClientLayout({ children, params }: LayoutProps) {
-  const { tipo, slug } = await params
-  const config = getClientConfig(tipo, slug)
-  const { theme } = config
+    const { tipo, slug } = await params;
+    const config = getClientConfig(tipo, slug);
+    const { theme } = config;
 
-  // Handle both old format (theme.font as string) and new format (theme.font.family)
-  const fontFamily = typeof theme.font === "string" 
-    ? theme.font 
-    : theme.font?.family || "Cormorant Garamond"
-  
-  const fontWeights = typeof theme.font === "string"
-    ? "300,400,500,600,700"
-    : theme.font?.weights || "300,400,500,600,700"
+    // Handle both old format (theme.font as string) and new format (theme.font.family)
+    const fontFamily =
+        typeof theme.font === "string"
+            ? theme.font
+            : theme.font?.family || "Cormorant Garamond";
 
-  // Build Google Fonts URL - encode properly for fonts with spaces
-  const encodedFamily = fontFamily.replace(/ /g, "+")
-  const fontUrl = `https://fonts.googleapis.com/css2?family=${encodedFamily}:wght@${fontWeights}&display=swap`
+    const fontWeights =
+        typeof theme.font === "string"
+            ? "300,400,500,600,700"
+            : theme.font?.weights || "300,400,500,600,700";
 
-  return (
-    <>
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href={fontUrl} rel="stylesheet" />
-      <style dangerouslySetInnerHTML={{ __html: `
+    // Build Google Fonts URL - encode properly for fonts with spaces
+    const encodedFamily = fontFamily.replace(/ /g, "+");
+    const fontUrl = `https://fonts.googleapis.com/css2?family=${encodedFamily}:wght@${fontWeights}&display=swap`;
+
+    return (
+        <>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link
+                rel="preconnect"
+                href="https://fonts.gstatic.com"
+                crossOrigin="anonymous"
+            />
+            <link href={fontUrl} rel="stylesheet" />
+            <style
+                dangerouslySetInnerHTML={{
+                    __html: `
         html, body {
           background-color: ${theme.backgroundColor} !important;
           font-family: '${fontFamily}', ui-sans-serif, system-ui, sans-serif !important;
@@ -71,8 +79,10 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
           --sidebar-border: ${theme.primaryColor}25;
           --sidebar-ring: ${theme.primaryColor};
         }
-      `}} />
-      {children}
-    </>
-  )
+      `,
+                }}
+            />
+            {children}
+        </>
+    );
 }

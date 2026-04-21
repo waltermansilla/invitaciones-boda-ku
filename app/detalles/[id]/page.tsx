@@ -1990,16 +1990,19 @@ export default function DetallesPage() {
                             <p className="text-sm font-medium text-[#5A4A3F]">
                                 Cómo crear el link:
                             </p>
-                            <div className="overflow-x-auto pb-1">
+                            <div className="overflow-x-auto pb-1 snap-x snap-mandatory">
                                 <div className="flex min-w-max gap-3">
-                                    {[1, 2, 3].map((step) => (
+                                    {[1, 2, 3, 4].map((step) => (
                                         <article
                                             key={step}
-                                            className="w-56 shrink-0 rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3"
+                                            className="w-56 shrink-0 snap-start rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3"
                                         >
+                                            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#7A5F45]">
+                                                Paso {step}
+                                            </p>
                                             <div className="relative mb-2 h-80 overflow-hidden rounded-lg border border-[#E1D7C9]">
                                                 <Image
-                                                    src={`/detalles-usuario/images/${step}.jpg`}
+                                                    src={`/detalles-usuario/album%20drive/images/${step}.${step === 4 ? "jpeg" : "jpg"}`}
                                                     alt={`Paso ${step} para compartir Drive`}
                                                     fill
                                                     className="object-cover object-top"
@@ -2010,7 +2013,9 @@ export default function DetallesPage() {
                                                     ? "Abris Google Drive, tocas + y creas una carpeta."
                                                     : step === 2
                                                       ? "Dentro de la carpeta tocas los 3 puntitos y vas a administrar acceso."
-                                                      : "Seleccionás 'cualquier usuario con el vínculo', copiás el enlace y lo pegás aquí en el formulario."}
+                                                      : step === 3
+                                                        ? "Seleccionás 'cualquier usuario con el vínculo', copiás el enlace y lo pegás aquí en el formulario."
+                                                        : "IMPORTANTE: Cambiar a modo 'editor'. Solo de esa manera tus invitados podrán agregar sus fotos."}
                                             </p>
                                         </article>
                                     ))}
@@ -2056,6 +2061,38 @@ export default function DetallesPage() {
                                     * Campo obligatorio
                                 </p>
                             ) : null}
+                            <p className="text-sm font-medium text-[#5A4A3F]">
+                                Cómo crear el link:
+                            </p>
+                            <div className="overflow-x-auto pb-1 snap-x snap-mandatory">
+                                <div className="flex min-w-max gap-3">
+                                    {[1, 2, 3].map((step) => (
+                                        <article
+                                            key={step}
+                                            className="w-56 shrink-0 snap-start rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3"
+                                        >
+                                            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#7A5F45]">
+                                                Paso {step}
+                                            </p>
+                                            <div className="relative mb-2 h-80 overflow-hidden rounded-lg border border-[#E1D7C9]">
+                                                <Image
+                                                    src={`/detalles-usuario/playlist%20spotify/images/${step}.jpeg`}
+                                                    alt={`Paso ${step} para crear playlist Spotify`}
+                                                    fill
+                                                    className="object-cover object-top"
+                                                />
+                                            </div>
+                                            <p className="text-xs text-[#6A5C52]">
+                                                {step === 1
+                                                    ? "Toca 'Crear' y seleccioná 'Playlist colaborativa'."
+                                                    : step === 2
+                                                      ? "Toca los 3 puntitos."
+                                                      : "Selecciona 'Invitá colaboradores', copiá el enlace y pegalo acá."}
+                                            </p>
+                                        </article>
+                                    ))}
+                                </div>
+                            </div>
                         </>
                     ) : null}
 

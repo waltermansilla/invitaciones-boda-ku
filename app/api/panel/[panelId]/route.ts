@@ -5,8 +5,15 @@ import { inferInvitationPathFromPanelId } from "@/lib/client-json-helpers"
 import {
   findConfigByPanelId,
   getEventDataFromConfig,
+  invitationAccessTokenFromConfig,
   invitationPublicPathFromConfig,
 } from "@/lib/config-loader"
+import { panelConfirmacionFromConfig } from "@/lib/panel-confirmacion"
+import {
+  limiteInvitadosPanelFromConfig,
+  plazasDelAltaInvitado,
+  plazasOcupadasPorInvitados,
+} from "@/lib/panel-plazas"
 
 type EventoRow = Record<string, unknown> & {
   id?: string
@@ -66,6 +73,12 @@ export async function GET(
     const invitationPath =
       invitationPublicPathFromConfig(config) ??
       inferInvitationPathFromPanelId(panelId)
+    const invitationToken = invitationAccessTokenFromConfig(config)
+
+    const confirmacionInvitacion = panelConfirmacionFromConfig(
+      config?.rsvpPanel?.confirmacion,
+    )
+    const limiteInvitados = limiteInvitadosPanelFromConfig(config?.rsvpPanel)
 
     const { data: evento, error: eventoError } = await supabase
       .from("eventos")
@@ -115,9 +128,13 @@ export async function GET(
         invitados: [],
         stats: { confirmados: 0, noAsisten: 0, pendientes: 0 },
         invitationPath,
+        invitationToken,
         panelConfig: {
           theme: configData.panel_theme,
           labels: configData.panel_labels,
+          confirmacion: confirmacionInvitacion,
+          limiteInvitados,
+          plazasOcupadas: 0,
         },
       })
     }
@@ -161,14 +178,20 @@ export async function GET(
       }
     })
 
+    const plazasOcupadas = plazasOcupadasPorInvitados(invitados || [])
+
     return NextResponse.json({
       evento: eventoMerged,
       invitados: invitados || [],
       stats: { confirmados, noAsisten, pendientes },
       invitationPath,
+      invitationToken,
       panelConfig: {
         theme: configData.panel_theme,
         labels: configData.panel_labels,
+        confirmacion: confirmacionInvitacion,
+        limiteInvitados,
+        plazasOcupadas,
       },
     })
   } catch (e) {
@@ -199,6 +222,39 @@ export async function POST(
 
   if (!evento) {
     return NextResponse.json({ error: "Evento no encontrado" }, { status: 404 })
+  }
+
+  const configPost = findConfigByPanelId(panelId)
+  if (
+    panelConfirmacionFromConfig(configPost?.rsvpPanel?.confirmacion) ===
+      "comun" &&
+    body.tipo === "familia"
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          "Con confirmación común solo se permiten invitados individuales (sin familia).",
+      },
+      { status: 400 },
+    )
+  }
+
+  const limitePost = limiteInvitadosPanelFromConfig(configPost?.rsvpPanel)
+  if (limitePost !== null) {
+    const { data: existentes } = await supabase
+      .from("invitados")
+      .select(`*, integrantes (*)`)
+      .eq("evento_id", evento.id)
+    const ocupadas = plazasOcupadasPorInvitados(existentes || [])
+    const delta = plazasDelAltaInvitado(body.tipo, body.integrantes)
+    if (ocupadas + delta > limitePost) {
+      return NextResponse.json(
+        {
+          error: `Se alcanzó el límite de plazas del panel (${limitePost}).`,
+        },
+        { status: 400 },
+      )
+    }
   }
 
   const codigo = nanoid(8)

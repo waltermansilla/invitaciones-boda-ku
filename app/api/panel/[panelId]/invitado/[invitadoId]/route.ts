@@ -1,5 +1,10 @@
 import { createApiClient } from "@/lib/supabase/api"
 import { NextRequest, NextResponse } from "next/server"
+import { findConfigByPanelId } from "@/lib/config-loader"
+import {
+  limiteInvitadosPanelFromConfig,
+  plazasOcupadasPorInvitados,
+} from "@/lib/panel-plazas"
 
 // GET: Obtener invitado específico
 export async function GET(
@@ -27,9 +32,45 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ panelId: string; invitadoId: string }> }
 ) {
-  const { invitadoId } = await params
+  const { panelId, invitadoId } = await params
   const body = await request.json()
   const supabase = createApiClient()
+
+  const limitePut = limiteInvitadosPanelFromConfig(
+    findConfigByPanelId(panelId)?.rsvpPanel,
+  )
+  if (
+    limitePut !== null &&
+    body.integrantes !== undefined &&
+    Array.isArray(body.integrantes)
+  ) {
+    const { data: invRow, error: invErr } = await supabase
+      .from("invitados")
+      .select("id, tipo, evento_id, integrantes (id)")
+      .eq("id", invitadoId)
+      .single()
+
+    if (!invErr && invRow?.tipo === "familia" && invRow.evento_id) {
+      const { data: allInv } = await supabase
+        .from("invitados")
+        .select("id, tipo, integrantes (id)")
+        .eq("evento_id", invRow.evento_id)
+
+      const sinEste = (allInv || []).filter(
+        (i: { id: string }) => i.id !== invitadoId,
+      )
+      const otrasPlazas = plazasOcupadasPorInvitados(sinEste)
+      const nuevasEste = Math.max(1, body.integrantes.length)
+      if (otrasPlazas + nuevasEste > limitePut) {
+        return NextResponse.json(
+          {
+            error: `Se alcanzó el límite de plazas del panel (${limitePut}).`,
+          },
+          { status: 400 },
+        )
+      }
+    }
+  }
 
   const updateData: Record<string, unknown> = {}
 
@@ -84,14 +125,16 @@ export async function PUT(
     // Actualizar existentes
     for (const int of body.integrantes) {
       if (int.id && !int.id.startsWith("new") && currentIds.includes(int.id)) {
-        await supabase.from("integrantes").update({ nombre: int.nombre }).eq("id", int.id)
+        const payload: Record<string, unknown> = { nombre: int.nombre }
+        if (int.estado !== undefined) payload.estado = int.estado
+        await supabase.from("integrantes").update(payload).eq("id", int.id)
       }
     }
 
     // Crear nuevos
     const newIntegrantes = body.integrantes
       .filter((i: { id: string }) => !i.id || i.id.startsWith("new"))
-      .map((i: { nombre: string }) => ({ invitado_id: invitadoId, nombre: i.nombre }))
+      .map((i: { nombre: string; estado?: string }) => ({ invitado_id: invitadoId, nombre: i.nombre, estado: i.estado || "pendiente" }))
 
     if (newIntegrantes.length > 0) {
       await supabase.from("integrantes").insert(newIntegrantes)

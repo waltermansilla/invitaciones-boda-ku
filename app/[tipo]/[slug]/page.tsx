@@ -1,10 +1,16 @@
 import type { Metadata } from "next"
-import { getClientConfig, getAllClientParams } from "@/lib/get-client-config"
+import { notFound } from "next/navigation"
+import {
+  getClientConfig,
+  getAllClientParams,
+  isAccessTokenValid,
+} from "@/lib/get-client-config"
 import { ConfigProvider } from "@/lib/config-context"
 import WeddingInvitation from "@/components/wedding/wedding-invitation"
 
 interface PageProps {
   params: Promise<{ tipo: string; slug: string }>
+  searchParams: Promise<{ k?: string }>
 }
 
 function getPublicSiteUrl() {
@@ -56,9 +62,11 @@ export function generateStaticParams() {
   return getAllClientParams()
 }
 
-export default async function ClientPage({ params }: PageProps) {
+export default async function ClientPage({ params, searchParams }: PageProps) {
   const { tipo, slug } = await params
+  const { k } = await searchParams
   const config = getClientConfig(tipo, slug)
+  if (!isAccessTokenValid(config, k)) notFound()
 
   return (
     <ConfigProvider config={config}>

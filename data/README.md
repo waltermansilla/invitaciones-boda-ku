@@ -9,7 +9,7 @@ Todo el contenido editable por “dato” vive acá, agrupado por uso.
 | **`config/`** | Reservado para ajustes globales adicionales (si aplica). |
 | **`templates/`** | Plantillas para **copiar** al crear un cliente: `_TEMPLATE_BODA.json`, `_TEMPLATE_XV.json`. |
 | **`reference/`** | Ejemplos o legacy: `wedding-config.json` (no es la fuente de una URL). |
-| **`admin/`** | `admin.json` — datos del panel admin (rutas API bajo `app/api/admin/`). |
+| **`clientes/`** | JSON por invitación real (boda, xv, baby, etc.), incluyendo bloque opcional `access` para token. |
 | **`docs/`** | Manuales ligados a **datos** del sitio (`README-landing.md`, `MANUAL_OPERATIVO.md`, etc.). |
 
 Los medios (fotos/videos de la landing) siguen en **`public/landing/media/`**, no en `data/`.

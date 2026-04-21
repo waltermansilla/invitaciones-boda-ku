@@ -460,7 +460,10 @@ function replaceDeliveryWindowTokens(
     return value
         .replace(/\{\{deliveryRangeEs\}\}/g, deliveryRangeEs)
         .replace(/\{\{deliveryRangeEn\}\}/g, deliveryRangeEn)
-        .replace(/\{\{deliveryRange\}\}/g, locale === "en" ? deliveryRangeEn : deliveryRangeEs);
+        .replace(
+            /\{\{deliveryRange\}\}/g,
+            locale === "en" ? deliveryRangeEn : deliveryRangeEs,
+        );
 }
 
 function applyDeliveryWindowTokens<T>(input: T, locale: LandingLocale): T {
@@ -468,7 +471,9 @@ function applyDeliveryWindowTokens<T>(input: T, locale: LandingLocale): T {
         return replaceDeliveryWindowTokens(input, locale) as T;
     }
     if (Array.isArray(input)) {
-        return input.map((item) => applyDeliveryWindowTokens(item, locale)) as T;
+        return input.map((item) =>
+            applyDeliveryWindowTokens(item, locale),
+        ) as T;
     }
     if (input && typeof input === "object") {
         const out: Record<string, unknown> = {};
@@ -1929,10 +1934,7 @@ function incluyePrimerFrameSrc(videoSrc: string): string {
 }
 
 /** Pausa, lleva a t≈0 y ejecuta `then` tras `seeked` (o fallback si el seek no dispara). */
-function whenVideoAtStartThen(
-    v: HTMLVideoElement,
-    then: () => void,
-): void {
+function whenVideoAtStartThen(v: HTMLVideoElement, then: () => void): void {
     v.pause();
     let finished = false;
     const done = () => {
@@ -2016,10 +2018,11 @@ function IncluyeSection({
     const incluyePrevVisibleRatioRef = useRef(0);
     const incluyeClampedToStartRef = useRef(false);
     const [incluyeDomReady, setIncluyeDomReady] = useState(false);
-    const [incluyeMainVideoHasData, setIncluyeMainVideoHasData] = useState(false);
+    const [incluyeMainVideoHasData, setIncluyeMainVideoHasData] =
+        useState(false);
     const [incluyePosterDismissed, setIncluyePosterDismissed] = useState(false);
     const posterSrc = showVideo
-        ? (data.videoPosterSrc?.trim() || incluyePrimerFrameSrc(mediaSrc))
+        ? data.videoPosterSrc?.trim() || incluyePrimerFrameSrc(mediaSrc)
         : "";
 
     useLayoutEffect(() => {
@@ -2251,10 +2254,7 @@ function IncluyeSection({
                                                       transitionTimingFunction:
                                                           "ease-out, ease-out",
                                                   }
-                                                : blockRevealStyle(
-                                                      revealed,
-                                                      0,
-                                                  )
+                                                : blockRevealStyle(revealed, 0)
                                         }
                                         aria-hidden
                                     >
@@ -2921,7 +2921,9 @@ function CatalogMedia({
 /** Segmento de tipo en href de muestra: `/m/{tipo}/...` */
 type EstiloCatalogKind = string;
 
-function estiloKindFromHref(href: string | undefined): EstiloCatalogKind | null {
+function estiloKindFromHref(
+    href: string | undefined,
+): EstiloCatalogKind | null {
     if (!href) return null;
     const m = href.trim().match(/^\/m\/([^/]+)(\/|$)/i);
     if (!m) return null;
@@ -2930,7 +2932,10 @@ function estiloKindFromHref(href: string | undefined): EstiloCatalogKind | null 
 
 function estiloItemsGroupedByKind(
     items: LandingData["sections"]["estilos"]["items"],
-): { kind: EstiloCatalogKind; items: LandingData["sections"]["estilos"]["items"] }[] {
+): {
+    kind: EstiloCatalogKind;
+    items: LandingData["sections"]["estilos"]["items"];
+}[] {
     const out: {
         kind: EstiloCatalogKind;
         items: LandingData["sections"]["estilos"]["items"];
@@ -3213,7 +3218,8 @@ function EstilosCarousel({
                                             className="text-lg font-medium tracking-tight md:text-xl"
                                             style={{
                                                 fontFamily:
-                                                    theme.typography.headingFont,
+                                                    theme.typography
+                                                        .headingFont,
                                                 color: tx.heading,
                                                 ...blockRevealStyle(
                                                     revealed,
@@ -3243,9 +3249,7 @@ function EstilosCarousel({
                     </div>
                 ) : (
                     <div className={`mt-12 ${estilosCarouselRowClass}`}>
-                        {data.items.map((item, i) =>
-                            renderEstiloCard(item, i),
-                        )}
+                        {data.items.map((item, i) => renderEstiloCard(item, i))}
                     </div>
                 )}
                 {endHeroPrimaryCta ? (
@@ -4208,9 +4212,7 @@ function FaqTdy({
                                         : "¿Lista para la invitación que vas a amar compartir?")
                                 }
                                 revealed={revealed}
-                                baseDelayMs={
-                                    120 + data.items.length * 34 + 52
-                                }
+                                baseDelayMs={120 + data.items.length * 34 + 52}
                                 wordStepMs={14}
                             />
                         </h3>
@@ -4350,10 +4352,7 @@ export default function LandingPageHome({
         });
         return next;
     }, [baseData, locale]);
-    const theme = useMemo(
-        () => mergeTheme(baseData.theme),
-        [baseData.theme],
-    );
+    const theme = useMemo(() => mergeTheme(baseData.theme), [baseData.theme]);
     const themeAlt = useMemo<LandingTheme>(
         () => ({
             ...theme,
@@ -4401,8 +4400,7 @@ export default function LandingPageHome({
         if (typeof window === "undefined") return;
         if (syncLocaleFromSearch) {
             const urlLang =
-                new URLSearchParams(window.location.search).get("lang") ===
-                "en"
+                new URLSearchParams(window.location.search).get("lang") === "en"
                     ? "en"
                     : "es";
             if (locale !== urlLang) return;
@@ -4472,12 +4470,7 @@ export default function LandingPageHome({
             };
         }
         return undefined;
-    }, [
-        sections.servicio,
-        compactHeroLayout,
-        locale,
-        showLang,
-    ]);
+    }, [sections.servicio, compactHeroLayout, locale, showLang]);
 
     const postEstilosRows = pageLayout?.postEstilosSections;
 
