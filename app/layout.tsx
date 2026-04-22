@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     title: "Momento Único | Invitaciones Digitales",
     description: "Invitaciones digitales para bodas, XV y eventos especiales.",
     manifest: "/manifest.json",
+    other: {
+        "facebook-domain-verification": "k3cml5epxptco67r97d2ypxvd0jr51",
+    },
 };
 
 export default function RootLayout({
