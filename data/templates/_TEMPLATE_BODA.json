@@ -653,6 +653,27 @@
 
         {
             "// ----------------------------------------------------------------------": "",
+            "// PLAYLIST - Link a Spotify                                             ": "",
+            "// ----------------------------------------------------------------------": "",
+            "// title/description: textos                                             ": "",
+            "// button: link a la playlist                                            ": "",
+            "// ----------------------------------------------------------------------": "",
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "enabled": true,
+            "data": {
+                "title": "Arma la playlist",
+                "description": "Agrega tus canciones favoritas a la playlist de la fiesta.",
+                "button": {
+                    "text": "Ir a la playlist",
+                    "url": "https://open.spotify.com",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "// ----------------------------------------------------------------------": "",
             "// TRUTHS - Juego A o B                                                  ": "",
             "// ----------------------------------------------------------------------": "",
             "// title: titulo del juego                                               ": "",
@@ -688,8 +709,9 @@
             "// ----------------------------------------------------------------------": "",
             "// icon: 'gift','creditCard','heart','star','sparkles','handHeart','dollar'": "",
             "// title/description: textos                                             ": "",
-            "// button: abre el modal                                                 ": "",
-            "// modal:                                                                ": "",
+            "// showButton: true/false (opcional, default true)                       ": "",
+            "// button: abre el modal (opcional si showButton=false)                  ": "",
+            "// modal: (opcional si showButton=false)                                 ": "",
             "//   title: titulo del popup                                             ": "",
             "//   suggestedValueLabel: etiqueta arriba de los valores                 ": "",
             "//   suggestedValue: UN solo valor (string). Ej: '$20.000'               ": "",
@@ -706,6 +728,7 @@
                 "icon": "gift",
                 "title": "Valor Tarjeta",
                 "description": "Si queres hacernos un regalo, podes contribuir con un valor para nuestra nueva vida juntos.",
+                "showButton": true,
                 "button": {
                     "text": "Ver datos",
                     "url": "#",
@@ -907,27 +930,6 @@
 
         {
             "// ----------------------------------------------------------------------": "",
-            "// PLAYLIST - Link a Spotify                                             ": "",
-            "// ----------------------------------------------------------------------": "",
-            "// title/description: textos                                             ": "",
-            "// button: link a la playlist                                            ": "",
-            "// ----------------------------------------------------------------------": "",
-            "type": "playlist",
-            "id": "playlist-suggestion",
-            "enabled": true,
-            "data": {
-                "title": "Arma la playlist",
-                "description": "Agrega tus canciones favoritas a la playlist de la fiesta.",
-                "button": {
-                    "text": "Ir a la playlist",
-                    "url": "https://open.spotify.com",
-                    "variant": "primary"
-                }
-            }
-        },
-
-        {
-            "// ----------------------------------------------------------------------": "",
             "// RSVP - Formulario de confirmacion                                     ": "",
             "// ----------------------------------------------------------------------": "",
             "// title: titulo de la seccion                                           ": "",
@@ -962,8 +964,9 @@
                         "Celiaco",
                         "Otro"
                     ],
-                    "_comment_songRequestLabel": "Opcional: label para el campo de cancion (si no se incluye, solo se muestra el placeholder)",
+                    "_comment_songRequestLabel": "Opcional: label para el campo de cancion (si no se incluye, solo se muestra el placeholder).",
                     "songRequestLabel": "Cancion sugerida (opcional)",
+                    "_comment_songRequest": "Opcional: placeholder del campo de cancion. Si se omite o queda vacio, el campo de cancion no se muestra.",
                     "songRequest": "Que cancion no puede faltar?",
                     "_comment_extraInputs": "Opcional: mas campos de texto. Se muestran debajo del campo de cancion.",
                     "extraInputs": [

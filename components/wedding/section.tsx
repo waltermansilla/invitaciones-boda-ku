@@ -194,8 +194,9 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
             icon={data.icon as string}
             title={data.title as string}
             description={data.description as string}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
-            modal={data.modal as { title: string; suggestedValue: string; description: string; transferData: { label: string; value: string }[] }}
+            showButton={data.showButton as boolean | undefined}
+            button={data.button as { text: string; url: string; variant: "primary" | "secondary" } | undefined}
+            modal={data.modal as { title: string; suggestedValue: string; description: string; transferData: { label: string; value: string }[] } | undefined}
           />
         )
 

@@ -563,6 +563,24 @@
 
         {
             "// ----------------------------------------------------------------------": "",
+            "// PLAYLIST - Link a Spotify                                             ": "",
+            "// ----------------------------------------------------------------------": "",
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "enabled": true,
+            "data": {
+                "title": "Arma la playlist",
+                "description": "Agrega tus canciones favoritas a la playlist de mi fiesta.",
+                "button": {
+                    "text": "Ir a la playlist",
+                    "url": "https://open.spotify.com",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "// ----------------------------------------------------------------------": "",
             "// TRUTHS - Juego A o B                                                  ": "",
             "// ----------------------------------------------------------------------": "",
             "type": "truths",
@@ -588,6 +606,8 @@
             "// ----------------------------------------------------------------------": "",
             "// GIFT CARD - Tarjeta de regalo                                         ": "",
             "// ----------------------------------------------------------------------": "",
+            "// showButton: true/false (opcional, default true)                       ": "",
+            "// button/modal: opcionales si showButton=false                           ": "",
             "// suggestedValue: UN solo valor. Ej: '$15.000'                           ": "",
             "// suggestedValues: MULTIPLES valores (array, hasta 4). Usar UNO u OTRO  ": "",
             "//   Ejemplo: [{ label: 'Mayores', value: '$68.000' }, { label: 'Menores', value: '$30.000' }]": "",
@@ -601,6 +621,7 @@
                 "icon": "gift",
                 "title": "Valor Tarjeta",
                 "description": "Si queres hacerme un regalo, podes contribuir con un valor para mi fiesta.",
+                "showButton": true,
                 "button": {
                     "text": "Ver datos",
                     "url": "#",
@@ -758,24 +779,6 @@
                             "explanation": "Asado siempre!"
                         }
                     ]
-                }
-            }
-        },
-
-        {
-            "// ----------------------------------------------------------------------": "",
-            "// PLAYLIST - Link a Spotify                                             ": "",
-            "// ----------------------------------------------------------------------": "",
-            "type": "playlist",
-            "id": "playlist-suggestion",
-            "enabled": true,
-            "data": {
-                "title": "Arma la playlist",
-                "description": "Agrega tus canciones favoritas a la playlist de mi fiesta.",
-                "button": {
-                    "text": "Ir a la playlist",
-                    "url": "https://open.spotify.com",
-                    "variant": "primary"
                 }
             }
         },

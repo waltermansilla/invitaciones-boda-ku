@@ -1,0 +1,390 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Nuestra Boda - Romina & Franco",
+        "description": "Estamos felices de invitarte a celebrar nuestra boda.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Franco",
+            "brideName": "Romina",
+            "separator": "&"
+        }
+    },
+
+    "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "access": {
+        "tokenEnabled": true,
+        "token": "Rd4k3b",
+        "allowLegacyUntil": ""
+    },
+
+    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
+    "rsvpPanel": {
+        "enabled": true,
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": true,
+        "limiteInvitados": 150,
+        "panelId": "romina-franco-b2ksTb8p",
+        "fechaEvento": "2026-10-17",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 17 de Octubre.",
+        "theme": {
+            "primaryColor": "#42362f"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Tarjeta pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Ya pagó",
+            "unpaidButton": "¿Pagó tarjeta?"
+        }
+    },
+
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma.  marron oscuro 2c231e, claro 42362f, un poco mas claro 5c4d44",
+    "theme": {
+        "primaryColor": "#42362f",
+        "backgroundColor": "#FAF8F5",
+        "textColor": "#5c4d44",
+        "lightBgTextColor": "#5c4d44",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#EDF2E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "El mejor regalo es compartir este día con vos",
+        "buttonText": "Ingresar"
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/xv/12-carmela/music/perfect.mp3",
+        "autoplay": true,
+        "startTime": 20
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "hero": {
+        "coupleImage": "/clientes/boda/20-romina-franco/images/hero.jpeg",
+        "headline": "¡Nos casamos!",
+        "showNamesOnPhoto": false,
+        "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
+        "namesDisplay": {
+            "enabled": false,
+            "position": "top",
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-10-17T10:30:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Estamos muy felices de dar este paso y queremos celebrarlo con vos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "17 de Octubre del 2026"
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/boda/20-romina-franco/images/1.jpeg"]
+            }
+        },
+
+        {
+            "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "enabled": false,
+            "id": "location-ceremonia",
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "¿Dónde?",
+                "address": "Parroquia San Pedro y San Pablo",
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/f5c2xKsVRKJgitNC9",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "gem",
+                        "name": "Civil",
+                        "address": "Salón del Reino, Puerto Madryn 217, Luján de Cuyo",
+                        "time": "10:30 hs",
+
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/Y1Bxt3chqUpUfXhY9?g_st=iw",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "book",
+
+                        "name": "Discurso de bodas",
+                        "address": "Salón del Reino"
+                    },
+                    {
+                        "icon": "party",
+                        "name": "Fiesta",
+                        "address": "Salón de eventos 'Tierras del Plata', Peña Morales o Nueva s/n",
+                        "time": "13:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/rQpUTrw85SiMuUEGA?g_st=iw",
+                            "variant": "primary"
+                        }
+                    }
+                ]
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/20-romina-franco/images/2.jpeg",
+                    "/clientes/boda/20-romina-franco/images/3.jpeg"
+                ]
+            }
+        },
+
+        {
+            "_comment": "PHOTOS: Invitar a subir fotos al album compartido. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "background",
+            "bgImage": "",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Subí las fotos de la boda y ayudanos a guardar los recuerdos de este momento tan especial",
+                "button": {
+                    "text": "Ir al álbum",
+                    "url": "https://drive.google.com/drive/folders/1YEaCmMP8nANuYBRLvSfKWp93Skwt3KQm?usp=drive_link",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "_comment": "PLAYLIST: Link a playlist colaborativa de Spotify.",
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["title", "description", "button"],
+            "data": {
+                "title": "Playlist de la fiesta",
+                "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
+                "button": {
+                    "text": "Agregar canciones",
+                    "url": "https://open.spotify.com/playlist/4M441Fhy1O4qBdQlSj2cYe?si=mPpYbj_7SvCYCagitfI2ZQ&pt=6a2e890067830703db9d81708ddb3822&pi=yBZLYb9cQ9qlo",
+                    "variant": "background"
+                }
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "El amor se construye día a día, pero cobra aún más sentido cuando puede compartirse con quienes forman parte de nuestra vida.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "_comment": "VALOR TARJETA",
+            "type": "giftCard",
+            "id": "gift-card",
+            "enabled": true,
+            "bgColor": "primary",
+            "data": {
+                "icon": "heart",
+                "title": "Valor Tarjeta",
+                "description": "Para quienes quieran acompañarnos, cada invitado podrá abonar su tarjeta. El valor será informado por el salón y podrá abonarse del 1 al 6 de octubre.",
+                "showButton": false
+            }
+        },
+        {
+            "// --- FORMULARIO RSVP ---": "",
+            "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "background",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 30 de Septiembre",
+                "guestCountLabel": "Número de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "Confirmás tu asistencia?",
+                    "attendanceYes": "Confirmo!",
+                    "attendanceNo": "No podré asistir",
+                    "dietary": "¿Algún requerimiento en la alimentación?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celíaco",
+                        "Otro"
+                    ],
+
+                    "extraInputs": [
+                        {
+                            "id": "mensajersvp",
+                            "label": "¿Algún mensaje para los novios?",
+                            "placeholder": "Escribí tu mensaje",
+                            "tituloPanel": "Mensaje"
+                        }
+                    ],
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "542616588223",
+                    "messageTemplate": "Hola Romina & Franco! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
+                }
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por ser parte de nuestra historia y por acompañarnos en el comienzo de esta nueva etapa.",
+                "author": "Romina & Franco",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/boda/20-romina-franco/images/final.jpeg"
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}

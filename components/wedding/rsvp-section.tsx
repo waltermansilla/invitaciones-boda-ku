@@ -27,7 +27,7 @@ interface RSVPSectionProps {
         dietary: string;
         dietaryOptions: string[];
         songRequestLabel?: string;
-        songRequest: string;
+        songRequest?: string;
         extraInputs?: {
             id: string;
             label: string;
@@ -159,6 +159,7 @@ export default function RSVPSection({
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     const [guestCount, setGuestCount] = useState(1);
     const extraInputs = fields.extraInputs ?? [];
+    const showSongRequest = Boolean(fields.songRequest?.trim());
     const createEmptyExtraValues = () =>
         extraInputs.reduce<Record<string, string>>((acc, item) => {
             acc[item.label] = "";
@@ -612,21 +613,23 @@ export default function RSVPSection({
                                     </select>
                                 </div>
 
-                                <div className="px-4 py-3">
-                                    {fields.songRequestLabel && (
-                                        <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
-                                            {fields.songRequestLabel}
-                                        </label>
-                                    )}
-                                    <input
-                                        type="text"
-                                        placeholder={fields.songRequest}
-                                        value={guest.songRequest}
-                                        onChange={(e) => updateGuest(index, "songRequest", e.target.value)}
-                                        className="w-full bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
-                                        style={{ fontSize: "16px" }}
-                                    />
-                                </div>
+                                {showSongRequest && (
+                                    <div className="px-4 py-3">
+                                        {fields.songRequestLabel && (
+                                            <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
+                                                {fields.songRequestLabel}
+                                            </label>
+                                        )}
+                                        <input
+                                            type="text"
+                                            placeholder={fields.songRequest}
+                                            value={guest.songRequest}
+                                            onChange={(e) => updateGuest(index, "songRequest", e.target.value)}
+                                            className="w-full bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
+                                            style={{ fontSize: "16px" }}
+                                        />
+                                    </div>
+                                )}
                                 {extraInputs.map((extraInput) => (
                                     <div key={extraInput.id} className="border-t border-current/10 px-4 py-3">
                                         <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">

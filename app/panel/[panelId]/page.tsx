@@ -261,7 +261,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
         <div className="flex flex-wrap gap-2">
           {(["todos", "confirmados", "pendientes", "no_asiste", "pago_pendiente"] as const).map((f) => (
             <button key={f} onClick={() => applyFilter(f)} className="rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors" style={{ backgroundColor: filter === f ? primaryColor : "#fff", color: filter === f ? "#fff" : "#666", border: filter === f ? "none" : "1px solid #e5e5e5" }}>
-              {f === "no_asiste" ? "No asisten" : f === "todos" ? "Todos" : f === "pago_pendiente" ? "Pago pendiente" : f.charAt(0).toUpperCase() + f.slice(1)}
+              {f === "no_asiste" ? "No asisten" : f === "todos" ? "Todos" : f === "pago_pendiente" ? (labels?.paymentPending || "Pago pendiente") : f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
           ))}
           {canFilterDietary && (

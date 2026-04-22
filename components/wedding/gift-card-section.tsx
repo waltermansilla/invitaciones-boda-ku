@@ -70,8 +70,9 @@ interface GiftCardSectionProps {
     icon: string;
     title: string;
     description: string;
-    button: { text: string; url: string; variant: "primary" | "secondary" };
-    modal: {
+    showButton?: boolean;
+    button?: { text: string; url: string; variant: "primary" | "secondary" };
+    modal?: {
         title: string;
         suggestedValueLabel?: string;
         suggestedValue?: string; // Un solo valor (retrocompatible)
@@ -85,6 +86,7 @@ export default function GiftCardSection({
     icon,
     title,
     description,
+    showButton = true,
     button,
     modal,
 }: GiftCardSectionProps) {
@@ -94,6 +96,7 @@ export default function GiftCardSection({
     const IconComponent = icon ? ICON_MAP[icon] || Gift : Gift;
 
     const handleOpen = () => {
+        if (!modal) return;
         const maskedData = isMuestra
             ? modal.transferData.map((item) => ({
                   ...item,
@@ -185,13 +188,15 @@ export default function GiftCardSection({
             <p className="mb-6 max-w-sm text-sm font-light leading-relaxed opacity-80">
                 {description}
             </p>
-            <button
-                onClick={handleOpen}
-                className="inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:opacity-70"
-                style={{ borderColor: "currentColor", borderOpacity: 0.4 }}
-            >
-                {button.text}
-            </button>
+            {showButton && button && modal && (
+                <button
+                    onClick={handleOpen}
+                    className="inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:opacity-70"
+                    style={{ borderColor: "currentColor", borderOpacity: 0.4 }}
+                >
+                    {button.text}
+                </button>
+            )}
         </section>
     );
 }
