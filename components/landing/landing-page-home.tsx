@@ -946,7 +946,7 @@ function Landing2PrimaryPill({
     theme,
     locale,
     waNumber,
-    trackingSource = "hero_primary",
+    trackingSource = "hero",
 }: {
     primary?: CtaButton;
     theme: LandingTheme;
