@@ -42,6 +42,7 @@ import {
     getExtrasForLang,
     getUiStrings,
 } from "./strings";
+import { trackMetaEvent } from "@/lib/meta-pixel";
 
 type Currency = "ARS" | "USD";
 type PlanKey = "premium" | "diseno-unico";
@@ -1892,6 +1893,13 @@ function ConfiguradorPageContent() {
                                 type="button"
                                 onClick={() => {
                                     if (!canContinue) return;
+                                    trackMetaEvent("Purchase", {
+                                        source: "configurador",
+                                        step: "senar_50",
+                                        plan,
+                                        currency,
+                                        value: total,
+                                    });
                                     window.open(
                                         WhatsAppHref(waNumber, summary),
                                         "_blank",

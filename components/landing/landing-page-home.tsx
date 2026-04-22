@@ -44,6 +44,7 @@ import {
     type LandingLocale,
 } from "@/components/landing/landing-header-home";
 import { eventTypeLabelFromFolderTipo } from "@/lib/client-helpers-shared";
+import { trackMetaEvent } from "@/lib/meta-pixel";
 import FooterSection from "@/components/wedding/footer-section";
 import pricingData from "@/data/landing/pricing.json";
 
@@ -829,14 +830,26 @@ function useSectionReveal(
 function CtaLink({
     btn,
     waNumber,
+    trackingEvent,
+    trackingSource,
     className,
     style,
 }: {
     btn: CtaButton;
     waNumber: string;
+    trackingEvent?: "InitiateCheckout" | "Lead";
+    trackingSource?: string;
     className: string;
     style: React.CSSProperties;
 }) {
+    const handleTracking = () => {
+        if (!trackingEvent) return;
+        trackMetaEvent(trackingEvent, {
+            source: trackingSource || "unknown",
+            cta_text: btn.text,
+        });
+    };
+
     if (btn.type === "whatsapp") {
         const msg = btn.message || "";
         const href = `https://wa.me/${waNumber.replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
@@ -845,6 +858,7 @@ function CtaLink({
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={handleTracking}
                 className={className}
                 style={style}
             >
@@ -856,9 +870,10 @@ function CtaLink({
         return (
             <a
                 href={btn.anchor || "#"}
-                onClick={(event) =>
-                    handleLocalAnchorClick(event, btn.anchor || "#")
-                }
+                onClick={(event) => {
+                    handleTracking();
+                    handleLocalAnchorClick(event, btn.anchor || "#");
+                }}
                 className={className}
                 style={style}
             >
@@ -871,6 +886,7 @@ function CtaLink({
             href={btn.url || "#"}
             target={btn.newTab ? "_blank" : undefined}
             rel={btn.newTab ? "noopener noreferrer" : undefined}
+            onClick={handleTracking}
             className={className}
             style={style}
         >
@@ -914,11 +930,13 @@ function Landing2PrimaryPill({
     theme,
     locale,
     waNumber,
+    trackingSource = "hero_primary",
 }: {
     primary?: CtaButton;
     theme: LandingTheme;
     locale: LandingLocale;
     waNumber: string;
+    trackingSource?: string;
 }) {
     const label =
         primary?.text ??
@@ -938,7 +956,13 @@ function Landing2PrimaryPill({
         return (
             <a
                 href={href}
-                onClick={(event) => handleLocalAnchorClick(event, href)}
+                onClick={(event) => {
+                    trackMetaEvent("InitiateCheckout", {
+                        source: trackingSource,
+                        step: "crear_invitacion",
+                    });
+                    handleLocalAnchorClick(event, href);
+                }}
                 className={className}
                 style={style}
             >
@@ -956,6 +980,12 @@ function Landing2PrimaryPill({
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                    trackMetaEvent("InitiateCheckout", {
+                        source: trackingSource,
+                        step: "crear_invitacion",
+                    })
+                }
                 className={className}
                 style={style}
             >
@@ -971,6 +1001,12 @@ function Landing2PrimaryPill({
             href={p.url || "#"}
             target={p.newTab ? "_blank" : undefined}
             rel={p.newTab ? "noopener noreferrer" : undefined}
+            onClick={() =>
+                trackMetaEvent("InitiateCheckout", {
+                    source: trackingSource,
+                    step: "crear_invitacion",
+                })
+            }
             className={className}
             style={style}
         >
@@ -1118,6 +1154,10 @@ function FloatingCta({
                 <a
                     href={data.anchor}
                     onClick={(event) => {
+                        trackMetaEvent("InitiateCheckout", {
+                            source: "floating",
+                            step: "crear_invitacion",
+                        });
                         if (!anchorTargetId) return;
                         const target = document.getElementById(anchorTargetId);
                         if (!target) return;
@@ -1895,6 +1935,8 @@ function HeroTdy({
                             <CtaLink
                                 btn={primary}
                                 waNumber={waNumber}
+                                trackingEvent="InitiateCheckout"
+                                trackingSource="hero"
                                 className="inline-flex min-h-[52px] items-center justify-center rounded-xl px-10 py-3 text-[15px] font-semibold shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99]"
                                 style={{
                                     background: "#7A5F45",
@@ -3268,6 +3310,7 @@ function EstilosCarousel({
                             theme={theme}
                             locale={endHeroPrimaryCta.locale}
                             waNumber={waNumber}
+                            trackingSource="muestras_mid"
                         />
                     </div>
                 ) : null}
@@ -3878,6 +3921,11 @@ function PlanesTdy({
                             plan.name.toLowerCase().includes("diseño") ||
                             plan.name.toLowerCase().includes("unique");
                         const ctaBtn = buttons[plan.ctaButton];
+                        const leadSource = isPremium
+                            ? "plan_premium"
+                            : isUniqueDesign
+                              ? "plan_diseno_unico"
+                              : "plan_otro";
                         return (
                             <div
                                 key={plan.name}
@@ -4013,6 +4061,8 @@ function PlanesTdy({
                                         <CtaLink
                                             btn={ctaBtn}
                                             waNumber={waNumber}
+                                            trackingEvent="Lead"
+                                            trackingSource={leadSource}
                                             className="flex min-h-[52px] w-full items-center justify-center rounded-full text-sm font-medium transition-transform duration-200 hover:scale-[1.02]"
                                             style={
                                                 isPremium
