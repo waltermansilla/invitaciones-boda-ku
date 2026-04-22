@@ -1,18 +1,64 @@
 import { createApiClient } from "@/lib/supabase/api"
 import { NextRequest, NextResponse } from "next/server"
-import { findConfigByPanelId } from "@/lib/config-loader"
+import {
+  eventoPanelIdMatchesConfig,
+  getAuthorizedPanelConfig,
+  type EventConfig,
+} from "@/lib/config-loader"
 import {
   limiteInvitadosPanelFromConfig,
   plazasOcupadasPorInvitados,
 } from "@/lib/panel-plazas"
+
+function panelIdParamInvalid(panelId: string): boolean {
+  return (
+    !panelId ||
+    typeof panelId !== "string" ||
+    panelId.length > 200 ||
+    /[\s<>#"']/.test(panelId)
+  )
+}
+
+async function invitadoBelongsToPanel(
+  supabase: ReturnType<typeof createApiClient>,
+  invitadoId: string,
+  panelAuth: EventConfig,
+): Promise<boolean> {
+  const { data: inv } = await supabase
+    .from("invitados")
+    .select("evento_id")
+    .eq("id", invitadoId)
+    .maybeSingle()
+  if (!inv?.evento_id) return false
+  const { data: ev } = await supabase
+    .from("eventos")
+    .select("panel_id")
+    .eq("id", inv.evento_id)
+    .maybeSingle()
+  return Boolean(ev && eventoPanelIdMatchesConfig(ev.panel_id, panelAuth))
+}
 
 // GET: Obtener invitado específico
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ panelId: string; invitadoId: string }> }
 ) {
-  const { invitadoId } = await params
+  const { panelId, invitadoId } = await params
+  if (panelIdParamInvalid(panelId)) {
+    return NextResponse.json({ error: "panelId inválido" }, { status: 400 })
+  }
+  const panelAuthGet = getAuthorizedPanelConfig(panelId)
+  if (!panelAuthGet) {
+    return NextResponse.json(
+      { error: "Panel no encontrado o desactivado" },
+      { status: 404 },
+    )
+  }
+
   const supabase = createApiClient()
+  if (!(await invitadoBelongsToPanel(supabase, invitadoId, panelAuthGet))) {
+    return NextResponse.json({ error: "Invitado no encontrado" }, { status: 404 })
+  }
 
   const { data: invitado, error } = await supabase
     .from("invitados")
@@ -33,12 +79,25 @@ export async function PUT(
   { params }: { params: Promise<{ panelId: string; invitadoId: string }> }
 ) {
   const { panelId, invitadoId } = await params
-  const body = await request.json()
-  const supabase = createApiClient()
+  if (panelIdParamInvalid(panelId)) {
+    return NextResponse.json({ error: "panelId inválido" }, { status: 400 })
+  }
+  const panelAuth = getAuthorizedPanelConfig(panelId)
+  if (!panelAuth) {
+    return NextResponse.json(
+      { error: "Panel no encontrado o desactivado" },
+      { status: 404 },
+    )
+  }
 
-  const limitePut = limiteInvitadosPanelFromConfig(
-    findConfigByPanelId(panelId)?.rsvpPanel,
-  )
+  const supabase = createApiClient()
+  if (!(await invitadoBelongsToPanel(supabase, invitadoId, panelAuth))) {
+    return NextResponse.json({ error: "Invitado no encontrado" }, { status: 404 })
+  }
+
+  const body = await request.json()
+
+  const limitePut = limiteInvitadosPanelFromConfig(panelAuth.rsvpPanel)
   if (
     limitePut !== null &&
     body.integrantes !== undefined &&
@@ -156,8 +215,22 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ panelId: string; invitadoId: string }> }
 ) {
-  const { invitadoId } = await params
+  const { panelId, invitadoId } = await params
+  if (panelIdParamInvalid(panelId)) {
+    return NextResponse.json({ error: "panelId inválido" }, { status: 400 })
+  }
+  const panelAuthDel = getAuthorizedPanelConfig(panelId)
+  if (!panelAuthDel) {
+    return NextResponse.json(
+      { error: "Panel no encontrado o desactivado" },
+      { status: 404 },
+    )
+  }
+
   const supabase = createApiClient()
+  if (!(await invitadoBelongsToPanel(supabase, invitadoId, panelAuthDel))) {
+    return NextResponse.json({ error: "Invitado no encontrado" }, { status: 404 })
+  }
 
   const { error } = await supabase
     .from("invitados")

@@ -11,7 +11,8 @@
     "start": "next start",
     "lint": "eslint .",
     "validate:clientes": "node scripts/validate-client-invitations.mjs",
-    "panel:gen-id": "node scripts/generate-panel-id.mjs"
+    "panel:gen-id": "node scripts/generate-panel-id.mjs",
+    "panel:audit-orphans": "node scripts/audit-orphan-panel-eventos.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

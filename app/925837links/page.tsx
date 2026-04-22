@@ -16,7 +16,7 @@ export default async function InternalLinksAdminPage() {
   const baseUrl = absoluteUrl("")
 
   return (
-    <main className="min-h-screen bg-[#EEE3D2] text-[#3F332B]">
+    <main className="min-h-screen bg-[#F5EFE6] text-[#3F332B]">
       <div className="mx-auto max-w-5xl px-4 py-8">
         <header className="mb-6 rounded-2xl border border-[#CFB79A] bg-white p-5 shadow-[0_8px_24px_rgba(71,45,22,0.08)]">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7A5F45]">

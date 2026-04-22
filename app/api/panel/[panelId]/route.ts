@@ -1,13 +1,14 @@
 import { createApiClient } from "@/lib/supabase/api"
 import { NextRequest, NextResponse } from "next/server"
 import { nanoid } from "nanoid"
-import { inferInvitationPathFromPanelId } from "@/lib/client-json-helpers"
 import {
-  findConfigByPanelId,
+  canonicalPanelIdFromConfig,
+  getAuthorizedPanelConfig,
   getEventDataFromConfig,
   invitationAccessTokenFromConfig,
   invitationPublicPathFromConfig,
 } from "@/lib/config-loader"
+import { resolveEventoForPanelConfig } from "@/lib/panel-evento-resolve"
 import { panelConfirmacionFromConfig } from "@/lib/panel-confirmacion"
 import {
   limiteInvitadosPanelFromConfig,
@@ -50,6 +51,14 @@ export async function GET(
       return NextResponse.json({ error: "panelId inválido" }, { status: 400 })
     }
 
+    const config = getAuthorizedPanelConfig(panelId)
+    if (!config) {
+      return NextResponse.json(
+        { error: "Panel no encontrado o desactivado" },
+        { status: 404 },
+      )
+    }
+
     let supabase: ReturnType<typeof createApiClient>
     try {
       supabase = createApiClient()
@@ -58,42 +67,43 @@ export async function GET(
       return NextResponse.json({ error: msg }, { status: 503 })
     }
 
-    const config = findConfigByPanelId(panelId)
-    const configData = config
-      ? getEventDataFromConfig(config)
-      : {
-          panel_theme: null as null,
-          panel_labels: null as null,
-          nombre_evento: "",
-          tipo_evento: "boda" as const,
-          fecha_evento: null as string | null,
-          slug: undefined as string | undefined,
-        }
+    const configData = getEventDataFromConfig(config)
 
-    const invitationPath =
-      invitationPublicPathFromConfig(config) ??
-      inferInvitationPathFromPanelId(panelId)
+    const invitationPath = invitationPublicPathFromConfig(config)
     const invitationToken = invitationAccessTokenFromConfig(config)
 
     const confirmacionInvitacion = panelConfirmacionFromConfig(
-      config?.rsvpPanel?.confirmacion,
+      config.rsvpPanel?.confirmacion,
     )
-    const limiteInvitados = limiteInvitadosPanelFromConfig(config?.rsvpPanel)
+    const limiteInvitados = limiteInvitadosPanelFromConfig(config.rsvpPanel)
 
-    const { data: evento, error: eventoError } = await supabase
-      .from("eventos")
-      .select("*")
-      .eq("panel_id", panelId)
-      .maybeSingle()
-
-    if (eventoError) {
+    const canonicalPanelId = canonicalPanelIdFromConfig(config)
+    if (!canonicalPanelId) {
       return NextResponse.json(
-        {
-          error: eventoError.message || "Error leyendo evento",
-          details: eventoError,
-        },
+        { error: "El JSON del cliente no define rsvpPanel.panelId" },
         { status: 500 },
       )
+    }
+
+    let evento: EventoRow | null = null
+    try {
+      const resolved = await resolveEventoForPanelConfig(supabase, config)
+      if (resolved.ok === false && resolved.reason === "ambiguous") {
+        return NextResponse.json(
+          {
+            error:
+              "Varias filas en `eventos` coinciden con este panel. Revisá `legacyPanelIds` y los `panel_id` en la base.",
+            count: resolved.count,
+          },
+          { status: 500 },
+        )
+      }
+      if (resolved.ok) {
+        evento = resolved.evento
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      return NextResponse.json({ error: msg }, { status: 500 })
     }
 
     if (!evento) {
@@ -102,7 +112,7 @@ export async function GET(
       const { data: nuevoEvento, error: createError } = await supabase
         .from("eventos")
         .insert({
-          panel_id: panelId,
+          panel_id: canonicalPanelId,
           fecha_evento: configData.fecha_evento || null,
         })
         .select()
@@ -118,10 +128,10 @@ export async function GET(
         )
       }
 
-      const eventoMerged =
-        config && nuevoEvento
-          ? mergeEventoFromConfig(nuevoEvento as EventoRow, configData)
-          : nuevoEvento
+      const eventoMerged = mergeEventoFromConfig(
+        nuevoEvento as EventoRow,
+        configData,
+      )
 
       return NextResponse.json({
         evento: eventoMerged,
@@ -139,10 +149,7 @@ export async function GET(
       })
     }
 
-    const eventoMerged =
-      config && configData
-        ? mergeEventoFromConfig(evento as EventoRow, configData)
-        : evento
+    const eventoMerged = mergeEventoFromConfig(evento as EventoRow, configData)
 
     const { data: invitados, error: invitadosError } = await supabase
       .from("invitados")
@@ -205,6 +212,23 @@ export async function POST(
   { params }: { params: Promise<{ panelId: string }> }
 ) {
   const { panelId } = await params
+  if (
+    !panelId ||
+    typeof panelId !== "string" ||
+    panelId.length > 200 ||
+    /[\s<>#"']/.test(panelId)
+  ) {
+    return NextResponse.json({ error: "panelId inválido" }, { status: 400 })
+  }
+
+  const configPost = getAuthorizedPanelConfig(panelId)
+  if (!configPost) {
+    return NextResponse.json(
+      { error: "Panel no encontrado o desactivado" },
+      { status: 404 },
+    )
+  }
+
   const body = await request.json()
   let supabase: ReturnType<typeof createApiClient>
   try {
@@ -214,19 +238,37 @@ export async function POST(
     return NextResponse.json({ error: msg }, { status: 503 })
   }
 
-  const { data: evento } = await supabase
-    .from("eventos")
-    .select("id")
-    .eq("panel_id", panelId)
-    .single()
-
-  if (!evento) {
-    return NextResponse.json({ error: "Evento no encontrado" }, { status: 404 })
+  let evento: { id: string }
+  try {
+    const resolved = await resolveEventoForPanelConfig(supabase, configPost)
+    if (!resolved.ok && resolved.reason === "ambiguous") {
+      return NextResponse.json(
+        {
+          error:
+            "Varias filas en `eventos` coinciden con este panel. Revisá `legacyPanelIds` y la base.",
+          count: resolved.count,
+        },
+        { status: 500 },
+      )
+    }
+    if (!resolved.ok) {
+      return NextResponse.json(
+        { error: "Evento no encontrado. Abrí el panel una vez desde la invitación para crearlo." },
+        { status: 404 },
+      )
+    }
+    const id = resolved.evento.id
+    if (typeof id !== "string") {
+      return NextResponse.json({ error: "Evento sin id" }, { status: 500 })
+    }
+    evento = { id }
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 
-  const configPost = findConfigByPanelId(panelId)
   if (
-    panelConfirmacionFromConfig(configPost?.rsvpPanel?.confirmacion) ===
+    panelConfirmacionFromConfig(configPost.rsvpPanel?.confirmacion) ===
       "comun" &&
     body.tipo === "familia"
   ) {
@@ -239,7 +281,7 @@ export async function POST(
     )
   }
 
-  const limitePost = limiteInvitadosPanelFromConfig(configPost?.rsvpPanel)
+  const limitePost = limiteInvitadosPanelFromConfig(configPost.rsvpPanel)
   if (limitePost !== null) {
     const { data: existentes } = await supabase
       .from("invitados")

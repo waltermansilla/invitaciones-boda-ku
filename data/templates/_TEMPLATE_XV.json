@@ -80,6 +80,8 @@
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
         "panelId": "nombre-xv-demo",
+        "// legacyPanelIds: al cambiar panelId, poner aca el id viejo hasta el 1er GET del panel (luego vaciar)": "",
+        "legacyPanelIds": [],
         "fechaEvento": "2027-02-17",
         "confirmationMessage": "Gracias por confirmar! Te esperamos en los XV.",
         "limiteInvitados": 120,
@@ -711,7 +713,10 @@
                 "modal": {
                     "title": "Mas informacion",
                     "sections": [
-                        { "heading": "Tip 1", "text": "Detalle o recomendacion." },
+                        {
+                            "heading": "Tip 1",
+                            "text": "Detalle o recomendacion."
+                        },
                         { "heading": "Tip 2", "text": "Otro dato importante." }
                     ]
                 }

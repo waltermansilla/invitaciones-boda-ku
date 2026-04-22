@@ -20,7 +20,8 @@
         "enabled": true,
         "confirmacion": "comun",
 
-        "panelId": "valentina-xv-hola",
+        "panelId": "valentina-xv-5xF4M2",
+        "legacyPanelIds": [],
         "fechaEvento": "2026-09-19",
         "confirmationMessage": "Gracias por confirmar! Te espero en mis 15.",
         "theme": {

@@ -113,7 +113,7 @@ En la práctica:
 2. Si trabajás en tu Mac con `npm run dev`, con **guardar el archivo** alcanza; recargá el navegador.
 3. Si el sitio está en **Vercel** (o similar), tenés que **subir el cambio** (git push / deploy) para que el servidor sirva el JSON nuevo.
 
-La **primera vez** que abrís el panel en el navegador con ese id, si en Supabase todavía no había fila para ese evento, el sistema **puede crear** la fila sola. Después ya podés agregar invitados.
+La **primera vez** que abrís el panel en el navegador con ese id, si en Supabase todavía no había fila para ese evento **y** ese `panelId` está autorizado en el JSON (`enabled: true` y coincide con `panelId` o con algún `legacyPanelIds`), el sistema **puede crear** la fila sola. Después ya podés agregar invitados. No se crean eventos con ids que no correspondan a ningún cliente en JSON.
 
 ---
 
@@ -147,6 +147,7 @@ Referencia rápida de todas las claves disponibles:
   "enabled": true,
   "confirmacion": "formulario",
   "panelId": "anto-walter-boda",
+  "legacyPanelIds": [],
   "fechaEvento": "2027-02-16",
   "confirmationMessage": "Gracias por confirmar! Nos vemos el 16 de febrero.",
   "limiteInvitados": 120,
@@ -177,6 +178,7 @@ Qué hace cada clave:
   - `formulario`: usa la sección `rsvp` y guarda confirmaciones por API.
   - `comun`: usa `confirmarWhatsapp` y registra en panel antes de abrir WhatsApp.
 - `panelId`: ID único del panel (URL: `/panel/[panelId]`).
+- `legacyPanelIds` (opcional): lista de ids viejos que todavía pueden estar en la columna `panel_id` de Supabase; sirve para **renombrar** el panel sin perder invitados. Tras el primer acceso al panel, la fila se actualiza al `panelId` nuevo y podés vaciar el array. Ver sección “Si el cliente ya tenía otro panelId”.
 - `fechaEvento`: fecha para el contador interno del panel (`YYYY-MM-DD`).
 - `confirmationMessage`: texto que ve el invitado al confirmar.
 - `limiteInvitados` (opcional): tope de plazas. Si falta, no hay límite.
@@ -201,12 +203,57 @@ En `confirmacion: "comun"`, el registro en panel ocurre con links personalizados
 
 ## Si el cliente **ya tenía** otro `panelId` y datos en Supabase
 
-Si cambiás solo el JSON y **no** tocás Supabase:
+Si cambiás solo el `panelId` en el JSON y **no** enlazás con lo que hay en la base:
 
-- El link **nuevo** abre un panel **vacío** (nuevo evento).
-- Los invitados viejos siguen atados al **id viejo** en la base.
+- El servidor puede **crear otra fila** `eventos` con el id nuevo (panel vacío).
+- Los invitados que ya existían siguen colgando de la fila cuyo `panel_id` era el **viejo**.
 
-Para **renombrar** sin perder datos tenés que en Supabase poner el **mismo** `panel_id` nuevo en la fila del evento (o migrar a mano según cómo manejes la base). Después avisá a los novios el link nuevo; el viejo deja de ser el correcto.
+Para **seguir usando los mismos invitados** con un id nuevo, tenés dos caminos:
+
+1. **`legacyPanelIds` en el JSON** (recomendado si no querés tocar Supabase a mano): en `rsvpPanel` poné el `panelId` nuevo y un array con el id anterior, por ejemplo `"legacyPanelIds": ["id-viejo"]`. La primera vez que alguien abre el panel con la config nueva, el sistema encuentra la fila vieja y **actualiza** `panel_id` al nuevo (misma fila, mismos invitados). Después podés vaciar `legacyPanelIds`. Los templates (`_TEMPLATE_BODA.json`, `_TEMPLATE_XV.json`) incluyen la clave vacía y un comentario.
+
+2. **Solo Supabase**: en la tabla `eventos`, editá la fila correcta y cambiá `panel_id` al texto nuevo; el JSON solo necesita el `panelId` nuevo (sin `legacyPanelIds`).
+
+Si cambiás el id muchas veces sin migrar, pueden quedar **varias filas** `eventos` que ya no coinciden con ningún JSON: ocupan la base y confunden. Para eso existe el script de auditoría (siguiente sección).
+
+---
+
+## Eventos huérfanos en Supabase: listar y borrar (script)
+
+**Para qué sirve.** A veces quedan filas en la tabla `eventos` cuyo `panel_id` **no aparece** en ningún archivo de `data/clientes/**` (ni en `rsvpPanel.panelId` ni en `rsvpPanel.legacyPanelIds`). Suele pasar si se probó muchas veces el panel con distintos ids, o si se borró un cliente del repo pero la base siguió igual. Esas filas son **huérfanas**: el sitio ya no las usa para ninguna invitación cargada en JSON.
+
+**Qué hace el script.** Lee todos los ids “en uso” desde los JSON de clientes, lee todos los `eventos` de Supabase y lista solo los que **no** están referenciados. Por cada uno muestra:
+
+- `panel_id`
+- **`num_invitados`**: cantidad de filas en `invitados` de ese evento (`0` = panel vacío en la base)
+- **`con_datos`**: `Sí` si hay al menos un invitado, `No` si está vacío
+- `created_at` y el `id` interno del evento (por si querés revisar en Supabase)
+
+Al final imprime un **resumen** con cuántos huérfanos tienen al menos un invitado (conviene revisarlos antes de borrar: puede ser data real de un JSON que moviste de carpeta o borraste).
+
+**Requisitos.** En la raíz del proyecto, `.env.local` con las mismas variables que la app: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+**Solo listar (no borra nada):**
+
+```bash
+npm run panel:audit-orphans
+```
+
+o:
+
+```bash
+node scripts/audit-orphan-panel-eventos.mjs
+```
+
+**Borrar huérfanos.** Solo borra las filas que el listado marcó como huérfanas; **no** toca eventos cuyo `panel_id` siga en algún JSON.
+
+```bash
+node scripts/audit-orphan-panel-eventos.mjs --delete
+```
+
+El script vuelve a mostrar la tabla y pide que escribas **`YES`** (en mayúsculas) para confirmar. Al borrar un `evento`, en la base configurada con `ON DELETE CASCADE` se eliminan también sus `invitados` e `integrantes`. **No hay vuelta atrás**: si un huérfano tenía `con_datos: Sí`, asegurate de que realmente sea basura o un panel abandonado.
+
+El comando npm está en `package.json` como `panel:audit-orphans`; el archivo del script es `scripts/audit-orphan-panel-eventos.mjs`.
 
 ---
 

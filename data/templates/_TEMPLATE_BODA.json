@@ -78,6 +78,8 @@
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
         "panelId": "nombre-nombre-boda-demo",
+        "// legacyPanelIds: al cambiar panelId, poner aca el id viejo hasta el 1er GET del panel (luego vaciar)": "",
+        "legacyPanelIds": [],
         "fechaEvento": "2027-02-17",
         "confirmationMessage": "Gracias por confirmar! Nos vemos en la boda.",
         "limiteInvitados": 120,

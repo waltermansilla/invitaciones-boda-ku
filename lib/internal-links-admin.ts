@@ -21,6 +21,8 @@ export type InternalInviteRow = {
   tokenPresent: boolean
   tokenHashPresent: boolean
   allowLegacyUntil: string | null
+  panelEnabled: boolean
+  panelId: string | null
 }
 
 function slugFromFileName(fileName: string): string {
@@ -63,6 +65,15 @@ export async function listInvitationsForInternalAdmin(): Promise<InternalInviteR
         const json = JSON.parse(raw) as Record<string, unknown>
         const access = (json.access || {}) as AccessBlock
         const hero = (json.hero || {}) as Record<string, unknown>
+        const rsvpPanel = (json.rsvpPanel || {}) as {
+          enabled?: boolean
+          panelId?: string
+        }
+        const panelId =
+          typeof rsvpPanel.panelId === "string" && rsvpPanel.panelId.trim()
+            ? rsvpPanel.panelId.trim()
+            : null
+        const panelEnabled = Boolean(rsvpPanel.enabled) && Boolean(panelId)
         const eventDateRaw = (typeof hero.eventDate === "string" && hero.eventDate) || ""
         const eventDate = eventDateRaw ? String(eventDateRaw).slice(0, 10) : null
         const realBaseUrl = `/${tipo}/${slug}`
@@ -84,6 +95,8 @@ export async function listInvitationsForInternalAdmin(): Promise<InternalInviteR
             typeof access.allowLegacyUntil === "string" && access.allowLegacyUntil
               ? access.allowLegacyUntil
               : null,
+          panelEnabled,
+          panelId,
         })
       } catch {
         // ignore invalid json
