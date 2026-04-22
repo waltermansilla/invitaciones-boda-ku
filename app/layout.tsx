@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display } from "next/font/google";
 import Script from "next/script";
+import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import MetaPixelPageView from "@/components/analytics/meta-pixel-page-view";
 import "./globals.css";
@@ -55,7 +56,9 @@ export default function RootLayout({
                                 alt=""
                             />
                         </noscript>
-                        <MetaPixelPageView />
+                        <Suspense fallback={null}>
+                            <MetaPixelPageView />
+                        </Suspense>
                     </>
                 )}
                 <Analytics />

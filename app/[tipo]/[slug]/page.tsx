@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
+import { Suspense } from "react"
 import {
   getClientConfig,
   getAllClientParams,
@@ -70,7 +71,9 @@ export default async function ClientPage({ params, searchParams }: PageProps) {
 
   return (
     <ConfigProvider config={config}>
-      <WeddingInvitation />
+      <Suspense fallback={null}>
+        <WeddingInvitation />
+      </Suspense>
     </ConfigProvider>
   )
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getClientConfig, getAllClientParams } from "@/lib/get-client-config";
 import { ConfigProvider } from "@/lib/config-context";
 import WeddingInvitation from "@/components/wedding/wedding-invitation";
@@ -66,7 +67,9 @@ export default async function MuestraPage({ params }: PageProps) {
 
     return (
         <ConfigProvider config={config} isMuestra={true}>
-            <WeddingInvitation />
+            <Suspense fallback={null}>
+                <WeddingInvitation />
+            </Suspense>
         </ConfigProvider>
     );
 }
