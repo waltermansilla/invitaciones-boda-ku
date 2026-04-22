@@ -886,7 +886,23 @@ function CtaLink({
             href={btn.url || "#"}
             target={btn.newTab ? "_blank" : undefined}
             rel={btn.newTab ? "noopener noreferrer" : undefined}
-            onClick={handleTracking}
+            onClick={(event) => {
+                // On same-tab navigation, give Meta Pixel a brief window to send the event.
+                if (
+                    trackingEvent &&
+                    btn.url &&
+                    !btn.newTab &&
+                    !btn.url.startsWith("#")
+                ) {
+                    event.preventDefault();
+                    handleTracking();
+                    window.setTimeout(() => {
+                        window.location.href = btn.url || "#";
+                    }, 120);
+                    return;
+                }
+                handleTracking();
+            }}
             className={className}
             style={style}
         >
