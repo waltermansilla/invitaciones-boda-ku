@@ -37,6 +37,28 @@ const ICON_MAP: Record<string, React.ElementType> = {
     dollar: DollarSign,
 };
 
+interface GiftCardPriceItem {
+    label: string;
+    value: string;
+}
+
+interface GiftCardDateRange {
+    label: string;
+    helperText?: string;
+    suggestedValue?: string;
+    suggestedValues?: GiftCardPriceItem[];
+}
+
+interface GiftCardModalData {
+    title: string;
+    suggestedValueLabel?: string;
+    suggestedValue?: string; // Un solo valor (retrocompatible)
+    suggestedValues?: GiftCardPriceItem[]; // Multiples valores (hasta 4)
+    dateRanges?: GiftCardDateRange[]; // Tramos de fecha con importes propios
+    description: string;
+    transferData: { label: string; value: string }[];
+}
+
 function CopyBtn({ value }: { value: string }) {
     const [copied, setCopied] = useState(false);
     const handleCopy = async () => {
@@ -72,14 +94,125 @@ interface GiftCardSectionProps {
     description: string;
     showButton?: boolean;
     button?: { text: string; url: string; variant: "primary" | "secondary" };
-    modal?: {
-        title: string;
-        suggestedValueLabel?: string;
-        suggestedValue?: string; // Un solo valor (retrocompatible)
-        suggestedValues?: { label: string; value: string }[]; // Multiples valores (hasta 4)
-        description: string;
-        transferData: { label: string; value: string }[];
-    };
+    modal?: GiftCardModalData;
+}
+
+function GiftCardModalContent({
+    modal,
+    isMuestra,
+}: {
+    modal: GiftCardModalData;
+    isMuestra: boolean;
+}) {
+    const hasDateRanges = Boolean(modal.dateRanges && modal.dateRanges.length > 0);
+    const [activeDateRangeIdx, setActiveDateRangeIdx] = useState(0);
+    const activeDateRange = hasDateRanges
+        ? modal.dateRanges?.[activeDateRangeIdx] || modal.dateRanges?.[0]
+        : null;
+    const activeSuggestedValues = activeDateRange
+        ? activeDateRange.suggestedValues
+        : modal.suggestedValues;
+    const activeSuggestedValue = activeDateRange
+        ? activeDateRange.suggestedValue
+        : modal.suggestedValue;
+
+    const hasMultipleValues =
+        activeSuggestedValues && activeSuggestedValues.length > 0;
+    const hasSingleValue = activeSuggestedValue && !hasMultipleValues;
+    const valueLabel = modal.suggestedValueLabel || "Valor tarjeta por persona";
+
+    return (
+        <>
+            <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
+                {modal.title}
+            </h3>
+
+            {hasDateRanges && (
+                <div className="mb-4 rounded-sm border border-primary-foreground/20 bg-primary-foreground/5 p-2">
+                    <p className="mb-2 text-center text-[10px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
+                        Selecciona el tramo de fecha
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-2">
+                        {modal.dateRanges!.map((range, index) => (
+                            <button
+                                key={`${range.label}-${index}`}
+                                type="button"
+                                onClick={() => setActiveDateRangeIdx(index)}
+                                className={`rounded-full border px-3 py-1.5 text-[10px] font-medium tracking-[0.1em] uppercase transition-colors ${
+                                    activeDateRangeIdx === index
+                                        ? "border-primary-foreground/60 bg-primary-foreground/20 text-primary-foreground"
+                                        : "border-primary-foreground/25 text-primary-foreground/70 hover:bg-primary-foreground/10"
+                                }`}
+                            >
+                                {range.label}
+                            </button>
+                        ))}
+                    </div>
+                    {activeDateRange?.helperText && (
+                        <p className="mt-2 text-center text-[11px] font-light text-primary-foreground/80">
+                            {activeDateRange.helperText}
+                        </p>
+                    )}
+                </div>
+            )}
+
+            {hasSingleValue && (
+                <div className="mb-5 rounded-sm bg-primary-foreground/10 px-5 py-4 text-center">
+                    <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
+                        {valueLabel}
+                    </p>
+                    <p className="mt-1 text-2xl font-light text-primary-foreground">
+                        {isMuestra ? "$XX.XXX" : activeSuggestedValue}
+                    </p>
+                </div>
+            )}
+
+            {hasMultipleValues && (
+                <div className="mb-5 rounded-sm bg-primary-foreground/10 px-4 py-3">
+                    <p className="mb-2 text-center text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
+                        {valueLabel}
+                    </p>
+                    <div className="space-y-1.5">
+                        {activeSuggestedValues!.map((item, index) => (
+                            <div
+                                key={`${item.label}-${index}`}
+                                className="flex items-center justify-between py-1"
+                            >
+                                <span className="text-xs font-light text-primary-foreground/70">
+                                    {item.label}
+                                </span>
+                                <span className="text-sm font-medium text-primary-foreground">
+                                    {isMuestra ? "$XX.XXX" : item.value}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <p className="mb-6 text-sm font-light leading-relaxed text-primary-foreground/80">
+                {modal.description}
+            </p>
+            <div className="space-y-3">
+                {modal.transferData.map((item) => (
+                    <div
+                        key={item.label}
+                        className="flex items-center justify-between rounded-sm border border-primary-foreground/15 px-4 py-3"
+                    >
+                        <div className="min-w-0 flex-1">
+                            <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-primary-foreground/50">
+                                {item.label}
+                            </p>
+                            <p className="mt-0.5 truncate text-sm font-light text-primary-foreground">
+                                {isMuestra ? "XXXX-XXXX-XXXX" : item.value}
+                            </p>
+                        </div>
+                        {!isMuestra && <CopyBtn value={item.value} />}
+                    </div>
+                ))}
+            </div>
+        </>
+    );
 }
 
 export default function GiftCardSection({
@@ -97,83 +230,7 @@ export default function GiftCardSection({
 
     const handleOpen = () => {
         if (!modal) return;
-        const maskedData = isMuestra
-            ? modal.transferData.map((item) => ({
-                  ...item,
-                  value: "XXXX-XXXX-XXXX",
-              }))
-            : modal.transferData;
-
-        // Determinar si usar valores multiples o valor simple
-        const hasMultipleValues = modal.suggestedValues && modal.suggestedValues.length > 0;
-        const hasSingleValue = modal.suggestedValue && !hasMultipleValues;
-
-        openModal(
-            <>
-                <h3 className="mb-5 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
-                    {modal.title}
-                </h3>
-                
-                {/* Valor simple (retrocompatible) */}
-                {hasSingleValue && (
-                    <div className="mb-5 rounded-sm bg-primary-foreground/10 px-5 py-4 text-center">
-                        <p className="text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
-                            {modal.suggestedValueLabel || "Valor tarjeta por persona"}
-                        </p>
-                        <p className="mt-1 text-2xl font-light text-primary-foreground">
-                            {isMuestra ? "$XX.XXX" : modal.suggestedValue}
-                        </p>
-                    </div>
-                )}
-                
-                {/* Valores multiples (hasta 4) */}
-                {hasMultipleValues && (
-                    <div className="mb-5 rounded-sm bg-primary-foreground/10 px-4 py-3">
-                        {modal.suggestedValueLabel && (
-                            <p className="mb-2 text-center text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
-                                {modal.suggestedValueLabel}
-                            </p>
-                        )}
-                        <div className="space-y-1.5">
-                            {modal.suggestedValues!.map((item, index) => (
-                                <div 
-                                    key={index} 
-                                    className="flex items-center justify-between py-1"
-                                >
-                                    <span className="text-xs font-light text-primary-foreground/70">
-                                        {item.label}
-                                    </span>
-                                    <span className="text-sm font-medium text-primary-foreground">
-                                        {isMuestra ? "$XX.XXX" : item.value}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-                <p className="mb-6 text-sm font-light leading-relaxed text-primary-foreground/80">
-                    {modal.description}
-                </p>
-                <div className="space-y-3">
-                    {maskedData.map((item) => (
-                        <div
-                            key={item.label}
-                            className="flex items-center justify-between rounded-sm border border-primary-foreground/15 px-4 py-3"
-                        >
-                            <div className="min-w-0 flex-1">
-                                <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-primary-foreground/50">
-                                    {item.label}
-                                </p>
-                                <p className="mt-0.5 truncate text-sm font-light text-primary-foreground">
-                                    {item.value}
-                                </p>
-                            </div>
-                            {!isMuestra && <CopyBtn value={item.value} />}
-                        </div>
-                    ))}
-                </div>
-            </>,
-        );
+        openModal(<GiftCardModalContent modal={modal} isMuestra={isMuestra} />);
     };
 
     return (

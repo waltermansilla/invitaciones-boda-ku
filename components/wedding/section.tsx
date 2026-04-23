@@ -87,9 +87,18 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
 
   // Determine bg + text color from theme
   const bg = bgColor === "primary" ? "bg-primary" : bgColor === "transparent" ? "bg-transparent" : "bg-background"
+  const resolveTextColorValue = (value: string): string => {
+    const color = value.trim()
+    if (!color) return color
+    if (color === "foreground") return "hsl(var(--foreground))"
+    if (color === "primary-foreground") return "hsl(var(--primary-foreground))"
+    if (color === "background") return "hsl(var(--background))"
+    if (color === "primary") return "hsl(var(--primary))"
+    return color
+  }
   let resolvedTextColor: string
   if (textColor) {
-    resolvedTextColor = textColor
+    resolvedTextColor = resolveTextColorValue(textColor)
   } else if (bgColor === "primary") {
     resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF"
   } else {

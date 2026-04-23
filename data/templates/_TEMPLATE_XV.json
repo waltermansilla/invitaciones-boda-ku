@@ -195,13 +195,16 @@
     "// src: ruta al archivo mp3                                                  ": "",
     "// autoplay: true = inicia al tocar 'Ingresar', false = manual               ": "",
     "// startTime: segundos desde donde empieza (0 = inicio)                      ": "",
+    "// endTime: segundos donde termina/corta la musica (0 = sin corte)           ": "",
+    "// Se puede usar solo startTime, solo endTime, o ambos                        ": "",
     "// ==========================================================================": "",
 
     "music": {
         "enabled": true,
         "src": "/music/background.mp3",
         "autoplay": false,
-        "startTime": 0
+        "startTime": 0,
+        "endTime": 0
     },
 
     "// ==========================================================================": "",
@@ -326,6 +329,8 @@
             "// ----------------------------------------------------------------------": "",
             "// QUOTE - Frase de bienvenida                                           ": "",
             "// ----------------------------------------------------------------------": "",
+            "// textColor (opcional): hex o nombre ('foreground'/'primary-foreground')": "",
+            "//   util cuando usas bgImage y queres forzar contraste del texto         ": "",
             "type": "quote",
             "id": "quote-welcome",
             "enabled": true,
@@ -610,6 +615,8 @@
             "// button/modal: opcionales si showButton=false                           ": "",
             "// suggestedValue: UN solo valor. Ej: '$15.000'                           ": "",
             "// suggestedValues: MULTIPLES valores (array, hasta 4). Usar UNO u OTRO  ": "",
+            "// EXTRA tramos por fecha (opcional): dateRanges[]                        ": "",
+            "//   Cada tramo: { label, helperText?, suggestedValue? o suggestedValues? }": "",
             "//   Ejemplo: [{ label: 'Mayores', value: '$68.000' }, { label: 'Menores', value: '$30.000' }]": "",
             "// Ver mas opciones en template BODA                                     ": "",
             "// ----------------------------------------------------------------------": "",
@@ -631,6 +638,24 @@
                     "title": "Datos de transferencia",
                     "suggestedValueLabel": "Valor tarjeta",
                     "suggestedValue": "$15.000",
+                    "_dateRanges_ejemplo": [
+                        {
+                            "label": "Hasta 15/07",
+                            "helperText": "Pago anticipado",
+                            "suggestedValues": [
+                                { "label": "Mayores", "value": "$15.000" },
+                                { "label": "Menores", "value": "$8.000" }
+                            ]
+                        },
+                        {
+                            "label": "Desde 16/07",
+                            "helperText": "Pago tardio",
+                            "suggestedValues": [
+                                { "label": "Mayores", "value": "$18.000" },
+                                { "label": "Menores", "value": "$10.000" }
+                            ]
+                        }
+                    ],
                     "description": "Podes transferir el monto que quieras.",
                     "transferData": [
                         { "label": "Alias", "value": "MI.ALIAS" },

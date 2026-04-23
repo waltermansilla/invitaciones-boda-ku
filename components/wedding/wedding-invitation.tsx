@@ -405,6 +405,7 @@ function WeddingInvitationContent() {
                     <MusicPlayer 
                         src={music.src} 
                         startTime={(music as Record<string, unknown>).startTime as number | undefined}
+                        endTime={(music as Record<string, unknown>).endTime as number | undefined}
                         triggerPlay={shouldPlayMusic}
                     />
                 )}

@@ -200,13 +200,16 @@
     "// src: ruta al archivo mp3                                                  ": "",
     "// autoplay: true = inicia al tocar 'Ingresar', false = manual               ": "",
     "// startTime: segundos desde donde empieza (0 = inicio, 15 = salta intro)    ": "",
+    "// endTime: segundos donde termina/corta la musica (0 = sin corte)           ": "",
+    "// Se puede usar solo startTime, solo endTime, o ambos                        ": "",
     "// ==========================================================================": "",
 
     "music": {
         "enabled": true,
         "src": "/music/background.mp3",
         "autoplay": false,
-        "startTime": 0
+        "startTime": 0,
+        "endTime": 0
     },
 
     "// ==========================================================================": "",
@@ -367,6 +370,8 @@
             "// text: la frase                                                        ": "",
             "// author: autor (opcional, dejar vacio si no queres)                    ": "",
             "// decorativeLines: true/false para lineas arriba y abajo                ": "",
+            "// textColor (opcional): hex o nombre ('foreground'/'primary-foreground')": "",
+            "//   util cuando usas bgImage y queres forzar contraste del texto         ": "",
             "// ----------------------------------------------------------------------": "",
             "type": "quote",
             "id": "quote-welcome",
@@ -717,6 +722,9 @@
             "//   suggestedValue: UN solo valor (string). Ej: '$20.000'               ": "",
             "//   suggestedValues: MULTIPLES valores (array, hasta 4). Usar UNO u OTRO": "",
             "//     Formato: [{ label: 'Mayores', value: '$68.000' }, ...]            ": "",
+            "//   EXTRA tramos por fecha (opcional):                                  ": "",
+            "//   dateRanges: [{ label, helperText?, suggestedValue? o suggestedValues? }]": "",
+            "//     Muestra botones para elegir el tramo y ver los valores de ese periodo": "",
             "//   description: texto adicional                                        ": "",
             "//   transferData: array de { label, value } con datos bancarios         ": "",
             "// ----------------------------------------------------------------------": "",
@@ -747,6 +755,24 @@
                         { "label": "Menores", "value": "$30.000" },
                         { "label": "Despues de 0hs", "value": "$25.000" },
                         { "label": "Menores de 5", "value": "Sin cargo" }
+                    ],
+                    "_dateRanges_ejemplo": [
+                        {
+                            "label": "Hasta 15/07",
+                            "helperText": "Pago anticipado",
+                            "suggestedValues": [
+                                { "label": "Mayores", "value": "$68.000" },
+                                { "label": "Menores", "value": "$30.000" }
+                            ]
+                        },
+                        {
+                            "label": "Desde 16/07",
+                            "helperText": "Pago tardio",
+                            "suggestedValues": [
+                                { "label": "Mayores", "value": "$75.000" },
+                                { "label": "Menores", "value": "$35.000" }
+                            ]
+                        }
                     ],
 
                     "description": "Podes transferir el monto que quieras.",

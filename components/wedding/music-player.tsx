@@ -6,13 +6,27 @@ import { Volume2, VolumeX } from "lucide-react"
 interface MusicPlayerProps {
   src: string
   startTime?: number // segundos desde donde empieza la cancion (default: 0)
+  endTime?: number // segundos donde se corta la cancion (opcional)
   triggerPlay?: boolean // cuando cambia a true, activa la musica (como si tocaran el boton)
 }
 
-export default function MusicPlayer({ src, startTime = 0, triggerPlay = false }: MusicPlayerProps) {
+export default function MusicPlayer({ src, startTime = 0, endTime, triggerPlay = false }: MusicPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const hasTriggered = useRef(false)
+  const hasValidEndTime = typeof endTime === "number" && endTime > 0
+  const shouldStopAtEnd = hasValidEndTime && endTime > startTime
+
+  const jumpToStart = () => {
+    if (!audioRef.current) return
+    const safeStart = startTime > 0 ? startTime : 0
+    audioRef.current.currentTime = safeStart
+  }
+
+  const hitConfiguredEnd = () => {
+    if (!audioRef.current || !shouldStopAtEnd) return false
+    return audioRef.current.currentTime >= (endTime as number)
+  }
 
   // Cuando triggerPlay cambia a true, cambiar el boton a "sonido" inmediatamente y luego reproducir
   useEffect(() => {
@@ -23,15 +37,30 @@ export default function MusicPlayer({ src, startTime = 0, triggerPlay = false }:
       
       // Luego intentar reproducir el audio
       if (audioRef.current) {
-        if (startTime > 0) {
-          audioRef.current.currentTime = startTime
-        }
+        jumpToStart()
         audioRef.current.play().catch(() => {
           // Si falla, el boton ya esta en modo "sonido", el usuario puede reintentarlo
         })
       }
     }
-  }, [triggerPlay, startTime])
+  }, [triggerPlay, startTime, endTime])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio || !shouldStopAtEnd) return
+
+    const onTimeUpdate = () => {
+      if (!hitConfiguredEnd()) return
+      audio.pause()
+      setIsPlaying(false)
+      jumpToStart()
+    }
+
+    audio.addEventListener("timeupdate", onTimeUpdate)
+    return () => {
+      audio.removeEventListener("timeupdate", onTimeUpdate)
+    }
+  }, [shouldStopAtEnd, startTime, endTime])
 
   const togglePlay = () => {
     if (!audioRef.current) return
@@ -39,8 +68,8 @@ export default function MusicPlayer({ src, startTime = 0, triggerPlay = false }:
       audioRef.current.pause()
       setIsPlaying(false)
     } else {
-      if (startTime > 0 && audioRef.current.currentTime === 0) {
-        audioRef.current.currentTime = startTime
+      if (hitConfiguredEnd() || audioRef.current.currentTime === 0) {
+        jumpToStart()
       }
       audioRef.current.play()
       setIsPlaying(true)
@@ -49,7 +78,7 @@ export default function MusicPlayer({ src, startTime = 0, triggerPlay = false }:
 
   return (
     <>
-      <audio ref={audioRef} src={src} loop preload="none" />
+      <audio ref={audioRef} src={src} loop={!shouldStopAtEnd} preload="none" />
       <button
         onClick={togglePlay}
         aria-label={isPlaying ? "Pausar musica" : "Reproducir musica"}

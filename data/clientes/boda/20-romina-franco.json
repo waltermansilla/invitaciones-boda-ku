@@ -31,7 +31,7 @@
         "fechaEvento": "2026-10-17",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 17 de Octubre.",
         "theme": {
-            "primaryColor": "#42362f"
+            "primaryColor": "#4e3300"
         },
         "labels": {
             "title": "Panel de Invitados",
@@ -53,10 +53,10 @@
     "// ==========================================..": "",
     "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma.  marron oscuro 2c231e, claro 42362f, un poco mas claro 5c4d44",
     "theme": {
-        "primaryColor": "#42362f",
+        "primaryColor": "#4e3300",
         "backgroundColor": "#FAF8F5",
-        "textColor": "#5c4d44",
-        "lightBgTextColor": "#5c4d44",
+        "textColor": "#555",
+        "lightBgTextColor": "#555",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
