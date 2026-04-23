@@ -163,7 +163,10 @@ export default function FooterSection() {
                 {BRAND_NAME}
             </a>
             <div className="mx-auto mt-5 h-px w-full max-w-sm bg-primary-foreground/14" />
-            <p className="mt-4 text-[11px] tracking-[0.08em] text-primary-foreground/62 md:text-xs">
+            <p
+                className="mt-4 text-[11px] tracking-[0.08em] text-primary-foreground/62 md:text-xs"
+                suppressHydrationWarning
+            >
                 © {currentYear} {BRAND_NAME}. Todos los derechos reservados.
             </p>
         </footer>

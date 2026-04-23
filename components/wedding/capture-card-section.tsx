@@ -1,6 +1,6 @@
  "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MapPin, Video, KeyRound, CalendarDays, Clock } from "lucide-react"
 
 interface CaptureCardSectionProps {
@@ -44,6 +44,7 @@ export default function CaptureCardSection({
   colors,
 }: CaptureCardSectionProps) {
   const [imageError, setImageError] = useState(false)
+  const [hydrated, setHydrated] = useState(false)
   const initials = name
     .split(" ")
     .filter(Boolean)
@@ -69,6 +70,13 @@ export default function CaptureCardSection({
     fontFamily: '"Cormorant Garamond", "Georgia", serif',
   }
   const resolvedNameSize = nameSize && nameSize.trim() ? nameSize.trim() : "35px"
+  const meetingIdTelHref = meetingId
+    ? `tel:${meetingId.replace(/[^\d+]/g, "")}`
+    : undefined
+
+  useEffect(() => {
+    setHydrated(true)
+  }, [])
 
   return (
     <section className="flex items-center justify-center px-4 py-10" style={{ backgroundColor: captureBg }}>
@@ -76,7 +84,10 @@ export default function CaptureCardSection({
         className="w-full max-w-[390px] overflow-hidden rounded-[28px] border border-[#d7ccbe] shadow-[0_10px_28px_rgba(70,52,36,0.12)]"
         style={{ backgroundColor: cardBg }}
       >
-        <div className="mx-auto flex aspect-[3/5] w-full flex-col px-4 py-4 text-center sm:px-5">
+        <div
+          className="mx-auto flex w-full flex-col px-4 py-4 text-center sm:px-5"
+          style={{ minHeight: "640px" }}
+        >
           <div className="rounded-2xl border border-[#e2d7ca] px-4 py-4" style={{ backgroundColor: photoPanelBg }}>
             <p
               className="text-[13px] uppercase tracking-[0.2em] text-[#7b6c5b]"
@@ -92,7 +103,9 @@ export default function CaptureCardSection({
                 alt={name}
                 className="h-full w-full object-cover"
                 style={{ objectPosition: "50% 8%" }}
-                onError={() => setImageError(true)}
+                onError={() => {
+                  if (hydrated) setImageError(true)
+                }}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-xl font-semibold tracking-[0.1em] text-inherit/60">
@@ -178,7 +191,14 @@ export default function CaptureCardSection({
                   </p>
                   {meetingId ? (
                     <p className="mt-0.5 text-[13px] font-semibold leading-tight" style={{ ...captureBodyFont, color: blockTextColor }}>
-                      ID: {meetingId}
+                      ID:{" "}
+                      <a
+                        href={meetingIdTelHref}
+                        className="no-underline"
+                        style={{ color: "inherit" }}
+                      >
+                        {meetingId}
+                      </a>
                     </p>
                   ) : null}
                   {passcode ? (
