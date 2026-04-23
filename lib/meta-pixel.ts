@@ -16,10 +16,20 @@ export function trackMetaPageView(): void {
 export function trackMetaEvent(
     eventName: string,
     params?: MetaPixelEventParams,
+    eventId?: string,
 ): void {
     if (typeof window === "undefined" || typeof window.fbq !== "function") return;
+    const options = eventId ? { eventID: eventId } : undefined;
     if (params) {
+        if (options) {
+            window.fbq("track", eventName, params, options);
+            return;
+        }
         window.fbq("track", eventName, params);
+        return;
+    }
+    if (options) {
+        window.fbq("track", eventName, undefined, options);
         return;
     }
     window.fbq("track", eventName);

@@ -842,12 +842,73 @@ function CtaLink({
     className: string;
     style: React.CSSProperties;
 }) {
+    const readCookie = (name: string) => {
+        if (typeof document === "undefined") return undefined;
+        const match = document.cookie.match(
+            new RegExp(`(?:^|; )${name.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")}=([^;]*)`),
+        );
+        return match ? decodeURIComponent(match[1]) : undefined;
+    };
+
+    const generateEventId = () => {
+        if (typeof crypto !== "undefined" && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+        return `evt_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    };
+
+    const sendLeadToCapi = async (eventId: string) => {
+        try {
+            await fetch("/api/meta/capi", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    eventName: "Lead",
+                    eventId,
+                    source: trackingSource || "unknown",
+                    ctaText: btn.text,
+                    eventSourceUrl: window.location.href,
+                    fbp: readCookie("_fbp"),
+                    fbc: readCookie("_fbc"),
+                }),
+                keepalive: true,
+            });
+        } catch {
+            // Non-blocking: browser Pixel remains the primary signal.
+        }
+    };
+
     const handleTracking = () => {
         if (!trackingEvent) return;
-        trackMetaEvent(trackingEvent, {
-            source: trackingSource || "unknown",
-            cta_text: btn.text,
-        });
+        const eventId = trackingEvent === "Lead" ? generateEventId() : undefined;
+        trackMetaEvent(
+            trackingEvent,
+            {
+                source: trackingSource || "unknown",
+                cta_text: btn.text,
+            },
+            eventId,
+        );
+        if (trackingEvent === "Lead" && eventId) {
+            void sendLeadToCapi(eventId);
+        }
+    };
+
+    const handleTrackingAndReturnEventId = () => {
+        if (!trackingEvent) return undefined;
+        const eventId = trackingEvent === "Lead" ? generateEventId() : undefined;
+        trackMetaEvent(
+            trackingEvent,
+            {
+                source: trackingSource || "unknown",
+                cta_text: btn.text,
+            },
+            eventId,
+        );
+        if (trackingEvent === "Lead" && eventId) {
+            void sendLeadToCapi(eventId);
+        }
+        return eventId;
     };
 
     if (btn.type === "whatsapp") {
@@ -895,7 +956,7 @@ function CtaLink({
                     !btn.url.startsWith("#")
                 ) {
                     event.preventDefault();
-                    handleTracking();
+                    handleTrackingAndReturnEventId();
                     window.setTimeout(() => {
                         window.location.href = btn.url || "#";
                     }, 120);
