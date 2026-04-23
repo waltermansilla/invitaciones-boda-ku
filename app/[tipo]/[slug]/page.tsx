@@ -19,13 +19,18 @@ function getPublicSiteUrl() {
 }
 
 function resolveOgImage(config: ReturnType<typeof getClientConfig>) {
+  const metaImage =
+    typeof config.meta?.ogImage === "string"
+      ? config.meta.ogImage
+      : typeof config.meta?.image === "string"
+        ? config.meta.image
+        : null
   const heroImage =
-    typeof config.hero?.coupleImage === "string"
-      ? config.hero.coupleImage
-      : null
-  if (!heroImage) return null
-  if (/^https?:\/\//i.test(heroImage)) return heroImage
-  return `${getPublicSiteUrl()}${heroImage.startsWith("/") ? heroImage : `/${heroImage}`}`
+    typeof config.hero?.coupleImage === "string" ? config.hero.coupleImage : null
+  const image = metaImage || heroImage
+  if (!image) return null
+  if (/^https?:\/\//i.test(image)) return image
+  return `${getPublicSiteUrl()}${image.startsWith("/") ? image : `/${image}`}`
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
