@@ -626,6 +626,7 @@ export default function DetallesPage() {
         { alias: "", owner: "", bank: "", cbu: "" },
     ]);
     const [giftListLink, setGiftListLink] = useState("");
+    const [cardPaymentAlias, setCardPaymentAlias] = useState("");
     const [cardPrices, setCardPrices] = useState<CardPrice[]>([
         { amount: "", note: "", paymentDeadline: "" },
     ]);
@@ -833,6 +834,7 @@ export default function DetallesPage() {
                         .join("\n");
                     return [
                         `- ${sectionTitleUpper}:`,
+                        `  Alias pago tarjeta: ${cardPaymentAlias || "-"}`,
                         values || "  - Sin valores cargados",
                         `  Nota extra: ${note || "-"}`,
                     ].join("\n");
@@ -956,6 +958,7 @@ export default function DetallesPage() {
             .join("\n\n");
     }, [
         cardPrices,
+        cardPaymentAlias,
         colorsToAvoid,
         dressCode,
         dressTips,
@@ -1039,6 +1042,7 @@ export default function DetallesPage() {
         }
         if (stepId === "tarjeta") {
             return (
+                cardPaymentAlias.trim().length > 0 &&
                 cardPrices.length > 0 &&
                 cardPrices.every((item) => item.amount.trim().length > 0)
             );
@@ -1103,6 +1107,7 @@ export default function DetallesPage() {
         setItinerary("");
         setGiftAliases([{ alias: "", owner: "", bank: "", cbu: "" }]);
         setGiftListLink("");
+        setCardPaymentAlias("");
         setCardPrices([{ amount: "", note: "", paymentDeadline: "" }]);
         setDriveAlbumLink("");
         setMusicYoutube("");
@@ -1151,6 +1156,7 @@ export default function DetallesPage() {
                 itinerary: string;
                 giftAliases: AliasItem[];
                 giftListLink: string;
+                cardPaymentAlias: string;
                 cardPrices: CardPrice[];
                 driveAlbumLink: string;
                 musicYoutube: string;
@@ -1201,6 +1207,8 @@ export default function DetallesPage() {
             }
             if (typeof draft.giftListLink === "string")
                 setGiftListLink(draft.giftListLink);
+            if (typeof draft.cardPaymentAlias === "string")
+                setCardPaymentAlias(draft.cardPaymentAlias);
             if (
                 Array.isArray(draft.cardPrices) &&
                 draft.cardPrices.length > 0
@@ -1333,6 +1341,7 @@ export default function DetallesPage() {
             itinerary,
             giftAliases,
             giftListLink,
+            cardPaymentAlias,
             cardPrices,
             driveAlbumLink,
             musicYoutube,
@@ -1354,6 +1363,7 @@ export default function DetallesPage() {
         window.localStorage.setItem(draftStorageKey, JSON.stringify(draft));
     }, [
         cardPrices,
+        cardPaymentAlias,
         colorsToAvoid,
         draftStorageKey,
         dressCode,
@@ -1856,6 +1866,18 @@ export default function DetallesPage() {
 
                     {activeStep.id === "tarjeta" ? (
                         <>
+                            <Input
+                                label="Alias pago tarjeta"
+                                value={cardPaymentAlias}
+                                onChange={setCardPaymentAlias}
+                                placeholder="Ej: tumomento.tarjeta"
+                            />
+                            {showRequiredHints &&
+                            cardPaymentAlias.trim().length === 0 ? (
+                                <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
+                                    * Campo obligatorio
+                                </p>
+                            ) : null}
                             <p className="text-sm font-medium text-[#5A4A3F]">
                                 Podes cargar varios valores, y detallar para
                                 quien aplica.
