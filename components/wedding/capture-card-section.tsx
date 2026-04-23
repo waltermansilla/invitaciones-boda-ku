@@ -85,8 +85,8 @@ export default function CaptureCardSection({
         style={{ backgroundColor: cardBg }}
       >
         <div
-          className="mx-auto flex w-full flex-col px-4 py-4 text-center sm:px-5"
-          style={{ minHeight: "640px" }}
+          className="mx-auto flex w-full flex-col justify-between px-4 py-4 text-center sm:px-5"
+          style={{ aspectRatio: "3 / 5" }}
         >
           <div className="rounded-2xl border border-[#e2d7ca] px-4 py-4" style={{ backgroundColor: photoPanelBg }}>
             <p
