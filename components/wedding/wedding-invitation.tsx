@@ -22,7 +22,7 @@ function WeddingInvitationContent() {
     const config = useConfig();
     const isMuestra = useIsMuestra();
     const searchParams = useSearchParams();
-    const codigoInvitado = searchParams.get("c") || "";
+    const codigoInvitado = searchParams.get("i") || searchParams.get("c") || "";
     const skipOverlay =
         searchParams.get("enter") === "1" ||
         searchParams.get("noOverlay") === "1";
@@ -32,6 +32,12 @@ function WeddingInvitationContent() {
     const sectionsForLayout = sections.filter(
         (s) => (s as { type?: string }).type !== "footer",
     );
+    const footerConfig = config.footer as { enabled?: boolean } | undefined;
+    const footerSectionOverride = sections.find(
+        (s) => (s as { type?: string }).type === "footer",
+    ) as { enabled?: boolean } | undefined;
+    const showFooter =
+        footerConfig?.enabled !== false && footerSectionOverride?.enabled !== false;
     const meta = config.meta;
     const music = config.music;
     const overlay = config.overlay;
@@ -322,6 +328,16 @@ function WeddingInvitationContent() {
                             | "primary" | "background" | string
                             | undefined
                     }
+                    showCountdown={
+                        (hero as Record<string, unknown>).showCountdown as
+                            | boolean
+                            | undefined
+                    }
+                    vignette={
+                        (hero as Record<string, unknown>).vignette as
+                            | { enabled?: boolean; opacity?: number }
+                            | undefined
+                    }
                 />
 
                 {/* Dynamic sections: order controlled by array position in JSON */}
@@ -399,7 +415,7 @@ function WeddingInvitationContent() {
                     })
                 })()}
 
-                <FooterSection />
+                {showFooter && <FooterSection />}
 
                 {music.enabled && (
                     <MusicPlayer 

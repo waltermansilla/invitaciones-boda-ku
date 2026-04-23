@@ -1,19 +1,26 @@
 import { listInvitationsForInternalAdmin } from "@/lib/internal-links-admin"
 import { InternalLinksList } from "@/components/admin/internal-links-list"
+import { headers } from "next/headers"
 
 export const dynamic = "force-dynamic"
 
-function absoluteUrl(pathname: string): string {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL || "https://momentounico.com.ar").replace(
-    /\/+$/,
-    "",
-  )
+function absoluteUrl(baseUrl: string, pathname: string): string {
+  const base = baseUrl.replace(/\/+$/, "")
   return `${base}${pathname}`
+}
+
+async function getRequestBaseUrl(): Promise<string> {
+  const h = await headers()
+  const host = h.get("x-forwarded-host") || h.get("host")
+  const proto = h.get("x-forwarded-proto") || "http"
+  if (host) return `${proto}://${host}`
+  return process.env.NEXT_PUBLIC_SITE_URL || "https://momentounico.com.ar"
 }
 
 export default async function InternalLinksAdminPage() {
   const rows = await listInvitationsForInternalAdmin()
-  const baseUrl = absoluteUrl("")
+  const requestBaseUrl = await getRequestBaseUrl()
+  const baseUrl = absoluteUrl(requestBaseUrl, "")
 
   return (
     <main className="min-h-screen bg-[#F5EFE6] text-[#3F332B]">

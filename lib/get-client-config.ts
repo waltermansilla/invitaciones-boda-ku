@@ -28,6 +28,7 @@ export interface ClientConfig {
   hero: Record<string, unknown>
   music: Record<string, unknown>
   sections: Array<Record<string, unknown>>
+  variants?: Record<string, unknown>
   access?: {
     tokenEnabled?: boolean
     /** Token real (opcional, útil para admin interno). */
@@ -37,6 +38,11 @@ export interface ClientConfig {
     allowLegacyUntil?: string
   }
   [key: string]: unknown
+}
+
+interface VariantConfig extends Record<string, unknown> {
+  sections?: Array<Record<string, unknown>>
+  replaceSections?: boolean
 }
 
 export function sha256Hex(value: string): string {
@@ -79,6 +85,82 @@ function slugFromFileName(fileName: string): string {
   return withoutExt.replace(/^\d+-/, "")
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function deepMerge<T>(base: T, patch: unknown): T {
+  if (Array.isArray(patch)) {
+    return patch as T
+  }
+  if (!isPlainObject(base) || !isPlainObject(patch)) {
+    return patch as T
+  }
+  const out: Record<string, unknown> = { ...base }
+  for (const [key, patchValue] of Object.entries(patch)) {
+    const baseValue = (base as Record<string, unknown>)[key]
+    out[key] =
+      isPlainObject(baseValue) && isPlainObject(patchValue)
+        ? deepMerge(baseValue, patchValue)
+        : patchValue
+  }
+  return out as T
+}
+
+function applyVariantToConfig(
+  baseConfig: ClientConfig,
+  variantKey: string | undefined,
+): ClientConfig {
+  const key = typeof variantKey === "string" ? variantKey.trim() : ""
+  if (!key) return baseConfig
+
+  const variants = baseConfig.variants
+  if (!isPlainObject(variants)) return baseConfig
+  const variantRaw = variants[key]
+  if (!isPlainObject(variantRaw)) return baseConfig
+
+  const variant = variantRaw as VariantConfig
+  const result = deepMerge(
+    JSON.parse(JSON.stringify(baseConfig)) as ClientConfig,
+    {},
+  )
+
+  for (const [k, v] of Object.entries(variant)) {
+    if (k === "sections" || k === "replaceSections" || k === "variants") continue
+    ;(result as Record<string, unknown>)[k] = deepMerge(
+      (result as Record<string, unknown>)[k],
+      v,
+    )
+  }
+
+  const currentSections = Array.isArray(result.sections) ? [...result.sections] : []
+  const sectionPatches = Array.isArray(variant.sections) ? variant.sections : []
+  if (sectionPatches.length > 0) {
+    if (variant.replaceSections) {
+      result.sections = sectionPatches
+    } else {
+      for (const patch of sectionPatches) {
+        const patchId = typeof patch?.id === "string" ? patch.id : ""
+        if (!patchId) {
+          currentSections.push(patch)
+          continue
+        }
+        const existingIdx = currentSections.findIndex(
+          (s) => typeof s?.id === "string" && s.id === patchId,
+        )
+        if (existingIdx === -1) {
+          currentSections.push(patch)
+          continue
+        }
+        currentSections[existingIdx] = deepMerge(currentSections[existingIdx], patch)
+      }
+      result.sections = currentSections
+    }
+  }
+
+  return result
+}
+
 function resolveClientFilePath(tipo: string, slug: string): string | null {
   const tipoDir = path.join(process.cwd(), "data", "clientes", tipo)
   if (!fs.existsSync(tipoDir)) return null
@@ -96,13 +178,18 @@ function resolveClientFilePath(tipo: string, slug: string): string | null {
  * Loads a client config JSON from data/clientes/{tipo}/{slug}.json
  * Throws notFound() if the file doesn't exist.
  */
-export function getClientConfig(tipo: string, slug: string): ClientConfig {
+export function getClientConfig(
+  tipo: string,
+  slug: string,
+  variantKey?: string,
+): ClientConfig {
   const filePath = resolveClientFilePath(tipo, slug)
   if (!filePath || !fs.existsSync(filePath)) {
     notFound()
   }
   const raw = fs.readFileSync(filePath, "utf-8")
-  return JSON.parse(raw) as ClientConfig
+  const parsed = JSON.parse(raw) as ClientConfig
+  return applyVariantToConfig(parsed, variantKey)
 }
 
 /**

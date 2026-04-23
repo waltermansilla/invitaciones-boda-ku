@@ -11,7 +11,7 @@ import WeddingInvitation from "@/components/wedding/wedding-invitation"
 
 interface PageProps {
   params: Promise<{ tipo: string; slug: string }>
-  searchParams: Promise<{ k?: string }>
+  searchParams: Promise<{ t?: string; k?: string; v?: string }>
 }
 
 function getPublicSiteUrl() {
@@ -28,9 +28,10 @@ function resolveOgImage(config: ReturnType<typeof getClientConfig>) {
   return `${getPublicSiteUrl()}${heroImage.startsWith("/") ? heroImage : `/${heroImage}`}`
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { tipo, slug } = await params
-  const config = getClientConfig(tipo, slug)
+  const { v } = await searchParams
+  const config = getClientConfig(tipo, slug, v)
   const siteUrl = getPublicSiteUrl()
   const canonicalUrl = `${siteUrl}/${tipo}/${slug}`
   const ogImage = resolveOgImage(config)
@@ -65,9 +66,10 @@ export function generateStaticParams() {
 
 export default async function ClientPage({ params, searchParams }: PageProps) {
   const { tipo, slug } = await params
-  const { k } = await searchParams
-  const config = getClientConfig(tipo, slug)
-  if (!isAccessTokenValid(config, k)) notFound()
+  const { t, k, v } = await searchParams
+  const token = t || k
+  const config = getClientConfig(tipo, slug, v)
+  if (!isAccessTokenValid(config, token)) notFound()
 
   return (
     <ConfigProvider config={config}>

@@ -26,6 +26,8 @@ import PlaylistSection from "./playlist-section"
 import SpecialMessageSection from "./special-message-section"
 import ConfirmarWhatsappSection from "./confirmar-whatsapp-section"
 import AdultsOnlySection from "./adults-only-section"
+import ZoomInfoSection from "./zoom-info-section"
+import CaptureCardSection from "./capture-card-section"
 import { useConfig } from "@/lib/config-context"
 import {
   confirmarComunUsesPanelApi,
@@ -56,7 +58,7 @@ interface SectionProps {
 
 function useCodigoInvitado() {
   const searchParams = useSearchParams()
-  return searchParams.get("c") || ""
+  return searchParams.get("i") || searchParams.get("c") || ""
 }
 
 function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: SectionProps) {
@@ -172,6 +174,57 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
             datetime={data.datetime as { date?: string; time?: string } | undefined}
             order={data.order as ("date" | "time" | "address")[] | undefined}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" | "background" }}
+          />
+        )
+
+      case "zoomInfo":
+        return (
+          <ZoomInfoSection
+            title={data.title as string}
+            meetingId={data.meetingId as string}
+            passcode={data.passcode as string}
+            notes={data.notes as string | undefined}
+            showButton={data.showButton as boolean | undefined}
+            button={
+              data.button as {
+                text: string
+                url: string
+                variant: "primary" | "secondary" | "background"
+              }
+            }
+          />
+        )
+
+      case "captureCard":
+        return (
+          <CaptureCardSection
+            image={data.image as string}
+            name={data.name as string}
+            topLabel={data.topLabel as string | undefined}
+            nameSize={data.nameSize as string | undefined}
+            locationTitle={data.locationTitle as string | undefined}
+            locationAddress={data.locationAddress as string | undefined}
+            eventDay={data.eventDay as string | undefined}
+            eventTime={data.eventTime as string | undefined}
+            zoomTitle={data.zoomTitle as string | undefined}
+            meetingId={data.meetingId as string | undefined}
+            passcode={data.passcode as string | undefined}
+            colors={
+              data.colors as
+                | {
+                    blockBg?: string
+                    blockBorder?: string
+                    dateTimeBg?: string
+                    locationBg?: string
+                    zoomBg?: string
+                    captureBg?: string
+                    cardBg?: string
+                    photoPanelBg?: string
+                    nameTextColor?: string
+                    blockTextColor?: string
+                  }
+                | undefined
+            }
           />
         )
 

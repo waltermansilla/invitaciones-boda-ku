@@ -25,7 +25,7 @@
     "rsvpPanel": {
         "enabled": true,
         "confirmacion": "formulario",
-        "registrarSinCodigoEnPanel": true,
+        "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
         "panelId": "romina-franco-b2ksTb8p",
         "fechaEvento": "2026-10-17",
@@ -209,7 +209,7 @@
                     {
                         "icon": "party",
                         "name": "Fiesta",
-                        "address": "Salón de eventos 'Tierras del Plata', Peña Morales o Nueva s/n",
+                        "address": "Salón de eventos 'Tierras del Plata', Peña Morales o Nueva s/n, Chacras de Coria",
                         "time": "13:00 hs",
                         "button": {
                             "text": "Cómo llegar",

@@ -433,5 +433,18 @@
                 ]
             }
         }
-    ]
+    ],
+
+    "variants": {
+        "1": {
+            "sections": [
+                {
+                    "id": "gift-card",
+                    "data": {
+                        "description": ""
+                    }
+                }
+            ]
+        }
+    }
 }

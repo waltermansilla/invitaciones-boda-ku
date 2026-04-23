@@ -27,7 +27,7 @@
     "rsvpPanel": {
         "enabled": true,
         "confirmacion": "formulario",
-        "registrarSinCodigoEnPanel": true,
+        "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
         "panelId": "xv-indiana-g6dVRl3t",
         "fechaEvento": "2027-03-06",

@@ -51,6 +51,11 @@ interface HeroSectionProps {
     overlayStyle?: "card" | "floating"
   }
   countdownAreaBg?: "primary" | "background" | string
+  showCountdown?: boolean
+  vignette?: {
+    enabled?: boolean
+    opacity?: number
+  }
 }
 
 function getTimeRemaining(targetDate: string) {
@@ -103,6 +108,8 @@ export default function HeroSection({
   countdownLabels,
   countdownStyle,
   countdownAreaBg,
+  showCountdown = true,
+  vignette,
 }: HeroSectionProps) {
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
@@ -211,6 +218,12 @@ export default function HeroSection({
     { value: time?.minutes ?? 0, label: countdownLabels.minutes },
     { value: time?.seconds ?? 0, label: countdownLabels.seconds },
   ]
+  const hasSecondName = Boolean(groomName.trim())
+  const vignetteEnabled = Boolean(vignette?.enabled)
+  const vignetteOpacity =
+    typeof vignette?.opacity === "number"
+      ? Math.min(0.65, Math.max(0, vignette.opacity))
+      : 0.18
 
   // Render a single name text with its own styling
   const renderNameText = (textConfig: NamesText, fallbackFont?: string, fallbackWeight?: string, fallbackSize?: string, fallbackStyle?: string) => {
@@ -312,8 +325,10 @@ export default function HeroSection({
       <div className={`${getPositionClass()} flex flex-col items-center`} style={namesFontStyle}>
         {showDecorativeLines && <div className="mb-3 h-px w-12 bg-current opacity-40" />}
         <p className={`text-center ${sizeClass}`}>{brideName}</p>
-        <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">{separator}</span>
-        <p className={`text-center ${sizeClass}`}>{groomName}</p>
+        {separator && hasSecondName && (
+          <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">{separator}</span>
+        )}
+        {hasSecondName && <p className={`text-center ${sizeClass}`}>{groomName}</p>}
         {showDecorativeLines && <div className="mt-3 h-px w-12 bg-current opacity-40" />}
       </div>
     )
@@ -406,6 +421,22 @@ export default function HeroSection({
           className="object-cover"
           priority
         />
+        {vignetteEnabled && (
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `
+                linear-gradient(
+                  to top,
+                  rgba(0,0,0,${vignetteOpacity}) 0%,
+                  rgba(0,0,0,${vignetteOpacity * 0.65}) 24%,
+                  rgba(0,0,0,${vignetteOpacity * 0.28}) 45%,
+                  rgba(0,0,0,0) 72%
+                )
+              `,
+            }}
+          />
+        )}
         {shouldShowNames && (
           <>
             <div className={`absolute inset-0 ${
@@ -419,7 +450,7 @@ export default function HeroSection({
       </div>
 
       {/* Countdown - different layouts */}
-      {isOverlayLayout ? (
+      {showCountdown && isOverlayLayout ? (
         isFloatingOverlay ? (
           // Floating style - items directly on the transition line, no card wrapper
           <div 
@@ -446,7 +477,7 @@ export default function HeroSection({
             </div>
           </div>
         )
-      ) : (
+      ) : showCountdown ? (
         // Inline style - below hero with headline
         <div className="flex w-full flex-col items-center px-6 pt-10 pb-10" style={getAreaBgStyle()}>
           <h1 className="mb-8 text-center text-3xl font-light tracking-wide uppercase text-inherit md:text-4xl">
@@ -461,7 +492,7 @@ export default function HeroSection({
             <CountdownItems />
           </div>
         </div>
-      )}
+      ) : null}
     </section>
   )
 }

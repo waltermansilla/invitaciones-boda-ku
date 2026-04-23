@@ -4,7 +4,7 @@ Manual simple para proteger invitaciones reales de curiosos.
 
 ## Objetivo
 
-- La invitación real (`/tipo/slug`) puede pedir un token en URL: `?k=ABC123`.
+- La invitación real (`/tipo/slug`) puede pedir un token en URL: `?t=ABC123`.
 - Si no coincide, devuelve 404.
 - La muestra (`/m/tipo/slug`) no usa este token.
 
@@ -24,9 +24,9 @@ Agregar en el JSON del cliente:
 
 - `tokenEnabled`: activa/desactiva el control.
 - `token`: token real de 6 caracteres alfanuméricos.
-- `allowLegacyUntil` (opcional): hasta esa fecha deja entrar sin `k` para migraciones.
+- `allowLegacyUntil` (opcional): hasta esa fecha deja entrar sin `t` para migraciones.
 
-Con esto ya funciona todo el acceso por `?k=...`.
+Con esto ya funciona todo el acceso por `?t=...`.
 
 ## Opción más segura: usar hash SHA-256
 
@@ -101,13 +101,13 @@ node scripts/gen-access-token.mjs Ab3Xz9
 - Genera (o usa) un token de 6 caracteres.
 - Calcula su SHA-256.
 - Te imprime ambos para copiar/pegar:
-  - token real: lo compartís en el link (`?k=...`)
+  - token real: lo compartís en el link (`?t=...`)
   - hash: lo guardás en `access.tokenHash`
 
 ## Cómo compartir links
 
-- Link real normal: `https://tudominio.com/boda/mi-slug?k=Ab3Xz9`
-- Si también usás panel por invitado: `...?k=Ab3Xz9&c=CODIGO`
+- Link real normal: `https://tudominio.com/boda/mi-slug?t=Ab3Xz9`
+- Si también usás panel por invitado: `...?t=Ab3Xz9&i=CODIGO`
 
 ## Compatibilidad con eventos ya activos
 
@@ -116,14 +116,23 @@ Para no romper enlaces viejos:
 1. Dejá `tokenEnabled: false` en eventos viejos, o
 2. Activá token y agregá `allowLegacyUntil` unos días.
 
-Cuando pase la fecha, ya será obligatorio `k`.
+Cuando pase la fecha, ya será obligatorio `t`.
 
 ### `allowLegacyUntil` explicado simple
 
-- Si `tokenEnabled` está en `true`, normalmente pide `?k=...`.
+- Si `tokenEnabled` está en `true`, normalmente pide `?t=...`.
 - Si cargás `allowLegacyUntil: "2026-12-31"`, hasta ese día deja entrar también sin token.
 - Desde el día siguiente, vuelve a exigir token.
 - Si no lo necesitás, dejalo vacío (`""`) o quitá la clave.
+
+## Compatibilidad de parámetros (viejos y nuevos)
+
+- Nuevo estándar corto:
+  - `t` = token
+  - `i` = código de invitado
+  - `v` = variante
+- Compatibilidad:
+  - también se aceptan enlaces viejos con `k` (token) y `c` (invitado).
 
 ## Notas importantes
 

@@ -17,6 +17,7 @@ export type InternalInviteRow = {
   sampleUrl: string
   realBaseUrl: string
   realUrlWithToken: string | null
+  realVariantUrls: { name: string; url: string }[]
   tokenEnabled: boolean
   tokenPresent: boolean
   tokenHashPresent: boolean
@@ -45,6 +46,30 @@ function nameFromJson(json: Record<string, unknown>, slug: string): string {
   if (typeof q === "string" && q.trim()) return q.trim()
   const duo = [b, g].filter((x) => typeof x === "string" && x.trim()).join(" & ")
   return duo || slug
+}
+
+function variantUrlsFromJson(
+  json: Record<string, unknown>,
+  realBaseUrl: string,
+  token: string,
+): { name: string; url: string }[] {
+  const variantsRaw = json.variants
+  if (!variantsRaw || typeof variantsRaw !== "object" || Array.isArray(variantsRaw)) {
+    return []
+  }
+  const baseUrlWithToken =
+    token && /^[A-Za-z0-9]{6}$/.test(token) ? `${realBaseUrl}?t=${token}` : realBaseUrl
+  const entries = Object.entries(variantsRaw)
+    .filter(([name, value]) => {
+      if (!name || name.startsWith("_")) return false
+      return value !== null && typeof value === "object" && !Array.isArray(value)
+    })
+    .sort(([a], [b]) => a.localeCompare(b))
+
+  return entries.map(([name]) => ({
+    name,
+    url: `${baseUrlWithToken}${baseUrlWithToken.includes("?") ? "&" : "?"}v=${encodeURIComponent(name)}`,
+  }))
 }
 
 export async function listInvitationsForInternalAdmin(): Promise<InternalInviteRow[]> {
@@ -78,6 +103,7 @@ export async function listInvitationsForInternalAdmin(): Promise<InternalInviteR
         const eventDate = eventDateRaw ? String(eventDateRaw).slice(0, 10) : null
         const realBaseUrl = `/${tipo}/${slug}`
         const token = typeof access.token === "string" ? access.token : ""
+        const realVariantUrls = variantUrlsFromJson(json, realBaseUrl, token)
         out.push({
           fileId: idFromFileName(file),
           tipo,
@@ -87,7 +113,8 @@ export async function listInvitationsForInternalAdmin(): Promise<InternalInviteR
           sampleUrl: `/m/${tipo}/${slug}`,
           realBaseUrl,
           realUrlWithToken:
-            token && /^[A-Za-z0-9]{6}$/.test(token) ? `${realBaseUrl}?k=${token}` : null,
+            token && /^[A-Za-z0-9]{6}$/.test(token) ? `${realBaseUrl}?t=${token}` : null,
+          realVariantUrls,
           tokenEnabled: Boolean(access.tokenEnabled),
           tokenPresent: Boolean(token),
           tokenHashPresent: typeof access.tokenHash === "string" && access.tokenHash.length > 0,
@@ -104,9 +131,19 @@ export async function listInvitationsForInternalAdmin(): Promise<InternalInviteR
     }
   }
   return out.sort((a, b) => {
-    const aId = a.fileId ?? Number.MAX_SAFE_INTEGER
-    const bId = b.fileId ?? Number.MAX_SAFE_INTEGER
-    if (aId !== bId) return aId - bId
+    const aId = a.fileId
+    const bId = b.fileId
+
+    // Regla solicitada: primero id 0, luego el resto de mayor a menor.
+    if (aId === 0 && bId !== 0) return -1
+    if (bId === 0 && aId !== 0) return 1
+
+    const aMissing = aId == null
+    const bMissing = bId == null
+    if (aMissing && !bMissing) return 1
+    if (bMissing && !aMissing) return -1
+
+    if (aId != null && bId != null && aId !== bId) return bId - aId
     return `${a.tipo}/${a.slug}`.localeCompare(`${b.tipo}/${b.slug}`)
   })
 }

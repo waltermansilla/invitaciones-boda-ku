@@ -1,0 +1,166 @@
+{
+  "meta": {
+    "title": "Velatorio - Nombre de la persona",
+    "description": "Invitacion con informacion de velatorio y transmision por Zoom.",
+    "lang": "es",
+    "coupleNames": {
+      "groomName": "",
+      "brideName": "Nombre de la persona",
+      "separator": ""
+    }
+  },
+  "access": {
+    "tokenEnabled": true,
+    "token": "ABC123",
+    "tokenHash": "",
+    "allowLegacyUntil": ""
+  },
+  "rsvpPanel": {
+    "enabled": false,
+    "confirmacion": "formulario",
+    "registrarSinCodigoEnPanel": false,
+    "panelId": "",
+    "legacyPanelIds": [],
+    "fechaEvento": "",
+    "confirmationMessage": "",
+    "limiteInvitados": 0,
+    "theme": {
+      "primaryColor": "#6F6A63"
+    },
+    "labels": {
+      "title": "Panel de Invitados",
+      "totalLabel": "Total invitados",
+      "confirmedLabel": "Confirmados",
+      "pendingLabel": "Pendientes",
+      "declinedLabel": "No asisten",
+      "paymentPending": "Pago pendiente",
+      "addGuest": "Agregar Invitado",
+      "copyLink": "Copiar link",
+      "manualConfirm": "Confirmación manual",
+      "paidButton": "Ya pago",
+      "unpaidButton": "Pago?"
+    }
+  },
+  "theme": {
+    "primaryColor": "#6F6A63",
+    "backgroundColor": "#F6F3EE",
+    "backgroundImage": "",
+    "primaryImage": "",
+    "textColor": "#3F3A35",
+    "lightBgTextColor": "#4A443E",
+    "darkBgTextColor": "#FFFFFF",
+    "accentBackground": "#ECE6DE",
+    "modalTextColor": "#FFFFFF",
+    "font": {
+      "family": "Playfair Display",
+      "weights": "300,400,500,600,700"
+    }
+  },
+  "overlay": {
+    "enabled": false,
+    "phrase": "",
+    "buttonText": "Abrir",
+    "bgColor": "",
+    "bgImage": "",
+    "showNames": true,
+    "showPhrase": false
+  },
+  "music": {
+    "enabled": false,
+    "src": "",
+    "autoplay": false,
+    "startTime": 0,
+    "endTime": 0
+  },
+  "qrCard": {
+    "enabled": false
+  },
+  "hero": {
+    "coupleImage": "/clientes/v/[slug]/hero.jpg",
+    "headline": "",
+    "showNamesOnPhoto": true,
+    "namesDisplay": {
+      "enabled": true,
+      "position": "bottom",
+      "color": "rgba(255,255,255,0.95)",
+      "decorativeLines": false,
+      "logo": "",
+      "font": "",
+      "weight": "300",
+      "size": "xl",
+      "style": "normal",
+      "lowercase": false,
+      "letterSpacing": "normal"
+    },
+    "showCountdown": false,
+    "countdownPrefix": "",
+    "eventDate": "2026-01-01T00:00:00",
+    "countdownLabels": {
+      "days": "Dias",
+      "hours": "Horas",
+      "minutes": "Minutos",
+      "seconds": "Segundos"
+    },
+    "countdownAreaBg": "background",
+    "countdownStyle": {
+      "background": "none",
+      "shape": "rounded",
+      "layout": "inline",
+      "overlayStyle": "card"
+    }
+  },
+  "sections": [
+    {
+      "type": "quote",
+      "id": "frase-recuerdo",
+      "enabled": true,
+      "bgColor": "primary",
+      "data": {
+        "text": "Siempre vivira en nuestros corazones.",
+        "author": "",
+        "decorativeLines": true
+      }
+    },
+    {
+      "type": "locationInfo",
+      "id": "lugar-velatorio",
+      "enabled": true,
+      "bgColor": "background",
+      "data": {
+        "icon": "pin",
+        "title": "Lugar del velatorio",
+        "address": "Dirección completa",
+        "showButton": true,
+        "datetime": {
+          "date": "Jueves 23 de Abril",
+          "time": "Desde 08:00 hs"
+        },
+        "order": ["date", "time", "address"],
+        "button": {
+          "text": "Como llegar",
+          "url": "https://maps.google.com",
+          "variant": "primary"
+        }
+      }
+    },
+    {
+      "type": "zoomInfo",
+      "id": "zoom-transmision",
+      "enabled": true,
+      "bgColor": "background",
+      "data": {
+        "title": "Transmision por Zoom",
+        "meetingId": "123 456 7890",
+        "passcode": "ABCD1234",
+        "notes": "El discurso se transmitira en vivo para familiares y amigos.",
+        "showButton": true,
+        "button": {
+          "text": "Ingresar a Zoom",
+          "url": "https://zoom.us/j/1234567890?pwd=ABCD1234",
+          "variant": "primary"
+        }
+      }
+    }
+  ],
+  "variants": {}
+}

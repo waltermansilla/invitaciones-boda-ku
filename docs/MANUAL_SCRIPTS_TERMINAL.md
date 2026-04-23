@@ -168,7 +168,7 @@ node scripts/gen-access-token.mjs MI6TOK
 
 **Nota de seguridad**
 
-- El token en claro (`access.token`) en JSON es solo para **admin** que necesite copiar el link con `?k=`; en producción lo habitual es solo `tokenHash` + `tokenEnabled`.
+- El token en claro (`access.token`) en JSON es solo para **admin** que necesite copiar el link con `?t=`; en producción lo habitual es solo `tokenHash` + `tokenEnabled`.
 
 ---
 
@@ -231,7 +231,7 @@ npx tsx scripts/migrate-to-blob.ts
 ## 9. Manuales relacionados en `docs/`
 
 - **`PANEL_INVITADOS.md`** — Uso del panel, `panelId`, `legacyPanelIds`, script de huérfanos.
-- **`ACCESO_TOKEN_INVITACIONES.md`** — Token `?k=` en invitaciones; encaja con `gen-access-token.mjs`.
+- **`ACCESO_TOKEN_INVITACIONES.md`** — Token `?t=` en invitaciones; encaja con `gen-access-token.mjs`.
 - **`VALIDAR_INVITACIONES_CLIENTES.md`** — Si existe, suele remitir al validador de clientes.
 
 ---

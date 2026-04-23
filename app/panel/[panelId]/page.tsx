@@ -120,9 +120,9 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
         ""
       const query = new URLSearchParams()
       if (data?.invitationToken?.trim()) {
-        query.set("k", data.invitationToken.trim())
+        query.set("t", data.invitationToken.trim())
       }
-      query.set("c", invitado.codigo || "")
+      query.set("i", invitado.codigo || "")
       const queryString = query.toString()
       const link = path
         ? `${window.location.origin}${path}?${queryString}`

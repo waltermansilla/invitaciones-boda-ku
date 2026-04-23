@@ -6,6 +6,7 @@ import WeddingInvitation from "@/components/wedding/wedding-invitation";
 
 interface PageProps {
     params: Promise<{ tipo: string; slug: string }>;
+    searchParams: Promise<{ v?: string }>;
 }
 
 function getPublicSiteUrl() {
@@ -26,9 +27,11 @@ function resolveOgImage(config: ReturnType<typeof getClientConfig>) {
 
 export async function generateMetadata({
     params,
+    searchParams,
 }: PageProps): Promise<Metadata> {
     const { tipo, slug } = await params;
-    const config = getClientConfig(tipo, slug);
+    const { v } = await searchParams;
+    const config = getClientConfig(tipo, slug, v);
     const siteUrl = getPublicSiteUrl();
     const canonicalUrl = `${siteUrl}/m/${tipo}/${slug}`;
     const ogImage = resolveOgImage(config);
@@ -61,9 +64,10 @@ export function generateStaticParams() {
     return getAllClientParams();
 }
 
-export default async function MuestraPage({ params }: PageProps) {
+export default async function MuestraPage({ params, searchParams }: PageProps) {
     const { tipo, slug } = await params;
-    const config = getClientConfig(tipo, slug);
+    const { v } = await searchParams;
+    const config = getClientConfig(tipo, slug, v);
 
     return (
         <ConfigProvider config={config} isMuestra={true}>

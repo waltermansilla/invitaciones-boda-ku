@@ -11,6 +11,7 @@ const tipoBadge: Record<string, string> = {
   baby: "#DCE8F2",
   cumple: "#F7E7DD",
   corporativo: "#DCE8DF",
+  v: "#E3E0DA",
 }
 
 export function InternalLinksList({
@@ -46,7 +47,7 @@ export function InternalLinksList({
       return url
     }
   }
-  const tipoOrder = ["boda", "xv", "baby", "cumple"]
+  const tipoOrder = ["boda", "xv", "baby", "cumple", "v"]
   const tipos = Array.from(new Set(rows.map((r) => r.tipo))).sort((a, b) => {
     const ia = tipoOrder.indexOf(a)
     const ib = tipoOrder.indexOf(b)
@@ -221,6 +222,11 @@ export function InternalLinksList({
         const fullRealWithToken = row.realUrlWithToken ? `${baseUrl}${row.realUrlWithToken}` : null
         const fullReal = row.tokenEnabled && fullRealWithToken ? fullRealWithToken : fullRealBase
         const displayReal = toRelativeDisplay(fullReal)
+        const fullRealVariants = row.realVariantUrls.map((variant) => ({
+          name: variant.name,
+          url: `${baseUrl}${variant.url}`,
+          display: toRelativeDisplay(`${baseUrl}${variant.url}`),
+        }))
         const displaySample = toRelativeDisplay(fullSample)
         const fullPanel =
           row.panelEnabled && row.panelId ? `${baseUrl}/panel/${row.panelId}` : null
@@ -298,6 +304,29 @@ export function InternalLinksList({
                     </div>
                   </div>
                 </div>
+
+                {fullRealVariants.map((variant) => (
+                  <div
+                    key={`${key}/variant/${variant.name}`}
+                    className="rounded-xl border border-[#DDEBDD] bg-[#F8FDF8] px-3 py-2"
+                  >
+                    <div className="flex w-full flex-nowrap items-center gap-2">
+                      <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#2F7E56]">
+                        Real {variant.name}:
+                      </span>
+                      <a
+                        className="block min-w-0 flex-1 truncate whitespace-nowrap pr-1 text-[13px] leading-tight text-[#2F7E56] underline underline-offset-2"
+                        href={variant.url}
+                        target="_blank"
+                      >
+                        {variant.display}
+                      </a>
+                      <div className="shrink-0">
+                        <CopyLinkButton value={variant.url} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
 
                 <div className="rounded-xl border border-[#E8DFD4] bg-[#FFFDFB] px-3 py-2">
                   <div className="flex w-full flex-nowrap items-center gap-2">

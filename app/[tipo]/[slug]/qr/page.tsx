@@ -10,7 +10,7 @@ import {
 
 interface PageProps {
   params: Promise<{ tipo: string; slug: string }>
-  searchParams: Promise<{ k?: string }>
+  searchParams: Promise<{ t?: string; k?: string }>
 }
 
 function BlankPage() {
@@ -23,7 +23,8 @@ export function generateStaticParams() {
 
 export default async function QRPage({ params, searchParams }: PageProps) {
   const { tipo, slug } = await params
-  const { k } = await searchParams
+  const { t, k } = await searchParams
+  const token = t || k
 
   let data: ClientConfig
   try {
@@ -31,7 +32,7 @@ export default async function QRPage({ params, searchParams }: PageProps) {
   } catch {
     notFound()
   }
-  if (!isAccessTokenValid(data, k)) notFound()
+  if (!isAccessTokenValid(data, token)) notFound()
 
   const qrRaw = data.qrCard as Record<string, unknown> | undefined
   const meta = data.meta
@@ -42,8 +43,8 @@ export default async function QRPage({ params, searchParams }: PageProps) {
   const invitationUrlBase =
     (typeof qrRaw?.qrUrl === "string" && qrRaw.qrUrl) || `${baseUrl}/${tipo}/${slug}`
   const invitationUrl =
-    k && /^[A-Za-z0-9]{6}$/.test(k)
-      ? `${invitationUrlBase}${invitationUrlBase.includes("?") ? "&" : "?"}k=${k}`
+    token && /^[A-Za-z0-9]{6}$/.test(token)
+      ? `${invitationUrlBase}${invitationUrlBase.includes("?") ? "&" : "?"}t=${token}`
       : invitationUrlBase
 
   if (tipo === "xv") {

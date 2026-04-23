@@ -7,7 +7,7 @@ Guía simple: qué es, cómo armar el link y qué pasos seguir para que funcione
 ## Para qué sirve
 
 - Los **novios** (o vos) entran a una página aparte de la invitación: el **panel**. Ahí cargan la lista de invitados, ven quién confirmó y pueden mandar por WhatsApp el link personal de cada uno.
-- Los invitados siguen entrando a la **invitación normal** (`/boda/slug`, etc.) y, si el plan usa RSVP con código, con un link que lleva algo como `...?c=abcd1234`.
+- Los invitados siguen entrando a la **invitación normal** (`/boda/slug`, etc.) y, si el plan usa RSVP con código, con un link que lleva algo como `...?i=abcd1234`.
 - Los datos del panel (lista, confirmaciones) se guardan en **Supabase** (base de datos en la nube). Sin Supabase bien configurado, el panel no puede trabajar.
 
 ---
@@ -98,7 +98,7 @@ Ahí **no existe panel web**: nadie usa `/panel/...`. No hay que inventar `panel
 
 - La invitación que compartís con todos es siempre del estilo **`/boda/nombre-del-json`**, **`/xv/...`**, etc. Eso sale de la **carpeta** + **archivo** en `data/clientes/`, no del `panelId`.
 - El `panelId` es **otra dirección**, aparte, para la **gestión** de la lista.
-- El **`?c=...`** (código del invitado) se pone **después** de la URL de la invitación cuando querés un link personalizado; eso lo arma el panel al mandar WhatsApp, no reemplaza el `/boda/slug`.
+- El **`?i=...`** (código del invitado) se pone **después** de la URL de la invitación cuando querés un link personalizado; eso lo arma el panel al mandar WhatsApp, no reemplaza el `/boda/slug`.
 
 ---
 
@@ -132,7 +132,7 @@ Seguí en orden:
 5. En el navegador entrá a:  
    `https://tudominio.com.ar/panel/TU-PANEL-ID`  
    (reemplazá dominio y el id). Si todo está bien, ves el panel (aunque todavía sin invitados).
-6. Desde ahí **agregá invitados**. Cada uno recibe un código; el botón de WhatsApp del panel arma el link de la invitación con `?c=...` para mandárselo.
+6. Desde ahí **agregá invitados**. Cada uno recibe un código; el botón de WhatsApp del panel arma el link de la invitación con `?i=...` para mandárselo.
 
 Listo: ese es el flujo completo para “generar y hacer funcionar” el panel en un cliente nuevo.
 
@@ -183,21 +183,21 @@ Qué hace cada clave:
 - `confirmationMessage`: texto que ve el invitado al confirmar.
 - `limiteInvitados` (opcional): tope de plazas. Si falta, no hay límite.
 - `registrarSinCodigoEnPanel` (solo `confirmacion: "formulario"`):
-  - `true`: si entran sin `?c=` y envían RSVP, se crea invitado en panel.
-  - `false`: si entran sin `?c=`, el RSVP solo sale por WhatsApp.
+  - `true`: si entran sin `?i=` y envían RSVP, se crea invitado en panel.
+  - `false`: si entran sin `?i=`, el RSVP solo sale por WhatsApp.
 - `theme`: colores del panel.
 - `labels`: textos personalizables del panel.
 
 ---
 
-## Comportamiento sin `?c=` (invitado no cargado)
+## Comportamiento sin `?i=` (invitado no cargado)
 
 Aplica cuando la invitación tiene sección `rsvp`:
 
 - Si `registrarSinCodigoEnPanel = true`: el envío crea invitado en panel y guarda su confirmación.
 - Si `registrarSinCodigoEnPanel = false` (o no existe): el envío solo va por WhatsApp.
 
-En `confirmacion: "comun"`, el registro en panel ocurre con links personalizados (`?c=`), porque ese flujo trabaja sobre invitados existentes.
+En `confirmacion: "comun"`, el registro en panel ocurre con links personalizados (`?i=`), porque ese flujo trabaja sobre invitados existentes.
 
 ---
 

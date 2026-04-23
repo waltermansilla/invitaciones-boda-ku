@@ -43,7 +43,7 @@
     "//   - guardar access.tokenHash (SHA-256) y evitar token plano en repo       ": "",
     "//   - generar con: node scripts/gen-access-token.mjs                        ": "",
     "//                                                                            ": "",
-    "// tokenEnabled: true exige ?k=TOKEN en /tipo/slug                           ": "",
+    "// tokenEnabled: true exige ?t=TOKEN en /tipo/slug                           ": "",
     "// token: token real de 6 chars (A-Z a-z 0-9). Puede usarse sin hash.        ": "",
     "// tokenHash: SHA-256 (hex) del token real de 6 caracteres (opcional)        ": "",
     "// allowLegacyUntil (opcional): fecha YYYY-MM-DD para permitir sin token     ": "",
@@ -70,9 +70,9 @@
     "//   - persona = 1 plaza                                                     ": "",
     "//   - familia = cantidad de integrantes (minimo 1)                         ": "",
     "// registrarSinCodigoEnPanel (solo confirmacion='formulario'):              ": "",
-    "//   - true  = si entran sin ?c= y envian RSVP, crea invitado en panel      ": "",
+    "//   - true  = si entran sin ?i= y envian RSVP, crea invitado en panel      ": "",
     "//             y registra confirmacion                                       ": "",
-    "//   - false = sin ?c= el RSVP solo envia WhatsApp (no impacta panel)       ": "",
+    "//   - false = sin ?i= el RSVP solo envia WhatsApp (no impacta panel)       ": "",
     "// theme/labels: colores y textos del panel                                 ": "",
     "// ==========================================================================": "",
     "rsvpPanel": {
@@ -940,5 +940,46 @@
                 }
             }
         }
-    ]
+    ],
+    "// ==========================================================================": "",
+    "// VARIANTS - Variantes por query param ?v=nombre                            ": "",
+    "// ==========================================================================": "",
+    "// Colocar SIEMPRE al final del JSON                                        ": "",
+    "// URL ejemplo: /xv/[slug]?v=version2                                       ": "",
+    "// En cada variante podes overridear top-level (theme, hero, music, etc)    ": "",
+    "// sections: por defecto parchea por id (solo lo que incluyas)              ": "",
+    "// replaceSections: true -> reemplaza TODO el array sections base            ": "",
+    "// Si no se define replaceSections, se toma como false (parche por id)       ": "",
+    "// Podes crear todas las variantes que necesites                             ": "",
+    "// ==========================================================================": "",
+    "variants": {
+        "version2": {
+            "theme": {
+                "primaryColor": "#f0a6c8"
+            },
+            "sections": [
+                {
+                    "id": "quote-welcome",
+                    "data": {
+                        "text": "Texto alternativo para esta variante de XV."
+                    }
+                }
+            ]
+        },
+        "_version3_ejemplo_reemplazo_total_sections": {
+            "replaceSections": true,
+            "sections": [
+                {
+                    "id": "quote-only",
+                    "type": "quote",
+                    "enabled": true,
+                    "bgColor": "primary",
+                    "data": {
+                        "text": "Si activas replaceSections=true, se usa solo este array.",
+                        "author": ""
+                    }
+                }
+            ]
+        }
+    }
 }

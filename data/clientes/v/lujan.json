@@ -1,0 +1,188 @@
+{
+    "meta": {
+        "title": "Luján Zamudio",
+        "description": "Discurso de despedida.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Luján Zamudio",
+            "separator": ""
+        }
+    },
+    "access": {
+        "tokenEnabled": false,
+        "token": "VEL123",
+        "tokenHash": "",
+        "allowLegacyUntil": ""
+    },
+    "theme": {
+        "primaryColor": "#b08968",
+        "backgroundColor": "#F8F3EC",
+        "backgroundImage": "",
+        "primaryImage": "",
+        "textColor": "#3F3A35",
+        "lightBgTextColor": "#666",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#ECE6DE",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "300,400,500,600,700"
+        }
+    },
+    "overlay": {
+        "enabled": false,
+        "phrase": "",
+        "buttonText": "Abrir",
+        "bgColor": "",
+        "bgImage": "",
+        "showNames": true,
+        "showPhrase": false
+    },
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": false,
+        "startTime": 0,
+        "endTime": 0
+    },
+    "qrCard": {
+        "enabled": false
+    },
+    "hero": {
+        "coupleImage": "/clientes/v/lujan.jpeg",
+        "headline": "",
+        "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": true,
+            "position": "bottom",
+            "color": "rgba(255,255,255,0.95)",
+            "decorativeLines": false,
+            "logo": "",
+            "font": "Dancing Script",
+            "weight": "300",
+            "size": "3xl",
+            "style": "normal",
+            "lowercase": true,
+            "letterSpacing": "none"
+        },
+        "showCountdown": false,
+        "vignette": {
+            "enabled": true,
+            "opacity": 0.2
+        },
+        "countdownPrefix": "",
+        "eventDate": "2026-04-23T00:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownAreaBg": "background",
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded",
+            "layout": "inline",
+            "overlayStyle": "card"
+        }
+    },
+    "sections": [
+        {
+            "type": "quote",
+            "id": "frase-recuerdo",
+            "enabled": true,
+            "bgColor": "primary",
+            "data": {
+                "text": "'Dios no es injusto y no se olvida de las obras de ustedes ni del amor que demostraron por su nombre.'",
+                "author": "Hebreos 6:10",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "locationInfo",
+            "id": "lugar-velatorio",
+            "enabled": true,
+            "bgColor": "background",
+            "data": {
+                "icon": "pin",
+                "title": "Discurso",
+                "address": "Salón del Reino, Muller 91, Guernica",
+                "showButton": true,
+                "datetime": {
+                    "date": "Sábado 25 de Abril",
+                    "time": "10:30 hs"
+                },
+                "order": ["date", "time", "address"],
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/MummomeBhqCNYozv5?g_st=iw",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "type": "zoomInfo",
+            "id": "zoom-transmision",
+            "enabled": true,
+            "bgColor": "background",
+            "data": {
+                "title": "Transmisión por Zoom",
+                "meetingId": "275 734 6994",
+                "passcode": "643243",
+                "showButton": true,
+                "button": {
+                    "text": "Ingresar a Zoom",
+                    "url": "https://jworg.zoom.us/j/2757346994?pwd=UVdkR1JsQVJHVWVFcmRQRW90Um1jUT09",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "type": "quote",
+            "id": "frase-recuerdo2",
+            "enabled": true,
+            "bgColor": "primary",
+            "data": {
+                "text": "'Tú llamarás y yo te responderé. Ansiarás volver a ver la obra de tus manos.'",
+                "author": "Job 14:15",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "captureCard",
+            "id": "captura-final",
+            "enabled": true,
+            "bgColor": "background",
+            "data": {
+                "image": "/clientes/v/lujan2.jpeg",
+                "name": "Luján Zamudio",
+                "topLabel": "DISCURSO DE DESPEDIDA",
+                "nameSize": "35px",
+                "locationTitle": "Salon del Reino",
+                "locationAddress": "Muller 91, Guernica",
+                "eventDay": "Sabado 25/04",
+                "eventTime": "10:30 hs",
+                "zoomTitle": "Transmisión por Zoom",
+                "meetingId": "275 734 6994",
+                "passcode": "643243",
+                "colors": {
+                    "blockBg": "#F3ECE2",
+                    "blockBorder": "#D9CCBB",
+                    "dateTimeBg": "#ede0d4",
+                    "locationBg": "#ede0d4",
+                    "zoomBg": "#ede0d4",
+                    "captureBg": "#EDE4D8",
+                    "cardBg": "#F8F3EC",
+                    "photoPanelBg": "#FBF7F2",
+                    "nameTextColor": "#555",
+                    "blockTextColor": "#555"
+                }
+            }
+        }
+    ],
+    "footer": {
+        "enabled": false
+    },
+    "variants": {}
+}
