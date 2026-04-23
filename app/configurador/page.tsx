@@ -42,6 +42,7 @@ import {
     getExtrasForLang,
     getUiStrings,
 } from "./strings";
+import { trackGaEvent } from "@/lib/google-analytics";
 import { trackMetaEvent } from "@/lib/meta-pixel";
 
 type Currency = "ARS" | "USD";
@@ -1895,6 +1896,14 @@ function ConfiguradorPageContent() {
                                     if (!canContinue) return;
                                     trackMetaEvent("Purchase", {
                                         source: "configurador",
+                                        step: "senar_50",
+                                        plan,
+                                        currency,
+                                        value: total,
+                                    });
+                                    trackGaEvent("purchase", {
+                                        source: "configurador",
+                                        button_name: "SEÑAR",
                                         step: "senar_50",
                                         plan,
                                         currency,

@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Suspense } from "react";
 import { Analytics } from "@vercel/analytics/next";
 import MetaPixelPageView from "@/components/analytics/meta-pixel-page-view";
+import GoogleAnalyticsPageView from "@/components/analytics/google-analytics-page-view";
 import "./globals.css";
 
 const _playfair = Playfair_Display({
@@ -32,6 +33,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+    const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
     return (
         <html lang="es">
@@ -61,6 +63,26 @@ export default function RootLayout({
                         </noscript>
                         <Suspense fallback={null}>
                             <MetaPixelPageView />
+                        </Suspense>
+                    </>
+                )}
+                {gaMeasurementId && (
+                    <>
+                        <Script
+                            src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+                            strategy="afterInteractive"
+                        />
+                        <Script id="google-analytics" strategy="afterInteractive">
+                            {`
+                                window.dataLayer = window.dataLayer || [];
+                                function gtag(){dataLayer.push(arguments);}
+                                window.gtag = gtag;
+                                gtag('js', new Date());
+                                gtag('config', '${gaMeasurementId}', { send_page_view: false });
+                            `}
+                        </Script>
+                        <Suspense fallback={null}>
+                            <GoogleAnalyticsPageView />
                         </Suspense>
                     </>
                 )}

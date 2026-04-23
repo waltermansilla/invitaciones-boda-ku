@@ -44,6 +44,7 @@ import {
     type LandingLocale,
 } from "@/components/landing/landing-header-home";
 import { eventTypeLabelFromFolderTipo } from "@/lib/client-helpers-shared";
+import { trackGaEvent } from "@/lib/google-analytics";
 import { trackMetaEvent } from "@/lib/meta-pixel";
 import FooterSection from "@/components/wedding/footer-section";
 import pricingData from "@/data/landing/pricing.json";
@@ -842,6 +843,22 @@ function CtaLink({
     className: string;
     style: React.CSSProperties;
 }) {
+    const resolveGaButtonName = (
+        event: "InitiateCheckout" | "Lead",
+        source?: string,
+    ) => {
+        if (event === "InitiateCheckout") {
+            if (source === "hero") return "CTA - HERO";
+            if (source === "muestras_mid") return "CTA - MUESTRAS";
+            if (source === "floating") return "CTA - FLOTANTE";
+        }
+        if (event === "Lead") {
+            if (source === "plan_premium") return "LEAD - PREMIUM";
+            if (source === "plan_diseno_unico") return "LEAD - UNICO";
+        }
+        return source || "unknown";
+    };
+
     const readCookie = (name: string) => {
         if (typeof document === "undefined") return undefined;
         const match = document.cookie.match(
@@ -892,6 +909,23 @@ function CtaLink({
         if (trackingEvent === "Lead" && eventId) {
             void sendLeadToCapi(eventId);
         }
+        if (trackingEvent === "Lead") {
+            trackGaEvent("lead", {
+                source: trackingSource || "unknown",
+                button_name: resolveGaButtonName("Lead", trackingSource),
+                cta_text: btn.text,
+            });
+        }
+        if (trackingEvent === "InitiateCheckout") {
+            trackGaEvent("initiate_checkout", {
+                source: trackingSource || "unknown",
+                button_name: resolveGaButtonName(
+                    "InitiateCheckout",
+                    trackingSource,
+                ),
+                cta_text: btn.text,
+            });
+        }
     };
 
     const handleTrackingAndReturnEventId = () => {
@@ -907,6 +941,23 @@ function CtaLink({
         );
         if (trackingEvent === "Lead" && eventId) {
             void sendLeadToCapi(eventId);
+        }
+        if (trackingEvent === "Lead") {
+            trackGaEvent("lead", {
+                source: trackingSource || "unknown",
+                button_name: resolveGaButtonName("Lead", trackingSource),
+                cta_text: btn.text,
+            });
+        }
+        if (trackingEvent === "InitiateCheckout") {
+            trackGaEvent("initiate_checkout", {
+                source: trackingSource || "unknown",
+                button_name: resolveGaButtonName(
+                    "InitiateCheckout",
+                    trackingSource,
+                ),
+                cta_text: btn.text,
+            });
         }
         return eventId;
     };
@@ -1015,6 +1066,8 @@ function Landing2PrimaryPill({
     waNumber: string;
     trackingSource?: string;
 }) {
+    const gaButtonName =
+        trackingSource === "muestras_mid" ? "CTA - MUESTRAS" : "CTA - HERO";
     const label =
         primary?.text ??
         (locale === "en" ? "Create my invitation" : "Crear mi invitación");
@@ -1038,6 +1091,11 @@ function Landing2PrimaryPill({
                         source: trackingSource,
                         step: "crear_invitacion",
                     });
+                    trackGaEvent("initiate_checkout", {
+                        source: trackingSource,
+                        button_name: gaButtonName,
+                        step: "crear_invitacion",
+                    });
                     handleLocalAnchorClick(event, href);
                 }}
                 className={className}
@@ -1057,12 +1115,17 @@ function Landing2PrimaryPill({
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() =>
+                onClick={() => {
                     trackMetaEvent("InitiateCheckout", {
                         source: trackingSource,
                         step: "crear_invitacion",
-                    })
-                }
+                    });
+                    trackGaEvent("initiate_checkout", {
+                        source: trackingSource,
+                        button_name: gaButtonName,
+                        step: "crear_invitacion",
+                    });
+                }}
                 className={className}
                 style={style}
             >
@@ -1078,12 +1141,17 @@ function Landing2PrimaryPill({
             href={p.url || "#"}
             target={p.newTab ? "_blank" : undefined}
             rel={p.newTab ? "noopener noreferrer" : undefined}
-            onClick={() =>
+            onClick={() => {
                 trackMetaEvent("InitiateCheckout", {
                     source: trackingSource,
                     step: "crear_invitacion",
-                })
-            }
+                });
+                trackGaEvent("initiate_checkout", {
+                    source: trackingSource,
+                    button_name: gaButtonName,
+                    step: "crear_invitacion",
+                });
+            }}
             className={className}
             style={style}
         >
@@ -1233,6 +1301,11 @@ function FloatingCta({
                     onClick={(event) => {
                         trackMetaEvent("InitiateCheckout", {
                             source: "floating",
+                            step: "crear_invitacion",
+                        });
+                        trackGaEvent("initiate_checkout", {
+                            source: "floating",
+                            button_name: "CTA - FLOTANTE",
                             step: "crear_invitacion",
                         });
                         if (!anchorTargetId) return;
