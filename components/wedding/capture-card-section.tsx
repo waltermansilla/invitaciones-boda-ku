@@ -79,16 +79,19 @@ export default function CaptureCardSection({
   }, [])
 
   return (
-    <section className="flex items-center justify-center px-4 py-10" style={{ backgroundColor: captureBg }}>
+    <section
+      className="flex items-center justify-center px-4 py-10"
+      style={{ backgroundColor: captureBg, WebkitTextSizeAdjust: "100%" }}
+    >
       <div
         className="w-full max-w-[390px] overflow-hidden rounded-[28px] border border-[#d7ccbe] shadow-[0_10px_28px_rgba(70,52,36,0.12)]"
         style={{ backgroundColor: cardBg }}
       >
         <div
-          className="mx-auto flex w-full flex-col justify-between px-4 py-4 text-center sm:px-5"
+          className="mx-auto flex w-full flex-col px-4 py-4 text-center sm:px-5"
           style={{ aspectRatio: "3 / 5" }}
         >
-          <div className="rounded-2xl border border-[#e2d7ca] px-4 py-4" style={{ backgroundColor: photoPanelBg }}>
+          <div className="rounded-2xl border border-[#e2d7ca] px-4 py-3" style={{ backgroundColor: photoPanelBg }}>
             <p
               className="text-[13px] uppercase tracking-[0.2em] text-[#7b6c5b]"
               style={captureBodyFont}
@@ -96,7 +99,7 @@ export default function CaptureCardSection({
               {topLabel || "Recordatorio"}
             </p>
             <div className="mx-auto mt-3 mb-2 h-px w-16 bg-[#d7ccbe]" />
-            <div className="relative mx-auto h-24 w-24 shrink-0 overflow-hidden rounded-full border-2 border-[#d7ccbe] bg-current/10">
+            <div className="relative mx-auto h-28 w-28 shrink-0 overflow-hidden rounded-full border-2 border-[#d7ccbe] bg-current/10">
             {!imageError && image ? (
               <img
                 src={image}
@@ -121,7 +124,7 @@ export default function CaptureCardSection({
             </h3>
           </div>
 
-          <div className="mt-3 grid grid-cols-1 gap-2.5 text-left">
+          <div className="mt-2 grid grid-cols-1 gap-2 text-left">
             {(eventDay || eventTime) && (
               <div
                 className="rounded-xl px-3 py-2.5"
