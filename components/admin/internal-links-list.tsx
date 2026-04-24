@@ -47,8 +47,12 @@ export function InternalLinksList({
       return url
     }
   }
-  const tipoOrder = ["boda", "xv", "baby", "cumple", "v"]
-  const tipos = Array.from(new Set(rows.map((r) => r.tipo))).sort((a, b) => {
+  // No mostrar filtro por carpeta "v": confunde con el query ?v= (variantes).
+  const TIPO_EXCLUDE_FROM_FILTER = "v"
+  const tipoOrder = ["boda", "xv", "baby", "cumple"]
+  const tipos = Array.from(
+    new Set(rows.map((r) => r.tipo).filter((t) => t !== TIPO_EXCLUDE_FROM_FILTER)),
+  ).sort((a, b) => {
     const ia = tipoOrder.indexOf(a)
     const ib = tipoOrder.indexOf(b)
     if (ia === -1 && ib === -1) return a.localeCompare(b)
@@ -56,8 +60,12 @@ export function InternalLinksList({
     if (ib === -1) return -1
     return ia - ib
   })
+  const activeTipoNorm =
+    activeTipo === TIPO_EXCLUDE_FROM_FILTER ? "todos" : activeTipo
   const byTipo =
-    activeTipo === "todos" ? rows : rows.filter((r) => r.tipo === activeTipo)
+    activeTipoNorm === "todos"
+      ? rows
+      : rows.filter((r) => r.tipo === activeTipoNorm)
   const normalizedQuery = normalizeText(query.trim())
   const visibleRows = normalizedQuery
     ? byTipo.filter((r) => {
@@ -184,7 +192,7 @@ export function InternalLinksList({
             type="button"
             onClick={() => setActiveTipo("todos")}
             className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-              activeTipo === "todos"
+              activeTipoNorm === "todos"
                 ? "border-[#7A5F45] bg-[#7A5F45] text-white"
                 : "border-[#D9CBB9] bg-[#FFFDF9] text-[#6A4F38]"
             }`}
@@ -197,7 +205,7 @@ export function InternalLinksList({
               type="button"
               onClick={() => setActiveTipo(tipo)}
               className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                activeTipo === tipo
+                activeTipoNorm === tipo
                   ? "border-[#7A5F45] bg-[#7A5F45] text-white"
                   : "border-[#D9CBB9] bg-[#FFFDF9] text-[#6A4F38]"
               }`}

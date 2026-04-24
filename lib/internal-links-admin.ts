@@ -61,7 +61,8 @@ function variantUrlsFromJson(
     token && /^[A-Za-z0-9]{6}$/.test(token) ? `${realBaseUrl}?t=${token}` : realBaseUrl
   const entries = Object.entries(variantsRaw)
     .filter(([name, value]) => {
-      if (!name || name.startsWith("_")) return false
+      if (!name) return false
+      if (name.startsWith("_")) return false
       return value !== null && typeof value === "object" && !Array.isArray(value)
     })
     .sort(([a], [b]) => a.localeCompare(b))
