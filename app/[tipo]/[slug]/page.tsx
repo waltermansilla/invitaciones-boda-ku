@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { Suspense } from "react"
 import {
@@ -19,14 +18,6 @@ function getPublicSiteUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://momentounico.com.ar").replace(/\/+$/, "")
 }
 
-function getRequestSiteUrl() {
-  const h = headers()
-  const host = h.get("x-forwarded-host") || h.get("host")
-  const proto = h.get("x-forwarded-proto") || "https"
-  if (!host) return getPublicSiteUrl()
-  return `${proto}://${host}`.replace(/\/+$/, "")
-}
-
 function resolveOgImage(config: ReturnType<typeof getClientConfig>) {
   const metaImage =
     typeof config.meta?.ogImage === "string"
@@ -39,14 +30,14 @@ function resolveOgImage(config: ReturnType<typeof getClientConfig>) {
   const image = metaImage || heroImage
   if (!image) return null
   if (/^https?:\/\//i.test(image)) return image
-  return `${getRequestSiteUrl()}${image.startsWith("/") ? image : `/${image}`}`
+  return `${getPublicSiteUrl()}${image.startsWith("/") ? image : `/${image}`}`
 }
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { tipo, slug } = await params
   const { v } = await searchParams
   const config = getClientConfig(tipo, slug, v)
-  const siteUrl = getRequestSiteUrl()
+  const siteUrl = getPublicSiteUrl()
   const canonicalUrl = `${siteUrl}/${tipo}/${slug}`
   const ogImage = resolveOgImage(config)
 
