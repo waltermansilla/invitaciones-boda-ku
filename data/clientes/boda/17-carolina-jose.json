@@ -55,7 +55,6 @@
         "primaryColor": "#385e78",
         "backgroundColor": "#fff",
         "primaryImage": "/clientes/boda/17-carolina-jose/images/primary.jpg",
-        "backgroundImage": "/clientes/boda/9-yesica-hernan/background/background.PNG",
         "textColor": "#385e78",
         "lightBgTextColor": "#d17a38",
         "darkBgTextColor": "#FFFFFF",
@@ -71,7 +70,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar"
     },
@@ -82,7 +81,7 @@
     "music": {
         "enabled": true,
         "src": "/clientes/boda/17-carolina-jose/music/rompecabezas-de-amor.mp3",
-        "autoplay": false,
+        "autoplay": true,
         "startTime": 10
     },
     "// ==========================================-": "",
@@ -151,7 +150,7 @@
             "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
             "type": "dateInfo",
             "id": "date-info",
-            "bgColor": "background",
+            "bgColor": "primary",
             "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
@@ -171,10 +170,10 @@
                 "title": "Horarios y lugar",
                 "events": [
                     {
-                        "icon": "heart",
+                        "icon": "church",
                         "name": "Ceremonia",
                         "time": "19:00 hs",
-                        "address": "Lagomarsino 128",
+                        "address": "Iglesia San Jerónimo, Lagomarsino 128",
                         "button": {
                             "text": "Cómo llegar",
                             "url": "https://maps.app.goo.gl/CxgCF8B2EXBANQBK8",
@@ -185,7 +184,7 @@
                         "icon": "party",
                         "name": "¡Fiesta!",
                         "time": "21:00 hs",
-                        "address": "Ruta nacional 11, 335",
+                        "address": "'Mauka Eventos', Ruta nacional 11, 335",
                         "button": {
                             "text": "Cómo llegar",
                             "url": "https://maps.app.goo.gl/ht6vSHsfAzZtiRkr8",
@@ -202,103 +201,16 @@
         },
 
         {
-            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
-            "type": "honeymoon",
-            "id": "honeymoon",
-            "bgColor": "primary",
-            "bgImage": "primaryImage",
-            "blocks": ["icon", "title", "description", "modal"],
-            "data": {
-                "icon": "plane",
-                "title": "Regalos",
-                "description": "El mejor regalo es que nos acompañes, pero si querés ayudar a nuestro próximo sueño ✈️ 🇮🇹 te dejamos el alías ❤️❤️",
-                "showButton": true,
-                "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Datos bancarios",
-                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
-                    "bankData": [
-                        { "label": "Alias 1", "value": "joseycaro.boda2027" },
-                        {
-                            "label": "Titular 1",
-                            "value": "Carolina Julieta Debonis"
-                        },
-                        { "label": "Alias 2", "value": "Hernán Darío Falcone" },
-                        {
-                            "label": "Titular 2",
-                            "value": "0000003100097882232195"
-                        },
-                        { "label": "Banco", "value": "Naranja X" }
-                    ],
-                    "thankYouText": "¡Gracias de corazón!"
-                }
-            }
-        },
-
-        {
-            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
-            "type": "honeymoon",
-            "id": "honeymoon2",
-            "enabled": true,
-            "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modals"],
-            "data": {
-                "icon": "gift",
-                "title": "Regalos",
-                "description": "Si querés regalarnos algo más que tu presencia...",
-                "showButton": true,
-                "button": {
-                    "text": "Ver más",
-                    "url": "#",
-                    "variant": "secondary",
-                    "action": "modal"
-                },
-                "_comment_action": "action: 'modal' abre modal, 'url' abre el link directo en button.url",
-                "modalMode": "sequential",
-                "_comment_modalMode": "combined = ambos modales juntos. sequential = primero uno, boton para ir al otro.",
-                "modals": [
-                    {
-                        "type": "address",
-                        "title": "Regalos físicos",
-                        "subtitle": "Nuestra dirección",
-                        "address": "Agustina de Libarona 364, Bº Juan XXIII, Quimili, Santiago del Estero",
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/Jf5ncz5qcWEWUM4i7?g_st=iw"
-                        }
-                    },
-                    {
-                        "type": "bank",
-                        "title": "Transferencias",
-                        "description": "",
-                        "bankData": [
-                            { "label": "Alias", "value": "BODAIVANYMELI" },
-
-                            {
-                                "label": "Titular",
-                                "value": "Iván Francisco Coronel"
-                            }
-                        ],
-                        "thankYouText": "¡Muchas gracias!"
-                    }
-                ]
-            }
-        },
-
-        {
             "_comment": "VALOR TARJETA",
             "type": "giftCard",
             "id": "gift-card",
             "enabled": true,
             "bgColor": "primary",
+            "bgImage": "primaryImage",
             "data": {
                 "icon": "heart",
                 "title": "Valor Tarjeta",
-                "description": "Agradecemos que abones la tarjeta antes del 15 de Septiembre.",
+                "description": "Agradecemos que, si asistís, abones la tarjeta antes del 17 de Enero del 2027.",
                 "button": {
                     "text": "Ver",
                     "url": "#",
@@ -308,13 +220,20 @@
                     "title": "Datos de transferencia",
                     "suggestedValueLabel": "Valor tarjeta",
                     "suggestedValues": [
-                        { "label": "Por persona", "value": "$70.000" },
-                        { "label": "De 4 a 8 años", "value": "$35.000" },
-                        { "label": "3 años o menos", "value": "Sin cargo" }
+                        { "label": "Mayores de 17 años", "value": "$130.000" },
+                        { "label": "De 12 a 17 años", "value": "$97.000" },
+                        { "label": "De 4 a 11 años", "value": "$65.000" }
                     ],
                     "description": "No olvides enviarnos el comprobante.",
                     "transferData": [
-                        { "label": "Alias", "value": "dai.nico.boda" }
+                        { "label": "Alias", "value": "joseycaro.boda2027" },
+                        { "label": "CBU", "value": "4530000800017786145030" },
+
+                        {
+                            "label": "Titular",
+                            "value": "Carolina Julieta Debonis"
+                        },
+                        { "label": "Banco", "value": "Naranja X" }
                     ]
                 }
             }
@@ -333,16 +252,81 @@
         },
 
         {
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["icon", "title", "description", "modal"],
+            "data": {
+                "icon": "plane",
+                "title": "Regalos",
+                "description": "El mejor regalo es que nos acompañes, pero si querés ayudar a nuestro próximo sueño ✈️ 🇮🇹 te dejamos el alías ❤️",
+                "showButton": true,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
+                    "bankData": [
+                        { "label": "Alias", "value": "joseycaro.regalo" },
+                        { "label": "CBU", "value": "9530000800010067849878" },
+                        {
+                            "label": "Titular",
+                            "value": "José Orlando Belloni"
+                        },
+                        { "label": "Banco", "value": "Naranja X" }
+                    ],
+                    "thankYouText": "¡Gracias de corazón!"
+                }
+            }
+        },
+
+        {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-welcome2",
             "bgColor": "primary",
             "bgImage": "primaryImage",
+
             "blocks": ["text", "author"],
             "data": {
-                "text": "En sus risas encontramos nuestro hogar, y en sus pequeños abrazos… el amor más grande que alguna vez imaginamos.",
+                "text": "Elegirnos fue el comienzo, pero formar una familia juntos le dio sentido a todo",
                 "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/17-carolina-jose/images/1.jpg",
+                    "/clientes/boda/17-carolina-jose/images/2.jpg"
+                ]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "background",
+
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por estar presentes en uno de los días más importantes de nuestras vidas. Su compañía significa mucho para nosotros",
+                "author": "Carolina & José",
                 "decorativeLines": true
             }
         },
@@ -352,11 +336,11 @@
             "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
             "type": "rsvp",
             "id": "rsvp-form",
-            "bgColor": "background",
+            "bgColor": "primary",
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 31 de Julio",
+                "deadline": "Antes del 25 de Enero",
                 "guestCountLabel": "Número de personas a confirmar",
                 "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
@@ -365,7 +349,7 @@
                     "attendance": "Confirmás tu asistencia?",
                     "attendanceYes": "Confirmo!",
                     "attendanceNo": "No podré asistir",
-                    "dietary": "¿Alguna limitación en la alimentación?",
+                    "dietary": "¿Algún requerimiento en la alimentación?",
                     "dietaryOptions": [
                         "Ninguno",
                         "Vegetariano",
@@ -377,25 +361,12 @@
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "541166678476",
-                    "messageTemplate": "Hola Yesica & Hernán! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
+                    "number": "543476623302",
+                    "messageTemplate": "Hola Carolina & José! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
                 }
             }
         },
-        {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-welcome3",
-            "bgColor": "primary",
-            "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
-            "data": {
-                "text": "Gracias por acompañarnos, por ser parte de nuestra historia y por estar en uno de los días más importantes de nuestras vidas. Tenerlos cerca hace que este momento sea aún más especial.",
-                "author": "",
-                "decorativeLines": true
-            }
-        },
+
         {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
@@ -404,7 +375,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/9-yesica-hernan/images/img-hero.jpeg"
+                "image": "/clientes/boda/14-daiana-nicolas/images/ramo.png"
             }
         },
         {

@@ -381,10 +381,23 @@ function WeddingInvitationContent() {
                                         const prev = group.sections[index - 1]
                                         const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage"]
                                         const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
+                                        const inheritedTextColor =
+                                            section.textColor ||
+                                            (section.bgColor === "primary"
+                                                ? ((theme.darkBgTextColor as string) ||
+                                                  "#FFFFFF")
+                                                : ((theme.lightBgTextColor as string) ||
+                                                  (theme.primaryColor as string) ||
+                                                  "#6B7F5E"))
                                         return (
                                             <Section
                                                 key={section.id}
-                                                section={{ ...section, bgImage: undefined, bgColor: "transparent" }} // Remove bgImage and make transparent since parent has bg
+                                                section={{
+                                                    ...section,
+                                                    bgImage: undefined,
+                                                    bgColor: "transparent",
+                                                    textColor: inheritedTextColor,
+                                                }} // Remove bgImage and make transparent since parent has bg
                                                 coupleNames={meta.coupleNames}
                                                 prevBgColor={prevBg}
                                                 prevBgImage={undefined}
