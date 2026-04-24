@@ -174,7 +174,7 @@
 
             "blocks": ["text", "author"],
             "data": {
-                "text": "Hay historias que sólo se viven una vez... momentos que sólo se disfrutan una vez.",
+                "text": "Hay historias que sólo se viven una vez... momentos que no se repiten.",
                 "author": "",
                 "decorativeLines": true
             }

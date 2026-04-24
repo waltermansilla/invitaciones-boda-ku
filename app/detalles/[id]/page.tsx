@@ -633,6 +633,9 @@ export default function DetallesPage() {
     const [driveAlbumLink, setDriveAlbumLink] = useState("");
     const [musicYoutube, setMusicYoutube] = useState("");
     const [musicNotes, setMusicNotes] = useState("");
+    const [musicPlayMode, setMusicPlayMode] = useState<
+        "autoplay" | "manual" | null
+    >(null);
     const [spotifyPlaylist, setSpotifyPlaylist] = useState("");
     const [storyBrief, setStoryBrief] = useState("");
     const [storyDetailsOpen, setStoryDetailsOpen] = useState(false);
@@ -849,6 +852,7 @@ export default function DetallesPage() {
                     return [
                         `- ${sectionTitleUpper}:`,
                         `  Link o nombre canción: ${musicYoutube || "-"}`,
+                        `  Modo reproducción: ${musicPlayMode === "autoplay" ? "Play automático (arranca sola)" : musicPlayMode === "manual" ? "Play manual" : "-"}`,
                         `  Preferencias: ${musicNotes || "-"}`,
                     ].join("\n");
                 }
@@ -1048,7 +1052,12 @@ export default function DetallesPage() {
             );
         }
         if (stepId === "album") return driveAlbumLink.trim().length > 0;
-        if (stepId === "musica") return musicYoutube.trim().length > 0;
+        if (stepId === "musica") {
+            return (
+                musicYoutube.trim().length > 0 &&
+                (musicPlayMode === "autoplay" || musicPlayMode === "manual")
+            );
+        }
         if (stepId === "playlist") return spotifyPlaylist.trim().length > 0;
         if (stepId === "historia") return storyBrief.trim().length > 0;
         if (stepId === "trivia") {
@@ -1112,6 +1121,7 @@ export default function DetallesPage() {
         setDriveAlbumLink("");
         setMusicYoutube("");
         setMusicNotes("");
+        setMusicPlayMode(null);
         setSpotifyPlaylist("");
         setStoryBrief("");
         setStoryDetailsOpen(false);
@@ -1161,6 +1171,7 @@ export default function DetallesPage() {
                 driveAlbumLink: string;
                 musicYoutube: string;
                 musicNotes: string;
+                musicPlayMode: "autoplay" | "manual" | null;
                 spotifyPlaylist: string;
                 storyBrief: string;
                 storyDetailsOpen: boolean;
@@ -1221,6 +1232,12 @@ export default function DetallesPage() {
                 setMusicYoutube(draft.musicYoutube);
             if (typeof draft.musicNotes === "string")
                 setMusicNotes(draft.musicNotes);
+            if (
+                draft.musicPlayMode === "autoplay" ||
+                draft.musicPlayMode === "manual"
+            ) {
+                setMusicPlayMode(draft.musicPlayMode);
+            }
             if (typeof draft.spotifyPlaylist === "string")
                 setSpotifyPlaylist(draft.spotifyPlaylist);
             if (typeof draft.storyBrief === "string")
@@ -1346,6 +1363,7 @@ export default function DetallesPage() {
             driveAlbumLink,
             musicYoutube,
             musicNotes,
+            musicPlayMode,
             spotifyPlaylist,
             storyBrief,
             storyDetailsOpen,
@@ -1377,6 +1395,7 @@ export default function DetallesPage() {
         itinerary,
         kidsMessage,
         musicNotes,
+        musicPlayMode,
         musicYoutube,
         primaryName,
         rsvpDeadline,
@@ -2060,6 +2079,47 @@ export default function DetallesPage() {
                                     * Campo obligatorio
                                 </p>
                             ) : null}
+                            <div>
+                                <p className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
+                                    Reproducción al abrir la invitación
+                                </p>
+                                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setMusicPlayMode("autoplay")
+                                        }
+                                        className={[
+                                            "rounded-xl border px-3 py-2 text-sm font-semibold transition-colors",
+                                            musicPlayMode === "autoplay"
+                                                ? "border-[#7A5F45] bg-[#7A5F45] text-white"
+                                                : "border-[#DCCFC0] bg-white text-[#6A5C52] hover:border-[#BFA88F]",
+                                        ].join(" ")}
+                                    >
+                                        Play automático (arranca sola)
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            setMusicPlayMode("manual")
+                                        }
+                                        className={[
+                                            "rounded-xl border px-3 py-2 text-sm font-semibold transition-colors",
+                                            musicPlayMode === "manual"
+                                                ? "border-[#7A5F45] bg-[#7A5F45] text-white"
+                                                : "border-[#DCCFC0] bg-white text-[#6A5C52] hover:border-[#BFA88F]",
+                                        ].join(" ")}
+                                    >
+                                        Play manual
+                                    </button>
+                                </div>
+                                {showRequiredHints &&
+                                musicPlayMode === null ? (
+                                    <p className="block pt-3 text-[11px] font-semibold leading-relaxed text-[#B71C1C]">
+                                        * Elegí una opción de reproducción
+                                    </p>
+                                ) : null}
+                            </div>
                             <Textarea
                                 label="Detalle deseado (opcional)"
                                 value={musicNotes}

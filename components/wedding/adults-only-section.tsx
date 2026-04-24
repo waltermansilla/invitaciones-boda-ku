@@ -102,7 +102,7 @@ export default function AdultsOnlySection({
       <h2 className="mb-3 text-xl font-semibold tracking-wide uppercase text-inherit md:text-2xl">
         {title}
       </h2>
-      <p className="max-w-sm text-sm font-light leading-relaxed opacity-80">
+      <p className="max-w-sm text-sm font-[350] leading-relaxed opacity-80">
         {description}
       </p>
     </section>

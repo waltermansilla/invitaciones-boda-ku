@@ -128,10 +128,21 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
         ? `${window.location.origin}${path}?${queryString}`
         : `${window.location.origin}?${queryString}`
       const tipoEvento = String(data?.evento?.tipo_evento || "boda").toLowerCase()
-      const eventoTexto = eventTypeLabelFromFolderTipo(tipoEvento)
       const nombreEvento = data?.evento?.nombre_evento?.trim() || ""
-      const eventoDetalle = nombreEvento ? `${eventoTexto} ${nombreEvento} ♥️` : `${eventoTexto} ♥️`
-      const message = `¡Hola, ${invitado.nombre}! Estás invitado a nuestra ${eventoTexto} 🫶🏼\nIngresá al enlace para ver tu invitación:\n\n${eventoDetalle}\n${link}`
+      const eventoTexto = eventTypeLabelFromFolderTipo(tipoEvento)
+      const isGroupInvite =
+        invitado.tipo === "familia" && (invitado.integrantes?.length || 0) > 1
+      const invitacionTexto = isGroupInvite ? "Están invitados" : "Estás invitado/a"
+      let eventoFrase = `a nuestra ${eventoTexto}`
+      if (tipoEvento === "boda") eventoFrase = "a nuestra boda"
+      if (tipoEvento === "xv") eventoFrase = "a mis XV"
+      if (tipoEvento === "cumple") {
+        eventoFrase = `al cumple de ${nombreEvento || "nombre a definir"}`
+      }
+      if (tipoEvento === "baby") {
+        eventoFrase = `al Baby Shower de ${nombreEvento || "nombre a definir"}`
+      }
+      const message = `¡Hola, ${invitado.nombre}! ${invitacionTexto} ${eventoFrase} 🫶🏼\n\nIngresá al enlace para ver tu invitación:\n${link}`
       window.open(
         `https://wa.me/?text=${encodeURIComponent(message)}`,
         "_blank",

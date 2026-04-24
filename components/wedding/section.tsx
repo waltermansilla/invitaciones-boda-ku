@@ -297,8 +297,8 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
             description={data.description as string | undefined}
             icons={data.icons as string[] | undefined}
             showButton={data.showButton as boolean | undefined}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
-            modal={data.modal as { title: string; sections: { heading: string; text: string }[] }}
+            button={data.button as { text: string; url: string; variant: "primary" | "secondary" } | undefined}
+            modal={data.modal as { title: string; sections: { heading: string; text: string }[] } | undefined}
             colorSwatches={data.colorSwatches as { enabled: boolean; shape: "circle" | "square"; colors: string[] } | undefined}
           />
         )
@@ -417,6 +417,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
               }[]
             }
             finishText={data.finishText as string}
+            sectionBgColor={bgColor}
           />
         )
 

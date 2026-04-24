@@ -17,6 +17,7 @@ interface OurStorySectionProps {
 function StoryMoment({ moment, index, aspectRatio }: { moment: Moment; index: number; aspectRatio: string }) {
   const { ref, isVisible } = useFadeIn(0.15)
   const isEven = index % 2 === 0
+  const isFreeAspect = aspectRatio === "libre"
 
   return (
     <div
@@ -30,13 +31,21 @@ function StoryMoment({ moment, index, aspectRatio }: { moment: Moment; index: nu
       <div className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-0`}>
         {/* Image */}
         <div className="w-full md:w-1/2">
-          <div className="relative w-full overflow-hidden" style={{ aspectRatio }}>
+          {isFreeAspect ? (
             <img
               src={moment.image}
               alt={moment.title}
-              className="h-full w-full object-cover"
+              className="block h-auto w-full"
             />
-          </div>
+          ) : (
+            <div className="relative w-full overflow-hidden" style={{ aspectRatio }}>
+              <img
+                src={moment.image}
+                alt={moment.title}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          )}
         </div>
 
         {/* Text */}

@@ -51,9 +51,10 @@ export default function MusicPlayer({ src, startTime = 0, endTime, triggerPlay =
 
     const onTimeUpdate = () => {
       if (!hitConfiguredEnd()) return
-      audio.pause()
-      setIsPlaying(false)
       jumpToStart()
+      audio.play().catch(() => {
+        setIsPlaying(false)
+      })
     }
 
     audio.addEventListener("timeupdate", onTimeUpdate)

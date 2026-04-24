@@ -349,7 +349,7 @@
             "// image: foto de la quinceanera                                         ": "",
             "// name: nombre                                                          ": "",
             "// description: texto de presentacion                                    ": "",
-            "// aspectRatio: proporcion de la foto                                    ": "",
+            "// aspectRatio: proporcion de la foto ('3/4', '4/3', '1/1', '16/9', 'libre')": "",
             "// ----------------------------------------------------------------------": "",
             "type": "presentation",
             "id": "presentation",

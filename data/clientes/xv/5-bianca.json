@@ -491,7 +491,7 @@
             "id": "closing-image",
             "blocks": ["image", "name"],
             "data": {
-                "aspectRatio": "3/4",
+                "aspectRatio": "4/3",
                 "image": "/clientes/xv/5-bianca/images/final.jpeg"
             }
         },

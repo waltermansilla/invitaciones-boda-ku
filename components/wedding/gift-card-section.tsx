@@ -61,11 +61,34 @@ interface GiftCardModalData {
 
 function CopyBtn({ value }: { value: string }) {
     const [copied, setCopied] = useState(false);
+    const fallbackCopy = (text: string) => {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        let ok = false;
+        try {
+            ok = document.execCommand("copy");
+        } catch {
+            ok = false;
+        }
+        document.body.removeChild(ta);
+        return ok;
+    };
     const handleCopy = async () => {
         try {
-            await navigator.clipboard.writeText(value);
+            if (navigator.clipboard?.writeText && window.isSecureContext) {
+                await navigator.clipboard.writeText(value);
+            } else {
+                const ok = fallbackCopy(value);
+                if (!ok) throw new Error("copy-failed");
+            }
             setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
+            setTimeout(() => setCopied(false), 3000);
         } catch {
             /* noop */
         }

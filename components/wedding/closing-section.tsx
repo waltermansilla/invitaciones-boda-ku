@@ -86,6 +86,7 @@ export default function ClosingSection({
   const shouldCopyFromOverlay = namesDisplay?.copyFromOverlay ?? false
 
   const isEnabled = namesDisplay?.enabled ?? true
+  const isFreeAspect = aspectRatio === "libre"
   
   // Priority: copyFromOverlay > copyFromHero > namesDisplay defaults
   let namesFont = namesDisplay?.font
@@ -161,14 +162,18 @@ export default function ClosingSection({
       )}
 
       {/* Full-width closing image */}
-      <div className="relative w-full" style={{ aspectRatio }}>
-        <Image
-          src={image}
-          alt="Foto de cierre"
-          fill
-          className="object-cover"
-        />
-      </div>
+      {isFreeAspect ? (
+        <img src={image} alt="Foto de cierre" className="block h-auto w-full" />
+      ) : (
+        <div className="relative w-full" style={{ aspectRatio }}>
+          <Image
+            src={image}
+            alt="Foto de cierre"
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
 
       {/* Names or Logo as elegant close */}
       {isEnabled && (

@@ -39,6 +39,7 @@ export default function GallerySection({ images, aspectRatio = "3/4" }: GalleryS
   }, [emblaApi, onSelect])
 
   if (!images || images.length === 0) return null
+  const isFreeAspect = aspectRatio === "libre"
 
   return (
     <section className="w-full">
@@ -50,14 +51,22 @@ export default function GallerySection({ images, aspectRatio = "3/4" }: GalleryS
               className="relative mr-[6px] min-w-0 shrink-0 grow-0"
               style={{ flex: "0 0 100%" }}
             >
-              <div className="relative w-full" style={{ aspectRatio }}>
-                <Image
+              {isFreeAspect ? (
+                <img
                   src={src}
                   alt={`Foto de la pareja ${index + 1}`}
-                  fill
-                  className="object-cover"
+                  className="block h-auto w-full"
                 />
-              </div>
+              ) : (
+                <div className="relative w-full" style={{ aspectRatio }}>
+                  <Image
+                    src={src}
+                    alt={`Foto de la pareja ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>

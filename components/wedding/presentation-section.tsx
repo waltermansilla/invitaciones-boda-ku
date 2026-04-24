@@ -15,17 +15,23 @@ export default function PresentationSection({
   description,
   aspectRatio = "3/4",
 }: PresentationSectionProps) {
+  const isFreeAspect = aspectRatio === "libre"
+
   return (
     <section className="bg-background">
       {/* Portrait photo */}
-      <div className="relative w-full" style={{ aspectRatio }}>
-        <Image
-          src={image}
-          alt={`Foto de ${name}`}
-          fill
-          className="object-cover"
-        />
-      </div>
+      {isFreeAspect ? (
+        <img src={image} alt={`Foto de ${name}`} className="block h-auto w-full" />
+      ) : (
+        <div className="relative w-full" style={{ aspectRatio }}>
+          <Image
+            src={image}
+            alt={`Foto de ${name}`}
+            fill
+            className="object-cover"
+          />
+        </div>
+      )}
 
       {/* Name and description */}
       <div className="flex flex-col items-center px-8 py-12 text-center">
