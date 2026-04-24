@@ -26,7 +26,7 @@
         "enabled": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
-        "limiteInvitados": 150,
+        "limiteInvitados": 250,
         "panelId": "romina-franco-b2ksTb8p",
         "fechaEvento": "2026-10-17",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 17 de Octubre.",
