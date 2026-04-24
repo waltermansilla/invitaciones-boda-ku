@@ -13,6 +13,40 @@
             "separator": "&"
         }
     },
+
+    "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "access": {
+        "tokenEnabled": true,
+        "token": "wG7nZB",
+        "allowLegacyUntil": ""
+    },
+
+    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
+    "rsvpPanel": {
+        "enabled": true,
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": false,
+        "limiteInvitados": 150,
+        "panelId": "carolina-jose-79hJn961",
+        "fechaEvento": "2027-02-27",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 27 de Febrero.",
+        "theme": {
+            "primaryColor": "#385e78"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Tarjeta pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Ya pagó",
+            "unpaidButton": "¿Pagó tarjeta?"
+        }
+    },
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",

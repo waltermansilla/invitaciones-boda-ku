@@ -13,6 +13,13 @@
             "separator": "&"
         }
     },
+
+    "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "access": {
+        "tokenEnabled": true,
+        "token": "bj4J7s",
+        "allowLegacyUntil": ""
+    },
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
