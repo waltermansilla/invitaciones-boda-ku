@@ -551,7 +551,20 @@ function AddInvitadoModal({ panelId, primaryColor, soloPersona, onClose, onSucce
   const [newIntegrante, setNewIntegrante] = useState("")
   const [saving, setSaving] = useState(false)
   const integranteInputRef = useRef<HTMLInputElement>(null)
-  const handleAddIntegrante = () => { if (newIntegrante.trim()) { setIntegrantes([...integrantes, newIntegrante.trim()]); setNewIntegrante("") } }
+  const focusIntegranteInput = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      integranteInputRef.current?.focus()
+    })
+  }, [])
+  const handleAddIntegrante = () => {
+    if (!newIntegrante.trim()) {
+      focusIntegranteInput()
+      return
+    }
+    setIntegrantes([...integrantes, newIntegrante.trim()])
+    setNewIntegrante("")
+    focusIntegranteInput()
+  }
   const handleRemoveIntegrante = (idx: number) => setIntegrantes(integrantes.filter((_, i) => i !== idx))
   const handleSave = async () => {
     if (!nombre.trim()) return
@@ -596,7 +609,7 @@ function AddInvitadoModal({ panelId, primaryColor, soloPersona, onClose, onSucce
           <div className="mb-4">
             <p className="mb-2 text-sm font-medium text-neutral-700">Integrantes:</p>
             <div className="mb-2 flex flex-wrap gap-2">{integrantes.map((i, idx) => <span key={idx} className="flex items-center gap-1 rounded-full bg-neutral-100 px-3 py-1 text-sm">{i}<button onClick={() => handleRemoveIntegrante(idx)} className="text-red-500"><X className="h-3 w-3" /></button></span>)}</div>
-            <div className="flex gap-2"><input ref={integranteInputRef} type="text" placeholder="Nombre del integrante" value={newIntegrante} onChange={(e) => setNewIntegrante(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAddIntegrante()} className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none" /><button onClick={handleAddIntegrante} className="rounded-lg bg-neutral-100 px-3 py-2"><Plus className="h-4 w-4" /></button></div>
+            <div className="flex gap-2"><input ref={integranteInputRef} type="text" placeholder="Nombre del integrante" value={newIntegrante} onChange={(e) => setNewIntegrante(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAddIntegrante()} className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none" /><button onMouseDown={(e) => e.preventDefault()} onClick={handleAddIntegrante} className="rounded-lg bg-neutral-100 px-3 py-2"><Plus className="h-4 w-4" /></button></div>
           </div>
         )}
         <div className="flex gap-2"><button onClick={onClose} className="flex-1 rounded-lg bg-neutral-100 py-3 text-sm font-medium text-neutral-600">Cancelar</button><button onClick={handleSave} disabled={saving || !nombre.trim()} className="flex-1 rounded-lg py-3 text-sm font-medium text-white disabled:opacity-50" style={{ backgroundColor: primaryColor }}>{saving ? "Guardando..." : "Guardar"}</button></div>
@@ -765,7 +778,20 @@ function EditInvitadoModal({ panelId, invitado, primaryColor, onClose, onSuccess
   const [newIntegrante, setNewIntegrante] = useState("")
   const [saving, setSaving] = useState(false)
   const integranteInputRef = useRef<HTMLInputElement>(null)
-  const handleAddIntegrante = () => { if (newIntegrante.trim()) { setIntegrantes([...integrantes, { id: `new-${Date.now()}`, nombre: newIntegrante.trim(), estado: "pendiente" }]); setNewIntegrante("") } }
+  const focusIntegranteInput = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      integranteInputRef.current?.focus()
+    })
+  }, [])
+  const handleAddIntegrante = () => {
+    if (!newIntegrante.trim()) {
+      focusIntegranteInput()
+      return
+    }
+    setIntegrantes([...integrantes, { id: `new-${Date.now()}`, nombre: newIntegrante.trim(), estado: "pendiente" }])
+    setNewIntegrante("")
+    focusIntegranteInput()
+  }
   const handleRemoveIntegrante = (idx: number) => setIntegrantes(integrantes.filter((_, i) => i !== idx))
   const handleUpdateIntegrante = (idx: number, newNombre: string) => { const u = [...integrantes]; u[idx] = { ...u[idx], nombre: newNombre }; setIntegrantes(u) }
   const handleUpdateIntegranteEstado = (idx: number, newEstado: "pendiente" | "confirmado" | "no_asiste") => {
@@ -875,7 +901,7 @@ function EditInvitadoModal({ panelId, invitado, primaryColor, onClose, onSuccess
                 </div>
               ))}
             </div>
-            <div className="flex gap-2"><input ref={integranteInputRef} type="text" placeholder="Agregar integrante" value={newIntegrante} onChange={(e) => setNewIntegrante(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAddIntegrante()} className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none" /><button onClick={handleAddIntegrante} className="rounded-lg bg-neutral-100 px-3 py-2"><Plus className="h-4 w-4" /></button></div>
+            <div className="flex gap-2"><input ref={integranteInputRef} type="text" placeholder="Agregar integrante" value={newIntegrante} onChange={(e) => setNewIntegrante(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAddIntegrante()} className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none" /><button onMouseDown={(e) => e.preventDefault()} onClick={handleAddIntegrante} className="rounded-lg bg-neutral-100 px-3 py-2"><Plus className="h-4 w-4" /></button></div>
             {editingIntegranteIdx !== null && integrantes[editingIntegranteIdx] && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setEditingIntegranteIdx(null)}>
                 <div className="w-full max-w-sm rounded-2xl bg-white p-5" onClick={(e) => e.stopPropagation()}>

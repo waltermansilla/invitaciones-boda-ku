@@ -168,69 +168,36 @@
 
             "blocks": ["title", "timeline"],
             "data": {
-                "title": "Horarios",
+                "title": "Horarios y lugar",
                 "events": [
                     {
-                        "icon": "church",
-                        "name": "Ceremonia religiosa",
-                        "time": "19:20 hs",
-                        "address": "Parroquia Nuestra Sra. de Loreto, Castellanos 56, Ezeiza",
+                        "icon": "heart",
+                        "name": "Ceremonia",
+                        "time": "19:00 hs",
+                        "address": "Lagomarsino 128",
                         "button": {
                             "text": "Cómo llegar",
-                            "url": "https://maps.google.com/maps/place//data=!4m2!3m1!1s0x95bcd03ae16aaaab:0x65e12b9f1d7193b1?entry=s&sa=X&ved=2ahUKEwj8x-Xl0aqTAxUCq5UCHQNPICkQ4kB6BAgUEAA",
+                            "url": "https://maps.app.goo.gl/CxgCF8B2EXBANQBK8",
                             "variant": "primary"
                         }
                     },
                     {
                         "icon": "party",
                         "name": "¡Fiesta!",
-                        "time": "21:30 hs",
-                        "address": "Lorenza Zenavilla 443, Canning",
+                        "time": "21:00 hs",
+                        "address": "Ruta nacional 11, 335",
                         "button": {
                             "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/8hCUH1WG93P5dDXH6?g_st=ic",
+                            "url": "https://maps.app.goo.gl/ht6vSHsfAzZtiRkr8",
                             "variant": "primary"
                         }
+                    },
+                    {
+                        "icon": "clock",
+                        "name": "Fin",
+                        "time": "04:00 hs"
                     }
                 ]
-            }
-        },
-
-        {
-            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
-            "type": "dressCode",
-            "id": "dress-code",
-            "bgColor": "background",
-
-            "blocks": [
-                "title",
-                "subtitle",
-                "icons",
-                "description",
-                "colorSwatches",
-                "button",
-                "modal"
-            ],
-            "data": {
-                "icons": ["gem"],
-                "title": "Vestimenta",
-                "subtitle": "Elegante",
-                "description": "",
-                "showButton": false,
-                "colorSwatches": {
-                    "enabled": false,
-                    "shape": "square",
-                    "colors": ["#012a4a", "#013a63", "#01497c", "#2a6f97"]
-                },
-                "button": {
-                    "text": "Ver consejos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Consejos de vestimenta",
-                    "sections": []
-                }
             }
         },
 
@@ -242,9 +209,9 @@
             "bgImage": "primaryImage",
             "blocks": ["icon", "title", "description", "modal"],
             "data": {
-                "icon": "",
+                "icon": "plane",
                 "title": "Regalos",
-                "description": "Tu presencia en este día es lo más importante para nosotros. Pero si además querés hacernos un regalo, podés acompañarnos con un aporte para nuestros proyectos futuros",
+                "description": "El mejor regalo es que nos acompañes, pero si querés ayudar a nuestro próximo sueño ✈️ 🇮🇹 te dejamos el alías ❤️❤️",
                 "showButton": true,
                 "button": {
                     "text": "Ver datos",
@@ -255,12 +222,70 @@
                     "title": "Datos bancarios",
                     "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
                     "bankData": [
-                        { "label": "Alias", "value": "hernandariofalcone" },
-                        { "label": "CVU", "value": "0000003100097882232195" },
-                        { "label": "Titular", "value": "Hernán Darío Falcone" }
+                        { "label": "Alias 1", "value": "joseycaro.boda2027" },
+                        {
+                            "label": "Titular 1",
+                            "value": "Carolina Julieta Debonis"
+                        },
+                        { "label": "Alias 2", "value": "Hernán Darío Falcone" },
+                        {
+                            "label": "Titular 2",
+                            "value": "0000003100097882232195"
+                        },
+                        { "label": "Banco", "value": "Naranja X" }
                     ],
                     "thankYouText": "¡Gracias de corazón!"
                 }
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon2",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modals"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Si querés regalarnos algo más que tu presencia...",
+                "showButton": true,
+                "button": {
+                    "text": "Ver más",
+                    "url": "#",
+                    "variant": "secondary",
+                    "action": "modal"
+                },
+                "_comment_action": "action: 'modal' abre modal, 'url' abre el link directo en button.url",
+                "modalMode": "sequential",
+                "_comment_modalMode": "combined = ambos modales juntos. sequential = primero uno, boton para ir al otro.",
+                "modals": [
+                    {
+                        "type": "address",
+                        "title": "Regalos físicos",
+                        "subtitle": "Nuestra dirección",
+                        "address": "Agustina de Libarona 364, Bº Juan XXIII, Quimili, Santiago del Estero",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/Jf5ncz5qcWEWUM4i7?g_st=iw"
+                        }
+                    },
+                    {
+                        "type": "bank",
+                        "title": "Transferencias",
+                        "description": "",
+                        "bankData": [
+                            { "label": "Alias", "value": "BODAIVANYMELI" },
+
+                            {
+                                "label": "Titular",
+                                "value": "Iván Francisco Coronel"
+                            }
+                        ],
+                        "thankYouText": "¡Muchas gracias!"
+                    }
+                ]
             }
         },
 

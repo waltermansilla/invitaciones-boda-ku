@@ -59,6 +59,7 @@ interface GuestForm {
     dietary: string;
     songRequest: string;
     extraValues?: Record<string, string>;
+    panelEstado?: "pendiente" | "confirmado" | "no_asiste";
 }
 
 function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
@@ -185,11 +186,18 @@ export default function RSVPSection({
                         setInvitado(inv);
                         
                         // Verificar si ya confirmo (estado no es pendiente)
-                        const yaConfirmo = inv.estado !== "pendiente" || 
-                            (inv.integrantes && inv.integrantes.some((int: { estado: string }) => int.estado !== "pendiente"));
+                        const yaConfirmo =
+                            inv.tipo === "familia" && inv.integrantes?.length
+                                ? inv.integrantes.every(
+                                      (int: { estado: string }) =>
+                                          int.estado !== "pendiente",
+                                  )
+                                : inv.estado !== "pendiente";
                         
                         if (yaConfirmo && !editing) {
                             setAlreadyConfirmed(true);
+                        } else {
+                            setAlreadyConfirmed(false);
                         }
                         
                         // Si es familia, precargar integrantes con sus datos guardados
@@ -206,6 +214,12 @@ export default function RSVPSection({
                                     dietary: int.restricciones || "Ninguno",
                                     songRequest: inv.cancion || "",
                                     extraValues: createEmptyExtraValues(),
+                                    panelEstado:
+                                        int.estado === "confirmado"
+                                            ? "confirmado"
+                                            : int.estado === "no_asiste"
+                                              ? "no_asiste"
+                                              : "pendiente",
                                 };
                             }));
                         } else if (inv.tipo === "persona") {
@@ -218,6 +232,12 @@ export default function RSVPSection({
                                 dietary: "Ninguno",
                                 songRequest: inv.cancion || "",
                                 extraValues: createEmptyExtraValues(),
+                                panelEstado:
+                                    inv.estado === "confirmado"
+                                        ? "confirmado"
+                                        : inv.estado === "no_asiste"
+                                          ? "no_asiste"
+                                          : "pendiente",
                             }]);
                         }
                     }
