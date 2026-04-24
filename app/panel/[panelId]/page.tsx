@@ -8,7 +8,7 @@ import {
   invitationPathFromPanelIdSlug,
 } from "@/lib/client-helpers-shared"
 
-interface Integrante { id: string; nombre: string; estado: "pendiente" | "confirmado" | "no_asiste"; restricciones?: string }
+interface Integrante { id: string; nombre: string; estado: "pendiente" | "confirmado" | "no_asiste"; restricciones?: string; fecha_confirmacion?: string }
 interface Invitado { id: string; nombre: string; codigo?: string; tipo: "persona" | "familia" | "integrante"; estado: "pendiente" | "confirmado" | "no_asiste"; pago_tarjeta?: boolean; confirmado_manual?: boolean; restricciones?: string; mensaje?: string; cancion?: string; fecha_confirmacion?: string; integrantes?: Integrante[]; familiaId?: string; familiaNombre?: string; pago?: boolean }
 interface Evento { id: string; panel_id: string; fecha_evento?: string; nombre_evento?: string; tipo_evento?: string }
 interface PanelTheme { primaryColor?: string; backgroundColor?: string }
@@ -55,6 +55,7 @@ const fetcher = async (url: string) => {
   return json
 }
 const filterToEstado: Record<string, string> = { confirmados: "confirmado", pendientes: "pendiente", no_asiste: "no_asiste" }
+const NEW_MARK_MS = 3 * 60 * 1000
 
 // Helper para obtener texto del estado
 const getEstadoTexto = (estado: string, plural: boolean) => {
@@ -101,9 +102,14 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [showLimitHelpModal, setShowLimitHelpModal] = useState(false)
   const [showUsageHelpModal, setShowUsageHelpModal] = useState(false)
+  const [nowMs, setNowMs] = useState(() => Date.now())
   const giftCardEnabled = true
 
   useEffect(() => { params.then((p) => setPanelId(p.panelId)) }, [params])
+  useEffect(() => {
+    const id = window.setInterval(() => setNowMs(Date.now()), 10000)
+    return () => window.clearInterval(id)
+  }, [])
 
   const { data, error, mutate } = useSWR<PanelData>(panelId ? `/api/panel/${panelId}` : null, fetcher, { refreshInterval: 30000 })
   
@@ -205,6 +211,37 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   const hasMusic = (inv: Invitado) => Boolean(inv.cancion?.trim())
   const hasExtra = (inv: Invitado) =>
     Boolean(inv.mensaje?.trim() && inv.mensaje !== inv.cancion)
+  const getEstadoOrdenLista = (inv: Invitado): "pendiente" | "no_asiste" | "confirmado" => {
+    if (inv.tipo === "familia" && inv.integrantes?.length) {
+      const estados = inv.integrantes.map((int) => int.estado)
+      if (estados.includes("no_asiste")) return "no_asiste"
+      if (estados.includes("pendiente")) return "pendiente"
+      return "confirmado"
+    }
+    if (inv.estado === "no_asiste") return "no_asiste"
+    if (inv.estado === "pendiente") return "pendiente"
+    return "confirmado"
+  }
+  const getLatestConfirmationMs = (inv: Invitado) => {
+    const times: number[] = []
+    if (inv.fecha_confirmacion) {
+      const t = new Date(inv.fecha_confirmacion).getTime()
+      if (!Number.isNaN(t)) times.push(t)
+    }
+    if (inv.tipo === "familia" && inv.integrantes?.length) {
+      inv.integrantes.forEach((int) => {
+        if (!int.fecha_confirmacion) return
+        const t = new Date(int.fecha_confirmacion).getTime()
+        if (!Number.isNaN(t)) times.push(t)
+      })
+    }
+    if (!times.length) return null
+    return Math.max(...times)
+  }
+  const isNewInvitado = (inv: Invitado) => {
+    const latest = getLatestConfirmationMs(inv)
+    return latest !== null && nowMs - latest <= NEW_MARK_MS
+  }
   const canFilterDietary = invitados.some((inv) => hasDietary(inv))
   const canFilterMusic = invitados.some((inv) => hasMusic(inv))
   const canFilterExtra = invitados.some((inv) => hasExtra(inv))
@@ -212,9 +249,30 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   let itemsToDisplay: Invitado[] = []
 
   if (filter === "todos") {
-    // Ordenar: pendientes primero, luego no asisten, luego confirmados
+    // Orden:
+    // 1) Nuevos (última confirmación más reciente primero)
+    // 2) Lista estándar por estado (pendiente, no_asiste, confirmado) y alfabético
     const ordenEstado: Record<string, number> = { pendiente: 0, no_asiste: 1, confirmado: 2 }
-    itemsToDisplay = invitados.map((inv) => ({ ...inv })).sort((a, b) => (ordenEstado[a.estado] ?? 1) - (ordenEstado[b.estado] ?? 1))
+    const collator = new Intl.Collator("es", { sensitivity: "base" })
+    const invitadosBase = invitados.map((inv) => ({ ...inv }))
+    const nuevos = invitadosBase
+      .filter((inv) => isNewInvitado(inv))
+      .sort((a, b) => (getLatestConfirmationMs(b) ?? 0) - (getLatestConfirmationMs(a) ?? 0))
+    const estandarBase = invitadosBase.filter((inv) => !isNewInvitado(inv))
+    const sortByNombre = (a: Invitado, b: Invitado) => collator.compare(a.nombre, b.nombre)
+    const estandarPendientes = estandarBase.filter((inv) => getEstadoOrdenLista(inv) === "pendiente").sort(sortByNombre)
+    const estandarNoAsisten = estandarBase.filter((inv) => getEstadoOrdenLista(inv) === "no_asiste").sort(sortByNombre)
+    const estandarConfirmados = estandarBase.filter((inv) => getEstadoOrdenLista(inv) === "confirmado").sort(sortByNombre)
+    const estandarOtros = estandarBase
+      .filter((inv) => !(inv.estado in ordenEstado))
+      .sort(sortByNombre)
+    const estandar = [
+      ...estandarPendientes,
+      ...estandarNoAsisten,
+      ...estandarConfirmados,
+      ...estandarOtros,
+    ]
+    itemsToDisplay = [...nuevos, ...estandar]
   } else if (filter === "pago_pendiente") {
     // Mostrar solo los que no pagaron tarjeta
     itemsToDisplay = invitados.filter((inv) => !inv.pago_tarjeta).map((inv) => ({ ...inv }))
@@ -335,7 +393,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
           <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-12 text-center"><p className="text-neutral-500">{searchTerm ? "No se encontraron resultados" : "No hay invitados"}</p></div>
         ) : (
           <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
-            {invitadosFiltrados.map((inv, idx) => <InvitadoRow key={inv.id} invitado={inv} isLast={idx === invitadosFiltrados.length - 1} giftCardEnabled={giftCardEnabled} primaryColor={primaryColor} labels={labels} expanded={expandedId === inv.id} onToggleExpand={() => setExpandedId(expandedId === inv.id ? null : inv.id)} onSendInvitation={handleSendInvitation} onDelete={handleDelete} onEdit={() => setEditingInvitado(inv)} onTogglePago={handleTogglePago} onOpenConfirmManual={() => setConfirmManualInvitado(inv)} />)}
+            {invitadosFiltrados.map((inv, idx) => <InvitadoRow key={inv.id} invitado={inv} isLast={idx === invitadosFiltrados.length - 1} isNew={inv.tipo !== "integrante" && isNewInvitado(inv)} giftCardEnabled={giftCardEnabled} primaryColor={primaryColor} labels={labels} expanded={expandedId === inv.id} onToggleExpand={() => setExpandedId(expandedId === inv.id ? null : inv.id)} onSendInvitation={handleSendInvitation} onDelete={handleDelete} onEdit={() => setEditingInvitado(inv)} onTogglePago={handleTogglePago} onOpenConfirmManual={() => setConfirmManualInvitado(inv)} />)}
           </div>
         )}
       </div>
@@ -370,7 +428,7 @@ export default function PanelPage({ params }: { params: Promise<{ panelId: strin
   )
 }
 
-function InvitadoRow({ invitado, isLast, giftCardEnabled, primaryColor, labels, expanded, onToggleExpand, onSendInvitation, onDelete, onEdit, onTogglePago, onOpenConfirmManual }: { invitado: Invitado; isLast: boolean; giftCardEnabled: boolean; primaryColor: string; labels?: PanelLabels; expanded: boolean; onToggleExpand: () => void; onSendInvitation: (inv: Invitado) => void; onDelete: (id: string) => void; onEdit: () => void; onTogglePago: (inv: Invitado) => void; onOpenConfirmManual: () => void }) {
+function InvitadoRow({ invitado, isLast, isNew, giftCardEnabled, primaryColor, labels, expanded, onToggleExpand, onSendInvitation, onDelete, onEdit, onTogglePago, onOpenConfirmManual }: { invitado: Invitado; isLast: boolean; isNew?: boolean; giftCardEnabled: boolean; primaryColor: string; labels?: PanelLabels; expanded: boolean; onToggleExpand: () => void; onSendInvitation: (inv: Invitado) => void; onDelete: (id: string) => void; onEdit: () => void; onTogglePago: (inv: Invitado) => void; onOpenConfirmManual: () => void }) {
   const rowRef = useRef<HTMLDivElement | null>(null)
   const estadoBg: Record<string, string> = { confirmado: "#d4edda", pendiente: "#f5f5f5", no_asiste: "#f5d5d5" }
   const estadoText: Record<string, string> = { confirmado: "#155724", pendiente: "#888", no_asiste: "#8b6b6b" }
@@ -460,8 +518,16 @@ function InvitadoRow({ invitado, isLast, giftCardEnabled, primaryColor, labels, 
 
   return (
     <div ref={rowRef} className={!isLast ? "border-b border-neutral-100" : ""}>
-      <div className="flex items-center gap-3 px-4 py-3 cursor-pointer" onClick={onToggleExpand}>
-        <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ backgroundColor: iconBg }}>{invitado.tipo === "familia" ? <Users className="h-4 w-4" style={{ color: iconTxt }} /> : <User className="h-4 w-4" style={{ color: iconTxt }} />}</div>
+      <div className="relative flex items-center gap-3 px-4 py-3 cursor-pointer" onClick={onToggleExpand}>
+        {isNew && (
+          <span
+            className="absolute top-1/2 z-10 h-2.5 w-2.5 -translate-y-1/2 rounded-full shadow-sm"
+            style={{ left: "3px", backgroundColor: "#2563eb", opacity: 1 }}
+          />
+        )}
+        <div className="relative flex h-8 w-8 items-center justify-center rounded-full" style={{ backgroundColor: iconBg }}>
+          {invitado.tipo === "familia" ? <Users className="h-4 w-4" style={{ color: iconTxt }} /> : <User className="h-4 w-4" style={{ color: iconTxt }} />}
+        </div>
         <div className="flex-1">
           <p className="font-medium text-neutral-800">{invitado.nombre}</p>
           {invitado.tipo === "familia" && invitado.integrantes && <p className="text-xs text-neutral-500">{invitado.integrantes.length} integrantes</p>}
@@ -485,31 +551,31 @@ function InvitadoRow({ invitado, isLast, giftCardEnabled, primaryColor, labels, 
             {invitado.tipo !== "integrante" && <><button onClick={(e) => { e.stopPropagation(); onEdit() }} className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"><Edit2 className="h-3 w-3" />Editar</button><button onClick={(e) => { e.stopPropagation(); onDelete(invitado.id) }} className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600"><Trash2 className="h-3 w-3" />Eliminar</button></>}
           </div>
           {invitado.tipo !== "familia" && invitado.restricciones && <div className="mt-3 flex items-center gap-2 text-xs text-neutral-600"><Utensils className="h-3 w-3" /><span>{invitado.restricciones}</span></div>}
-          {invitado.tipo !== "familia" && invitado.cancion && <div className="mt-2 flex items-center gap-2 text-xs text-neutral-600"><Music className="h-3 w-3" /><span>{invitado.cancion}</span></div>}
-          {invitado.tipo !== "familia" && invitado.mensaje && invitado.mensaje !== invitado.cancion && <div className="mt-2 flex items-center gap-2 text-xs text-neutral-600"><MessageSquare className="h-3 w-3" /><span>{invitado.mensaje}</span></div>}
+          {invitado.tipo !== "familia" && invitado.cancion && <div className="mt-2 flex items-start gap-2 text-xs text-neutral-600"><Music className="mt-0.5 h-3 w-3 shrink-0" /><span className="whitespace-pre-wrap break-words">{invitado.cancion}</span></div>}
+          {invitado.tipo !== "familia" && invitado.mensaje && invitado.mensaje !== invitado.cancion && <div className="mt-2 flex items-start gap-2 text-xs text-neutral-600"><MessageSquare className="mt-0.5 h-3 w-3 shrink-0" /><span className="whitespace-pre-wrap break-words">{invitado.mensaje}</span></div>}
           {invitado.tipo === "familia" && invitado.integrantes?.length && (
             <div className="mt-3">
               <p className="mb-2 text-xs font-medium text-neutral-700">Integrantes:</p>
               <div className="space-y-1">
                 {invitado.integrantes!.map((i) => (
-                  <div key={i.id} className="flex items-center justify-between rounded bg-white px-2 py-1">
-                    <div className="min-w-0">
+                  <div key={i.id} className="flex items-start justify-between gap-2 rounded bg-white px-2 py-1">
+                    <div className="min-w-0 flex-1">
                       <span className="text-xs text-neutral-700">{i.nombre}</span>
                       {songsByMember[i.nombre]?.length ? (
-                        <div className="mt-0.5 flex items-center gap-1 text-[10px] text-neutral-600">
-                          <Music className="h-3 w-3" />
-                          <span className="truncate">{songsByMember[i.nombre].join(" | ")}</span>
+                        <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
+                          <Music className="mt-0.5 h-3 w-3 shrink-0" />
+                          <span className="whitespace-pre-wrap break-words">{songsByMember[i.nombre].join(" | ")}</span>
                         </div>
                       ) : null}
                       {extraByMember[i.nombre]?.length ? (
-                        <div className="mt-0.5 flex items-center gap-1 text-[10px] text-neutral-600">
-                          <MessageSquare className="h-3 w-3" />
-                          <span className="truncate">{extraByMember[i.nombre].join(" | ")}</span>
+                        <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
+                          <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
+                          <span className="whitespace-pre-wrap break-words">{extraByMember[i.nombre].join(" | ")}</span>
                         </div>
                       ) : null}
                     </div>
-                    <div className="flex items-center gap-2">
-                      {i.restricciones && <span className="flex items-center gap-1 text-[10px] text-neutral-500"><Utensils className="h-3 w-3" />{i.restricciones}</span>}
+                    <div className="flex shrink-0 items-start gap-2">
+                      {i.restricciones && <span className="flex items-start gap-1 text-[10px] text-neutral-500"><Utensils className="mt-0.5 h-3 w-3 shrink-0" /><span className="whitespace-pre-wrap break-words">{i.restricciones}</span></span>}
                       <span className="rounded px-2 py-0.5 text-[10px] font-medium" style={{ backgroundColor: estadoBg[i.estado], color: estadoText[i.estado] }}>{getEstadoTexto(i.estado, false)}</span>
                     </div>
                   </div>

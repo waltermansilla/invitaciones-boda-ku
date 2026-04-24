@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, useRef } from "react";
 import { useIsMuestra } from "@/lib/config-context";
 
 interface InvitadoData {
@@ -202,6 +202,7 @@ export default function RSVPSection({
     const [error, setError] = useState<string | null>(null);
     const [alreadyConfirmed, setAlreadyConfirmed] = useState(false);
     const [editing, setEditing] = useState(false);
+    const extraTextareaRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
     // Obtener datos del invitado cuando hay codigo
     useEffect(() => {
@@ -320,6 +321,14 @@ export default function RSVPSection({
         };
         setGuests(newGuests);
     };
+
+    useEffect(() => {
+        Object.values(extraTextareaRefs.current).forEach((textarea) => {
+            if (!textarea) return;
+            textarea.style.height = "auto";
+            textarea.style.height = `${textarea.scrollHeight}px`;
+        });
+    }, [guests]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -702,12 +711,20 @@ export default function RSVPSection({
                                         <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
                                             {extraInput.label}
                                         </label>
-                                        <input
-                                            type="text"
+                                        <textarea
+                                            ref={(el) => {
+                                                extraTextareaRefs.current[`${index}-${extraInput.id}`] = el;
+                                            }}
                                             placeholder={extraInput.placeholder || extraInput.label}
                                             value={guest.extraValues?.[extraInput.label] || ""}
                                             onChange={(e) => updateGuestExtraValue(index, extraInput.label, e.target.value)}
-                                            className="w-full bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
+                                            onInput={(e) => {
+                                                const target = e.currentTarget;
+                                                target.style.height = "auto";
+                                                target.style.height = `${target.scrollHeight}px`;
+                                            }}
+                                            rows={1}
+                                            className="w-full resize-none overflow-hidden bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
                                             style={{ fontSize: "16px" }}
                                         />
                                     </div>
