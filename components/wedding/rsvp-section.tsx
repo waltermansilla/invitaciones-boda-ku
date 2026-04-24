@@ -147,6 +147,34 @@ function buildPanelExtraSummary(
     return rows.join(" | ");
 }
 
+function parsePerMemberEntries(
+    raw: string | undefined,
+): Array<{ memberName: string; label?: string; value: string }> {
+    if (!raw) return [];
+    const entries: Array<{ memberName: string; label?: string; value: string }> = [];
+    raw
+        .split("|")
+        .map((chunk) => chunk.trim())
+        .filter(Boolean)
+        .forEach((chunk) => {
+            const colonIdx = chunk.indexOf(":");
+            if (colonIdx <= 0) return;
+            const left = chunk.slice(0, colonIdx).trim();
+            const value = chunk.slice(colonIdx + 1).trim();
+            if (!left || !value) return;
+            if (left.includes(" - ")) {
+                const [memberNameRaw, labelRaw] = left.split(" - ");
+                const memberName = memberNameRaw?.trim();
+                const label = labelRaw?.trim();
+                if (!memberName) return;
+                entries.push({ memberName, label: label || undefined, value });
+                return;
+            }
+            entries.push({ memberName: left, value });
+        });
+    return entries;
+}
+
 export default function RSVPSection({
     title,
     deadline,
@@ -202,9 +230,28 @@ export default function RSVPSection({
                         
                         // Si es familia, precargar integrantes con sus datos guardados
                         if (inv.tipo === "familia" && inv.integrantes?.length > 0) {
+                            const songEntries = parsePerMemberEntries(inv.cancion);
+                            const extraEntries = parsePerMemberEntries(inv.mensaje);
                             setGuestCount(inv.integrantes.length);
                             setGuests(inv.integrantes.map((int: { id: string; nombre: string; estado: string; restricciones?: string }) => {
                                 const [firstName, ...lastParts] = int.nombre.split(" ");
+                                const songForMember =
+                                    songEntries.find(
+                                        (entry) => entry.memberName === int.nombre,
+                                    )?.value || "";
+                                const extraValues = createEmptyExtraValues();
+                                extraInputs.forEach((input) => {
+                                    const panelTitle = (input.tituloPanel || input.label || "").trim();
+                                    const matched = extraEntries.find(
+                                        (entry) =>
+                                            entry.memberName === int.nombre &&
+                                            entry.label &&
+                                            (entry.label === panelTitle || entry.label === input.label),
+                                    );
+                                    if (matched) {
+                                        extraValues[input.label] = matched.value;
+                                    }
+                                });
                                 return {
                                     id: int.id,
                                     firstName,
@@ -212,8 +259,8 @@ export default function RSVPSection({
                                     showLastName: lastParts.length > 0,
                                     attendance: int.estado === "confirmado" ? "yes" : int.estado === "no_asiste" ? "no" : "",
                                     dietary: int.restricciones || "Ninguno",
-                                    songRequest: inv.cancion || "",
-                                    extraValues: createEmptyExtraValues(),
+                                    songRequest: songForMember,
+                                    extraValues,
                                     panelEstado:
                                         int.estado === "confirmado"
                                             ? "confirmado"
