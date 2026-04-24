@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Suspense } from "react";
 import { getClientConfig, getAllClientParams } from "@/lib/get-client-config";
 import { ConfigProvider } from "@/lib/config-context";
@@ -15,6 +16,14 @@ function getPublicSiteUrl() {
     ).replace(/\/+$/, "");
 }
 
+function getRequestSiteUrl() {
+    const h = headers();
+    const host = h.get("x-forwarded-host") || h.get("host");
+    const proto = h.get("x-forwarded-proto") || "https";
+    if (!host) return getPublicSiteUrl();
+    return `${proto}://${host}`.replace(/\/+$/, "");
+}
+
 function resolveOgImage(config: ReturnType<typeof getClientConfig>) {
     const metaImage =
         typeof config.meta?.ogImage === "string"
@@ -29,7 +38,7 @@ function resolveOgImage(config: ReturnType<typeof getClientConfig>) {
     const image = metaImage || heroImage;
     if (!image) return null;
     if (/^https?:\/\//i.test(image)) return image;
-    return `${getPublicSiteUrl()}${image.startsWith("/") ? image : `/${image}`}`;
+    return `${getRequestSiteUrl()}${image.startsWith("/") ? image : `/${image}`}`;
 }
 
 export async function generateMetadata({
@@ -39,7 +48,7 @@ export async function generateMetadata({
     const { tipo, slug } = await params;
     const { v } = await searchParams;
     const config = getClientConfig(tipo, slug, v);
-    const siteUrl = getPublicSiteUrl();
+    const siteUrl = getRequestSiteUrl();
     const canonicalUrl = `${siteUrl}/m/${tipo}/${slug}`;
     const ogImage = resolveOgImage(config);
 
