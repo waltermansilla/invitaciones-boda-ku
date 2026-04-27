@@ -3931,24 +3931,31 @@ function PanelSection({
                         </div>
                     </div>
                 )}
-                <div className="mt-16 grid gap-14 md:grid-cols-3 md:gap-16">
+                <div className="mt-12 grid gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
                     {data.features.map((f, i) => (
                         <div
                             key={f.title}
-                            style={blockRevealStyle(revealed, 265 + i * 72)}
+                            className="rounded-2xl px-4 py-5 shadow-lg md:px-5 md:py-6"
+                            style={{
+                                background: "#EDE6DC",
+                                ...blockRevealStyle(revealed, 265 + i * 72),
+                            }}
                         >
                             <span
-                                className="mb-3 inline-flex"
-                                style={{ color: theme.accents.softGold }}
+                                className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl"
+                                style={{
+                                    background: "#D9CFC2",
+                                    color: "#4A3F35",
+                                }}
                             >
                                 <TdyIcon
                                     name={f.icon ?? "barChart"}
-                                    size={24}
-                                    color={theme.accents.softGold}
+                                    size={20}
+                                    color="#4A3F35"
                                 />
                             </span>
                             <h3
-                                className="mt-2 text-lg font-normal"
+                                className="mt-1 text-lg font-normal"
                                 style={{
                                     fontFamily: theme.typography.headingFont,
                                     color: tx.heading,
@@ -4710,7 +4717,7 @@ export default function LandingPageHome({
                 />
             )}
             <IncluyeSection data={sections.incluye} theme={theme} />
-            <ComparativaSection data={sections.comparativa} theme={theme} />
+            <PanelSection data={sections.panel} theme={theme} />
             <EstilosCarousel
                 data={sections.estilos}
                 theme={theme}
@@ -4727,7 +4734,9 @@ export default function LandingPageHome({
             />
             {postEstilosRows?.length ? (
                 <>
-                    {postEstilosRows.map((row, i) => (
+                    {postEstilosRows
+                        .filter((row) => row.id !== "panel")
+                        .map((row, i) => (
                         <Fragment key={`post-estilos-${i}-${row.id}`}>
                             {renderLandingPostEstilosSection(row, {
                                 sections,
@@ -4740,20 +4749,26 @@ export default function LandingPageHome({
                                 locale,
                                 showLang,
                             })}
+                            {row.id === "servicio" ? (
+                                <ComparativaSection
+                                    data={sections.comparativa}
+                                    theme={theme}
+                                />
+                            ) : null}
                         </Fragment>
                     ))}
                 </>
             ) : (
                 <>
-                    <IdiomasSection data={sections.idiomas} theme={theme} />
                     <ProcesoTdy data={sections.proceso} theme={theme} />
-                    <PanelSection data={sections.panel} theme={theme} />
                     <PlanesTdy
                         data={sections.servicio}
                         theme={theme}
                         buttons={ctaButtons}
                         waNumber={wa}
                     />
+                    <ComparativaSection data={sections.comparativa} theme={theme} />
+                    <IdiomasSection data={sections.idiomas} theme={theme} />
                     <FaqTdy data={sections.faq} theme={themeAlt} />
                 </>
             )}

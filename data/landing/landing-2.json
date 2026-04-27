@@ -7,9 +7,8 @@
         "heroSectionId": "hero-home",
         "reviewsTopSimple": true,
         "postEstilosSections": [
-            { "id": "panel", "surface": "default" },
-            { "id": "idiomas", "surface": "alt" },
             { "id": "servicio", "surface": "default" },
+            { "id": "idiomas", "surface": "alt" },
             { "id": "proceso", "surface": "alt" },
             { "id": "faq", "surface": "alt" }
         ],
@@ -124,12 +123,12 @@
             "anchor": "#muestras"
         },
         "planPremium": {
-            "text": "Elegir Premium",
+            "text": "Reservar Premium",
             "type": "link",
             "url": "/configurador?plan=premium"
         },
         "planDisenoUnico": {
-            "text": "Elegir Diseño único",
+            "text": "Reservar Diseño único",
             "type": "link",
             "url": "/configurador?plan=diseno-unico&start=idioma"
         }
@@ -405,18 +404,18 @@
             ],
             "features": [
                 {
-                    "title": "Control de asistencia",
-                    "subtitle": "Confirmaciones en tiempo real y visión clara de quién viene.",
+                    "title": "RSVP en tiempo real",
+                    "subtitle": "Ves al instante quién confirmó, quién sigue pendiente y quién no asiste, sin planillas.",
                     "icon": "userCheck"
                 },
                 {
-                    "title": "Intolerancias y menús",
-                    "subtitle": "Anotá alergias y preferencias para coordinar con el catering.",
+                    "title": "Datos clave para organizar",
+                    "subtitle": "Centralizás alergias, menús y notas importantes para pasarle todo claro al catering.",
                     "icon": "utensils"
                 },
                 {
-                    "title": "Estadísticas claras",
-                    "subtitle": "Seguí el avance de las respuestas de un vistazo.",
+                    "title": "Visión clara para decidir",
+                    "subtitle": "Tenés un resumen simple del estado general para planificar mesas, comida y logística.",
                     "icon": "barChart"
                 }
             ]

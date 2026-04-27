@@ -5,9 +5,8 @@
         "heroSectionId": "hero-home",
         "reviewsTopSimple": true,
         "postEstilosSections": [
-            { "id": "panel", "surface": "default" },
-            { "id": "idiomas", "surface": "alt" },
             { "id": "servicio", "surface": "default" },
+            { "id": "idiomas", "surface": "alt" },
             { "id": "proceso", "surface": "alt" },
             { "id": "faq", "surface": "alt" }
         ],
@@ -403,18 +402,18 @@
             ],
             "features": [
                 {
-                    "title": "Attendance control",
-                    "subtitle": "Real-time confirmations and a clear view of who’s coming.",
+                    "title": "Real-time RSVP",
+                    "subtitle": "Instantly see who confirmed, who is still pending, and who is not attending, without spreadsheets.",
                     "icon": "userCheck"
                 },
                 {
-                    "title": "Intolerances and menus",
-                    "subtitle": "Note allergies and preferences to coordinate with catering.",
+                    "title": "Key planning details",
+                    "subtitle": "Keep allergies, menu choices, and important notes in one place to brief catering clearly.",
                     "icon": "utensils"
                 },
                 {
-                    "title": "Clear stats",
-                    "subtitle": "Follow how responses are progressing at a glance.",
+                    "title": "Clear planning overview",
+                    "subtitle": "Get a simple status snapshot to plan seating, food, and event logistics with confidence.",
                     "icon": "barChart"
                 }
             ]
