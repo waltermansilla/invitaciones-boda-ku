@@ -13,14 +13,18 @@
             "separator": "&"
         }
     },
-
     "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "aS8UoghD",
+        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+    },
     "access": {
         "tokenEnabled": true,
         "token": "Rd4k3b",
         "allowLegacyUntil": ""
     },
-
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,
@@ -47,7 +51,6 @@
             "unpaidButton": "¿Pagó tarjeta?"
         }
     },
-
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
@@ -128,7 +131,10 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Estamos muy felices de dar este paso y queremos celebrarlo con vos.",
                 "author": "",
@@ -141,7 +147,11 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "17 de Octubre del 2026"
@@ -152,13 +162,16 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/boda/20-romina-franco/images/1.jpeg"]
+                "images": [
+                    "/clientes/boda/20-romina-franco/images/1.jpeg"
+                ]
             }
         },
-
         {
             "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
@@ -166,7 +179,11 @@
             "enabled": false,
             "id": "location-ceremonia",
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "¿Dónde?",
                 "address": "Parroquia San Pedro y San Pablo",
@@ -177,14 +194,16 @@
                 }
             }
         },
-
         {
             "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -193,7 +212,6 @@
                         "name": "Civil",
                         "address": "Salón del Reino, Puerto Madryn 217, Luján de Cuyo",
                         "time": "10:30 hs",
-
                         "button": {
                             "text": "Cómo llegar",
                             "url": "https://maps.app.goo.gl/Y1Bxt3chqUpUfXhY9?g_st=iw",
@@ -202,7 +220,6 @@
                     },
                     {
                         "icon": "book",
-
                         "name": "Discurso de bodas",
                         "address": "Salón del Reino"
                     },
@@ -220,13 +237,14 @@
                 ]
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -235,7 +253,6 @@
                 ]
             }
         },
-
         {
             "_comment": "PHOTOS: Invitar a subir fotos al album compartido. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
             "type": "photos",
@@ -243,7 +260,12 @@
             "enabled": true,
             "bgColor": "background",
             "bgImage": "",
-            "blocks": ["icon", "title", "description", "button"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "icon": "camera",
                 "title": "Compartí tus fotos",
@@ -261,7 +283,11 @@
             "id": "playlist-suggestion",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["title", "description", "button"],
+            "blocks": [
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "title": "Playlist de la fiesta",
                 "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
@@ -278,7 +304,10 @@
             "type": "quote",
             "id": "quote-final",
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "El amor se construye día a día, pero cobra aún más sentido cuando puede compartirse con quienes forman parte de nuestra vida.",
                 "author": "",
@@ -304,12 +333,21 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "background",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 30 de Septiembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -324,7 +362,6 @@
                         "Celíaco",
                         "Otro"
                     ],
-
                     "extraInputs": [
                         {
                             "id": "mensajersvp",
@@ -347,20 +384,25 @@
             "type": "quote",
             "id": "quote-final2",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Gracias por ser parte de nuestra historia y por acompañarnos en el comienzo de esta nueva etapa.",
                 "author": "Romina & Franco",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/20-romina-franco/images/final.jpeg"
@@ -371,7 +413,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

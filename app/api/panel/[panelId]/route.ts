@@ -7,6 +7,7 @@ import {
   getEventDataFromConfig,
   invitationAccessTokenFromConfig,
   invitationPublicPathFromConfig,
+  panelVariantesFromConfig,
 } from "@/lib/config-loader"
 import { resolveEventoForPanelConfig } from "@/lib/panel-evento-resolve"
 import { panelConfirmacionFromConfig } from "@/lib/panel-confirmacion"
@@ -22,6 +23,32 @@ type EventoRow = Record<string, unknown> & {
   nombre_evento?: string | null
   tipo_evento?: string | null
   fecha_evento?: string | null
+}
+
+function normalizePanelVariant(
+  value: string | null,
+  allowed: string[],
+  fallback: string,
+): string {
+  const raw = (value || "").trim()
+  if (!raw) return fallback
+  return allowed.includes(raw) ? raw : fallback
+}
+
+function resolveStoredVariantToKnown(
+  storedValue: unknown,
+  variantes: Array<{ id: string; legacyIds?: string[] }>,
+  fallback: string,
+): string {
+  const raw =
+    typeof storedValue === "string" && storedValue.trim()
+      ? storedValue.trim()
+      : ""
+  if (!raw) return fallback
+  const direct = variantes.find((v) => v.id === raw)
+  if (direct) return direct.id
+  const byLegacy = variantes.find((v) => (v.legacyIds || []).includes(raw))
+  return byLegacy?.id || fallback
 }
 
 function mergeEventoFromConfig(
@@ -68,6 +95,12 @@ export async function GET(
     }
 
     const configData = getEventDataFromConfig(config)
+    const { variantes, defaultVariante } = panelVariantesFromConfig(config)
+    const activeVariante = normalizePanelVariant(
+      request.nextUrl.searchParams.get("pv"),
+      variantes.map((v) => v.id),
+      defaultVariante,
+    )
 
     const invitationPath = invitationPublicPathFromConfig(config)
     const invitationToken = invitationAccessTokenFromConfig(config)
@@ -145,6 +178,9 @@ export async function GET(
           confirmacion: confirmacionInvitacion,
           limiteInvitados,
           plazasOcupadas: 0,
+          variantes,
+          defaultVariante,
+          activeVariante,
         },
       })
     }
@@ -171,7 +207,17 @@ export async function GET(
     let noAsisten = 0
     let pendientes = 0
 
-    invitados?.forEach((inv) => {
+    const invitadosFiltradosPorVariante = (invitados || []).filter((inv) => {
+      const rawVariant = (inv as Record<string, unknown>).panel_variant
+      const variant = resolveStoredVariantToKnown(
+        rawVariant,
+        variantes,
+        defaultVariante,
+      )
+      return variant === activeVariante
+    })
+
+    invitadosFiltradosPorVariante.forEach((inv) => {
       if (inv.tipo === "persona") {
         if (inv.estado === "confirmado") confirmados++
         else if (inv.estado === "no_asiste") noAsisten++
@@ -189,7 +235,7 @@ export async function GET(
 
     return NextResponse.json({
       evento: eventoMerged,
-      invitados: invitados || [],
+      invitados: invitadosFiltradosPorVariante,
       stats: { confirmados, noAsisten, pendientes },
       invitationPath,
       invitationToken,
@@ -199,6 +245,9 @@ export async function GET(
         confirmacion: confirmacionInvitacion,
         limiteInvitados,
         plazasOcupadas,
+        variantes,
+        defaultVariante,
+        activeVariante,
       },
     })
   } catch (e) {
@@ -282,6 +331,12 @@ export async function POST(
   }
 
   const limitePost = limiteInvitadosPanelFromConfig(configPost.rsvpPanel)
+  const { variantes, defaultVariante } = panelVariantesFromConfig(configPost)
+  const activeVariante = normalizePanelVariant(
+    request.nextUrl.searchParams.get("pv"),
+    variantes.map((v) => v.id),
+    defaultVariante,
+  )
   if (limitePost !== null) {
     const { data: existentes } = await supabase
       .from("invitados")
@@ -308,6 +363,7 @@ export async function POST(
       nombre: body.nombre,
       codigo,
       tipo: body.tipo || "persona",
+      panel_variant: activeVariante,
     })
     .select()
     .single()

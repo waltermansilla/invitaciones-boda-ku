@@ -13,14 +13,18 @@
             "separator": "&"
         }
     },
-
     "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "p8JkNoDt",
+        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+    },
     "access": {
         "tokenEnabled": true,
         "token": "j9hPl3",
         "allowLegacyUntil": ""
     },
-
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,
@@ -47,7 +51,6 @@
             "unpaidButton": "¿Pagó tarjeta?"
         }
     },
-
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
@@ -129,7 +132,10 @@
             "id": "quote-welcome",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Estamos emocionados de compartir este momento tan especial con las personas que más queremos. ¡Contamos con tu presencia!",
                 "author": "",
@@ -143,7 +149,11 @@
             "id": "date-info",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "31 de Octubre del 2026"
@@ -154,13 +164,19 @@
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-recepcion",
-
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Civil y Fiesta",
                 "address": "Salón 'La Nonnina', Neuquén",
-                "order": ["address", "time"],
+                "order": [
+                    "address",
+                    "time"
+                ],
                 "datetime": {
                     "time": "20:00 hs"
                 },
@@ -176,7 +192,9 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -186,14 +204,16 @@
                 ]
             }
         },
-
         {
             "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
             "_comment": "Cada evento tiene icon, name, time. Opcionales: date (subtitulo de dia, aparece como separador visual), button (con text, url y variant). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -201,7 +221,6 @@
                         "icon": "heart",
                         "name": "Recepción",
                         "time": "20:00 hs",
-
                         "button": {
                             "text": "Cómo llegar",
                             "url": "https://maps.app.goo.gl/SV4A9viafH4BzscS9?g_st=iw",
@@ -213,7 +232,6 @@
                         "name": "Inicio ceremonia y una noche mágica",
                         "time": "20:40 hs"
                     },
-
                     {
                         "icon": "clock",
                         "name": "Fin de fiesta",
@@ -222,7 +240,6 @@
                 ]
             }
         },
-
         {
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
             "type": "dressCode",
@@ -238,7 +255,9 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Dress Code",
                 "subtitle": "Elegante, formal",
                 "description": "Por favor, evitar los siguientes colores:",
@@ -246,7 +265,12 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
-                    "colors": ["#ffffff", "#f3d9b9", "#d3b996", "#1982c4"]
+                    "colors": [
+                        "#ffffff",
+                        "#f3d9b9",
+                        "#d3b996",
+                        "#1982c4"
+                    ]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -255,26 +279,30 @@
                 }
             }
         },
-
         {
             "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
             "type": "adultsOnly",
             "id": "adults-only",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description"],
+            "blocks": [
+                "icon",
+                "title",
+                "description"
+            ],
             "data": {
                 "icon": "baby",
                 "title": "Sólo adultos",
                 "description": "DEBIDO A LA NATURALEZA DEL EVENTO, LA BODA SERÁ SOLO PARA ADULTOS. ¡ESPERAMOS VERTE PARA PODER COMPARTIR ESTA NOCHE ESPECIAL!"
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -283,14 +311,17 @@
                 ]
             }
         },
-
         {
             "_comment": "PLAYLIST: Link a playlist colaborativa de Spotify.",
             "type": "playlist",
             "id": "playlist-suggestion",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "description", "button"],
+            "blocks": [
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "title": "Playlist de la fiesta",
                 "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
@@ -301,14 +332,16 @@
                 }
             }
         },
-
         {
             "// --- PEQUEÑAS VERDADES ---": "",
             "_comment": "Fondo verde. Preguntas de a una, 2 opciones (A o B). correctOption = 'A' o 'B'. revealText = frase al responder. finishText = mensaje final. Sin puntaje. Agregar/quitar preguntas libremente.",
             "type": "truths",
             "id": "truths-game",
             "bgColor": "primary",
-            "blocks": ["title", "questions"],
+            "blocks": [
+                "title",
+                "questions"
+            ],
             "data": {
                 "title": "¿Cuánto nos conoces?",
                 "finishText": "Gracias por jugar. Ahora ya saben un poco mas sobre nosotros. ¡Nos vemos en la fiesta!",
@@ -356,7 +389,13 @@
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "background",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modal"
+            ],
             "data": {
                 "icon": "plane",
                 "title": "Luna de miel",
@@ -370,9 +409,18 @@
                     "title": "Datos de transferencia",
                     "description": "Gracias por tu cariño y por ser parte de este momento tan importante para nosotros.",
                     "bankData": [
-                        { "label": "Alias", "value": "Boda.AlexyFabi" },
-                        { "label": "Titular", "value": "Cabrol Fabian Matias" },
-                        { "label": "Banco", "value": "Mercado Pago" }
+                        {
+                            "label": "Alias",
+                            "value": "Boda.AlexyFabi"
+                        },
+                        {
+                            "label": "Titular",
+                            "value": "Cabrol Fabian Matias"
+                        },
+                        {
+                            "label": "Banco",
+                            "value": "Mercado Pago"
+                        }
                     ]
                 }
             }
@@ -382,13 +430,16 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos3",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/18-alex-fabi/images/5.jpeg"]
+                "images": [
+                    "/clientes/boda/18-alex-fabi/images/5.jpeg"
+                ]
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
@@ -396,7 +447,10 @@
             "id": "quote-welcome2",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "El amor no sólo se construye entre dos, también se enriquece con quienes están presentes en los momentos más importantes de nuestra vida.",
                 "author": "",
@@ -409,12 +463,21 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 20 de Septiembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -429,7 +492,6 @@
                         "Celíaco",
                         "Otro"
                     ],
-
                     "extraInputs": [
                         {
                             "id": "mensajersvp",
@@ -451,7 +513,10 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/18-alex-fabi/images/final.jpeg"
@@ -462,7 +527,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

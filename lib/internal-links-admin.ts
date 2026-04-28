@@ -8,6 +8,11 @@ type AccessBlock = {
   allowLegacyUntil?: string
 }
 
+type BaseBlock = {
+  enabled?: boolean
+  token?: string
+}
+
 export type InternalInviteRow = {
   fileId: number | null
   tipo: string
@@ -24,6 +29,8 @@ export type InternalInviteRow = {
   allowLegacyUntil: string | null
   panelEnabled: boolean
   panelId: string | null
+  baseEnabled: boolean
+  baseUrl: string | null
 }
 
 function slugFromFileName(fileName: string): string {
@@ -90,6 +97,7 @@ export async function listInvitationsForInternalAdmin(): Promise<InternalInviteR
       try {
         const json = JSON.parse(raw) as Record<string, unknown>
         const access = (json.access || {}) as AccessBlock
+        const base = (json.base || {}) as BaseBlock
         const hero = (json.hero || {}) as Record<string, unknown>
         const rsvpPanel = (json.rsvpPanel || {}) as {
           enabled?: boolean
@@ -100,6 +108,8 @@ export async function listInvitationsForInternalAdmin(): Promise<InternalInviteR
             ? rsvpPanel.panelId.trim()
             : null
         const panelEnabled = Boolean(rsvpPanel.enabled) && Boolean(panelId)
+        const baseToken = typeof base.token === "string" ? base.token.trim() : ""
+        const baseEnabled = Boolean(base.enabled) && /^[A-Za-z0-9]{8}$/.test(baseToken)
         const eventDateRaw = (typeof hero.eventDate === "string" && hero.eventDate) || ""
         const eventDate = eventDateRaw ? String(eventDateRaw).slice(0, 10) : null
         const realBaseUrl = `/${tipo}/${slug}`
@@ -125,6 +135,8 @@ export async function listInvitationsForInternalAdmin(): Promise<InternalInviteR
               : null,
           panelEnabled,
           panelId,
+          baseEnabled,
+          baseUrl: baseEnabled ? `/base/${baseToken}` : null,
         })
       } catch {
         // ignore invalid json

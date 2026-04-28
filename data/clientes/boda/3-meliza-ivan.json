@@ -14,6 +14,12 @@
             "separator": "&"
         }
     },
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "m3LiZaI9",
+        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+    },
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
@@ -438,6 +444,8 @@
 
     "variants": {
         "1": {
+            "baseLabel": "Original",
+            "label": "Sin fecha límite",
             "sections": [
                 {
                     "id": "gift-card",

@@ -32,6 +32,21 @@
     },
 
     "// ==========================================================================": "",
+    "// BASE - Link unico de accesos para cliente                               ": "",
+    "// ==========================================================================": "",
+    "// Si enabled=true, se habilita /base/{token}                              ": "",
+    "// token: 8 caracteres alfanumericos (ej: A7mP2kQ9)                        ": "",
+    "// title/subtitle: textos visibles en la pagina de accesos                 ": "",
+    "// Desde esa base se puede abrir invitacion, panel y variantes             ": "",
+    "// ==========================================================================": "",
+    "base": {
+        "enabled": false,
+        "token": "",
+        "title": "Accesos del evento",
+        "subtitle": "Links rapidos para invitacion y panel."
+    },
+
+    "// ==========================================================================": "",
     "// ACCESS - Token de acceso para la invitacion real                          ": "",
     "// ==========================================================================": "",
     "// OPCION FACIL (recomendada para operar rapido):                            ": "",
@@ -1132,6 +1147,9 @@
     "// sections: por defecto parchea por id (solo lo que incluyas)              ": "",
     "// replaceSections: true -> reemplaza TODO el array sections base            ": "",
     "// Si no se define replaceSections, se toma como false (parche por id)       ": "",
+    "// label: nombre visible de la variante (lo usa /base y panel si hay panel) ": "",
+    "// baseLabel: nombre visible de la version original/base (solo en 1 variante)": "",
+    "// legacyIds: ids viejos para no perder listas en panel al renombrar         ": "",
     "// Podes crear todas las variantes que necesites                             ": "",
     "// ==========================================================================": "",
     "variants": {

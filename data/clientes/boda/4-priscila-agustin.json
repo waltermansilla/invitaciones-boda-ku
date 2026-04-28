@@ -13,14 +13,18 @@
             "separator": "&"
         }
     },
-
     "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "V8b7JnFO",
+        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+    },
     "access": {
         "tokenEnabled": true,
         "token": "js7klJ",
         "allowLegacyUntil": ""
     },
-
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,
@@ -117,7 +121,10 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Después de tantos años compartiendo la vida juntos, llegó el momento de celebrar nuestro amor. Y no podemos imaginar este día sin vos",
                 "author": "",
@@ -130,7 +137,11 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "24 de Octubre de 2026"
@@ -141,7 +152,9 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "4/3",
                 "images": [
@@ -156,7 +169,10 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -196,7 +212,6 @@
                 ]
             }
         },
-
         {
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
             "type": "dressCode",
@@ -212,7 +227,9 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Vestimenta",
                 "subtitle": "Evitar el blanco y beige",
                 "description": "Si podés, traé algo con tonos azules:",
@@ -220,7 +237,12 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
-                    "colors": ["#012a4a", "#013a63", "#01497c", "#2a6f97"]
+                    "colors": [
+                        "#012a4a",
+                        "#013a63",
+                        "#01497c",
+                        "#2a6f97"
+                    ]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -238,7 +260,9 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -252,21 +276,26 @@
             "type": "quote",
             "id": "quote-welcome2",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "A veces el amor no es un camino perfecto, pero cuando es verdadero siempre encuentra la forma de seguir adelante.",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- NUESTRA HISTORIA ---": "",
             "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/clientes/[tipo]/[slug]/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
-            "blocks": ["title", "moments"],
+            "blocks": [
+                "title",
+                "moments"
+            ],
             "data": {
                 "aspectRatio": "1/1",
                 "title": "Nuestra historia",
@@ -294,7 +323,12 @@
             "type": "honeymoon",
             "id": "honeymoon",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "modal"
+            ],
             "data": {
                 "icon": "",
                 "title": "Regalos",
@@ -309,28 +343,48 @@
                     "title": "Datos bancarios",
                     "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
                     "bankData": [
-                        { "label": "Alias", "value": "LUNA.DE.MIEL" },
-                        { "label": "CBU", "value": "0000000000000000000000" },
-                        { "label": "Titular", "value": "Nombre Completo" },
-                        { "label": "Banco", "value": "Nombre del Banco" }
+                        {
+                            "label": "Alias",
+                            "value": "LUNA.DE.MIEL"
+                        },
+                        {
+                            "label": "CBU",
+                            "value": "0000000000000000000000"
+                        },
+                        {
+                            "label": "Titular",
+                            "value": "Nombre Completo"
+                        },
+                        {
+                            "label": "Banco",
+                            "value": "Nombre del Banco"
+                        }
                     ],
                     "thankYouText": "¡Muchas gracias!"
                 }
             }
         },
-
         {
             "// --- FORMULARIO RSVP ---": "",
             "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "background",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 20 de Agosto",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -360,7 +414,10 @@
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Hoy celebramos nuestra historia, nuestra familia y el amor que nos trajo hasta acá. Nos haría muy felices compartir este día tan especial con vos.",
                 "author": "Pri & Agus",
@@ -372,7 +429,10 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/4-priscila-agustin/images/final.jpeg"
@@ -383,7 +443,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

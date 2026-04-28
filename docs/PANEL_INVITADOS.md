@@ -12,6 +12,28 @@ Guía simple: qué es, cómo armar el link y qué pasos seguir para que funcione
 
 ---
 
+## Base de accesos (link único para cliente)
+
+Podés crear un acceso único para cliente en el JSON usando bloque `base`:
+
+```json
+"base": {
+  "enabled": true,
+  "token": "A7mP2kQ9",
+  "title": "Accesos del evento",
+  "subtitle": "Links rapidos para invitacion y panel."
+}
+```
+
+- URL final: `/base/A7mP2kQ9`
+- Desde esa pantalla el cliente puede abrir:
+  - invitación principal
+  - panel
+  - variantes (si existen)
+- Si no agregás `base` (o `enabled: false`), esa URL no existe.
+
+---
+
 ## Tres cosas que tenés que saber antes
 
 1. **No hay usuario ni contraseña.** Solo existe el link del panel. Por eso el link es **secreto**: no lo subas a redes públicas; pasalo por WhatsApp o mail solo a quien administra la lista.
@@ -138,6 +160,49 @@ Listo: ese es el flujo completo para “generar y hacer funcionar” el panel en
 
 ---
 
+## Migración de DB para variantes (importante)
+
+Si vas a usar **listas por variante** dentro del panel (ej: Neuquén / Entre Ríos), la tabla `invitados` necesita una columna nueva: `panel_variant`.
+
+Por eso existe:
+
+- `scripts/002_add_panel_variant_to_invitados.sql`
+
+Qué hace:
+
+- Agrega columna `panel_variant`
+- Agrega índice `(evento_id, panel_variant)` para filtrar rápido
+
+### ¿Con qué prefijo se ejecuta?
+
+Este archivo es **SQL**, así que **no** lleva prefijo `node` ni `npm run`.
+
+- Forma recomendada: abrir Supabase -> **SQL Editor** -> pegar el contenido -> **Run**.
+- Si usás CLI SQL, ejecutarlo con el comando SQL/DB que uses en tu entorno.
+
+### ¿Cuándo correrla?
+
+- **Una sola vez por base de datos** (por entorno).
+- Ejemplos:
+  - Tu Supabase de desarrollo: 1 vez
+  - Tu Supabase de producción: 1 vez
+- No es por cliente ni por panel.
+
+### ¿En qué momento del trabajo?
+
+Orden recomendado:
+
+1. Hacer cambios de código/JSON (variantes, panel, etc.).
+2. Antes de publicar o validar el flujo completo, correr la migración en esa DB.
+3. Probar alta/edición/envío desde panel con variantes.
+
+### ¿Hay que correrla de nuevo al crear más variantes?
+
+- **No**, mientras sea la misma DB donde ya se ejecutó.
+- **Sí**, si cambiás a otra DB distinta que todavía no tenga esa columna.
+
+---
+
 ## Bloque `rsvpPanel` completo (JSON)
 
 Referencia rápida de todas las claves disponibles:
@@ -163,7 +228,7 @@ Referencia rápida de todas las claves disponibles:
     "declinedLabel": "No asisten",
     "paymentPending": "Pago pendiente",
     "addGuest": "Agregar Invitado",
-    "copyLink": "Copiar link",
+    "sendInvite": "Enviar invitación",
     "manualConfirm": "Confirmación manual",
     "paidButton": "Ya pagó",
     "unpaidButton": "¿Pagó tarjeta?"
@@ -187,6 +252,36 @@ Qué hace cada clave:
   - `false`: si entran sin `?i=`, el RSVP solo sale por WhatsApp.
 - `theme`: colores del panel.
 - `labels`: textos personalizables del panel.
+
+### Variantes de lista en panel (opcional)
+
+Podés definir variantes en `rsvpPanel` para tener listas separadas dentro del mismo panel, compartiendo cupo total:
+
+```json
+"rsvpPanel": {
+  "enabled": true,
+  "panelId": "anto-walter-boda",
+  "defaultVariante": "neuquen",
+  "variantes": {
+    "neuquen": {
+      "label": "Neuquén",
+      "eventTypeLabel": "Boda",
+      "eventName": "Anto & Walter"
+    },
+    "entre-rios": {
+      "label": "Entre Ríos",
+      "invitationVariant": "entre-rios",
+      "eventTypeLabel": "Boda",
+      "eventName": "Anto & Walter - Entre Ríos"
+    }
+  }
+}
+```
+
+- `defaultVariante`: lista que abre por defecto.
+- `variantes.<id>.label`: nombre visible en el selector del panel.
+- `invitationVariant`: valor que se envía como `v=` en el link de invitación.
+- `eventTypeLabel` y `eventName`: texto para el mensaje de WhatsApp desde panel.
 
 ---
 

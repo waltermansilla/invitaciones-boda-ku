@@ -10,6 +10,7 @@ Qué muestra:
 - URL de muestra
 - URL real base
 - URL real con token (si existe `access.token` en el JSON)
+- URL base privada (si existe `base.enabled=true` y `base.token` válido de 8 chars)
 - estado de token (`tokenEnabled`, hash presente, legacy)
 
 Notas:

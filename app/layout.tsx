@@ -16,6 +16,7 @@ export const viewport: Viewport = {
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
+    viewportFit: "cover",
 };
 
 export const metadata: Metadata = {
@@ -72,7 +73,10 @@ export default function RootLayout({
                             src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
                             strategy="afterInteractive"
                         />
-                        <Script id="google-analytics" strategy="afterInteractive">
+                        <Script
+                            id="google-analytics"
+                            strategy="afterInteractive"
+                        >
                             {`
                                 window.dataLayer = window.dataLayer || [];
                                 function gtag(){dataLayer.push(arguments);}

@@ -3,6 +3,12 @@ import path from "path"
 import { listClienteTipoDirNames } from "@/lib/client-json-helpers"
 
 export interface EventConfig {
+  base?: {
+    enabled?: boolean
+    token?: string
+    title?: string
+    subtitle?: string
+  }
   meta?: {
     coupleNames?: {
       groomName?: string
@@ -19,6 +25,7 @@ export interface EventConfig {
     fechaEvento?: string
     theme?: Record<string, unknown>
     labels?: Record<string, unknown>
+    defaultVariante?: string
     confirmationMessage?: string
     /** Tope de plazas en el panel (persona=1; familia=cantidad de integrantes). Sin clave = sin límite. */
     limiteInvitados?: number
@@ -36,6 +43,16 @@ export interface EventConfig {
     tokenEnabled?: boolean
     token?: string
   }
+  variants?: Record<string, unknown>
+}
+
+export interface PanelVariantDefinition {
+  id: string
+  label: string
+  invitationVariant?: string
+  eventTypeLabel?: string
+  eventName?: string
+  legacyIds?: string[]
 }
 
 function slugFromFileName(fileName: string): string {
@@ -50,6 +67,14 @@ function panelIdMatchesRsvp(config: EventConfig, candidate: string): boolean {
   const leg = config.rsvpPanel?.legacyPanelIds
   if (!Array.isArray(leg)) return false
   return leg.some((x) => typeof x === "string" && x.trim() === c)
+}
+
+function baseTokenMatches(config: EventConfig, candidate: string): boolean {
+  const c = candidate.trim()
+  if (!c) return false
+  if (!config.base?.enabled) return false
+  const token = config.base?.token
+  return typeof token === "string" && token.trim() === c
 }
 
 /** Id canónico actual del panel (el que debe quedar en Supabase tras migrar). */
@@ -112,6 +137,33 @@ export function findConfigByPanelId(panelId: string): EventConfig | null {
   return null
 }
 
+// Busca el JSON cuyo base.token coincide con `token`
+export function findConfigByBaseToken(token: string): EventConfig | null {
+  const dataDir = path.join(process.cwd(), "data", "clientes")
+  const needle = token.trim()
+  if (!needle) return null
+
+  for (const tipo of listClienteTipoDirNames()) {
+    const tipoDir = path.join(dataDir, tipo)
+    if (fs.existsSync(tipoDir)) {
+      const files = fs.readdirSync(tipoDir).filter((f) => f.endsWith(".json"))
+      for (const file of files) {
+        try {
+          const content = fs.readFileSync(path.join(tipoDir, file), "utf-8")
+          const config = JSON.parse(content) as EventConfig
+          if (baseTokenMatches(config, needle)) {
+            return { ...config, slug: slugFromFileName(file), tipo }
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+  }
+
+  return null
+}
+
 /**
  * Panel usable solo si el `panelId` coincide con un JSON de cliente y
  * `rsvpPanel.enabled` es true. Evita crear eventos en Supabase con IDs inventados.
@@ -143,6 +195,92 @@ export function getEventDataFromConfig(config: EventConfig) {
     slug: config.slug,
     panel_theme: config.rsvpPanel?.theme ?? null,
     panel_labels: config.rsvpPanel?.labels ?? null,
+  }
+}
+
+export function panelVariantesFromConfig(
+  config: EventConfig,
+): { variantes: PanelVariantDefinition[]; defaultVariante: string } {
+  const raw = config.variants
+  const out: PanelVariantDefinition[] = []
+  let baseLabel = "Principal"
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+    for (const [id, value] of Object.entries(raw)) {
+      const cleanId = id.trim()
+      if (!cleanId) continue
+      if (cleanId.startsWith("_")) continue
+      const v = value && typeof value === "object" ? value : {}
+      const baseLabelRaw =
+        "baseLabel" in (v as Record<string, unknown>)
+          ? (v as Record<string, unknown>).baseLabel
+          : undefined
+      if (
+        typeof baseLabelRaw === "string" &&
+        baseLabelRaw.trim() &&
+        baseLabel === "Principal"
+      ) {
+        baseLabel = baseLabelRaw.trim()
+      }
+      const labelRaw =
+        "label" in (v as Record<string, unknown>)
+          ? (v as Record<string, unknown>).label
+          : undefined
+      const invitationVariantRaw =
+        "invitationVariant" in (v as Record<string, unknown>)
+          ? (v as Record<string, unknown>).invitationVariant
+          : undefined
+      const eventTypeLabelRaw =
+        "eventTypeLabel" in (v as Record<string, unknown>)
+          ? (v as Record<string, unknown>).eventTypeLabel
+          : undefined
+      const eventNameRaw =
+        "eventName" in (v as Record<string, unknown>)
+          ? (v as Record<string, unknown>).eventName
+          : undefined
+      const legacyIdsRaw =
+        "legacyIds" in (v as Record<string, unknown>)
+          ? (v as Record<string, unknown>).legacyIds
+          : undefined
+      const legacyIds = Array.isArray(legacyIdsRaw)
+        ? legacyIdsRaw
+            .filter((x) => typeof x === "string")
+            .map((x) => x.trim())
+            .filter(Boolean)
+        : []
+      out.push({
+        id: cleanId,
+        label:
+          typeof labelRaw === "string" && labelRaw.trim()
+            ? labelRaw.trim()
+            : cleanId,
+        invitationVariant:
+          typeof invitationVariantRaw === "string" &&
+          invitationVariantRaw.trim()
+            ? invitationVariantRaw.trim()
+            : cleanId,
+        eventTypeLabel:
+          typeof eventTypeLabelRaw === "string" && eventTypeLabelRaw.trim()
+            ? eventTypeLabelRaw.trim()
+            : undefined,
+        eventName:
+          typeof eventNameRaw === "string" && eventNameRaw.trim()
+            ? eventNameRaw.trim()
+            : undefined,
+        legacyIds: legacyIds.length ? legacyIds : undefined,
+      })
+    }
+  }
+  const defaultVarianteRaw = config.rsvpPanel?.defaultVariante
+  const fallbackDefault = "default"
+  const defaultVariante =
+    typeof defaultVarianteRaw === "string" &&
+    (defaultVarianteRaw.trim() === "default" ||
+      out.some((v) => v.id === defaultVarianteRaw.trim()))
+      ? defaultVarianteRaw.trim()
+      : fallbackDefault
+  return {
+    variantes: [{ id: "default", label: baseLabel }, ...out],
+    defaultVariante,
   }
 }
 

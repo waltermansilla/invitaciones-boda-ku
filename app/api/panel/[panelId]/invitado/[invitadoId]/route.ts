@@ -97,6 +97,29 @@ export async function PUT(
 
   const body = await request.json()
 
+  if (body.panel_variant !== undefined) {
+    const { data: invForTransfer, error: invTransferErr } = await supabase
+      .from("invitados")
+      .select("id, tipo, estado, integrantes (estado)")
+      .eq("id", invitadoId)
+      .single()
+    if (invTransferErr || !invForTransfer) {
+      return NextResponse.json({ error: "Invitado no encontrado" }, { status: 404 })
+    }
+    const canTransfer =
+      invForTransfer.tipo === "familia"
+        ? (invForTransfer.integrantes || []).every(
+            (int: { estado: string }) => int.estado === "pendiente",
+          )
+        : invForTransfer.estado === "pendiente"
+    if (!canTransfer) {
+      return NextResponse.json(
+        { error: "Solo invitados pendientes pueden cambiar de lista." },
+        { status: 400 },
+      )
+    }
+  }
+
   const limitePut = limiteInvitadosPanelFromConfig(panelAuth.rsvpPanel)
   if (
     limitePut !== null &&
@@ -153,6 +176,7 @@ export async function PUT(
   if (body.restricciones !== undefined) updateData.restricciones = body.restricciones
   if (body.mensaje !== undefined) updateData.mensaje = body.mensaje
   if (body.cancion !== undefined) updateData.cancion = body.cancion
+  if (body.panel_variant !== undefined) updateData.panel_variant = body.panel_variant
 
   const { error } = await supabase
     .from("invitados")

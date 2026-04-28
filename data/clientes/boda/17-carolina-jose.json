@@ -14,14 +14,18 @@
             "separator": "&"
         }
     },
-
     "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "e6nnaS7C",
+        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+    },
     "access": {
         "tokenEnabled": true,
         "token": "wG7nZB",
         "allowLegacyUntil": ""
     },
-
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,
@@ -127,23 +131,29 @@
             "id": "quote-welcome",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Queremos compartir este momento muy especial con vos",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "libre",
-                "images": ["/clientes/boda/17-carolina-jose/images/collage.png"]
+                "images": [
+                    "/clientes/boda/17-carolina-jose/images/collage.png"
+                ]
             }
         },
         {
@@ -152,21 +162,26 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "primary",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "27 de Febrero 2027"
             }
         },
-
         {
             "_comment": "ITINERARY: Linea de tiempo con iconos, fechas opcionales y botones opcionales. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Horarios y lugar",
                 "events": [
@@ -200,7 +215,6 @@
                 ]
             }
         },
-
         {
             "_comment": "VALOR TARJETA",
             "type": "giftCard",
@@ -221,44 +235,68 @@
                     "title": "Datos de transferencia",
                     "suggestedValueLabel": "Valor tarjeta",
                     "suggestedValues": [
-                        { "label": "Mayores de 17 años", "value": "$130.000" },
-                        { "label": "De 12 a 17 años", "value": "$97.000" },
-                        { "label": "De 4 a 11 años", "value": "$65.000" }
+                        {
+                            "label": "Mayores de 17 años",
+                            "value": "$130.000"
+                        },
+                        {
+                            "label": "De 12 a 17 años",
+                            "value": "$97.000"
+                        },
+                        {
+                            "label": "De 4 a 11 años",
+                            "value": "$65.000"
+                        }
                     ],
                     "description": "No olvides enviarnos el comprobante.",
                     "transferData": [
-                        { "label": "Alias", "value": "joseycaro.boda2027" },
-                        { "label": "CBU", "value": "4530000800017786145030" },
-
+                        {
+                            "label": "Alias",
+                            "value": "joseycaro.boda2027"
+                        },
+                        {
+                            "label": "CBU",
+                            "value": "4530000800017786145030"
+                        },
                         {
                             "label": "Titular",
                             "value": "Carolina Julieta Debonis"
                         },
-                        { "label": "Banco", "value": "Naranja X" }
+                        {
+                            "label": "Banco",
+                            "value": "Naranja X"
+                        }
                     ]
                 }
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "1/1",
-                "images": ["/clientes/boda/14-daiana-nicolas/images/ramo.png"]
+                "images": [
+                    "/clientes/boda/14-daiana-nicolas/images/ramo.png"
+                ]
             }
         },
-
         {
             "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "honeymoon",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["icon", "title", "description", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "modal"
+            ],
             "data": {
                 "icon": "plane",
                 "title": "Regalos",
@@ -273,19 +311,27 @@
                     "title": "Datos de transferencia",
                     "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
                     "bankData": [
-                        { "label": "Alias", "value": "joseycaro.regalo" },
-                        { "label": "CBU", "value": "9530000800010067849878" },
+                        {
+                            "label": "Alias",
+                            "value": "joseycaro.regalo"
+                        },
+                        {
+                            "label": "CBU",
+                            "value": "9530000800010067849878"
+                        },
                         {
                             "label": "Titular",
                             "value": "José Orlando Belloni"
                         },
-                        { "label": "Banco", "value": "Naranja X" }
+                        {
+                            "label": "Banco",
+                            "value": "Naranja X"
+                        }
                     ],
                     "thankYouText": "¡Gracias de corazón!"
                 }
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
@@ -293,21 +339,24 @@
             "id": "quote-welcome2",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Elegirnos fue el comienzo, pero formar una familia juntos le dio sentido a todo",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -316,34 +365,43 @@
                 ]
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "background",
-
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Gracias por estar presentes en uno de los días más importantes de nuestras vidas. Su compañía significa mucho para nosotros",
                 "author": "Carolina & José",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- FORMULARIO RSVP ---": "",
             "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 25 de Enero",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -367,13 +425,15 @@
                 }
             }
         },
-
         {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/14-daiana-nicolas/images/ramo.png"
@@ -384,7 +444,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

@@ -126,7 +126,17 @@ function applyVariantToConfig(
   )
 
   for (const [k, v] of Object.entries(variant)) {
-    if (k === "sections" || k === "replaceSections" || k === "variants") continue
+    if (
+      k === "sections" ||
+      k === "replaceSections" ||
+      k === "variants" ||
+      k === "label" ||
+      k === "legacyIds" ||
+      k === "invitationVariant" ||
+      k === "eventTypeLabel" ||
+      k === "eventName" ||
+      k === "baseLabel"
+    ) continue
     ;(result as Record<string, unknown>)[k] = deepMerge(
       (result as Record<string, unknown>)[k],
       v,

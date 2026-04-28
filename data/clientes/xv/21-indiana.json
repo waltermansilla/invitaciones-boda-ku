@@ -2,7 +2,6 @@
     "// ==========================================": "",
     "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
     "// ==========================================.": "",
-
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
     "meta": {
         "title": "Mis 15 - Indiana",
@@ -15,14 +14,18 @@
             "separator": ""
         }
     },
-
     "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "Aib2eYCr",
+        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+    },
     "access": {
         "tokenEnabled": true,
         "token": "Bk5Gd4",
         "allowLegacyUntil": ""
     },
-
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,
@@ -49,11 +52,9 @@
             "unpaidButton": "¿Pagó tarjeta?"
         }
     },
-
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA / d8a5a2 globos / ea9ab2 rosa ": "",
     "// ==========================================..": "",
-
     "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
     "theme": {
         "primaryColor": "#111",
@@ -69,11 +70,9 @@
             "weights": "100,200,300,400,500,600,700"
         }
     },
-
     "// ==========================================;": "",
     "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
     "// ==========================================...": "",
-
     "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
@@ -88,11 +87,9 @@
             "letterSpacing": "none"
         }
     },
-
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
     "// ==========================================....": "",
-
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
@@ -101,11 +98,9 @@
         "startTime": 0,
         "endTime": 25
     },
-
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
     "// ==========================================.....": "",
-
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
         "coupleImage": "/clientes/xv/21-indiana/images/hero.jpeg",
@@ -158,11 +153,9 @@
             "overlayStyle": "floating"
         }
     },
-
     "// ==========================================+": "",
     "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
     "// ==========================================......": "",
-
     "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
     "sections": [
         {
@@ -171,38 +164,48 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Hay historias que sólo se viven una vez... momentos que no se repiten.",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- FECHA DEL EVENTO ---": "",
             "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
             "type": "dateInfo",
             "id": "date-info",
-            "blocks": ["title", "value"],
+            "blocks": [
+                "title",
+                "value"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "6 de Marzo del 2027"
             }
         },
-
         {
             "// --- UBICACION: FIESTA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-fiesta",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "¿Dónde?",
                 "address": "Salón 'Las Marías', Claveles 4055, Sauce Viejo",
                 "showButton": true,
-                "order": ["address", "time"],
+                "order": [
+                    "address",
+                    "time"
+                ],
                 "datetime": {
                     "time": "20:30 hs"
                 },
@@ -213,7 +216,6 @@
                 }
             }
         },
-
         {
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
             "type": "dressCode",
@@ -230,21 +232,27 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Dress code",
                 "subtitle": "Elegante",
                 "description": "El color BLANCO es exclusivo de la quinceañera.",
                 "showButton": false
             }
         },
-
         {
             "_comment": "PHOTOS: Invitar a subir fotos.",
             "type": "photos",
             "id": "shared-photos",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["icon", "title", "description", "button"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "icon": "camera",
                 "title": "Compartí tus fotos",
@@ -256,7 +264,6 @@
                 }
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
@@ -264,21 +271,28 @@
             "id": "quote-welcome2",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Recuerdos que se atesoran en el corazón para siempre, junto a personas que no voy a olvidar.",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "background",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modal"
+            ],
             "data": {
                 "icon": "gift",
                 "title": "Un pequeño aporte",
@@ -296,7 +310,10 @@
                             "label": "Alias Mercado Pago",
                             "value": "indiana.616.aceto.mp"
                         },
-                        { "label": "Alias Naranja X", "value": "INDICHALE" },
+                        {
+                            "label": "Alias Naranja X",
+                            "value": "INDICHALE"
+                        },
                         {
                             "label": "Titular",
                             "value": "Indiana Abigail Chalela"
@@ -305,7 +322,6 @@
                 }
             }
         },
-
         {
             "_comment": "VALOR TARJETA",
             "type": "giftCard",
@@ -329,8 +345,14 @@
                             "label": "Hasta 13/07/2026",
                             "helperText": "Pago anticipado",
                             "suggestedValues": [
-                                { "label": "Adultos", "value": "$98.000" },
-                                { "label": "Adolescentes", "value": "$52.000" },
+                                {
+                                    "label": "Adultos",
+                                    "value": "$98.000"
+                                },
+                                {
+                                    "label": "Adolescentes",
+                                    "value": "$52.000"
+                                },
                                 {
                                     "label": "Niños (4 a 11 años)",
                                     "value": "$47.000"
@@ -341,8 +363,14 @@
                             "label": "Del 15/07 al 15/10",
                             "helperText": "Segundo tramo",
                             "suggestedValues": [
-                                { "label": "Adultos", "value": "$104.000" },
-                                { "label": "Adolescentes", "value": "$56.000" },
+                                {
+                                    "label": "Adultos",
+                                    "value": "$104.000"
+                                },
+                                {
+                                    "label": "Adolescentes",
+                                    "value": "$56.000"
+                                },
                                 {
                                     "label": "Niños (4 a 11 años)",
                                     "value": "$52.000"
@@ -353,8 +381,14 @@
                             "label": "Del 15/10 al 15/01",
                             "helperText": "Tercer tramo",
                             "suggestedValues": [
-                                { "label": "Adultos", "value": "$110.000" },
-                                { "label": "Adolescentes", "value": "$60.000" },
+                                {
+                                    "label": "Adultos",
+                                    "value": "$110.000"
+                                },
+                                {
+                                    "label": "Adolescentes",
+                                    "value": "$60.000"
+                                },
                                 {
                                     "label": "Niños (4 a 11 años)",
                                     "value": "$55.000"
@@ -364,12 +398,14 @@
                     ],
                     "description": "No olvides enviarnos el comprobante.",
                     "transferData": [
-                        { "label": "Alias", "value": "RCHALELA.NX.ARS" }
+                        {
+                            "label": "Alias",
+                            "value": "RCHALELA.NX.ARS"
+                        }
                     ]
                 }
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
@@ -377,27 +413,37 @@
             "id": "quote-welcome8",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Me encantaría que compartas conmigo esta noche especial.",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- FORMULARIO RSVP ---": "",
             "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "background",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 1 de Diciembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -412,7 +458,6 @@
                         "Celíaco",
                         "Otro"
                     ],
-
                     "songRequest": "¿Que canción no puede faltar?",
                     "submitButton": "Confirmar"
                 },
@@ -422,13 +467,15 @@
                 }
             }
         },
-
         {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombre debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "name"],
+            "blocks": [
+                "image",
+                "name"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/xv/21-indiana/images/final.jpeg",
@@ -447,13 +494,15 @@
                 }
             }
         },
-
         {
             "// --- FOOTER / PIE DE PAGINA ---": "",
             "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

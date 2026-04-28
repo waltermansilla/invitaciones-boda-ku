@@ -4,6 +4,15 @@ Guía de todo lo que podés ejecutar desde la terminal en este proyecto: **coman
 
 **Convención:** los comandos asumen que estás en la **raíz del repo** (donde está `package.json`).
 
+## Regla rápida de prefijos (siempre)
+
+Antes de ejecutar, identificá el tipo de archivo/comando:
+
+- `.mjs` / `.js` -> prefijo `node` (o alias `npm run` si existe en `package.json`).
+- script definido en `package.json` -> prefijo `npm run`.
+- `.ts` suelto -> runner TS (ej. `npx tsx ...`) si aplica.
+- `.sql` -> **sin `node`/`npm`**, se ejecuta en SQL Editor (Supabase) o cliente SQL.
+
 ---
 
 ## 1. Comandos npm (definidos en `package.json`)
@@ -213,7 +222,21 @@ npx tsx scripts/migrate-to-blob.ts
 
 ---
 
-## 8. Tabla resumen rápida
+## 8. `scripts/002_add_panel_variant_to_invitados.sql` (no es Node)
+
+**Para qué sirve.** Agrega soporte de variantes de lista en panel:
+
+- columna `panel_variant` en `invitados`
+- índice `(evento_id, panel_variant)`
+
+**Prefijo / ejecución**
+
+- Es SQL puro: **no** usar `node` ni `npm run`.
+- Ejecutar en Supabase SQL Editor (pegar y correr), o por tu cliente SQL.
+
+---
+
+## 9. Tabla resumen rápida
 
 | Qué | Comando típico | Red / .env |
 |-----|----------------|------------|
@@ -223,12 +246,13 @@ npx tsx scripts/migrate-to-blob.ts
 | Token + hash acceso invitación | `node scripts/gen-access-token.mjs` | No |
 | Migración a Vercel Blob | `npx tsx scripts/migrate-to-blob.ts` | Sí (Blob + disco) |
 | Crear tablas panel | SQL en Supabase | N/A |
+| Agregar variantes en panel (DB) | SQL en Supabase (`002_add_panel_variant_to_invitados.sql`) | N/A |
 | App en desarrollo | `npm run dev` | Opcional |
 | Build producción | `npm run build` | No (salvo fetch en build) |
 
 ---
 
-## 9. Manuales relacionados en `docs/`
+## 10. Manuales relacionados en `docs/`
 
 - **`PANEL_INVITADOS.md`** — Uso del panel, `panelId`, `legacyPanelIds`, script de huérfanos.
 - **`ACCESO_TOKEN_INVITACIONES.md`** — Token `?t=` en invitaciones; encaja con `gen-access-token.mjs`.

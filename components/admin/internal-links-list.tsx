@@ -240,6 +240,8 @@ export function InternalLinksList({
           row.panelEnabled && row.panelId ? `${baseUrl}/panel/${row.panelId}` : null
         const displayPanel =
           row.panelEnabled && row.panelId ? `/panel/${row.panelId}` : null
+        const fullBase = row.baseEnabled && row.baseUrl ? `${baseUrl}${row.baseUrl}` : null
+        const displayBase = row.baseEnabled && row.baseUrl ? row.baseUrl : null
 
         return (
           <div
@@ -295,6 +297,26 @@ export function InternalLinksList({
 
             {isOpen ? (
               <div className="space-y-3 border-t border-[#EDE4D8] bg-[#FFFDFB] px-4 py-3 text-sm">
+                {fullBase && displayBase ? (
+                  <div className="rounded-xl border border-[#D8E8D2] bg-[#F6FBF4] px-3 py-2">
+                    <div className="flex w-full flex-nowrap items-center gap-2">
+                      <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#3E6A35]">
+                        Base:
+                      </span>
+                      <a
+                        className="block min-w-0 flex-1 truncate whitespace-nowrap pr-1 text-[13px] leading-tight text-[#3E6A35] underline underline-offset-2"
+                        href={fullBase}
+                        target="_blank"
+                      >
+                        {displayBase}
+                      </a>
+                      <div className="shrink-0">
+                        <CopyLinkButton value={fullBase} />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
                 <div className="rounded-xl border border-[#DDEBDD] bg-[#F8FDF8] px-3 py-2">
                   <div className="flex w-full flex-nowrap items-center gap-2">
                     <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#2F7E56]">
