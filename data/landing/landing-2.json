@@ -1,20 +1,49 @@
 {
     "_comment_archivo": "Ruta: / (raíz). Landing oficial: theme, header, floatingCta, whatsapp, ctaButtons, sections.*, pageLayout. Tipos: components/landing/landing-home-page.tsx (LandingData).",
     "_comment_theme": "theme.background, theme.text.*, theme.buttons.*, theme.footerBg/footerText (pie de página), theme.surfaceAlt (alternancia de fondos en bloques con surface alt).",
-    "_comment_pageLayout": "pageLayout: hero (id HTML), reseñas compactas, orden post-estilos, query ?from= en /configurador. postEstilosSections: id = panel | idiomas | servicio | proceso | faq; surface default|alt (alt intercambia fondo con surfaceAlt).",
-    "_comment_media": "Imágenes/videos en public/landing/media/; en JSON rutas /landing/media/...",
+    "_comment_pageLayout": "pageLayout: hero (id HTML), reseñas compactas, heroMarqueeLiteSrcs (solo carrusel hero, rutas WebP en images-marquee-lite/), orden post-estilos, query ?from= en /configurador. postEstilosSections: id = panel | idiomas | servicio | proceso | faq; surface default|alt (alt intercambia fondo con surfaceAlt).",
+    "_comment_media": "Imágenes en public/landing/media/. Carrusel hero: pageLayout.heroMarqueeLiteSrcs → images-marquee-lite/*.webp (npm run landing:marquee-lite). Modelos: sections.estilos.items → images/.",
     "pageLayout": {
         "heroSectionId": "hero-home",
         "reviewsTopSimple": true,
         "postEstilosSections": [
-            { "id": "servicio", "surface": "default" },
-            { "id": "idiomas", "surface": "alt" },
-            { "id": "proceso", "surface": "alt" },
-            { "id": "faq", "surface": "alt" }
+            {
+                "id": "servicio",
+                "surface": "default"
+            },
+            {
+                "id": "idiomas",
+                "surface": "alt"
+            },
+            {
+                "id": "proceso",
+                "surface": "alt"
+            },
+            {
+                "id": "faq",
+                "surface": "alt"
+            }
         ],
-        "configuradorFromQuery": "home"
-    },
+        "configuradorFromQuery": "home",
+        "heroMarqueeLiteSrcs": [
+            "/landing/media/images-marquee-lite/indiana-xv.webp",
 
+            "/landing/media/images-marquee-lite/meliza-ivan-boda.webp",
+            "/landing/media/images-marquee-lite/carolina-jose-boda.webp",
+
+            "/landing/media/images-marquee-lite/yesica-hernan-boda.webp",
+            "/landing/media/images-marquee-lite/romina-franco-boda.webp",
+            "/landing/media/images-marquee-lite/mirta-pelu-boda-overlay.webp",
+            "/landing/media/images-marquee-lite/anto-walter-boda.webp",
+            "/landing/media/images-marquee-lite/mirta-pelu-boda.webp",
+            "/landing/media/images-marquee-lite/camila-xv.webp",
+            "/landing/media/images-marquee-lite/dasha-xv.webp",
+            "/landing/media/images-marquee-lite/carmela-xv.webp",
+
+            "/landing/media/images-marquee-lite/maxima-baby.webp",
+            "/landing/media/images-marquee-lite/yesica-hernan-boda-overlay.webp"
+        ]
+    },
     "theme": {
         "_comment_creams": "Cremas y neutros cercanos a thedigitalyes.com (fondos cálidos, texto carbón).",
         "background": "#FDFBF7",
@@ -24,14 +53,12 @@
         "footerBg": "#4A423A",
         "footerText": "#F7F2EB",
         "surfaceAlt": "#F3EEE6",
-
         "typography": {
             "headingFont": "'Playfair Display', Georgia, 'Times New Roman', serif",
             "bodyFont": "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
             "priceFont": "var(--font-landing-price), 'Cormorant Garamond', Georgia, serif",
             "priceLetterSpacing": "-0.03em"
         },
-
         "text": {
             "heading": "#4A3A2F",
             "body": "#5A4A3F",
@@ -42,7 +69,6 @@
             "linkUnderline": true,
             "inverse": "#FDFBF7"
         },
-
         "buttons": {
             "primaryBg": "#6F5848",
             "primaryText": "#FFFCF8",
@@ -61,7 +87,6 @@
             "floatingBorderRadius": "9999px",
             "floatingBoxShadow": "0 8px 22px rgba(54, 34, 24, 0.30), 0 16px 36px rgba(54, 34, 24, 0.24), 0 0 0 1px rgba(255,255,255,0.14) inset"
         },
-
         "comparativa": {
             "paperCardOpacity": 0.7,
             "paperTotalStrike": "#C62828",
@@ -78,7 +103,6 @@
             "tableDigitalCircleBg": "#E8F5E9",
             "tableDigitalIcon": "#1B5E20"
         },
-
         "accents": {
             "star": "#D4A017",
             "softGold": "#B8956A",
@@ -86,36 +110,48 @@
             "iconMuted": "#8A847A"
         }
     },
-
     "header": {
         "brand": "Momento Único",
         "nav": [
-            { "label": "Inicio", "anchor": "#" },
-            { "label": "Modelos", "anchor": "#muestras" },
-            { "label": "Precios", "anchor": "#planes" },
-            { "label": "Cómo funciona", "anchor": "#proceso" }
+            {
+                "label": "Inicio",
+                "anchor": "#"
+            },
+            {
+                "label": "Modelos",
+                "anchor": "#muestras"
+            },
+            {
+                "label": "Precios",
+                "anchor": "#planes"
+            },
+            {
+                "label": "Cómo funciona",
+                "anchor": "#proceso"
+            }
         ],
-        "cta": { "label": "Crear invitación", "anchor": "#planes" }
+        "cta": {
+            "label": "Crear invitación",
+            "anchor": "#planes"
+        }
     },
-
     "floatingCta": {
         "enabled": true,
         "line1": "Empezá aquí",
         "line2": "Completá el formulario para continuar",
         "anchor": "#planes",
-        "hideWhenSectionId": "planes"
+        "hideWhenSectionId": "planes",
+        "showFromSectionId": "planes"
     },
-
     "whatsapp": {
         "number": "543456023759",
         "defaultMessage": "Hola! Me interesa una invitación digital. Quiero saber más."
     },
-
     "ctaButtons": {
         "heroPrimary": {
-            "text": "Crear mi invitación",
+            "text": "Quiero mi invitación",
             "type": "anchor",
-            "anchor": "#planes"
+            "anchor": "#muestras"
         },
         "heroSecondary": {
             "text": "Ver muestras",
@@ -133,7 +169,6 @@
             "url": "/configurador?plan=diseno-unico&start=idioma"
         }
     },
-
     "sections": {
         "hero": {
             "enabled": true,
@@ -207,10 +242,22 @@
                 "title": "Invitación en papel",
                 "guestHint": "Precio orientativo en Argentina · ~120 invitados",
                 "lines": [
-                    { "label": "Diseño", "value": "-" },
-                    { "label": "Impresión (130 u.)", "value": "-" },
-                    { "label": "Sobres y sellos", "value": "-" },
-                    { "label": "Envío postal", "value": "-" }
+                    {
+                        "label": "Diseño",
+                        "value": "-"
+                    },
+                    {
+                        "label": "Impresión (130 u.)",
+                        "value": "-"
+                    },
+                    {
+                        "label": "Sobres y sellos",
+                        "value": "-"
+                    },
+                    {
+                        "label": "Envío postal",
+                        "value": "-"
+                    }
                 ],
                 "totalLabel": "Total aproximado",
                 "totalValue": "-",
@@ -280,8 +327,8 @@
         "estilos": {
             "id": "muestras",
             "eyebrow": "Modelos",
-            "title": "Mirá nuestras invitaciones ya diseñadas",
-            "subtitle": "Elegí la que más te guste y usala como referencia para crear la tuya.",
+            "title": "Elegí tu estilo",
+            "subtitle": "Estas son invitaciones reales. Inspirate en una y armemos la tuya a tu medida.",
             "demoButtonText": "Ver invitación",
             "noStylePrompt": "¿No encontrás tu estilo?",
             "noStyleCta": "Contanos tu idea",
@@ -289,66 +336,183 @@
             "noStyleConfirmMessage": "Serás redirigido al WhatsApp del diseñador. ¿Querés continuar?",
             "items": [
                 {
-                    "image": "/landing/media/images/anto-walter-boda.jpg",
-                    "titulo": "Anto & Walter",
-                    "descripcion": "Boda · Cuenta su historia, trivia divertida.",
-                    "href": "/m/boda/anto-walter"
+                    "image": "/landing/media/images/romina-franco-boda.jpeg",
+                    "titulo": "Romina & Franco",
+                    "descripcion": "Elegante, galerías e itinerario completo.",
+                    "href": "/m/boda/romina-franco"
                 },
                 {
                     "image": "/landing/media/images/meliza-ivan-boda.jpg",
                     "titulo": "Meliza & Iván",
-                    "descripcion": "Boda · Sencillo, minimalista.",
+                    "descripcion": "Sencillo, minimalista.",
                     "href": "/m/boda/meliza-ivan"
+                },
+                {
+                    "image": "/landing/media/images/carolina-jose-boda.jpeg",
+                    "titulo": "Carolina & José",
+                    "descripcion": "Historia, galerías y detalles cuidados.",
+                    "href": "/m/boda/carolina-jose"
                 },
                 {
                     "image": "/landing/media/images/yesica-hernan-boda.jpg",
                     "titulo": "Yesica & Hernán",
-                    "descripcion": "Boda · Más premium, fondos florales.",
+                    "descripcion": "Más premium, fondos florales.",
                     "href": "/m/boda/yesica-hernan"
+                },
+                {
+                    "image": "/landing/media/images/anto-walter-boda.jpg",
+                    "titulo": "Anto & Walter",
+                    "descripcion": "Cuenta su historia, trivia divertida.",
+                    "href": "/m/boda/anto-walter"
+                },
+                {
+                    "image": "/landing/media/images/mirta-pelu-boda.jpeg",
+                    "titulo": "Mirta & Pelu",
+                    "descripcion": "Bodas de oro, paleta cálida y celebración.",
+                    "href": "/m/boda/mirta-pelu"
                 },
                 {
                     "image": "/landing/media/images/camila-xv.jpg",
                     "titulo": "Camila",
-                    "descripcion": "XV · Tipografías personalizadas, trivia interactiva.",
+                    "descripcion": "Tipografías personalizadas, trivia interactiva.",
                     "href": "/m/xv/camila"
                 },
                 {
                     "image": "/landing/media/images/dasha-xv.jpg",
                     "titulo": "Dasha",
-                    "descripcion": "XV · Mágica. Álbum compartido de fotos.",
+                    "descripcion": "Mágica. Álbum compartido de fotos.",
                     "href": "/m/xv/dasha"
                 },
                 {
                     "image": "/landing/media/images/carmela-xv.jpg",
                     "titulo": "Carmela",
-                    "descripcion": "XV · Sin fotos, con portada y diseños elegantes.",
+                    "descripcion": "Sin fotos, con portada y diseños elegantes.",
                     "href": "/m/xv/carmela"
+                },
+                {
+                    "image": "/landing/media/images/indiana-xv.jpeg",
+                    "titulo": "Indiana",
+                    "descripcion": "Identidad XV marcada, RSVP y secciones especiales.",
+                    "href": "/m/xv/indiana"
                 },
                 {
                     "image": "/landing/media/images/maxima-baby.jpg",
                     "titulo": "Máxima",
-                    "descripcion": "Baby shower · Dulce, sencilla.",
+                    "descripcion": "Dulce, sencilla.",
                     "href": "/m/baby/maxima"
                 }
-            ]
+            ],
+            "highlightsByHref": {
+                "/m/boda/romina-franco": [
+                    "Elegante y completo: historia, galerías e itinerario.",
+                    "Diseño con buena jerarquía para leer rápido en móvil.",
+                    "Playlist colaborativa Spotify."
+                ],
+                "/m/boda/meliza-ivan": [
+                    "Estética minimalista y elegante.",
+                    "Incluye bloque de tarjeta y luna de miel.",
+                    "Confirmación simple por WhatsApp."
+                ],
+                "/m/boda/carolina-jose": [
+                    "Recorrido con historia, galería y detalles del evento.",
+                    "Composición limpia con foco en contenidos clave.",
+                    "RSVP integrado para centralizar respuestas."
+                ],
+                "/m/boda/yesica-hernan": [
+                    "Diseño más premium con estética floral.",
+                    "Combina historia, galería y secciones especiales.",
+                    "RSVP detallado para confirmar con más datos."
+                ],
+                "/m/boda/anto-walter": [
+                    "Recorrido narrativo con historia de pareja y trivia interactiva.",
+                    "Múltiples ubicaciones con itinerario bien definido.",
+                    "Confirmación detallada tipo formulario (RSVP)."
+                ],
+                "/m/boda/mirta-pelu": [
+                    "Paleta cálida ideal para bodas de oro o aniversarios.",
+                    "Secciones claras para ceremonia, fiesta y datos prácticos.",
+                    "Confirmación por formulario con campo para agregar patente."
+                ],
+                "/m/xv/camila": [
+                    "Tipografías personalizadas con identidad XV marcada.",
+                    "Trivia interactiva para sumar participación.",
+                    "Estilo de estrellas + plateado."
+                ],
+                "/m/xv/dasha": [
+                    "Estilo mágico y bloques blanco y negro.",
+                    "Incluye trivia y sección para compartir fotos.",
+                    "Confirmación detallada tipo formulario."
+                ],
+                "/m/xv/carmela": [
+                    "Sin fotos, centrado en portada elegante.",
+                    "Valores de tarjeta y alias p/regalos.",
+                    "Confirmación de asistencia simple."
+                ],
+                "/m/xv/indiana": [
+                    "Blanco/negro + estrellado.",
+                    "Alias para regalos + sección fotos Google Drive.",
+                    "RSVP práctico para confirmar asistencia."
+                ],
+                "/m/baby/maxima": [
+                    "Estilo dulce y limpio para baby shower.",
+                    "Presentación + itinerario para ordenar el evento.",
+                    "Confirmación simple por WhatsApp."
+                ]
+            }
         },
         "idiomas": {
             "title": "Tu invitación en dos idiomas",
             "subtitle": "En tu invitación podés agregar un segundo idioma y cada invitado lo puede cambiar con un toque.",
             "globeImageSrc": "",
             "languages": [
-                { "code": "ES", "name": "Español" },
-                { "code": "EN", "name": "English" },
-                { "code": "PT", "name": "Português" },
-                { "code": "FR", "name": "Français" },
-                { "code": "DE", "name": "Deutsch" },
-                { "code": "IT", "name": "Italiano" },
-                { "code": "NL", "name": "Nederlands" },
-                { "code": "CA", "name": "Català" },
-                { "code": "PL", "name": "Polski" },
-                { "code": "RU", "name": "Русский" },
-                { "code": "AR", "name": "العربية" },
-                { "code": "JA", "name": "日本語" }
+                {
+                    "code": "ES",
+                    "name": "Español"
+                },
+                {
+                    "code": "EN",
+                    "name": "English"
+                },
+                {
+                    "code": "PT",
+                    "name": "Português"
+                },
+                {
+                    "code": "FR",
+                    "name": "Français"
+                },
+                {
+                    "code": "DE",
+                    "name": "Deutsch"
+                },
+                {
+                    "code": "IT",
+                    "name": "Italiano"
+                },
+                {
+                    "code": "NL",
+                    "name": "Nederlands"
+                },
+                {
+                    "code": "CA",
+                    "name": "Català"
+                },
+                {
+                    "code": "PL",
+                    "name": "Polski"
+                },
+                {
+                    "code": "RU",
+                    "name": "Русский"
+                },
+                {
+                    "code": "AR",
+                    "name": "العربية"
+                },
+                {
+                    "code": "JA",
+                    "name": "日本語"
+                }
             ],
             "bullets": [
                 "Cada invitación puede incluir hasta dos idiomas a tu elección",
@@ -391,16 +555,34 @@
             "imageSrc": "/landing/media/images/panel.PNG",
             "imageAlt": "Captura del panel de administración de invitados",
             "stats": [
-                { "value": "42", "label": "Confirmados" },
-                { "value": "8", "label": "Pendientes" },
-                { "value": "3", "label": "No asisten" }
+                {
+                    "value": "42",
+                    "label": "Confirmados"
+                },
+                {
+                    "value": "8",
+                    "label": "Pendientes"
+                },
+                {
+                    "value": "3",
+                    "label": "No asisten"
+                }
             ],
             "guestListTitle": "Lista de invitados",
             "guestListTotal": "53 en total",
             "sampleGuests": [
-                { "name": "María G.", "note": "Vegetariano" },
-                { "name": "Carlos L.", "note": "" },
-                { "name": "Ana M.", "note": "Sin gluten" }
+                {
+                    "name": "María G.",
+                    "note": "Vegetariano"
+                },
+                {
+                    "name": "Carlos L.",
+                    "note": ""
+                },
+                {
+                    "name": "Ana M.",
+                    "note": "Sin gluten"
+                }
             ],
             "features": [
                 {

@@ -7,6 +7,7 @@ Todo lo que pongas acá se sirve desde la raíz del sitio: rutas que empiezan co
 | Carpeta   | Uso recomendado |
 |-----------|------------------|
 | `images/` | Fotos para cards de estilos, hero, sección “Qué incluye”, panel, comparativa, etc. |
+| `images-marquee-lite/` | Carrusel del hero: orden y rutas `.webp` en `landing-2.json` → `pageLayout.heroMarqueeLiteSrcs`. Regenerar: `npm run landing:marquee-lite`. **Modelos** sigue en `images/` (`sections.estilos.items`). |
 | `videos/` | Loops o previews en `videoSrc` de cada ítem en `sections.estilos.items` (opcional). |
 
 Podés crear subcarpetas si querés ordenar (ej. `images/estilos/`, `images/panel/`); la ruta en JSON debe coincidir.

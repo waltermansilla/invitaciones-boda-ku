@@ -260,6 +260,23 @@
   animation-delay: -0.6s;
 }
 
+/* Landing hero: fila de muestras, bucle sin scroll (translate -50% = mitad duplicada). */
+@keyframes hero-sample-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.hero-sample-marquee-track {
+  animation-name: hero-sample-marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .landing-fab-star--a,
   .landing-fab-star--b,
@@ -267,5 +284,10 @@
   .landing-fab-star--d {
     animation: none;
     opacity: 0.22;
+  }
+
+  .hero-sample-marquee-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
   }
 }

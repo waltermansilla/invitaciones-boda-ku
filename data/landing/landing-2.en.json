@@ -1,18 +1,44 @@
 {
     "_comment_archivo": "English copy for / (home). Same schema as landing-2.json + pageLayout.",
-    "_comment_media": "Media: public/landing/media/ — paths /landing/media/...",
+    "_comment_media": "Media: public/landing/media/ — paths /landing/media/... Hero marquee lite: images-marquee-lite/ (npm run landing:marquee-lite); Models section still uses images/.",
     "pageLayout": {
         "heroSectionId": "hero-home",
         "reviewsTopSimple": true,
         "postEstilosSections": [
-            { "id": "servicio", "surface": "default" },
-            { "id": "idiomas", "surface": "alt" },
-            { "id": "proceso", "surface": "alt" },
-            { "id": "faq", "surface": "alt" }
+            {
+                "id": "servicio",
+                "surface": "default"
+            },
+            {
+                "id": "idiomas",
+                "surface": "alt"
+            },
+            {
+                "id": "proceso",
+                "surface": "alt"
+            },
+            {
+                "id": "faq",
+                "surface": "alt"
+            }
         ],
-        "configuradorFromQuery": "home"
+        "configuradorFromQuery": "home",
+        "heroMarqueeLiteSrcs": [
+            "/landing/media/images-marquee-lite/romina-franco-boda.webp",
+            "/landing/media/images-marquee-lite/meliza-ivan-boda.webp",
+            "/landing/media/images-marquee-lite/carolina-jose-boda.webp",
+            "/landing/media/images-marquee-lite/yesica-hernan-boda.webp",
+            "/landing/media/images-marquee-lite/anto-walter-boda.webp",
+            "/landing/media/images-marquee-lite/mirta-pelu-boda.webp",
+            "/landing/media/images-marquee-lite/camila-xv.webp",
+            "/landing/media/images-marquee-lite/dasha-xv.webp",
+            "/landing/media/images-marquee-lite/carmela-xv.webp",
+            "/landing/media/images-marquee-lite/indiana-xv.webp",
+            "/landing/media/images-marquee-lite/maxima-baby.webp",
+            "/landing/media/images-marquee-lite/yesica-hernan-boda-overlay.webp",
+            "/landing/media/images-marquee-lite/mirta-pelu-boda-overlay.webp"
+        ]
     },
-
     "theme": {
         "_comment_creams": "Same as ES.",
         "background": "#FDFBF7",
@@ -22,14 +48,12 @@
         "footerBg": "#4A423A",
         "footerText": "#F7F2EB",
         "surfaceAlt": "#F3EEE6",
-
         "typography": {
             "headingFont": "'Playfair Display', Georgia, 'Times New Roman', serif",
             "bodyFont": "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
             "priceFont": "var(--font-landing-price), 'Cormorant Garamond', Georgia, serif",
             "priceLetterSpacing": "-0.03em"
         },
-
         "text": {
             "heading": "#4A3A2F",
             "body": "#5A4A3F",
@@ -40,7 +64,6 @@
             "linkUnderline": true,
             "inverse": "#FDFBF7"
         },
-
         "buttons": {
             "primaryBg": "#6F5848",
             "primaryText": "#FFFCF8",
@@ -59,7 +82,6 @@
             "floatingBorderRadius": "9999px",
             "floatingBoxShadow": "0 8px 22px rgba(54, 34, 24, 0.30), 0 16px 36px rgba(54, 34, 24, 0.24), 0 0 0 1px rgba(255,255,255,0.14) inset"
         },
-
         "comparativa": {
             "paperCardOpacity": 0.7,
             "paperTotalStrike": "#C62828",
@@ -76,7 +98,6 @@
             "tableDigitalCircleBg": "#E8F5E9",
             "tableDigitalIcon": "#1B5E20"
         },
-
         "accents": {
             "star": "#D4A017",
             "softGold": "#B8956A",
@@ -84,36 +105,48 @@
             "iconMuted": "#8A847A"
         }
     },
-
     "header": {
         "brand": "Momento Único",
         "nav": [
-            { "label": "Home", "anchor": "#" },
-            { "label": "Samples", "anchor": "#muestras" },
-            { "label": "Pricing", "anchor": "#planes" },
-            { "label": "How it works", "anchor": "#proceso" }
+            {
+                "label": "Home",
+                "anchor": "#"
+            },
+            {
+                "label": "Samples",
+                "anchor": "#muestras"
+            },
+            {
+                "label": "Pricing",
+                "anchor": "#planes"
+            },
+            {
+                "label": "How it works",
+                "anchor": "#proceso"
+            }
         ],
-        "cta": { "label": "Create invitation", "anchor": "#planes" }
+        "cta": {
+            "label": "Create invitation",
+            "anchor": "#planes"
+        }
     },
-
     "floatingCta": {
         "enabled": true,
         "line1": "Start here",
         "line2": "Complete the form to continue",
         "anchor": "#planes",
-        "hideWhenSectionId": "planes"
+        "hideWhenSectionId": "planes",
+        "showFromSectionId": "planes"
     },
-
     "whatsapp": {
         "number": "543456023759",
         "defaultMessage": "Hi! I'm interested in a digital invitation. I'd like to know more."
     },
-
     "ctaButtons": {
         "heroPrimary": {
             "text": "Create my invitation",
             "type": "anchor",
-            "anchor": "#planes"
+            "anchor": "#muestras"
         },
         "heroSecondary": {
             "text": "View samples",
@@ -131,7 +164,6 @@
             "url": "/configurador?plan=diseno-unico&start=idioma"
         }
     },
-
     "sections": {
         "hero": {
             "enabled": true,
@@ -205,10 +237,22 @@
                 "title": "Paper invitation",
                 "guestHint": "Estimated pricing in Argentina · ~120 guests",
                 "lines": [
-                    { "label": "Design", "value": "-" },
-                    { "label": "Printing (130 pcs)", "value": "-" },
-                    { "label": "Envelopes & seals", "value": "-" },
-                    { "label": "Postal shipping", "value": "-" }
+                    {
+                        "label": "Design",
+                        "value": "-"
+                    },
+                    {
+                        "label": "Printing (130 pcs)",
+                        "value": "-"
+                    },
+                    {
+                        "label": "Envelopes & seals",
+                        "value": "-"
+                    },
+                    {
+                        "label": "Postal shipping",
+                        "value": "-"
+                    }
                 ],
                 "totalLabel": "Approx. total",
                 "totalValue": "-",
@@ -287,66 +331,183 @@
             "noStyleConfirmMessage": "You’ll be redirected to the designer’s WhatsApp. Do you want to continue?",
             "items": [
                 {
-                    "image": "/landing/media/images/anto-walter-boda.jpg",
-                    "titulo": "Anto & Walter",
-                    "descripcion": "Wedding · Tells their story, fun trivia.",
-                    "href": "/m/boda/anto-walter"
+                    "image": "/landing/media/images/romina-franco-boda.jpeg",
+                    "titulo": "Romina & Franco",
+                    "descripcion": "Elegant, with galleries and full timeline.",
+                    "href": "/m/boda/romina-franco"
                 },
                 {
                     "image": "/landing/media/images/meliza-ivan-boda.jpg",
                     "titulo": "Meliza & Iván",
-                    "descripcion": "Wedding · Simple and minimal.",
+                    "descripcion": "Simple and minimal.",
                     "href": "/m/boda/meliza-ivan"
+                },
+                {
+                    "image": "/landing/media/images/carolina-jose-boda.jpeg",
+                    "titulo": "Carolina & José",
+                    "descripcion": "Story, galleries and thoughtful details.",
+                    "href": "/m/boda/carolina-jose"
                 },
                 {
                     "image": "/landing/media/images/yesica-hernan-boda.jpg",
                     "titulo": "Yesica & Hernán",
-                    "descripcion": "Wedding · More premium, floral backgrounds.",
+                    "descripcion": "More premium, floral backgrounds.",
                     "href": "/m/boda/yesica-hernan"
+                },
+                {
+                    "image": "/landing/media/images/anto-walter-boda.jpg",
+                    "titulo": "Anto & Walter",
+                    "descripcion": "Tells their story, fun trivia.",
+                    "href": "/m/boda/anto-walter"
+                },
+                {
+                    "image": "/landing/media/images/mirta-pelu-boda.jpeg",
+                    "titulo": "Mirta & Pelu",
+                    "descripcion": "Golden anniversary, warm palette.",
+                    "href": "/m/boda/mirta-pelu"
                 },
                 {
                     "image": "/landing/media/images/camila-xv.jpg",
                     "titulo": "Camila",
-                    "descripcion": "XV · Custom typography, interactive trivia.",
+                    "descripcion": "Custom typography, interactive trivia.",
                     "href": "/m/xv/camila"
                 },
                 {
                     "image": "/landing/media/images/dasha-xv.jpg",
                     "titulo": "Dasha",
-                    "descripcion": "XV · Magical. Shared photo album.",
+                    "descripcion": "Magical. Shared photo album.",
                     "href": "/m/xv/dasha"
                 },
                 {
                     "image": "/landing/media/images/carmela-xv.jpg",
                     "titulo": "Carmela",
-                    "descripcion": "XV · Elegant and bright, with custom details.",
+                    "descripcion": "Elegant and bright, with custom details.",
                     "href": "/m/xv/carmela"
+                },
+                {
+                    "image": "/landing/media/images/indiana-xv.jpeg",
+                    "titulo": "Indiana",
+                    "descripcion": "Strong XV identity, RSVP and special sections.",
+                    "href": "/m/xv/indiana"
                 },
                 {
                     "image": "/landing/media/images/maxima-baby.jpg",
                     "titulo": "Máxima",
-                    "descripcion": "Baby shower · Sweet and simple.",
+                    "descripcion": "Sweet and simple.",
                     "href": "/m/baby/maxima"
                 }
-            ]
+            ],
+            "highlightsByHref": {
+                "/m/boda/romina-franco": [
+                    "Elegant and complete: story, galleries, and timeline.",
+                    "Clear visual hierarchy for fast mobile reading.",
+                    "Built-in confirmation to organize guests."
+                ],
+                "/m/boda/meliza-ivan": [
+                    "Minimal visual style with elegant typography.",
+                    "Gift card + honeymoon contribution sections.",
+                    "Simple WhatsApp confirmation flow."
+                ],
+                "/m/boda/carolina-jose": [
+                    "Story-driven flow with gallery and event details.",
+                    "Clean composition focused on key content blocks.",
+                    "Integrated RSVP to centralize responses."
+                ],
+                "/m/boda/yesica-hernan": [
+                    "Premium floral aesthetic with stronger visual impact.",
+                    "Story section plus extra gallery moments.",
+                    "Detailed RSVP with meal preferences."
+                ],
+                "/m/boda/anto-walter": [
+                    "Narrative flow with their story and interactive trivia.",
+                    "Multiple event locations with clear timeline.",
+                    "Detailed RSVP form for guest confirmations."
+                ],
+                "/m/boda/mirta-pelu": [
+                    "Warm palette ideal for golden anniversaries.",
+                    "Clear sections for ceremony, party, and practical info.",
+                    "Simple confirmation flow for quick replies."
+                ],
+                "/m/xv/camila": [
+                    "Personalized typography and bold XV identity.",
+                    "Interactive trivia to engage guests.",
+                    "Detailed RSVP and dedicated photo moments."
+                ],
+                "/m/xv/dasha": [
+                    "Fantasy-style presentation with special message section.",
+                    "Interactive trivia and photo block.",
+                    "Detailed RSVP for easier confirmation tracking."
+                ],
+                "/m/xv/carmela": [
+                    "No-photo concept focused on refined cover design.",
+                    "Gift card + honeymoon section in a clean flow.",
+                    "Simple WhatsApp confirmation for quick response."
+                ],
+                "/m/xv/indiana": [
+                    "Strong XV identity with distinctive special sections.",
+                    "Structure designed to organize guest information.",
+                    "Practical RSVP for attendance tracking."
+                ],
+                "/m/baby/maxima": [
+                    "Sweet and clean baby shower style.",
+                    "Presentation + itinerary blocks for clarity.",
+                    "Simple WhatsApp confirmation flow."
+                ]
+            }
         },
         "idiomas": {
             "title": "Your invitation in two languages",
             "subtitle": "You can add a second language to your invitation, and each guest can switch with one tap.",
             "globeImageSrc": "",
             "languages": [
-                { "code": "ES", "name": "Español" },
-                { "code": "EN", "name": "English" },
-                { "code": "PT", "name": "Português" },
-                { "code": "FR", "name": "Français" },
-                { "code": "DE", "name": "Deutsch" },
-                { "code": "IT", "name": "Italiano" },
-                { "code": "NL", "name": "Nederlands" },
-                { "code": "CA", "name": "Català" },
-                { "code": "PL", "name": "Polski" },
-                { "code": "RU", "name": "Русский" },
-                { "code": "AR", "name": "العربية" },
-                { "code": "JA", "name": "日本語" }
+                {
+                    "code": "ES",
+                    "name": "Español"
+                },
+                {
+                    "code": "EN",
+                    "name": "English"
+                },
+                {
+                    "code": "PT",
+                    "name": "Português"
+                },
+                {
+                    "code": "FR",
+                    "name": "Français"
+                },
+                {
+                    "code": "DE",
+                    "name": "Deutsch"
+                },
+                {
+                    "code": "IT",
+                    "name": "Italiano"
+                },
+                {
+                    "code": "NL",
+                    "name": "Nederlands"
+                },
+                {
+                    "code": "CA",
+                    "name": "Català"
+                },
+                {
+                    "code": "PL",
+                    "name": "Polski"
+                },
+                {
+                    "code": "RU",
+                    "name": "Русский"
+                },
+                {
+                    "code": "AR",
+                    "name": "العربية"
+                },
+                {
+                    "code": "JA",
+                    "name": "日本語"
+                }
             ],
             "bullets": [
                 "Each invitation can include up to two languages of your choice",
@@ -389,16 +550,34 @@
             "imageSrc": "/landing/media/images/panel.PNG",
             "imageAlt": "Guest admin panel screenshot",
             "stats": [
-                { "value": "42", "label": "Confirmed" },
-                { "value": "8", "label": "Pending" },
-                { "value": "3", "label": "Not attending" }
+                {
+                    "value": "42",
+                    "label": "Confirmed"
+                },
+                {
+                    "value": "8",
+                    "label": "Pending"
+                },
+                {
+                    "value": "3",
+                    "label": "Not attending"
+                }
             ],
             "guestListTitle": "Guest list",
             "guestListTotal": "53 total",
             "sampleGuests": [
-                { "name": "María G.", "note": "Vegetarian" },
-                { "name": "Carlos L.", "note": "" },
-                { "name": "Ana M.", "note": "Gluten-free" }
+                {
+                    "name": "María G.",
+                    "note": "Vegetarian"
+                },
+                {
+                    "name": "Carlos L.",
+                    "note": ""
+                },
+                {
+                    "name": "Ana M.",
+                    "note": "Gluten-free"
+                }
             ],
             "features": [
                 {

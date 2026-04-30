@@ -43,6 +43,10 @@ import {
     LandingHeader,
     type LandingLocale,
 } from "@/components/landing/landing-header-home";
+import {
+    HeroSampleMarquee,
+    isExcludedHeroMarqueeAsset,
+} from "@/components/landing/hero-sample-marquee";
 import { eventTypeLabelFromFolderTipo } from "@/lib/client-helpers-shared";
 import { trackGaEvent } from "@/lib/google-analytics";
 import { trackMetaEvent } from "@/lib/meta-pixel";
@@ -189,6 +193,11 @@ export interface LandingData {
         }[];
         /** Valor del query `from` en enlaces a /configurador (p. ej. home). */
         configuradorFromQuery?: string;
+        /**
+         * Carrusel del hero (layout compacto): orden fijo, rutas **solo** bajo
+         * `/landing/media/images-marquee-lite/*.webp`. La sección Modelos usa `sections.estilos.items`.
+         */
+        heroMarqueeLiteSrcs?: string[];
     };
     /** Barra superior estilo landing + anclas; si falta, no se renderiza */
     header?: {
@@ -202,6 +211,8 @@ export interface LandingData {
         line1Usd?: string;
         line2: string;
         anchor: string;
+        /** id del elemento (sin #) desde el cual el botón empieza a mostrarse. */
+        showFromSectionId?: string;
         /** id del elemento (sin #) que al entrar en vista oculta el botón; por defecto se usa el anchor sin # */
         hideWhenSectionId?: string;
         /** múltiples ids del elemento (sin #) que al entrar en vista ocultan el botón */
@@ -289,6 +300,8 @@ export interface LandingData {
                 descripcion: string;
                 href: string;
             }[];
+            /** Bullets del modal "Lo destacable..." por href de muestra. */
+            highlightsByHref?: Record<string, string[]>;
         };
         idiomas: {
             title: string;
@@ -312,6 +325,8 @@ export interface LandingData {
             }[];
         };
         panel: {
+            /** Ancla para el menú / observadores (ej. #panel) */
+            id?: string;
             eyebrow: string;
             title: string;
             subtitle: string;
@@ -835,6 +850,7 @@ function CtaLink({
     trackingSource,
     className,
     style,
+    children,
 }: {
     btn: CtaButton;
     waNumber: string;
@@ -842,6 +858,7 @@ function CtaLink({
     trackingSource?: string;
     className: string;
     style: React.CSSProperties;
+    children?: ReactNode;
 }) {
     const resolveGaButtonName = (
         event: "InitiateCheckout" | "Lead",
@@ -862,7 +879,9 @@ function CtaLink({
     const readCookie = (name: string) => {
         if (typeof document === "undefined") return undefined;
         const match = document.cookie.match(
-            new RegExp(`(?:^|; )${name.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")}=([^;]*)`),
+            new RegExp(
+                `(?:^|; )${name.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")}=([^;]*)`,
+            ),
         );
         return match ? decodeURIComponent(match[1]) : undefined;
     };
@@ -897,7 +916,8 @@ function CtaLink({
 
     const handleTracking = () => {
         if (!trackingEvent) return;
-        const eventId = trackingEvent === "Lead" ? generateEventId() : undefined;
+        const eventId =
+            trackingEvent === "Lead" ? generateEventId() : undefined;
         trackMetaEvent(
             trackingEvent,
             {
@@ -930,7 +950,8 @@ function CtaLink({
 
     const handleTrackingAndReturnEventId = () => {
         if (!trackingEvent) return undefined;
-        const eventId = trackingEvent === "Lead" ? generateEventId() : undefined;
+        const eventId =
+            trackingEvent === "Lead" ? generateEventId() : undefined;
         trackMetaEvent(
             trackingEvent,
             {
@@ -962,6 +983,8 @@ function CtaLink({
         return eventId;
     };
 
+    const label = children ?? btn.text;
+
     if (btn.type === "whatsapp") {
         const msg = btn.message || "";
         const href = `https://wa.me/${waNumber.replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
@@ -974,7 +997,7 @@ function CtaLink({
                 className={className}
                 style={style}
             >
-                {btn.text}
+                {label}
             </a>
         );
     }
@@ -989,7 +1012,7 @@ function CtaLink({
                 className={className}
                 style={style}
             >
-                {btn.text}
+                {label}
             </a>
         );
     }
@@ -1018,7 +1041,7 @@ function CtaLink({
             className={className}
             style={style}
         >
-            {btn.text}
+            {label}
         </a>
     );
 }
@@ -1052,19 +1075,22 @@ function heroPremiumPriceLine(locale: LandingLocale): string {
     return `desde $${premiumArs.toLocaleString("es-AR")}`;
 }
 
-/** Primary pill (label + desde/from price) en hero compacto y tras el carrusel de estilos. */
+/** Primary pill (label + opcional “desde …”) en hero compacto y tras el carrusel de estilos. */
 function Landing2PrimaryPill({
     primary,
     theme,
     locale,
     waNumber,
     trackingSource = "hero",
+    showPriceBelowLabel = true,
 }: {
     primary?: CtaButton;
     theme: LandingTheme;
     locale: LandingLocale;
     waNumber: string;
     trackingSource?: string;
+    /** En el hero compacto suele ir solo el texto, sin línea de precio. */
+    showPriceBelowLabel?: boolean;
 }) {
     const gaButtonName =
         trackingSource === "muestras_mid" ? "CTA - MUESTRAS" : "CTA - HERO";
@@ -1072,8 +1098,9 @@ function Landing2PrimaryPill({
         primary?.text ??
         (locale === "en" ? "Create my invitation" : "Crear mi invitación");
     const priceLine = heroPremiumPriceLine(locale);
-    const className =
-        "inline-flex min-h-[56px] w-full flex-col items-center justify-center rounded-full px-6 py-3 text-[15px] font-semibold shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99]";
+    const className = showPriceBelowLabel
+        ? "inline-flex min-h-[56px] w-full flex-col items-center justify-center rounded-full px-6 py-3 text-[15px] font-semibold shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99]"
+        : "inline-flex min-h-[56px] w-full items-center justify-center rounded-full px-6 py-3.5 text-[17px] font-semibold shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99] sm:text-lg";
     const style: React.CSSProperties = {
         background: theme.buttons.floatingBg,
         color: theme.buttons.floatingText,
@@ -1102,9 +1129,11 @@ function Landing2PrimaryPill({
                 style={style}
             >
                 <span>{label}</span>
+                {showPriceBelowLabel ? (
                 <span className="mt-0.5 text-[11px] font-medium opacity-90">
                     {priceLine}
                 </span>
+                ) : null}
             </a>
         );
     }
@@ -1130,9 +1159,11 @@ function Landing2PrimaryPill({
                 style={style}
             >
                 <span>{label}</span>
+                {showPriceBelowLabel ? (
                 <span className="mt-0.5 text-[11px] font-medium opacity-90">
                     {priceLine}
                 </span>
+                ) : null}
             </a>
         );
     }
@@ -1156,9 +1187,11 @@ function Landing2PrimaryPill({
             style={style}
         >
             <span>{label}</span>
+            {showPriceBelowLabel ? (
             <span className="mt-0.5 text-[11px] font-medium opacity-90">
                 {priceLine}
             </span>
+            ) : null}
         </a>
     );
 }
@@ -1186,10 +1219,13 @@ function FloatingCta({
     theme: LandingTheme;
 }) {
     const [hiddenBySection, setHiddenBySection] = useState(false);
+    const [showAllowed, setShowAllowed] = useState(!data.showFromSectionId);
     /** Ocultar de forma definitiva al haber scrolleado por debajo de #planes (FAQ, footer, etc.). */
     const [pastPlanes, setPastPlanes] = useState(false);
     const [slideIn, setSlideIn] = useState(false);
     const b = theme.buttons;
+    const showFromId = data.showFromSectionId?.replace(/^#/, "").trim() || "";
+    const showAfterPlanes = showFromId === "planes";
 
     const sectionIds = useMemo(() => {
         const normalized = (value?: string) => value?.replace(/^#/, "").trim();
@@ -1239,6 +1275,37 @@ function FloatingCta({
 
     useEffect(() => {
         if (!data.enabled) return;
+        const showFrom = showFromId;
+        if (!showFrom) {
+            setShowAllowed(true);
+            return;
+        }
+        const target = document.getElementById(showFrom);
+        if (!target) {
+            setShowAllowed(true);
+            return;
+        }
+        const updateShowAllowed = () => {
+            const rect = target.getBoundingClientRect();
+            if (showAfterPlanes) {
+                // Requested behavior: show only once section `#planes` is already above viewport.
+                setShowAllowed(rect.bottom < 0);
+                return;
+            }
+            // Default behavior: show once the section has reached (or passed) the top area.
+            setShowAllowed(rect.top <= 80);
+        };
+        updateShowAllowed();
+        window.addEventListener("scroll", updateShowAllowed, { passive: true });
+        window.addEventListener("resize", updateShowAllowed);
+        return () => {
+            window.removeEventListener("scroll", updateShowAllowed);
+            window.removeEventListener("resize", updateShowAllowed);
+        };
+    }, [data.enabled, showFromId, showAfterPlanes]);
+
+    useEffect(() => {
+        if (!data.enabled) return;
         const planes = document.getElementById("planes");
         if (!planes) return;
         const updatePastPlanes = () => {
@@ -1259,7 +1326,8 @@ function FloatingCta({
             setSlideIn(false);
             return;
         }
-        if (hiddenBySection || pastPlanes) {
+        const hiddenByPastPlanes = showAfterPlanes ? false : pastPlanes;
+        if (!showAllowed || hiddenBySection || hiddenByPastPlanes) {
             setSlideIn(false);
             return;
         }
@@ -1272,7 +1340,7 @@ function FloatingCta({
             cancelAnimationFrame(raf1);
             cancelAnimationFrame(raf2);
         };
-    }, [data.enabled, hiddenBySection, pastPlanes]);
+    }, [data.enabled, showAllowed, hiddenBySection, pastPlanes, showAfterPlanes]);
 
     if (!data.enabled) return null;
 
@@ -1690,6 +1758,7 @@ function HeroTdy({
     locale,
     reviewsTopSimple = false,
     heroSectionId,
+    heroMarqueeImageSrcs,
 }: {
     data: LandingData["sections"]["hero"];
     theme: LandingTheme;
@@ -1698,6 +1767,8 @@ function HeroTdy({
     locale: LandingLocale;
     reviewsTopSimple?: boolean;
     heroSectionId?: string;
+    /** Rutas `/landing/media/...` para bandas tipo showcase encima del título (solo layout compacto). */
+    heroMarqueeImageSrcs?: string[];
 }) {
     const [loaded, setLoaded] = useState(false);
     useEffect(() => {
@@ -1711,13 +1782,13 @@ function HeroTdy({
         (w) => w.length > 0,
     );
     const hint = data.languagesHint?.trim();
-    const heroLangLabel = locale === "en" ? "Multilingual" : "Multilingüe";
-    const secondaryLabel = locale === "en" ? "View models" : "Ver modelos";
 
     return (
         <section
             id={heroSectionId}
-            className="flex min-h-svh flex-col px-5 pt-10 pb-10 md:px-8 md:pb-12"
+            className={`flex min-h-svh flex-col px-5 pb-10 md:px-8 md:pb-12 ${
+                reviewsTopSimple ? "pt-1.5 md:pt-3" : "pt-7 md:pt-8"
+            }`}
             style={{
                 background: theme.background,
                 fontFamily: theme.typography.bodyFont,
@@ -1727,90 +1798,22 @@ function HeroTdy({
             <div
                 className={`mx-auto flex w-full max-w-6xl flex-1 flex-col ${
                     reviewsTopSimple
-                        ? "justify-start pt-2 md:justify-center md:pt-0"
+                        ? "justify-start pt-0 md:justify-center md:pt-0"
                         : "justify-center"
                 }`}
             >
-                {reviewsTopSimple && rev?.enabled ? (
-                    rev.url ? (
-                        <a
-                            href={rev.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mx-auto mb-8 mt-0 inline-flex items-center gap-2 text-sm"
-                            style={{
-                                color: tx.muted,
-                                ...blockRevealStyle(loaded, 20),
-                                textDecoration: "none",
-                            }}
-                        >
-                            <div className="flex items-center gap-0.5">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                    <Star
-                                        key={i}
-                                        size={14}
-                                        fill="#E4B63D"
-                                        strokeWidth={0}
-                                        style={{ color: "#E4B63D" }}
-                                    />
-                                ))}
-                            </div>
-                            <span className="font-semibold tabular-nums">
-                                {rev.rating}
-                            </span>
-                            <span>·</span>
-                            <span className="inline-flex items-center gap-1">
-                                {rev.linkText}
-                                <ChevronRight size={13} aria-hidden />
-                            </span>
-                        </a>
-                    ) : (
-                        <div
-                            className="mx-auto mb-8 mt-0 inline-flex items-center gap-2 text-sm"
-                            style={{
-                                color: tx.muted,
-                                ...blockRevealStyle(loaded, 20),
-                            }}
-                        >
-                            <div className="flex items-center gap-0.5">
-                                {Array.from({ length: 5 }).map((_, i) => (
-                                    <Star
-                                        key={i}
-                                        size={14}
-                                        fill="#E4B63D"
-                                        strokeWidth={0}
-                                        style={{ color: "#E4B63D" }}
-                                    />
-                                ))}
-                            </div>
-                            <span className="font-semibold tabular-nums">
-                                {rev.rating}
-                            </span>
-                            <span className="inline-flex items-center gap-1">
-                                {rev.linkText}
-                            </span>
-                        </div>
-                    )
-                ) : null}
-                {reviewsTopSimple && hint ? (
+                {reviewsTopSimple &&
+                heroMarqueeImageSrcs &&
+                heroMarqueeImageSrcs.length > 0 ? (
                     <div
-                        className="mx-auto mb-7 -mt-7 inline-flex items-center gap-1.5 text-[10px] font-medium tracking-[0.04em]"
-                        style={{
-                            color: `${tx.muted}B8`,
-                            ...blockRevealStyle(loaded, 30),
-                        }}
+                        className="relative z-0 mb-0 w-screen max-w-[100vw] shrink-0 overflow-visible -translate-x-1/2 left-1/2"
+                        style={blockRevealStyle(loaded, 0)}
                     >
-                        <Languages
-                            size={12}
-                            strokeWidth={1.7}
-                            style={{ color: `${tx.muted}B8` }}
-                            aria-hidden
-                        />
-                        <span>{heroLangLabel}</span>
+                        <HeroSampleMarquee imageSrcs={heroMarqueeImageSrcs} />
                     </div>
                 ) : null}
                 <h1
-                    className={`text-pretty ${reviewsTopSimple ? "mx-auto mt-7 max-w-4xl text-center" : "max-w-4xl text-left"}`}
+                    className={`text-pretty ${reviewsTopSimple ? "mx-auto mt-6 max-w-4xl text-center md:mt-8" : "max-w-4xl text-left"}`}
                     style={{
                         fontFamily: "var(--font-landing-hero), Georgia, serif",
                         color: tx.heading,
@@ -2012,42 +2015,93 @@ function HeroTdy({
 
                 {reviewsTopSimple ? (
                     <div
-                        className={`mx-auto flex w-full max-w-[280px] flex-col items-stretch gap-2.5 sm:max-w-md ${rev?.enabled ? (hint ? "mt-9" : "mt-9") : hint ? "mt-11" : "mt-11"}`}
-                        style={blockRevealStyle(
-                            loaded,
-                            rev?.enabled
-                                ? hint
-                                    ? 195
-                                    : 190
-                                : hint
-                                  ? 150
-                                  : 120,
-                        )}
+                        className={`mx-auto flex w-full max-w-[280px] flex-col items-stretch gap-2 sm:max-w-md ${rev?.enabled ? "mt-8" : "mt-10"}`}
+                        style={blockRevealStyle(loaded, rev?.enabled ? 170 : 120)}
                     >
+                        {rev?.enabled ? (
+                            rev.url ? (
+                                <a
+                                    href={rev.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mx-auto inline-flex items-center gap-1.5 text-[11px] leading-none"
+                                    style={{
+                                        color: tx.muted,
+                                        textDecoration: "none",
+                                        ...blockRevealStyle(loaded, 155),
+                                    }}
+                                >
+                                    <div
+                                        className="flex items-center gap-px"
+                                        aria-label={`${rev.rating} de 5 estrellas`}
+                                    >
+                                        {Array.from({ length: 5 }).map(
+                                            (_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    size={11}
+                                                    fill="#E4B63D"
+                                                    strokeWidth={0}
+                                                    style={{ color: "#E4B63D" }}
+                                                />
+                                            ),
+                                        )}
+                                    </div>
+                                    <span className="font-semibold tabular-nums">
+                                        {rev.rating}
+                                    </span>
+                                    <span className="opacity-60" aria-hidden>
+                                        ·
+                                    </span>
+                                    <span className="inline-flex items-center gap-0.5 font-medium">
+                                        {rev.linkText}
+                                        <ChevronRight
+                                            size={11}
+                                            aria-hidden
+                                            strokeWidth={2}
+                                        />
+                                    </span>
+                                </a>
+                            ) : (
+                                <div
+                                    className="mx-auto inline-flex items-center gap-1.5 text-[11px] leading-none"
+                                    style={{
+                                        color: tx.muted,
+                                        ...blockRevealStyle(loaded, 155),
+                                    }}
+                                >
+                                    <div
+                                        className="flex items-center gap-px"
+                                        aria-label={`${rev.rating} de 5 estrellas`}
+                                    >
+                                        {Array.from({ length: 5 }).map(
+                                            (_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    size={11}
+                                                    fill="#E4B63D"
+                                                    strokeWidth={0}
+                                                    style={{ color: "#E4B63D" }}
+                                                />
+                                            ),
+                                        )}
+                                    </div>
+                                    <span className="font-semibold tabular-nums">
+                                        {rev.rating}
+                                    </span>
+                                    <span className="inline-flex items-center gap-0.5 font-medium">
+                                        {rev.linkText}
+                                    </span>
+                                </div>
+                            )
+                        ) : null}
                         <Landing2PrimaryPill
                             primary={primary}
                             theme={theme}
                             locale={locale}
                             waNumber={waNumber}
+                            showPriceBelowLabel={false}
                         />
-                        <a
-                            href={secondary?.anchor ?? "#muestras"}
-                            onClick={(event) =>
-                                handleLocalAnchorClick(
-                                    event,
-                                    secondary?.anchor ?? "#muestras",
-                                )
-                            }
-                            className="inline-flex min-h-[56px] items-center justify-center rounded-full border px-6 py-3 text-[15px] font-semibold shadow-sm transition-colors duration-200 hover:brightness-[0.98]"
-                            style={{
-                                borderColor: theme.buttons.floatingBg,
-                                color: theme.buttons.floatingBg,
-                                background: "transparent",
-                                textDecoration: "none",
-                            }}
-                        >
-                            {secondaryLabel}
-                        </a>
                         <a
                             href="#incluye"
                             onClick={(event) =>
@@ -2089,8 +2143,8 @@ function HeroTdy({
                                 trackingSource="hero"
                                 className="inline-flex min-h-[52px] items-center justify-center rounded-xl px-10 py-3 text-[15px] font-semibold shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99]"
                                 style={{
-                                    background: "#7A5F45",
-                                    color: "#FFF9F2",
+                                    background: theme.buttons.floatingBg,
+                                    color: theme.buttons.floatingText,
                                 }}
                             />
                         )}
@@ -2370,9 +2424,7 @@ function IncluyeSection({
         <section
             id={data.id || "incluye"}
             className={`scroll-mt-24 px-5 pb-20 md:px-8 md:pb-28 ${
-                showVideo
-                    ? "-mt-[clamp(2.25rem,11vh,7.5rem)] relative z-10"
-                    : ""
+                showVideo ? "relative z-10 mt-8 pt-2 md:mt-12 md:pt-4" : ""
             }`}
             style={{ background: theme.background }}
         >
@@ -3190,6 +3242,9 @@ function EstilosCarousel({
     waNumber,
     locale = "es",
     endHeroPrimaryCta,
+    premiumLeadButton,
+    panelPreviewImageSrc,
+    panelPreviewImageAlt,
 }: {
     data: LandingData["sections"]["estilos"];
     theme: LandingTheme;
@@ -3200,10 +3255,16 @@ function EstilosCarousel({
         locale: LandingLocale;
         primary?: CtaButton;
     };
+    premiumLeadButton?: CtaButton;
+    panelPreviewImageSrc?: string;
+    panelPreviewImageAlt?: string;
 }) {
     const { revealRef, revealed } = useSectionReveal();
     const tx = theme.text;
     const b = theme.buttons;
+    const [activeModel, setActiveModel] = useState<
+        LandingData["sections"]["estilos"]["items"][number] | null
+    >(null);
     const waNoStyle = waHref(waNumber, data.noStyleWhatsappMessage);
     const noStyleConfirmMessage =
         data.noStyleConfirmMessage ??
@@ -3217,6 +3278,55 @@ function EstilosCarousel({
         [data.items],
     );
     const showKindSplit = kindGroups.length > 1;
+    const premiumPriceLabel =
+        locale === "en"
+            ? `for ${formatUsdMain(toUsdPerItem(pricingData.plans.premium))}`
+            : `por ${formatArs(pricingData.plans.premium, "es")}`;
+    const activeModelHighlights = useMemo(() => {
+        const href = activeModel?.href?.trim() ?? "";
+        const fromJson = href ? data.highlightsByHref?.[href] : undefined;
+        const cleaned = (fromJson ?? [])
+            .map((line) => line.trim())
+            .filter(Boolean);
+        if (cleaned.length > 0) return cleaned;
+        return locale === "en"
+            ? [
+                  "Visual style and structure adaptable to your event.",
+                  "Sections can be customized based on your priorities.",
+                  "WhatsApp confirmation included by default.",
+              ]
+            : [
+                  "Estilo visual adaptable a tu evento.",
+                  "Podés personalizar secciones según lo que necesites.",
+                  "Confirmación por WhatsApp incluida de base.",
+              ];
+    }, [activeModel?.href, data.highlightsByHref, locale]);
+    const panelAvailableTitle =
+        locale === "en"
+            ? "Guest dashboard available as an add-on"
+            : "Panel de invitados disponible como extra";
+    const panelAvailableCopy =
+        locale === "en"
+            ? "You can add the guest dashboard to track confirmations, dietary needs, and song requests in one place."
+            : "También podés sumar el panel privado para ordenar confirmaciones, restricciones alimentarias y canciones sugeridas.";
+    const modalPitch =
+        locale === "en"
+            ? "Want to start your invitation inspired by this style?"
+            : "¿Querés empezar tu invitación inspirándote en este estilo?";
+
+    useEffect(() => {
+        if (!activeModel) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Escape") setActiveModel(null);
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => {
+            document.body.style.overflow = prev;
+            window.removeEventListener("keydown", onKeyDown);
+        };
+    }, [activeModel]);
 
     const estilosCarouselRowClass =
         "flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-5 pb-4 pt-2 md:gap-6 md:px-8 [scrollbar-width:thin] scroll-pl-5 scroll-pr-5";
@@ -3226,7 +3336,7 @@ function EstilosCarousel({
         i: number,
     ) => {
         const cardClass =
-            "group relative aspect-[9/16] w-[min(76vw,252px)] shrink-0 snap-center overflow-hidden rounded-2xl border border-black/10 bg-[#121110] shadow-md sm:w-[min(72vw,268px)] md:w-[288px]";
+            "group relative aspect-[9/16] w-[min(76vw,252px)] shrink-0 snap-center overflow-hidden rounded-2xl border shadow-md sm:w-[min(72vw,268px)] md:w-[288px]";
         const inner = (
             <>
                 <CatalogMedia
@@ -3236,18 +3346,21 @@ function EstilosCarousel({
                     imageObjectFit="contain"
                 />
                 <div
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/88 via-black/35 to-black/15"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(76px,22%,118px)] w-full bg-gradient-to-t from-black/82 via-black/52 to-transparent"
                     aria-hidden
                 />
-                <div
-                    className="absolute right-3 top-3 rounded-full bg-black/30 p-2 backdrop-blur-sm"
-                    aria-hidden
+                <span
+                    className="pointer-events-none absolute right-2.5 top-2.5 z-[1] inline-flex rounded-full border border-white/45 bg-black/25 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm"
+                    style={{
+                        borderColor: b.demoOverlayBorder,
+                        color: b.demoOverlayText,
+                    }}
                 >
-                    <Sparkles size={17} className="text-white/95" />
-                </div>
-                <div className="absolute inset-x-0 bottom-0 flex flex-col p-6 pt-20 text-left">
+                    Ver más
+                </span>
+                <div className="absolute inset-x-0 bottom-0 z-[1] flex flex-col items-center px-3 pb-2 pt-4 text-center">
                     <h3
-                        className="text-2xl font-normal text-white"
+                        className="text-lg font-normal leading-tight text-white sm:text-xl"
                         style={{
                             fontFamily: theme.typography.headingFont,
                         }}
@@ -3261,7 +3374,7 @@ function EstilosCarousel({
                             wordStepMs={18}
                         />
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-white/88">
+                    <p className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-white/88 sm:text-xs">
                         <StaggerText
                             text={item.descripcion}
                             revealed={revealed}
@@ -3271,51 +3384,37 @@ function EstilosCarousel({
                             wordStepMs={10}
                         />
                     </p>
-                    <span
-                        className="pointer-events-none mt-4 inline-flex w-fit items-center gap-0.5 rounded-full border bg-transparent px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider backdrop-blur-[2px] md:text-[11px]"
-                        style={{
-                            borderColor: b.demoOverlayBorder,
-                            color: b.demoOverlayText,
-                        }}
-                    >
-                        {data.demoButtonText}
-                        <ChevronRight
-                            size={13}
-                            strokeWidth={2}
-                            className="opacity-90"
-                            aria-hidden
-                        />
-                    </span>
                 </div>
             </>
         );
         const cardStyle = {
             borderColor: theme.cardBorder,
+            backgroundColor: theme.surfaceAlt,
             ...blockRevealStyle(
                 revealed,
                 cardBaseDelay + i * car.stepBetweenCardsMs,
             ),
         };
-        if (item.href) {
             return (
-                <a
+            <button
                     key={item.titulo}
-                    href={item.href}
-                    className={cardClass}
+                type="button"
+                onClick={() => setActiveModel(item)}
+                className={`${cardClass} text-center transition-transform duration-200 hover:scale-[1.01]`}
                     style={cardStyle}
+                aria-label={
+                    locale === "en"
+                        ? `Open details for ${item.titulo}`
+                        : `Abrir detalles de ${item.titulo}`
+                }
                 >
                     {inner}
-                </a>
-            );
-        }
-        return (
-            <div key={item.titulo} className={cardClass} style={cardStyle}>
-                {inner}
-            </div>
+            </button>
         );
     };
 
     return (
+        <>
         <section
             id={data.id || "muestras"}
             className="px-0 py-20 md:py-28"
@@ -3367,32 +3466,6 @@ function EstilosCarousel({
                         />
                     </p>
                 </div>
-                {showKindSplit ? (
-                    <nav
-                        className="mx-auto mt-8 flex max-w-6xl flex-wrap justify-center gap-2 px-5 md:px-8"
-                        aria-label={
-                            locale === "en"
-                                ? "Jump to a model category"
-                                : "Ir a un tipo de modelo"
-                        }
-                    >
-                        {kindGroups.map(({ kind }) => (
-                            <button
-                                key={kind}
-                                type="button"
-                                onClick={() => scrollToEstilosGrupo(kind)}
-                                className="rounded-full border px-4 py-2 text-sm font-medium shadow-sm transition-[transform,box-shadow] duration-200 hover:shadow-md active:scale-[0.98]"
-                                style={{
-                                    borderColor: theme.cardBorder,
-                                    color: tx.heading,
-                                    background: theme.background,
-                                }}
-                            >
-                                {estiloCatalogGroupTitle(kind, locale)}
-                            </button>
-                        ))}
-                    </nav>
-                ) : null}
                 {showKindSplit ? (
                     <div className="mt-4 space-y-12 md:space-y-16">
                         {kindGroups.map((group, groupIndex) => {
@@ -3519,6 +3592,156 @@ function EstilosCarousel({
                 </p>
             </div>
         </section>
+        {activeModel ? (
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modelo-modal-title"
+                className="fixed inset-0 z-[220] flex items-end justify-center bg-[rgba(22,14,10,0.72)] p-3 backdrop-blur-[4px] sm:items-center sm:p-6"
+                onClick={() => setActiveModel(null)}
+            >
+                <div
+                    className="relative w-full max-w-4xl overflow-hidden rounded-[34px] border border-[#CDB69D] bg-gradient-to-b from-[#FFFDF8] via-[#F8F0E5] to-[#EFE2D2] shadow-[0_40px_110px_rgba(24,15,10,0.45)]"
+                    onClick={(event) => event.stopPropagation()}
+                >
+                    <button
+                        type="button"
+                        onClick={() => setActiveModel(null)}
+                        aria-label={locale === "en" ? "Close modal" : "Cerrar modal"}
+                        className="absolute right-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF9F1]/85 text-[#7A5F45] backdrop-blur-md transition-colors hover:bg-[#FFF3E4]"
+                    >
+                        <X size={18} />
+                    </button>
+                    <div
+                        className="max-h-[92dvh] overflow-y-auto overscroll-contain px-4 py-6 sm:px-6 sm:py-8"
+                        style={{
+                            WebkitOverflowScrolling: "touch",
+                            touchAction: "pan-y",
+                        }}
+                    >
+                    <h3
+                        id="modelo-modal-title"
+                        className="pr-8 text-2xl font-normal text-[#3D2A1F] sm:text-3xl"
+                        style={{ fontFamily: theme.typography.headingFont }}
+                    >
+                        {activeModel.titulo}
+                    </h3>
+                    {activeModel.descripcion ? (
+                        <p className="mt-1 text-sm text-[#6A5C52]">
+                            {activeModel.descripcion}
+                        </p>
+                    ) : null}
+                    <div
+                        className="mt-4 relative overflow-hidden rounded-2xl border border-[#E7DFD4] shadow-[0_10px_28px_rgba(48,32,20,0.12)]"
+                        style={{ background: theme.surfaceAlt }}
+                    >
+                        <div
+                            className="relative aspect-[9/16]"
+                            style={{ background: theme.surfaceAlt }}
+                        >
+                            <CatalogMedia
+                                image={activeModel.image}
+                                videoSrc={activeModel.videoSrc}
+                                alt={activeModel.titulo}
+                                imageObjectFit="contain"
+                            />
+                            {activeModel.href ? (
+                                <a
+                                    href={activeModel.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full border border-white/50 bg-[#3F3127]/75 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-[#3F3127]/90"
+                                >
+                                    {locale === "en" ? "View invitation" : "Ver invitación"}
+                                    <ChevronRight size={15} />
+                                </a>
+                            ) : null}
+                        </div>
+                    </div>
+                    <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-4 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
+                        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
+                            {locale === "en"
+                                ? "What stands out in this sample"
+                                : "Lo destacable de esta muestra"}
+                        </p>
+                        <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-snug text-[#5A4A3F]">
+                            {activeModelHighlights.map((line) => (
+                                <li key={line}>{line}</li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-3 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
+                        <div className="flex items-start gap-3">
+                            <div className="min-w-0 basis-[54%]">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
+                                    {panelAvailableTitle}
+                                </p>
+                                <p className="mt-1 text-xs leading-snug text-[#6A5C52]">
+                                    {panelAvailableCopy}
+                                </p>
+                            </div>
+                            <div className="relative basis-[46%] shrink-0 overflow-hidden rounded-lg">
+                                <div className="relative aspect-[9/16] w-full">
+                                    <Image
+                                        src={
+                                            panelPreviewImageSrc ||
+                                            "/landing/media/images/panel.PNG"
+                                        }
+                                        alt={
+                                            panelPreviewImageAlt ||
+                                            (locale === "en"
+                                                ? "Guest dashboard preview"
+                                                : "Vista previa del panel de invitados")
+                                        }
+                                        fill
+                                        className="object-contain"
+                                        sizes="120px"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p
+                        className="mx-auto my-8 max-w-2xl text-center text-[1.45rem] font-normal leading-tight text-[#3D2A1F] sm:my-10 sm:text-[1.75rem]"
+                        style={{ fontFamily: theme.typography.headingFont }}
+                    >
+                        {modalPitch}
+                    </p>
+                    {premiumLeadButton ? (
+                        <div className="mt-4 flex flex-col items-center gap-1">
+                            <CtaLink
+                                btn={{
+                                    ...premiumLeadButton,
+                                    text:
+                                        locale === "en"
+                                            ? "Start my invitation"
+                                            : "Comenzar mi invitación",
+                                }}
+                                waNumber={waNumber}
+                                trackingEvent="Lead"
+                                trackingSource="plan_premium"
+                                className="inline-flex min-h-[56px] w-auto min-w-[250px] flex-col items-center justify-center rounded-full px-6 py-3 text-[15px] font-semibold leading-tight shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99]"
+                                style={{
+                                    background: theme.buttons.floatingBg,
+                                    color: theme.buttons.floatingText,
+                                }}
+                            >
+                                <span className="text-[15px] font-semibold">
+                                    {locale === "en"
+                                        ? "Start my invitation"
+                                        : "Comenzar mi invitación"}
+                                </span>
+                                <span className="mt-0.5 text-xs font-medium opacity-90">
+                                    {premiumPriceLabel}
+                                </span>
+                            </CtaLink>
+                    </div>
+                ) : null}
+            </div>
+                </div>
+            </div>
+        ) : null}
+        </>
     );
 }
 
@@ -3774,6 +3997,7 @@ function PanelSection({
     const tx = theme.text;
     return (
         <section
+            id={data.id ?? "panel"}
             className="px-5 py-20 md:px-8 md:py-28"
             style={{ background: theme.background }}
         >
@@ -3842,14 +4066,14 @@ function PanelSection({
                         </div>
                     </div>
                 ) : (
-                    <div
-                        className="relative mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border shadow-lg"
-                        style={{
-                            borderColor: theme.cardBorder,
-                            background: theme.cardBg,
-                            ...blockRevealStyle(revealed, 195),
-                        }}
-                    >
+                <div
+                    className="relative mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border shadow-lg"
+                    style={{
+                        borderColor: theme.cardBorder,
+                        background: theme.cardBg,
+                        ...blockRevealStyle(revealed, 195),
+                    }}
+                >
                         <div className="p-6 md:p-10">
                             <div className="grid grid-cols-3 gap-3 md:gap-4">
                                 {data.stats.map((s) => (
@@ -3929,7 +4153,7 @@ function PanelSection({
                                 </code>
                             </p>
                         </div>
-                    </div>
+                </div>
                 )}
                 <div className="mt-12 grid gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
                     {data.features.map((f, i) => (
@@ -4137,12 +4361,12 @@ function PlanesTdy({
                                             )}
                                         </span>
                                     ) : (
-                                        <StaggerText
-                                            text={plan.description}
-                                            revealed={revealed}
-                                            baseDelayMs={214 + i * 75}
-                                            wordStepMs={10}
-                                        />
+                                    <StaggerText
+                                        text={plan.description}
+                                        revealed={revealed}
+                                        baseDelayMs={214 + i * 75}
+                                        wordStepMs={10}
+                                    />
                                     )}
                                 </p>
                                 {data.showPrices && (
@@ -4195,14 +4419,14 @@ function PlanesTdy({
                                                             )}
                                                         </span>
                                                     ) : (
-                                                        <StaggerText
-                                                            text={f}
-                                                            revealed={revealed}
-                                                            baseDelayMs={
-                                                                232 + i * 75
-                                                            }
-                                                            wordStepMs={9}
-                                                        />
+                                                    <StaggerText
+                                                        text={f}
+                                                        revealed={revealed}
+                                                        baseDelayMs={
+                                                            232 + i * 75
+                                                        }
+                                                        wordStepMs={9}
+                                                    />
                                                     )}
                                                 </span>
                                             </li>
@@ -4572,6 +4796,13 @@ export default function LandingPageHome({
     const wa = whatsapp.number;
     const showLang = Boolean(dataEn);
     const showHeader = Boolean(header);
+    const heroMarqueeSrcs = useMemo(() => {
+        const raw = data.pageLayout?.heroMarqueeLiteSrcs ?? [];
+        return raw
+            .map((s) => s.trim())
+            .filter(Boolean)
+            .filter((s) => !isExcludedHeroMarqueeAsset(s));
+    }, [data.pageLayout?.heroMarqueeLiteSrcs]);
 
     useEffect(() => {
         if (!syncLocaleFromSearch) return;
@@ -4582,6 +4813,24 @@ export default function LandingPageHome({
     useEffect(() => {
         document.documentElement.lang = locale === "en" ? "en" : "es";
     }, [locale]);
+
+    useLayoutEffect(() => {
+        if (typeof window === "undefined") return;
+        const prev = window.history.scrollRestoration;
+        window.history.scrollRestoration = "manual";
+        const resetTop = () =>
+            window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+        resetTop();
+        requestAnimationFrame(() => {
+            resetTop();
+            requestAnimationFrame(resetTop);
+        });
+        const t = window.setTimeout(resetTop, 140);
+        return () => {
+            window.clearTimeout(t);
+            window.history.scrollRestoration = prev;
+        };
+    }, []);
 
     useEffect(() => {
         const onClickCapture = (e: MouseEvent) => {
@@ -4714,24 +4963,36 @@ export default function LandingPageHome({
                     locale={showLang ? locale : "es"}
                     reviewsTopSimple={compactHeroLayout}
                     heroSectionId={heroSectionId}
+                    heroMarqueeImageSrcs={
+                        compactHeroLayout ? heroMarqueeSrcs : undefined
+                    }
                 />
             )}
             <IncluyeSection data={sections.incluye} theme={theme} />
-            <PanelSection data={sections.panel} theme={theme} />
             <EstilosCarousel
                 data={sections.estilos}
                 theme={theme}
                 waNumber={wa}
                 locale={showLang ? locale : "es"}
+                premiumLeadButton={ctaButtons.planPremium}
+                panelPreviewImageSrc={sections.panel.imageSrc}
+                panelPreviewImageAlt={sections.panel.imageAlt}
                 endHeroPrimaryCta={
                     compactHeroLayout
                         ? {
                               locale: showLang ? locale : "es",
-                              primary: ctaButtons.heroPrimary,
+                              primary: ctaButtons.heroPrimary
+                                  ? {
+                                        ...ctaButtons.heroPrimary,
+                                        type: "anchor",
+                                        anchor: "#planes",
+                                    }
+                                  : undefined,
                           }
                         : undefined
                 }
             />
+            <PanelSection data={sections.panel} theme={theme} />
             {postEstilosRows?.length ? (
                 <>
                     {postEstilosRows
@@ -4749,12 +5010,12 @@ export default function LandingPageHome({
                                 locale,
                                 showLang,
                             })}
-                            {row.id === "servicio" ? (
-                                <ComparativaSection
-                                    data={sections.comparativa}
-                                    theme={theme}
-                                />
-                            ) : null}
+                                {row.id === "servicio" ? (
+                                    <ComparativaSection
+                                        data={sections.comparativa}
+                                        theme={theme}
+                                    />
+                                ) : null}
                         </Fragment>
                     ))}
                 </>
@@ -4767,7 +5028,10 @@ export default function LandingPageHome({
                         buttons={ctaButtons}
                         waNumber={wa}
                     />
-                    <ComparativaSection data={sections.comparativa} theme={theme} />
+                    <ComparativaSection
+                        data={sections.comparativa}
+                        theme={theme}
+                    />
                     <IdiomasSection data={sections.idiomas} theme={theme} />
                     <FaqTdy data={sections.faq} theme={themeAlt} />
                 </>

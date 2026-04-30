@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "validate:clientes": "node scripts/validate-client-invitations.mjs",
     "panel:gen-id": "node scripts/generate-panel-id.mjs",
-    "panel:audit-orphans": "node scripts/audit-orphan-panel-eventos.mjs"
+    "panel:audit-orphans": "node scripts/audit-orphan-panel-eventos.mjs",
+    "landing:marquee-lite": "node scripts/generate-landing-marquee-lite.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -75,6 +76,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "sharp": "^0.34.5",
     "@tailwindcss/postcss": "^4.2.0",
     "@types/node": "^22",
     "@types/react": "19.2.14",

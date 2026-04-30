@@ -95,18 +95,23 @@ export function LandingHeader({
 
   return (
     <header
-      className="sticky top-0 z-[45] border-b backdrop-blur-md"
+      className="sticky top-0 z-[45] flex items-center border-b border-solid backdrop-blur-md"
       style={{
-        borderColor: theme.cardBorder,
         backgroundColor: `${theme.background}e6`,
-        paddingTop: "max(0.65rem, env(safe-area-inset-top, 0px))",
+        borderBottomColor: theme.cardBorder,
       }}
     >
-      <div className="mx-auto max-w-6xl px-5 py-2.5 md:px-8 md:py-3">
+      <div
+        className="mx-auto flex w-full max-w-6xl flex-col px-5 md:px-8"
+        style={{
+          paddingTop: "max(0.45rem, env(safe-area-inset-top, 0px))",
+          paddingBottom: "max(0.35rem, env(safe-area-inset-bottom, 0px))",
+        }}
+      >
         <div className="flex items-center justify-between gap-3">
           <a
             href="/"
-            className="shrink-0 text-lg font-normal tracking-tight transition-opacity hover:opacity-80 md:text-xl"
+            className="inline-flex shrink-0 items-center text-base font-normal leading-none tracking-tight transition-opacity hover:opacity-80 md:text-lg"
             style={{ fontFamily: theme.typography.headingFont, color: tx.heading }}
             onClick={closeMenu}
           >
@@ -114,7 +119,7 @@ export function LandingHeader({
           </a>
 
           <nav
-            className="hidden flex-1 flex-wrap items-center justify-center gap-x-6 gap-y-1 text-[10px] font-semibold uppercase tracking-[0.2em] md:flex lg:text-[11px]"
+            className="hidden flex-1 flex-wrap content-center items-center justify-center gap-x-6 gap-y-1 text-[10px] font-semibold uppercase tracking-[0.2em] md:flex lg:text-[11px]"
             aria-label={locale === "es" ? "Principal" : "Main"}
           >
             <NavLinks
@@ -143,7 +148,7 @@ export function LandingHeader({
                   <button
                     type="button"
                     onClick={() => onLocaleChange("es")}
-                    className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-[color,background] duration-200"
+                    className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider transition-[color,background] duration-200 md:px-2.5 md:py-1 md:text-[11px]"
                     style={seg(locale === "es")}
                     aria-pressed={locale === "es"}
                   >
@@ -152,7 +157,7 @@ export function LandingHeader({
                   <button
                     type="button"
                     onClick={() => onLocaleChange("en")}
-                    className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-[color,background] duration-200"
+                    className="rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider transition-[color,background] duration-200 md:px-2.5 md:py-1 md:text-[11px]"
                     style={seg(locale === "en")}
                     aria-pressed={locale === "en"}
                   >
@@ -166,7 +171,7 @@ export function LandingHeader({
               <a
                 href={cta.anchor}
                 onClick={(event) => handleHeaderAnchorClick(event, cta.anchor)}
-                className="hidden rounded-full border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] transition-[background,color,transform] duration-200 hover:scale-[1.02] md:inline-flex"
+                className="hidden rounded-full border px-3.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] transition-[background,color,transform] duration-200 hover:scale-[1.02] md:inline-flex md:px-4 md:py-2 md:text-[11px]"
                 style={{
                   borderColor: theme.foreground,
                   color: theme.foreground,
@@ -179,7 +184,7 @@ export function LandingHeader({
 
             <button
               type="button"
-              className="flex h-10 w-10 shrink-0 items-center justify-center md:hidden"
+              className="flex h-9 w-9 shrink-0 items-center justify-center md:hidden"
               aria-expanded={menuOpen}
               aria-controls={menuId}
               aria-label={menuOpen ? menuLabelClose : menuLabel}
@@ -215,7 +220,7 @@ export function LandingHeader({
         >
           <div className={`min-h-0 overflow-hidden ${menuOpen ? "" : "pointer-events-none"}`}>
             <div
-              className="border-t pt-4 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none"
+              className="border-t pt-3 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none"
               style={{
                 borderColor: theme.cardBorder,
                 opacity: menuOpen ? 1 : 0,
@@ -230,14 +235,14 @@ export function LandingHeader({
                   nav={nav}
                   tx={tx}
                   onNavigate={closeMenu}
-                  className="rounded-lg px-3 py-3 transition-colors duration-200 hover:bg-black/[0.04]"
+                  className="rounded-lg px-3 py-2.5 transition-colors duration-200 hover:bg-black/[0.04]"
                 />
               </nav>
               {cta ? (
                 <a
                   href={cta.anchor}
                   onClick={(event) => handleHeaderAnchorClick(event, cta.anchor, closeMenu)}
-                  className="mb-4 mt-1 block rounded-full border px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] transition-[transform,opacity] duration-200 active:scale-[0.99]"
+                  className="mb-3 mt-1 block rounded-full border px-4 py-2.5 text-center text-[11px] font-semibold uppercase tracking-[0.18em] transition-[transform,opacity] duration-200 active:scale-[0.99]"
                   style={{
                     borderColor: theme.foreground,
                     color: theme.foreground,
