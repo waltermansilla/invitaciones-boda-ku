@@ -43,7 +43,7 @@ import {
     getUiStrings,
 } from "./strings";
 import { trackGaEvent } from "@/lib/google-analytics";
-import { trackMetaEvent } from "@/lib/meta-pixel";
+import { trackMetaEvent, updateMetaPixelAdvancedMatching } from "@/lib/meta-pixel";
 
 type Currency = "ARS" | "USD";
 type PlanKey = "premium" | "diseno-unico";
@@ -632,6 +632,13 @@ function ConfiguradorPageContent() {
         const v = email.trim();
         return v.length > 5 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
     }, [email]);
+
+    useEffect(() => {
+        if (!hasValidEmail) return;
+        updateMetaPixelAdvancedMatching({
+            em: email.trim().toLowerCase(),
+        });
+    }, [hasValidEmail, email]);
 
     const MIN_SECTION_BLOCKS = FREE_SECTIONS;
 
