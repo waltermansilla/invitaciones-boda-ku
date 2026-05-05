@@ -33,6 +33,7 @@ interface RSVPSectionProps {
             label: string;
             placeholder?: string;
             tituloPanel?: string;
+            required?: boolean;
         }[];
         submitButton: string;
     };
@@ -125,7 +126,13 @@ function buildSongRequestSummary(guests: GuestForm[]): string | null {
 
 function buildPanelExtraSummary(
     guests: GuestForm[],
-    extraInputs: { id: string; label: string; placeholder?: string; tituloPanel?: string }[],
+    extraInputs: {
+        id: string;
+        label: string;
+        placeholder?: string;
+        tituloPanel?: string;
+        required?: boolean;
+    }[],
 ): string | null {
     const rows: string[] = [];
     guests.forEach((guest) => {
@@ -133,12 +140,16 @@ function buildPanelExtraSummary(
         extraInputs.forEach((input) => {
             const value = guest.extraValues?.[input.label]?.trim();
             if (!value) return;
-            const panelTitle = (input.tituloPanel || input.label || "").trim();
-            if (!panelTitle) return;
+            const hasCustomPanelTitle = typeof input.tituloPanel === "string";
+            const panelTitle = hasCustomPanelTitle
+                ? input.tituloPanel.trim()
+                : (input.label || "").trim();
             rows.push(
-                guests.length > 1 && fullName
-                    ? `${fullName} - ${panelTitle}: ${value}`
-                    : `${panelTitle}: ${value}`,
+                panelTitle
+                    ? guests.length > 1 && fullName
+                        ? `${fullName} - ${panelTitle}: ${value}`
+                        : `${panelTitle}: ${value}`
+                    : value,
             );
         });
     });
@@ -333,6 +344,18 @@ export default function RSVPSection({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (isMuestra) { setSubmitted(true); return; }
+        const missingRequiredExtra = guests.find((guest) =>
+            guest.attendance === "yes" &&
+            extraInputs.some(
+                (input) =>
+                    input.required &&
+                    !(guest.extraValues?.[input.label] || "").trim(),
+            ),
+        );
+        if (missingRequiredExtra) {
+            setError("Completa los campos obligatorios para confirmar asistencia.");
+            return;
+        }
         const songSummary = buildSongRequestSummary(guests);
         const panelExtraSummary = buildPanelExtraSummary(guests, extraInputs);
 
@@ -710,6 +733,7 @@ export default function RSVPSection({
                                     <div key={extraInput.id} className="border-t border-current/10 px-4 py-3">
                                         <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
                                             {extraInput.label}
+                                            {extraInput.required ? " *" : ""}
                                         </label>
                                         <textarea
                                             ref={(el) => {
@@ -723,6 +747,10 @@ export default function RSVPSection({
                                                 target.style.height = "auto";
                                                 target.style.height = `${target.scrollHeight}px`;
                                             }}
+                                            required={
+                                                Boolean(extraInput.required) &&
+                                                guest.attendance === "yes"
+                                            }
                                             rows={1}
                                             className="w-full resize-none overflow-hidden bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
                                             style={{ fontSize: "16px" }}

@@ -854,16 +854,19 @@
                     "songRequestLabel": "Cancion sugerida (opcional)",
                     "songRequest": "Que cancion no puede faltar?",
                     "_comment_extraInputs": "Opcional: mas campos de texto. Se muestran debajo del campo de cancion.",
+                    "_comment_extraInputs_required": "Cada input puede incluir required: true para hacerlo obligatorio al confirmar asistencia (cuando el invitado marca que SI asiste).",
                     "extraInputs": [
                         {
                             "id": "mensaje-cumple",
                             "label": "Mensaje para la cumpleanera",
-                            "placeholder": "Escribi tu mensaje"
+                            "placeholder": "Escribi tu mensaje",
+                            "required": false
                         },
                         {
                             "id": "acompanante",
                             "label": "Nombre de acompanante (si aplica)",
-                            "placeholder": "Nombre completo"
+                            "placeholder": "Nombre completo",
+                            "required": false
                         }
                     ],
                     "submitButton": "Confirmar"

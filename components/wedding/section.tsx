@@ -338,6 +338,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
                   id: string
                   label: string
                   placeholder?: string
+                  required?: boolean
                 }[]
                 submitButton: string
               }

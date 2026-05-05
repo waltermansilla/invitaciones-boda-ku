@@ -1010,16 +1010,19 @@
                     "_comment_songRequest": "Opcional: placeholder del campo de cancion. Si se omite o queda vacio, el campo de cancion no se muestra.",
                     "songRequest": "Que cancion no puede faltar?",
                     "_comment_extraInputs": "Opcional: mas campos de texto. Se muestran debajo del campo de cancion.",
+                    "_comment_extraInputs_required": "Cada input puede incluir required: true para hacerlo obligatorio al confirmar asistencia (cuando el invitado marca que SI asiste).",
                     "extraInputs": [
                         {
                             "id": "mensaje-novios",
                             "label": "Mensaje para los novios",
-                            "placeholder": "Escribi tu mensaje"
+                            "placeholder": "Escribi tu mensaje",
+                            "required": false
                         },
                         {
                             "id": "codigo-mesa",
                             "label": "Codigo de mesa (si aplica)",
-                            "placeholder": "Ej: Mesa 12"
+                            "placeholder": "Ej: Mesa 12",
+                            "required": false
                         }
                     ],
                     "submitButton": "Confirmar"
