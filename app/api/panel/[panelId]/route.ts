@@ -7,6 +7,7 @@ import {
   getEventDataFromConfig,
   invitationAccessTokenFromConfig,
   invitationPublicPathFromConfig,
+  panelDisplayForVariant,
   panelVariantesFromConfig,
 } from "@/lib/config-loader"
 import { normalizeColadoSingular } from "@/lib/colado-label"
@@ -109,6 +110,7 @@ export async function GET(
       variantes.map((v) => v.id),
       defaultVariante,
     )
+    const panelDisplay = panelDisplayForVariant(config, activeVariante)
 
     const invitationPath = invitationPublicPathFromConfig(config)
     const invitationToken = invitationAccessTokenFromConfig(config)
@@ -176,16 +178,20 @@ export async function GET(
         nuevoEvento as EventoRow,
         configData,
       )
+      const eventoMergedConVariante = {
+        ...eventoMerged,
+        fecha_evento: panelDisplay.panel_fecha_evento ?? eventoMerged.fecha_evento,
+      }
 
       return NextResponse.json({
-        evento: eventoMerged,
+        evento: eventoMergedConVariante,
         invitados: [],
         stats: { confirmados: 0, noAsisten: 0, pendientes: 0 },
         invitationPath,
         invitationToken,
         panelConfig: {
-          theme: configData.panel_theme,
-          labels: configData.panel_labels,
+          theme: panelDisplay.panel_theme,
+          labels: panelDisplay.panel_labels,
           confirmacion: confirmacionInvitacion,
           limiteInvitados,
           limiteColados,
@@ -200,6 +206,10 @@ export async function GET(
     }
 
     const eventoMerged = mergeEventoFromConfig(evento as EventoRow, configData)
+    const eventoMergedConVariante = {
+      ...eventoMerged,
+      fecha_evento: panelDisplay.panel_fecha_evento ?? eventoMerged.fecha_evento,
+    }
 
     const { data: invitados, error: invitadosError } = await supabase
       .from("invitados")
@@ -266,14 +276,14 @@ export async function GET(
     const plazasOcupadas = plazasOcupadasPorInvitados(invitados || [])
 
     return NextResponse.json({
-      evento: eventoMerged,
+      evento: eventoMergedConVariante,
       invitados: invitadosFiltradosPorVariante,
       stats: { confirmados, noAsisten, pendientes },
       invitationPath,
       invitationToken,
       panelConfig: {
-        theme: configData.panel_theme,
-        labels: configData.panel_labels,
+        theme: panelDisplay.panel_theme,
+        labels: panelDisplay.panel_labels,
         confirmacion: confirmacionInvitacion,
         limiteInvitados,
         limiteColados,

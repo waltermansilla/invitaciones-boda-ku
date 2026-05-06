@@ -70,6 +70,25 @@ export interface PanelVariantDefinition {
   legacyIds?: string[]
 }
 
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+function deepMergeRecord(
+  base: Record<string, unknown>,
+  patch: Record<string, unknown>,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = { ...base }
+  for (const [key, patchValue] of Object.entries(patch)) {
+    const baseValue = out[key]
+    out[key] =
+      isPlainObject(baseValue) && isPlainObject(patchValue)
+        ? deepMergeRecord(baseValue, patchValue)
+        : patchValue
+  }
+  return out
+}
+
 function slugFromFileName(fileName: string): string {
   return fileName.replace(/\.json$/i, "").replace(/^\d+-/, "")
 }
@@ -296,6 +315,87 @@ export function panelVariantesFromConfig(
   return {
     variantes: [{ id: "default", label: baseLabel }, ...out],
     defaultVariante,
+  }
+}
+
+/**
+ * Theme/labels efectivos del panel para la variante `pv`.
+ * Mezcla solo `variants[pv].rsvpPanel.theme|labels` sobre la base.
+ */
+export function panelDisplayForVariant(
+  config: EventConfig,
+  variantId: string,
+): {
+  panel_theme: Record<string, unknown> | null
+  panel_labels: Record<string, unknown> | null
+  panel_fecha_evento: string | null
+} {
+  const baseTheme = isPlainObject(config.rsvpPanel?.theme)
+    ? config.rsvpPanel.theme
+    : null
+  const baseLabels = isPlainObject(config.rsvpPanel?.labels)
+    ? config.rsvpPanel.labels
+    : null
+
+  const baseFechaEvento =
+    typeof config.rsvpPanel?.fechaEvento === "string" &&
+    config.rsvpPanel.fechaEvento.trim()
+      ? config.rsvpPanel.fechaEvento.trim()
+      : null
+
+  if (!variantId || variantId === "default") {
+    return {
+      panel_theme: baseTheme,
+      panel_labels: baseLabels,
+      panel_fecha_evento: baseFechaEvento,
+    }
+  }
+
+  const variantsRaw = config.variants
+  if (!isPlainObject(variantsRaw)) {
+    return {
+      panel_theme: baseTheme,
+      panel_labels: baseLabels,
+      panel_fecha_evento: baseFechaEvento,
+    }
+  }
+  const variantRaw = variantsRaw[variantId]
+  if (!isPlainObject(variantRaw)) {
+    return {
+      panel_theme: baseTheme,
+      panel_labels: baseLabels,
+      panel_fecha_evento: baseFechaEvento,
+    }
+  }
+  const rsvpPanelPatch = variantRaw.rsvpPanel
+  if (!isPlainObject(rsvpPanelPatch)) {
+    return {
+      panel_theme: baseTheme,
+      panel_labels: baseLabels,
+      panel_fecha_evento: baseFechaEvento,
+    }
+  }
+
+  const themePatch = isPlainObject(rsvpPanelPatch.theme)
+    ? rsvpPanelPatch.theme
+    : null
+  const labelsPatch = isPlainObject(rsvpPanelPatch.labels)
+    ? rsvpPanelPatch.labels
+    : null
+  const fechaEventoPatch =
+    typeof rsvpPanelPatch.fechaEvento === "string" &&
+    rsvpPanelPatch.fechaEvento.trim()
+      ? rsvpPanelPatch.fechaEvento.trim()
+      : null
+
+  return {
+    panel_theme: themePatch
+      ? deepMergeRecord(baseTheme || {}, themePatch)
+      : baseTheme,
+    panel_labels: labelsPatch
+      ? deepMergeRecord(baseLabels || {}, labelsPatch)
+      : baseLabels,
+    panel_fecha_evento: fechaEventoPatch ?? baseFechaEvento,
   }
 }
 

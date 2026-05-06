@@ -33,7 +33,7 @@
         "limiteInvitados": 150,
         "panelId": "alex-fabi-hB5j8dk1",
         "fechaEvento": "2026-10-31",
-        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 31 de Octubre",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 31 de Octubre.",
         "theme": {
             "primaryColor": "#c8b273"
         },
@@ -132,10 +132,7 @@
             "id": "quote-welcome",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "Estamos emocionados de compartir este momento tan especial con las personas que más queremos. ¡Contamos con tu presencia!",
                 "author": "",
@@ -149,11 +146,7 @@
             "id": "date-info",
             "enabled": true,
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "value",
-                "button"
-            ],
+            "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "31 de Octubre del 2026"
@@ -165,18 +158,11 @@
             "type": "locationInfo",
             "id": "location-recepcion",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Civil y Fiesta",
                 "address": "Salón 'La Nonnina', Neuquén",
-                "order": [
-                    "address",
-                    "time"
-                ],
+                "order": ["address", "time"],
                 "datetime": {
                     "time": "20:00 hs"
                 },
@@ -192,9 +178,7 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -210,10 +194,7 @@
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "timeline"
-            ],
+            "blocks": ["title", "timeline"],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -255,9 +236,7 @@
                 "modal"
             ],
             "data": {
-                "icons": [
-                    "gem"
-                ],
+                "icons": ["gem"],
                 "title": "Dress Code",
                 "subtitle": "Elegante, formal",
                 "description": "Por favor, evitar los siguientes colores:",
@@ -265,12 +244,7 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
-                    "colors": [
-                        "#ffffff",
-                        "#f3d9b9",
-                        "#d3b996",
-                        "#1982c4"
-                    ]
+                    "colors": ["#ffffff", "#f3d9b9", "#d3b996", "#1982c4"]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -284,11 +258,7 @@
             "type": "adultsOnly",
             "id": "adults-only",
             "bgColor": "primary",
-            "blocks": [
-                "icon",
-                "title",
-                "description"
-            ],
+            "blocks": ["icon", "title", "description"],
             "data": {
                 "icon": "baby",
                 "title": "Sólo adultos",
@@ -300,9 +270,7 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -317,11 +285,7 @@
             "id": "playlist-suggestion",
             "enabled": true,
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "description",
-                "button"
-            ],
+            "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Playlist de la fiesta",
                 "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
@@ -338,10 +302,7 @@
             "type": "truths",
             "id": "truths-game",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "questions"
-            ],
+            "blocks": ["title", "questions"],
             "data": {
                 "title": "¿Cuánto nos conoces?",
                 "finishText": "Gracias por jugar. Ahora ya saben un poco mas sobre nosotros. ¡Nos vemos en la fiesta!",
@@ -389,13 +350,7 @@
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "background",
-            "blocks": [
-                "icon",
-                "title",
-                "description",
-                "button",
-                "modal"
-            ],
+            "blocks": ["icon", "title", "description", "button", "modal"],
             "data": {
                 "icon": "plane",
                 "title": "Luna de miel",
@@ -430,14 +385,10 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos3",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
-                "images": [
-                    "/clientes/boda/18-alex-fabi/images/5.jpeg"
-                ]
+                "images": ["/clientes/boda/18-alex-fabi/images/5.jpeg"]
             }
         },
         {
@@ -447,10 +398,7 @@
             "id": "quote-welcome2",
             "enabled": true,
             "bgColor": "background",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "El amor no sólo se construye entre dos, también se enriquece con quienes están presentes en los momentos más importantes de nuestra vida.",
                 "author": "",
@@ -463,21 +411,12 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "form"
-            ],
+            "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 20 de Septiembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
+                "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -513,10 +452,7 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": [
-                "image",
-                "coupleNames"
-            ],
+            "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/18-alex-fabi/images/final.jpeg"
@@ -527,10 +463,7 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": [
-                "socialLinks",
-                "brandName"
-            ],
+            "blocks": ["socialLinks", "brandName"],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [
@@ -545,5 +478,75 @@
                 ]
             }
         }
-    ]
+    ],
+    "variants": {
+        "parana": {
+            "baseLabel": "Neuquén",
+            "label": "Paraná",
+            "rsvpPanel": {
+                "fechaEvento": "2027-01-29",
+                "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 29 de Enero.",
+                "theme": {
+                    "primaryColor": "#385e78"
+                }
+            },
+            "hero": {
+                "eventDate": "2027-01-29T00:00:00"
+            },
+            "sections": [
+                {
+                    "id": "date-info",
+                    "data": {
+                        "value": "29 de Enero del 2027"
+                    }
+                },
+                {
+                    "id": "location-recepcion",
+                    "data": {
+                        "title": "Iglesia y Fiesta",
+                        "address": "Salón 'Los Silos', San Benito, Entre Ríos",
+                        "datetime": {
+                            "time": "Horario a definir"
+                        },
+                        "button": {
+                            "url": "https://maps.app.goo.gl/DR15DrYTVJtgwdPt5?g_st=iw"
+                        }
+                    }
+                },
+                {
+                    "id": "itinerary-timeline",
+                    "data": {
+                        "events": [
+                            {
+                                "icon": "church",
+                                "name": "Ceremonia religiosa",
+                                "time": "Horario a definir"
+                            },
+                            {
+                                "icon": "party",
+                                "name": "Fiesta y celebración",
+                                "time": "Horario a definir",
+                                "button": {
+                                    "text": "Cómo llegar",
+                                    "url": "https://maps.app.goo.gl/DR15DrYTVJtgwdPt5?g_st=iw",
+                                    "variant": "primary"
+                                }
+                            },
+                            {
+                                "icon": "clock",
+                                "name": "Fin de fiesta",
+                                "time": "05:00 hs"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "rsvp-form",
+                    "data": {
+                        "deadline": ""
+                    }
+                }
+            ]
+        }
+    }
 }
