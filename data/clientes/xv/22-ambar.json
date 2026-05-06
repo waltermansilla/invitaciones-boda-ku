@@ -386,6 +386,7 @@
                             "label": "Por favor, indicá tu DNI",
                             "placeholder": "Ej: 40.238.243",
                             "tituloPanel": "DNI",
+                            "a4": "label",
                             "required": true
                         }
                     ],

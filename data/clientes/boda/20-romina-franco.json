@@ -367,7 +367,8 @@
                             "id": "mensajersvp",
                             "label": "¿Algún mensaje para los novios?",
                             "placeholder": "Escribí tu mensaje",
-                            "tituloPanel": "Mensaje"
+                            "tituloPanel": "Mensaje",
+                            "a4": "bottom"
                         }
                     ],
                     "submitButton": "Confirmar"

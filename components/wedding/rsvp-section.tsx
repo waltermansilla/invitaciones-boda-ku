@@ -47,6 +47,14 @@ interface RSVPSectionProps {
             label: string;
             placeholder?: string;
             tituloPanel?: string;
+            /**
+             * A4 lista/PDF del panel: `label` columna en la tabla,
+             * `bottom` bloque después de la planilla (título `${tituloPanel}s` + nombre + texto).
+             * Compat: `labelA4: true` = `label`.
+             */
+            a4?: "label" | "bottom";
+            /** @deprecated Usar `a4: \"label\"`. */
+            labelA4?: boolean;
             required?: boolean;
         }[];
         submitButton: string;

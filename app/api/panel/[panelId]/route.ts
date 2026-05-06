@@ -8,8 +8,14 @@ import {
   invitationAccessTokenFromConfig,
   invitationPublicPathFromConfig,
   panelDisplayForVariant,
+  PanelVariantDefinition,
   panelVariantesFromConfig,
 } from "@/lib/config-loader"
+import {
+  mergeInvitationClientVariant,
+  type ClientConfig,
+} from "@/lib/get-client-config"
+import { extraInputsA4LayoutFromMergedClient } from "@/lib/panel-a4-extras"
 import { normalizeColadoSingular } from "@/lib/colado-label"
 import { resolveEventoForPanelConfig } from "@/lib/panel-evento-resolve"
 import { panelConfirmacionFromConfig } from "@/lib/panel-confirmacion"
@@ -52,6 +58,21 @@ function resolveStoredVariantToKnown(
   if (direct) return direct.id
   const byLegacy = variantes.find((v) => (v.legacyIds || []).includes(raw))
   return byLegacy?.id || fallback
+}
+
+function invitationVariantMergeKeyForSections(
+  activeVariante: string,
+  variantesCfg: PanelVariantDefinition[],
+): string | undefined {
+  if (activeVariante === "default") return undefined
+  const def = variantesCfg.find((v) => v.id === activeVariante)
+  if (!def) return undefined
+  if (
+    typeof def.invitationVariant === "string" &&
+    def.invitationVariant.trim()
+  )
+    return def.invitationVariant.trim()
+  return activeVariante
 }
 
 function parseCupoColados(value: unknown): number {
@@ -114,6 +135,19 @@ export async function GET(
 
     const invitationPath = invitationPublicPathFromConfig(config)
     const invitationToken = invitationAccessTokenFromConfig(config)
+
+    const mergeInvKey = invitationVariantMergeKeyForSections(
+      activeVariante,
+      variantes,
+    )
+    const mergedForA4 = mergeInvitationClientVariant(
+      config as unknown as ClientConfig,
+      mergeInvKey,
+    )
+    const {
+      columns: extraInputsA4,
+      bottom: extraInputsA4Bottom,
+    } = extraInputsA4LayoutFromMergedClient(mergedForA4)
 
     const confirmacionInvitacion = panelConfirmacionFromConfig(
       config.rsvpPanel?.confirmacion,
@@ -201,6 +235,8 @@ export async function GET(
           activeVariante,
           coladosEnabled,
           coladoLabel,
+          extraInputsA4,
+          extraInputsA4Bottom,
         },
       })
     }
@@ -293,6 +329,8 @@ export async function GET(
         activeVariante,
         coladosEnabled,
         coladoLabel,
+        extraInputsA4,
+        extraInputsA4Bottom,
       },
     })
   } catch (e) {

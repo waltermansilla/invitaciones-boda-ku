@@ -6,6 +6,7 @@ import {
     Trash2,
     Edit2,
     Plus,
+    Download,
     Users,
     User,
     Check,
@@ -737,6 +738,20 @@ export default function PanelPage({
                         Faltan {diasRestantes} días
                     </p>
                 )}
+                <div className="absolute bottom-3 left-5">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            const url = `/panel/${panelId}/print?pv=${encodeURIComponent(panelVariant)}`;
+                            window.open(url, "_blank", "noopener,noreferrer");
+                        }}
+                        aria-label="Guardar lista en PDF"
+                        title="Lista A4 para guardar en PDF"
+                        className="inline-flex shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/15 px-3 py-1.5 text-white backdrop-blur-sm transition-opacity hover:opacity-90"
+                    >
+                        <Download className="h-4 w-4" aria-hidden />
+                    </button>
+                </div>
                 <div className="absolute bottom-3 right-5">
                     <button
                         type="button"
@@ -912,7 +927,9 @@ export default function PanelPage({
                             className="rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors"
                             style={{
                                 backgroundColor:
-                                    filter === "colados" ? primaryColor : "#fff",
+                                    filter === "colados"
+                                        ? primaryColor
+                                        : "#fff",
                                 color: filter === "colados" ? "#fff" : "#666",
                                 border:
                                     filter === "colados"
@@ -2556,10 +2573,7 @@ function EditInvitadoModal({
         typeof invitado.cupo_colados === "number"
             ? Math.max(
                   0,
-                  Math.min(
-                      limiteColadosMax,
-                      Math.floor(invitado.cupo_colados),
-                  ),
+                  Math.min(limiteColadosMax, Math.floor(invitado.cupo_colados)),
               )
             : 0,
     );

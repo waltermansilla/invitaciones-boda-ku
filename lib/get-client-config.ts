@@ -171,6 +171,14 @@ function applyVariantToConfig(
   return result
 }
 
+/** Panel / A4: mismo merge de secciones RSVP que la invitación para una clave de variante. */
+export function mergeInvitationClientVariant(
+  baseConfig: ClientConfig,
+  variantKey?: string,
+): ClientConfig {
+  return applyVariantToConfig(baseConfig, variantKey)
+}
+
 function resolveClientFilePath(tipo: string, slug: string): string | null {
   const tipoDir = path.join(process.cwd(), "data", "clientes", tipo)
   if (!fs.existsSync(tipoDir)) return null

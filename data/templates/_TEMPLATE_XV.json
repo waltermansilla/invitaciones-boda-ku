@@ -868,6 +868,7 @@
                     "songRequest": "Que cancion no puede faltar?",
                     "_comment_extraInputs": "Opcional: mas campos de texto. Se muestran debajo del campo de cancion.",
                     "_comment_extraInputs_required": "Cada input puede incluir required: true para hacerlo obligatorio al confirmar asistencia (cuando el invitado marca que SI asiste).",
+                    "_comment_a4": "Opcional: a4: label = columna en la tabla A4 (tituloPanel como encabezado). a4: bottom = bloque bajo la planilla titulo '${tituloPanel}s' + cada nombre que escribió y su texto. Sin clave o songRequest no van al A4.",
                     "extraInputs": [
                         {
                             "id": "mensaje-cumple",
