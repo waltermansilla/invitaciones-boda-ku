@@ -713,23 +713,33 @@ export default function RSVPSection({
             setSubmitting(true);
             setError(null);
             try {
+                const titularIndex = guestsForSubmit.findIndex(
+                    (g) => !g.isColado,
+                );
+                const integrantesPayload = guestsForSubmit
+                    .filter((g, idx) =>
+                        invitado?.tipo === "familia"
+                            ? true
+                            : g.isColado ||
+                              (invitado?.tipo === "persona" &&
+                                  idx !== titularIndex),
+                    )
+                    .map((g) => ({
+                        id: g.id,
+                        nombre: `${g.firstName} ${g.lastName}`.trim(),
+                        asiste: g.attendance === "yes",
+                        restricciones:
+                            g.dietary !== "Ninguno" ? g.dietary : null,
+                        es_colado:
+                            invitado?.tipo === "persona"
+                                ? true
+                                : Boolean(g.isColado),
+                    }));
                 const res = await fetch(`/api/rsvp/${panel.codigo}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        integrantes: guestsForSubmit
-                            .filter(
-                                (g) =>
-                                    invitado?.tipo === "familia" || g.isColado,
-                            )
-                            .map((g) => ({
-                                id: g.id,
-                                nombre: `${g.firstName} ${g.lastName}`.trim(),
-                                asiste: g.attendance === "yes",
-                                restricciones:
-                                    g.dietary !== "Ninguno" ? g.dietary : null,
-                                es_colado: Boolean(g.isColado),
-                            })),
+                        integrantes: integrantesPayload,
                         asiste: guestsForSubmit.some(
                             (g) => g.attendance === "yes",
                         ),

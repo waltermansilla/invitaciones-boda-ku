@@ -454,6 +454,19 @@ export default function PanelPage({
 
     const { evento, invitados, stats } = data;
     const total = stats.confirmados + stats.noAsisten + stats.pendientes;
+    const coladosConfirmados = invitados.reduce((acc, inv) => {
+        const confirmadosColadosInvitado =
+            inv.integrantes?.filter(
+                (integrante) =>
+                    Boolean(integrante.es_colado) &&
+                    integrante.estado === "confirmado",
+            ).length ?? 0;
+        return acc + confirmadosColadosInvitado;
+    }, 0);
+    const confirmadosSinColados = Math.max(
+        stats.confirmados - coladosConfirmados,
+        0,
+    );
     const limitePlazas = data.panelConfig?.limiteInvitados;
     const plazasOcupadas = data.panelConfig?.plazasOcupadas ?? 0;
     const cupoPanelLleno =
@@ -748,7 +761,7 @@ export default function PanelPage({
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                     <div
-                        className="rounded-lg px-3 py-4 text-center"
+                        className="flex min-h-[118px] flex-col items-center justify-center rounded-lg px-3 py-4 text-center"
                         style={{ backgroundColor: "#d4edda" }}
                     >
                         <p
@@ -763,8 +776,17 @@ export default function PanelPage({
                         >
                             {labels?.confirmedLabel || "Confirmados"}
                         </p>
+                        {coladosConfirmados > 0 && (
+                            <p
+                                className="mt-1 text-[10px]"
+                                style={{ color: "#155724", opacity: 0.8 }}
+                            >
+                                ({confirmadosSinColados} + {coladosConfirmados}{" "}
+                                colados)
+                            </p>
+                        )}
                     </div>
-                    <div className="rounded-lg bg-neutral-100 px-3 py-4 text-center">
+                    <div className="flex min-h-[118px] flex-col items-center justify-center rounded-lg bg-neutral-100 px-3 py-4 text-center">
                         <p className="text-2xl font-bold text-neutral-600">
                             {stats.pendientes}
                         </p>
@@ -773,7 +795,7 @@ export default function PanelPage({
                         </p>
                     </div>
                     <div
-                        className="rounded-lg px-3 py-4 text-center"
+                        className="flex min-h-[118px] flex-col items-center justify-center rounded-lg px-3 py-4 text-center"
                         style={{ backgroundColor: "#f5d5d5" }}
                     >
                         <p
@@ -1439,7 +1461,15 @@ function InvitadoRow({
                         )}
                     </div>
                 )}
-                {renderEstadoBadge()}
+                <div className="flex items-center gap-1">
+                    {invitado.tipo !== "integrante" &&
+                        (invitado.cupo_colados ?? 0) > 0 && (
+                            <span className="rounded bg-neutral-200 px-2 py-0.5 text-[10px] font-medium text-neutral-600">
+                                +{invitado.cupo_colados}
+                            </span>
+                        )}
+                    {renderEstadoBadge()}
+                </div>
             </div>
             {expanded && (
                 <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3">
