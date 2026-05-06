@@ -30,7 +30,7 @@
         "enabled": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
-        "limiteInvitados": 150,
+        "limiteInvitados": 300,
         "panelId": "alex-fabi-hB5j8dk1",
         "fechaEvento": "2026-10-31",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 31 de Octubre.",
