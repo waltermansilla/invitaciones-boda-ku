@@ -6,9 +6,13 @@ export type InvitadoPlazasRow = {
 }
 
 export function plazasDeUnInvitado(inv: InvitadoPlazasRow): number {
+    const integrantesCount = Array.isArray(inv.integrantes) ? inv.integrantes.length : 0
     if (inv.tipo === "familia") {
-        const k = Array.isArray(inv.integrantes) ? inv.integrantes.length : 0
-        return k > 0 ? k : 1
+        return integrantesCount > 0 ? integrantesCount : 1
+    }
+    if (integrantesCount > 0) {
+        // Persona con colados cargados como integrantes.
+        return 1 + integrantesCount
     }
     return 1
 }
@@ -37,4 +41,21 @@ export function limiteInvitadosPanelFromConfig(
     if (typeof n !== "number" || !Number.isFinite(n)) return null
     const f = Math.floor(n)
     return f >= 1 ? f : null
+}
+
+/** Default cuando `rsvpPanel.limiteColados` no está definido o es inválido. */
+export const DEFAULT_LIMITE_COLADOS_PANEL = 5
+
+/**
+ * `limiteColados` en JSON: máximo cupo de colados por invitado desde el panel (0…N).
+ * Ausente o negativo = {@link DEFAULT_LIMITE_COLADOS_PANEL}.
+ */
+export function limiteColadosMaxFromConfig(
+    rsvpPanel: { limiteColados?: number } | undefined,
+): number {
+    const n = rsvpPanel?.limiteColados
+    if (typeof n !== "number" || !Number.isFinite(n)) return DEFAULT_LIMITE_COLADOS_PANEL
+    const f = Math.floor(n)
+    if (f < 0) return DEFAULT_LIMITE_COLADOS_PANEL
+    return f
 }

@@ -27,6 +27,21 @@ export interface EventConfig {
     labels?: Record<string, unknown>
     defaultVariante?: string
     confirmationMessage?: string
+    /** Solo con `confirmacion: formulario`: RSVP sin ?i= puede crear invitado en el panel. */
+    registrarSinCodigoEnPanel?: boolean
+    /** Habilita cupo de colados por invitado/familia desde panel + RSVP. */
+    colados?: boolean
+    /**
+     * Palabra(s) en singular para el invitado extra (default "colado").
+     * En UI el plural añade "s" a cada palabra separada por espacios.
+     * Recomendado: palabras que en -s suenan bien (colado, amigo, persona extra, …).
+     */
+    coladoLabel?: string
+    /**
+     * Tope máximo de `cupo_colados` por invitado al cargarlo desde el panel (0…N).
+     * Sin clave o valor inválido = 5.
+     */
+    limiteColados?: number
     /** Tope de plazas en el panel (persona=1; familia=cantidad de integrantes). Sin clave = sin límite. */
     limiteInvitados?: number
     /**

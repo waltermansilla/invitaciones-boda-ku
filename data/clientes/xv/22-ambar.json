@@ -33,6 +33,8 @@
         "enabled": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
+        "colados": true,
+
         "limiteInvitados": 150,
         "panelId": "xv-ambar-P82bv19n",
         "fechaEvento": "2026-05-22",
@@ -302,7 +304,7 @@
             "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Creciendo, soñando y aprendiendo que pada paso forma parte de algo mucho más grande.",
+                "text": "Creciendo, soñando y aprendiendo que cada paso forma parte de algo mucho más grande.",
                 "author": "",
                 "decorativeLines": true
             }

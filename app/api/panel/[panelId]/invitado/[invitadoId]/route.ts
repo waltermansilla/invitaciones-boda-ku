@@ -6,6 +6,7 @@ import {
   type EventConfig,
 } from "@/lib/config-loader"
 import {
+  limiteColadosMaxFromConfig,
   limiteInvitadosPanelFromConfig,
   plazasOcupadasPorInvitados,
 } from "@/lib/panel-plazas"
@@ -17,6 +18,13 @@ function panelIdParamInvalid(panelId: string): boolean {
     panelId.length > 200 ||
     /[\s<>#"']/.test(panelId)
   )
+}
+
+function parseCupoColados(value: unknown): number | null {
+  if (value === undefined) return null
+  if (typeof value !== "number" || !Number.isFinite(value)) return 0
+  const n = Math.floor(value)
+  return n >= 0 ? n : 0
 }
 
 async function invitadoBelongsToPanel(
@@ -177,6 +185,13 @@ export async function PUT(
   if (body.mensaje !== undefined) updateData.mensaje = body.mensaje
   if (body.cancion !== undefined) updateData.cancion = body.cancion
   if (body.panel_variant !== undefined) updateData.panel_variant = body.panel_variant
+  const parsedCupoColados = parseCupoColados(body.cupo_colados)
+  if (parsedCupoColados !== null) {
+    const maxCupo = panelAuth.rsvpPanel?.colados
+      ? limiteColadosMaxFromConfig(panelAuth.rsvpPanel)
+      : 0
+    updateData.cupo_colados = Math.min(parsedCupoColados, maxCupo)
+  }
 
   const { error } = await supabase
     .from("invitados")
@@ -210,6 +225,7 @@ export async function PUT(
       if (int.id && !int.id.startsWith("new") && currentIds.includes(int.id)) {
         const payload: Record<string, unknown> = { nombre: int.nombre }
         if (int.estado !== undefined) payload.estado = int.estado
+        if (int.es_colado !== undefined) payload.es_colado = Boolean(int.es_colado)
         await supabase.from("integrantes").update(payload).eq("id", int.id)
       }
     }
@@ -217,7 +233,12 @@ export async function PUT(
     // Crear nuevos
     const newIntegrantes = body.integrantes
       .filter((i: { id: string }) => !i.id || i.id.startsWith("new"))
-      .map((i: { nombre: string; estado?: string }) => ({ invitado_id: invitadoId, nombre: i.nombre, estado: i.estado || "pendiente" }))
+      .map((i: { nombre: string; estado?: string; es_colado?: boolean }) => ({
+        invitado_id: invitadoId,
+        nombre: i.nombre,
+        estado: i.estado || "pendiente",
+        es_colado: Boolean(i.es_colado),
+      }))
 
     if (newIntegrantes.length > 0) {
       await supabase.from("integrantes").insert(newIntegrantes)

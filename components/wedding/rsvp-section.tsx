@@ -1,16 +1,30 @@
 "use client";
 
-import { useState, useEffect, Fragment, useRef } from "react";
+import { useState, useEffect, Fragment, useRef, useMemo } from "react";
 import { useIsMuestra } from "@/lib/config-context";
+import { Trash2 } from "lucide-react";
+import {
+    coladoPlural,
+    coladoTitleSingular,
+    normalizeColadoSingular,
+} from "@/lib/colado-label";
 
 interface InvitadoData {
     id: string;
     nombre: string;
     tipo: "persona" | "familia";
     estado: "pendiente" | "confirmado" | "no_asiste";
-    integrantes?: { id: string; nombre: string; estado: string; restricciones?: string }[];
+    cupo_colados?: number;
+    integrantes?: {
+        id: string;
+        nombre: string;
+        estado: string;
+        restricciones?: string;
+        es_colado?: boolean;
+    }[];
     cancion?: string;
     mensaje?: string;
+    restricciones?: string;
 }
 
 interface RSVPSectionProps {
@@ -47,12 +61,16 @@ interface RSVPSectionProps {
         codigo?: string;
         panelId?: string;
         allowAnonymousToPanel?: boolean;
+        allowColados?: boolean;
+        /** Desde JSON; plural = + "s" por palabra (separadas por espacios). */
+        coladoLabel?: string;
         confirmationMessage: string;
     };
 }
 
 interface GuestForm {
     id?: string;
+    isColado?: boolean;
     firstName: string;
     lastName: string;
     showLastName?: boolean;
@@ -61,6 +79,34 @@ interface GuestForm {
     songRequest: string;
     extraValues?: Record<string, string>;
     panelEstado?: "pendiente" | "confirmado" | "no_asiste";
+}
+
+function guestDisplayName(g: GuestForm): string {
+    return `${g.firstName || ""} ${g.lastName || ""}`.trim();
+}
+
+/** Colados sin nombre ni apellido: no se envían (equivale a quitarlos). */
+function dropEmptyColados(guests: GuestForm[]): GuestForm[] {
+    return guests.filter((g) => {
+        if (!g.isColado) return true;
+        return guestDisplayName(g).length > 0;
+    });
+}
+
+/** Comparación estable para saber si hubo cambios al editar una confirmación ya guardada. */
+function serializeGuestForms(guests: GuestForm[]): string {
+    return JSON.stringify(
+        guests.map((g) => ({
+            id: g.id,
+            isColado: Boolean(g.isColado),
+            firstName: g.firstName,
+            lastName: g.lastName,
+            attendance: g.attendance,
+            dietary: g.dietary,
+            songRequest: g.songRequest,
+            extraValues: g.extraValues ?? {},
+        })),
+    );
 }
 
 function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
@@ -73,7 +119,8 @@ function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
             `*${attendance}*`,
         ];
         if (g.attendance === "no") return detailLines.join("\n");
-        if (g.dietary && g.dietary !== "Ninguno") detailLines.push(`- Alimentacion: ${g.dietary}`);
+        if (g.dietary && g.dietary !== "Ninguno")
+            detailLines.push(`- Alimentacion: ${g.dietary}`);
         if (g.songRequest) detailLines.push(`- Cancion: ${g.songRequest}`);
         if (g.extraValues) {
             Object.entries(g.extraValues).forEach(([label, value]) => {
@@ -93,7 +140,10 @@ function buildNamesOnlySummary(guests: GuestForm[]): string {
         .join("\n");
 }
 
-function applySingularPluralAdjustments(message: string, guestCount: number): string {
+function applySingularPluralAdjustments(
+    message: string,
+    guestCount: number,
+): string {
     if (guestCount > 1) {
         return message
             .replace(/\bConfirmo\b/g, "Confirmamos")
@@ -158,13 +208,26 @@ function buildPanelExtraSummary(
     return rows.join(" | ");
 }
 
+/** Canción por persona cuando `cancion` viene como "Nombre: tema | ..." */
+function songForMemberFromRaw(
+    raw: string | undefined,
+    memberName: string,
+): string {
+    const entries = parsePerMemberEntries(raw);
+    const hit = entries.find((e) => e.memberName.trim() === memberName.trim());
+    return hit?.value?.trim() || "";
+}
+
 function parsePerMemberEntries(
     raw: string | undefined,
 ): Array<{ memberName: string; label?: string; value: string }> {
     if (!raw) return [];
-    const entries: Array<{ memberName: string; label?: string; value: string }> = [];
-    raw
-        .split("|")
+    const entries: Array<{
+        memberName: string;
+        label?: string;
+        value: string;
+    }> = [];
+    raw.split("|")
         .map((chunk) => chunk.trim())
         .filter(Boolean)
         .forEach((chunk) => {
@@ -198,6 +261,9 @@ export default function RSVPSection({
     const isMuestra = useIsMuestra();
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     const [guestCount, setGuestCount] = useState(1);
+    const canUseColados = Boolean(panel?.enabled && panel?.allowColados);
+    const coladoWordSingular = normalizeColadoSingular(panel?.coladoLabel);
+    const coladoWordPlural = coladoPlural(coladoWordSingular);
     const extraInputs = fields.extraInputs ?? [];
     const showSongRequest = Boolean(fields.songRequest?.trim());
     const createEmptyExtraValues = () =>
@@ -206,25 +272,78 @@ export default function RSVPSection({
             return acc;
         }, {});
     const [guests, setGuests] = useState<GuestForm[]>([
-        { firstName: "", lastName: "", showLastName: true, attendance: "", dietary: "Ninguno", songRequest: "", extraValues: createEmptyExtraValues() },
+        {
+            firstName: "",
+            lastName: "",
+            showLastName: true,
+            attendance: "",
+            dietary: "Ninguno",
+            songRequest: "",
+            extraValues: createEmptyExtraValues(),
+        },
     ]);
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const getCupoColados = (): number => {
+        const raw = invitado?.cupo_colados;
+        if (typeof raw !== "number" || !Number.isFinite(raw)) return 0;
+        const n = Math.floor(raw);
+        return n > 0 ? n : 0;
+    };
+    const currentColadosCount = guests.filter((g) => g.isColado).length;
+    const maxColados = canUseColados ? getCupoColados() : 0;
+    const canAddMoreColados = currentColadosCount < maxColados;
+    const visibleColadosCupoMessage =
+        canUseColados &&
+        Boolean(invitado) &&
+        maxColados > 0 &&
+        canAddMoreColados;
+
     const [alreadyConfirmed, setAlreadyConfirmed] = useState(false);
     const [editing, setEditing] = useState(false);
-    const extraTextareaRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
+    /** Snapshot JSON de `guests` al abrir edición (tras cargar desde API). */
+    const [editBaselineJson, setEditBaselineJson] = useState<string | null>(
+        null,
+    );
+    const editingRef = useRef(false);
+    editingRef.current = editing;
+    const extraTextareaRefs = useRef<
+        Record<string, HTMLTextAreaElement | null>
+    >({});
+    const confirmationSectionRef = useRef<HTMLElement | null>(null);
+
+    const guestsSerialized = useMemo(
+        () => serializeGuestForms(guests),
+        [guests],
+    );
+    const confirmEditDisabled =
+        editing &&
+        (editBaselineJson === null || guestsSerialized === editBaselineJson);
+
+    useEffect(() => {
+        if (!editing) setEditBaselineJson(null);
+    }, [editing]);
+
+    useEffect(() => {
+        const showThanks = (alreadyConfirmed && !editing) || submitted;
+        if (!showThanks || typeof window === "undefined") return;
+        confirmationSectionRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+        });
+    }, [alreadyConfirmed, editing, submitted]);
 
     // Obtener datos del invitado cuando hay codigo
     useEffect(() => {
         if (panel?.enabled && panel?.codigo) {
             fetch(`/api/rsvp/${panel.codigo}`)
-                .then(res => res.json())
-                .then(data => {
+                .then((res) => res.json())
+                .then((data) => {
                     if (data.invitado) {
                         const inv = data.invitado;
                         setInvitado(inv);
-                        
+
                         // Verificar si ya confirmo (estado no es pendiente)
                         const yaConfirmo =
                             inv.tipo === "familia" && inv.integrantes?.length
@@ -233,71 +352,225 @@ export default function RSVPSection({
                                           int.estado !== "pendiente",
                                   )
                                 : inv.estado !== "pendiente";
-                        
+
                         if (yaConfirmo && !editing) {
                             setAlreadyConfirmed(true);
                         } else {
                             setAlreadyConfirmed(false);
                         }
-                        
+
                         // Si es familia, precargar integrantes con sus datos guardados
-                        if (inv.tipo === "familia" && inv.integrantes?.length > 0) {
-                            const songEntries = parsePerMemberEntries(inv.cancion);
-                            const extraEntries = parsePerMemberEntries(inv.mensaje);
+                        if (
+                            inv.tipo === "familia" &&
+                            inv.integrantes?.length > 0
+                        ) {
+                            const songEntries = parsePerMemberEntries(
+                                inv.cancion,
+                            );
+                            const extraEntries = parsePerMemberEntries(
+                                inv.mensaje,
+                            );
+                            const builtGuests = inv.integrantes.map(
+                                (int: {
+                                    id: string;
+                                    nombre: string;
+                                    estado: string;
+                                    restricciones?: string;
+                                    es_colado?: boolean;
+                                }) => {
+                                    const [firstName, ...lastParts] =
+                                        int.nombre.split(" ");
+                                    const songForMember =
+                                        songEntries.find(
+                                            (entry) =>
+                                                entry.memberName === int.nombre,
+                                        )?.value || "";
+                                    const extraValues =
+                                        createEmptyExtraValues();
+                                    extraInputs.forEach((input) => {
+                                        const panelTitle = (
+                                            input.tituloPanel ||
+                                            input.label ||
+                                            ""
+                                        ).trim();
+                                        const matched = extraEntries.find(
+                                            (entry) =>
+                                                entry.memberName ===
+                                                    int.nombre &&
+                                                entry.label &&
+                                                (entry.label === panelTitle ||
+                                                    entry.label ===
+                                                        input.label),
+                                        );
+                                        if (matched) {
+                                            extraValues[input.label] =
+                                                matched.value;
+                                        }
+                                    });
+                                    return {
+                                        id: int.id,
+                                        isColado: Boolean(int.es_colado),
+                                        firstName,
+                                        lastName: lastParts.join(" "),
+                                        showLastName: lastParts.length > 0,
+                                        attendance:
+                                            int.estado === "confirmado"
+                                                ? "yes"
+                                                : int.estado === "no_asiste"
+                                                  ? "no"
+                                                  : "",
+                                        dietary: int.restricciones || "Ninguno",
+                                        songRequest: songForMember,
+                                        extraValues,
+                                        panelEstado:
+                                            int.estado === "confirmado"
+                                                ? "confirmado"
+                                                : int.estado === "no_asiste"
+                                                  ? "no_asiste"
+                                                  : "pendiente",
+                                    };
+                                },
+                            );
                             setGuestCount(inv.integrantes.length);
-                            setGuests(inv.integrantes.map((int: { id: string; nombre: string; estado: string; restricciones?: string }) => {
-                                const [firstName, ...lastParts] = int.nombre.split(" ");
-                                const songForMember =
-                                    songEntries.find(
-                                        (entry) => entry.memberName === int.nombre,
-                                    )?.value || "";
-                                const extraValues = createEmptyExtraValues();
-                                extraInputs.forEach((input) => {
-                                    const panelTitle = (input.tituloPanel || input.label || "").trim();
-                                    const matched = extraEntries.find(
-                                        (entry) =>
-                                            entry.memberName === int.nombre &&
-                                            entry.label &&
-                                            (entry.label === panelTitle || entry.label === input.label),
-                                    );
-                                    if (matched) {
-                                        extraValues[input.label] = matched.value;
-                                    }
-                                });
-                                return {
-                                    id: int.id,
+                            setGuests(builtGuests);
+                            if (editingRef.current) {
+                                setEditBaselineJson(
+                                    serializeGuestForms(builtGuests),
+                                );
+                            }
+                        } else if (inv.tipo === "persona") {
+                            const [firstName, ...lastParts] =
+                                inv.nombre.split(" ");
+                            const titularNombre = inv.nombre.trim();
+                            const songEntries = parsePerMemberEntries(
+                                inv.cancion,
+                            );
+                            const extraEntries = parsePerMemberEntries(
+                                inv.mensaje,
+                            );
+                            let titularSong = songForMemberFromRaw(
+                                inv.cancion,
+                                titularNombre,
+                            );
+                            if (
+                                !titularSong &&
+                                inv.cancion?.trim() &&
+                                !inv.cancion.includes("|")
+                            ) {
+                                titularSong = inv.cancion.trim();
+                            }
+                            const titularExtras = createEmptyExtraValues();
+                            extraInputs.forEach((input) => {
+                                const panelTitle = (
+                                    input.tituloPanel ||
+                                    input.label ||
+                                    ""
+                                ).trim();
+                                const matched = extraEntries.find(
+                                    (entry) =>
+                                        entry.memberName.trim() ===
+                                            titularNombre &&
+                                        entry.label &&
+                                        (entry.label === panelTitle ||
+                                            entry.label === input.label),
+                                );
+                                if (matched) {
+                                    titularExtras[input.label] = matched.value;
+                                }
+                            });
+                            const colados = (inv.integrantes || [])
+                                .filter((int: { es_colado?: boolean }) =>
+                                    Boolean(int.es_colado),
+                                )
+                                .map(
+                                    (int: {
+                                        id: string;
+                                        nombre: string;
+                                        estado: string;
+                                        restricciones?: string;
+                                    }) => {
+                                        const [cf, ...cl] =
+                                            int.nombre.split(" ");
+                                        const nombreColado = int.nombre.trim();
+                                        const ev = createEmptyExtraValues();
+                                        extraInputs.forEach((input) => {
+                                            const panelTitle = (
+                                                input.tituloPanel ||
+                                                input.label ||
+                                                ""
+                                            ).trim();
+                                            const matched = extraEntries.find(
+                                                (entry) =>
+                                                    entry.memberName.trim() ===
+                                                        nombreColado &&
+                                                    entry.label &&
+                                                    (entry.label ===
+                                                        panelTitle ||
+                                                        entry.label ===
+                                                            input.label),
+                                            );
+                                            if (matched) {
+                                                ev[input.label] = matched.value;
+                                            }
+                                        });
+                                        return {
+                                            id: int.id,
+                                            isColado: true,
+                                            firstName: cf,
+                                            lastName: cl.join(" "),
+                                            showLastName: cl.length > 0,
+                                            attendance:
+                                                int.estado === "confirmado"
+                                                    ? "yes"
+                                                    : int.estado === "no_asiste"
+                                                      ? "no"
+                                                      : "",
+                                            dietary:
+                                                int.restricciones || "Ninguno",
+                                            songRequest: songForMemberFromRaw(
+                                                inv.cancion,
+                                                nombreColado,
+                                            ),
+                                            extraValues: ev,
+                                            panelEstado:
+                                                int.estado === "confirmado"
+                                                    ? "confirmado"
+                                                    : int.estado === "no_asiste"
+                                                      ? "no_asiste"
+                                                      : "pendiente",
+                                        };
+                                    },
+                                );
+                            const builtGuests = [
+                                {
                                     firstName,
                                     lastName: lastParts.join(" "),
                                     showLastName: lastParts.length > 0,
-                                    attendance: int.estado === "confirmado" ? "yes" : int.estado === "no_asiste" ? "no" : "",
-                                    dietary: int.restricciones || "Ninguno",
-                                    songRequest: songForMember,
-                                    extraValues,
+                                    attendance:
+                                        inv.estado === "confirmado"
+                                            ? "yes"
+                                            : inv.estado === "no_asiste"
+                                              ? "no"
+                                              : "",
+                                    dietary: inv.restricciones || "Ninguno",
+                                    songRequest: titularSong,
+                                    extraValues: titularExtras,
                                     panelEstado:
-                                        int.estado === "confirmado"
+                                        inv.estado === "confirmado"
                                             ? "confirmado"
-                                            : int.estado === "no_asiste"
+                                            : inv.estado === "no_asiste"
                                               ? "no_asiste"
                                               : "pendiente",
-                                };
-                            }));
-                        } else if (inv.tipo === "persona") {
-                            const [firstName, ...lastParts] = inv.nombre.split(" ");
-                            setGuests([{
-                                firstName,
-                                lastName: lastParts.join(" "),
-                                showLastName: lastParts.length > 0,
-                                attendance: inv.estado === "confirmado" ? "yes" : inv.estado === "no_asiste" ? "no" : "",
-                                dietary: "Ninguno",
-                                songRequest: inv.cancion || "",
-                                extraValues: createEmptyExtraValues(),
-                                panelEstado:
-                                    inv.estado === "confirmado"
-                                        ? "confirmado"
-                                        : inv.estado === "no_asiste"
-                                          ? "no_asiste"
-                                          : "pendiente",
-                            }]);
+                                },
+                                ...colados,
+                            ];
+                            setGuests(builtGuests);
+                            setGuestCount(1 + colados.length);
+                            if (editingRef.current) {
+                                setEditBaselineJson(
+                                    serializeGuestForms(builtGuests),
+                                );
+                            }
                         }
                     }
                 })
@@ -309,18 +582,36 @@ export default function RSVPSection({
         setGuestCount(count);
         const newGuests: GuestForm[] = [];
         for (let i = 0; i < count; i++) {
-            newGuests.push(guests[i] || { firstName: "", lastName: "", showLastName: true, attendance: "", dietary: "Ninguno", songRequest: "", extraValues: createEmptyExtraValues() });
+            newGuests.push(
+                guests[i] || {
+                    firstName: "",
+                    lastName: "",
+                    showLastName: true,
+                    attendance: "",
+                    dietary: "Ninguno",
+                    songRequest: "",
+                    extraValues: createEmptyExtraValues(),
+                },
+            );
         }
         setGuests(newGuests);
     };
 
-    const updateGuest = (index: number, field: keyof GuestForm, value: string) => {
+    const updateGuest = (
+        index: number,
+        field: keyof GuestForm,
+        value: string,
+    ) => {
         const newGuests = [...guests];
         newGuests[index] = { ...newGuests[index], [field]: value };
         setGuests(newGuests);
     };
 
-    const updateGuestExtraValue = (index: number, label: string, value: string) => {
+    const updateGuestExtraValue = (
+        index: number,
+        label: string,
+        value: string,
+    ) => {
         const newGuests = [...guests];
         const prevExtraValues = newGuests[index].extraValues || {};
         newGuests[index] = {
@@ -333,6 +624,34 @@ export default function RSVPSection({
         setGuests(newGuests);
     };
 
+    const handleAddColado = () => {
+        if (!canAddMoreColados) return;
+        const row: GuestForm = {
+            id: `new-colado-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            isColado: true,
+            firstName: "",
+            lastName: "",
+            showLastName: true,
+            attendance: "",
+            dietary: "Ninguno",
+            songRequest: "",
+            extraValues: createEmptyExtraValues(),
+            panelEstado: "pendiente",
+        };
+        const next = [...guests, row];
+        setGuests(next);
+        setGuestCount(next.length);
+        setError(null);
+    };
+
+    const handleRemoveColado = (index: number) => {
+        if (!guests[index]?.isColado) return;
+        const next = guests.filter((_, i) => i !== index);
+        setGuests(next);
+        setGuestCount(next.length);
+        setError(null);
+    };
+
     useEffect(() => {
         Object.values(extraTextareaRefs.current).forEach((textarea) => {
             if (!textarea) return;
@@ -343,21 +662,52 @@ export default function RSVPSection({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (isMuestra) { setSubmitted(true); return; }
-        const missingRequiredExtra = guests.find((guest) =>
-            guest.attendance === "yes" &&
-            extraInputs.some(
-                (input) =>
-                    input.required &&
-                    !(guest.extraValues?.[input.label] || "").trim(),
-            ),
-        );
-        if (missingRequiredExtra) {
-            setError("Completa los campos obligatorios para confirmar asistencia.");
+        if (isMuestra) {
+            setSubmitted(true);
             return;
         }
-        const songSummary = buildSongRequestSummary(guests);
-        const panelExtraSummary = buildPanelExtraSummary(guests, extraInputs);
+
+        const guestsForSubmit = dropEmptyColados(guests);
+        if (guestsForSubmit.length !== guests.length) {
+            setGuests(guestsForSubmit);
+            setGuestCount(guestsForSubmit.length);
+        }
+        setError(null);
+
+        const coladoSinAsistencia = guestsForSubmit.find(
+            (g) =>
+                g.isColado &&
+                guestDisplayName(g).length > 0 &&
+                g.attendance !== "yes" &&
+                g.attendance !== "no",
+        );
+        if (coladoSinAsistencia) {
+            setError("Indicá si asiste cada colado que tenga nombre cargado.");
+            return;
+        }
+
+        const missingRequiredExtra = guestsForSubmit.find(
+            (guest) =>
+                guest.attendance === "yes" &&
+                extraInputs.some(
+                    (input) =>
+                        input.required &&
+                        !(guest.extraValues?.[input.label] || "").trim(),
+                ),
+        );
+        if (missingRequiredExtra) {
+            setError(
+                "Completa los campos obligatorios para confirmar asistencia.",
+            );
+            return;
+        }
+        const titularGuest =
+            guestsForSubmit.find((g) => !g.isColado) ?? guestsForSubmit[0];
+        const songSummary = buildSongRequestSummary(guestsForSubmit);
+        const panelExtraSummary = buildPanelExtraSummary(
+            guestsForSubmit,
+            extraInputs,
+        );
 
         if (panel?.enabled && panel?.codigo) {
             setSubmitting(true);
@@ -367,20 +717,45 @@ export default function RSVPSection({
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        integrantes: guests.map((g) => ({
-                            id: g.id,
-                            nombre: `${g.firstName} ${g.lastName}`,
-                            asiste: g.attendance === "yes",
-                            restricciones: g.dietary !== "Ninguno" ? g.dietary : null,
-                        })),
-                        asiste: guests.some((g) => g.attendance === "yes"),
+                        integrantes: guestsForSubmit
+                            .filter(
+                                (g) =>
+                                    invitado?.tipo === "familia" || g.isColado,
+                            )
+                            .map((g) => ({
+                                id: g.id,
+                                nombre: `${g.firstName} ${g.lastName}`.trim(),
+                                asiste: g.attendance === "yes",
+                                restricciones:
+                                    g.dietary !== "Ninguno" ? g.dietary : null,
+                                es_colado: Boolean(g.isColado),
+                            })),
+                        asiste: guestsForSubmit.some(
+                            (g) => g.attendance === "yes",
+                        ),
                         mensaje: panelExtraSummary,
                         cancion: songSummary,
+                        ...(invitado?.tipo === "persona"
+                            ? {
+                                  restricciones:
+                                      titularGuest &&
+                                      titularGuest.dietary !== "Ninguno"
+                                          ? titularGuest.dietary
+                                          : null,
+                              }
+                            : {}),
                     }),
                 });
-                const responseData = await res.json().catch(() => ({} as { error?: string; invitado?: InvitadoData }));
+                const responseData = await res
+                    .json()
+                    .catch(
+                        () =>
+                            ({}) as { error?: string; invitado?: InvitadoData },
+                    );
                 if (!res.ok) {
-                    throw new Error(responseData.error || "Error al enviar confirmacion");
+                    throw new Error(
+                        responseData.error || "Error al enviar confirmacion",
+                    );
                 }
                 if (responseData.invitado) {
                     setInvitado(responseData.invitado);
@@ -389,7 +764,11 @@ export default function RSVPSection({
                 setAlreadyConfirmed(true);
                 setEditing(false);
             } catch (err) {
-                setError(err instanceof Error ? err.message : "Error al enviar confirmacion");
+                setError(
+                    err instanceof Error
+                        ? err.message
+                        : "Error al enviar confirmacion",
+                );
             } finally {
                 setSubmitting(false);
             }
@@ -405,13 +784,14 @@ export default function RSVPSection({
             setSubmitting(true);
             setError(null);
             try {
-                const principalName = `${guests[0]?.firstName || ""} ${guests[0]?.lastName || ""}`.trim();
+                const principalName =
+                    `${guestsForSubmit[0]?.firstName || ""} ${guestsForSubmit[0]?.lastName || ""}`.trim();
                 const createPayload =
-                    guests.length > 1
+                    guestsForSubmit.length > 1
                         ? {
                               nombre: principalName || "Invitado",
                               tipo: "familia",
-                              integrantes: guests.map((g) =>
+                              integrantes: guestsForSubmit.map((g) =>
                                   `${g.firstName} ${g.lastName}`.trim(),
                               ),
                           }
@@ -425,15 +805,13 @@ export default function RSVPSection({
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(createPayload),
                 });
-                const createData = await createRes
-                    .json()
-                    .catch(
-                        () =>
-                            ({} as {
-                                error?: string;
-                                invitado?: InvitadoData & { codigo?: string };
-                            }),
-                    );
+                const createData = await createRes.json().catch(
+                    () =>
+                        ({}) as {
+                            error?: string;
+                            invitado?: InvitadoData & { codigo?: string };
+                        },
+                );
                 if (!createRes.ok || !createData.invitado?.codigo) {
                     const rawMsg =
                         createData.error ||
@@ -443,9 +821,7 @@ export default function RSVPSection({
                     )
                         ? "Error al registrar confirmación. Contactá con el anfitrión del evento."
                         : rawMsg;
-                    throw new Error(
-                        friendlyMsg,
-                    );
+                    throw new Error(friendlyMsg);
                 }
 
                 const invitadoCreado = createData.invitado;
@@ -455,14 +831,17 @@ export default function RSVPSection({
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            integrantes: guests.map((g, idx) => ({
+                            integrantes: guestsForSubmit.map((g, idx) => ({
                                 id: invitadoCreado.integrantes?.[idx]?.id,
                                 nombre: `${g.firstName} ${g.lastName}`.trim(),
                                 asiste: g.attendance === "yes",
                                 restricciones:
                                     g.dietary !== "Ninguno" ? g.dietary : null,
+                                es_colado: Boolean(g.isColado),
                             })),
-                            asiste: guests.some((g) => g.attendance === "yes"),
+                            asiste: guestsForSubmit.some(
+                                (g) => g.attendance === "yes",
+                            ),
                             mensaje: panelExtraSummary,
                             cancion: songSummary,
                         }),
@@ -472,7 +851,7 @@ export default function RSVPSection({
                     .json()
                     .catch(
                         () =>
-                            ({} as { error?: string; invitado?: InvitadoData }),
+                            ({}) as { error?: string; invitado?: InvitadoData },
                     );
                 if (!confirmRes.ok) {
                     throw new Error(
@@ -499,12 +878,23 @@ export default function RSVPSection({
         }
 
         if (whatsapp?.number && whatsapp?.messageTemplate) {
-            const everyoneDeclined = guests.length > 0 && guests.every((g) => g.attendance === "no");
+            const everyoneDeclined =
+                guestsForSubmit.length > 0 &&
+                guestsForSubmit.every((g) => g.attendance === "no");
             const baseMessage =
                 everyoneDeclined && whatsapp.noAttendanceMessageTemplate
-                    ? whatsapp.noAttendanceMessageTemplate.replace("{resumen}", buildNamesOnlySummary(guests))
-                    : buildWhatsAppMessage(whatsapp.messageTemplate, guests);
-            const message = applySingularPluralAdjustments(baseMessage, guests.length);
+                    ? whatsapp.noAttendanceMessageTemplate.replace(
+                          "{resumen}",
+                          buildNamesOnlySummary(guestsForSubmit),
+                      )
+                    : buildWhatsAppMessage(
+                          whatsapp.messageTemplate,
+                          guestsForSubmit,
+                      );
+            const message = applySingularPluralAdjustments(
+                baseMessage,
+                guestsForSubmit.length,
+            );
             const url = `https://wa.me/${whatsapp.number}?text=${encodeURIComponent(message)}`;
             window.open(url, "_blank");
             setSubmitted(true);
@@ -514,38 +904,83 @@ export default function RSVPSection({
     };
 
     const handleEdit = () => {
+        setEditBaselineJson(null);
         setEditing(true);
         setAlreadyConfirmed(false);
         setSubmitted(false);
     };
 
+    const handleCancelEdit = () => {
+        setEditing(false);
+        setAlreadyConfirmed(true);
+        setError(null);
+    };
+
     // Mostrar mensaje de confirmacion si ya confirmo o acaba de enviar
     if ((alreadyConfirmed && !editing) || submitted) {
-        const confirmMsg = panel?.enabled 
-            ? (panel.confirmationMessage || "Gracias por confirmar tu asistencia!")
-            : (isMuestra 
-                ? "Confirmacion simulada. En la version real, los datos se envian." 
-                : "Tu confirmacion ha sido enviada por WhatsApp.");
-        
-        // Resumen de lo que confirmaron
+        const confirmMsg = panel?.enabled
+            ? panel.confirmationMessage ||
+              "Gracias por confirmar tu asistencia!"
+            : isMuestra
+              ? "Confirmacion simulada. En la version real, los datos se envian."
+              : "Tu confirmacion ha sido enviada por WhatsApp.";
+
         const resumen = invitado && (
             <div className="mt-6 rounded-xl border border-current/15 bg-current/5 px-5 py-4 text-left">
-                {invitado.tipo === "familia" && invitado.integrantes ? (
+                {(invitado.integrantes?.length || 0) > 0 ? (
                     <div className="space-y-2">
+                        {invitado.tipo === "persona" && (
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="text-inherit/80">
+                                    {invitado.nombre}
+                                </span>
+                                <span
+                                    className={`text-xs font-medium ${invitado.estado === "confirmado" ? "text-green-600" : invitado.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}
+                                >
+                                    {invitado.estado === "confirmado"
+                                        ? "Asiste"
+                                        : invitado.estado === "no_asiste"
+                                          ? "No asiste"
+                                          : "Pendiente"}
+                                </span>
+                            </div>
+                        )}
                         {invitado.integrantes.map((int, i) => (
-                            <div key={i} className="flex items-center justify-between text-sm">
-                                <span className="text-inherit/80">{int.nombre}</span>
-                                <span className={`text-xs font-medium ${int.estado === "confirmado" ? "text-green-600" : int.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}>
-                                    {int.estado === "confirmado" ? "Asiste" : int.estado === "no_asiste" ? "No asiste" : "Pendiente"}
+                            <div
+                                key={i}
+                                className="flex items-center justify-between text-sm"
+                            >
+                                <span className="text-inherit/80">
+                                    {int.nombre}
+                                    {int.es_colado
+                                        ? ` (${coladoWordSingular})`
+                                        : ""}
+                                </span>
+                                <span
+                                    className={`text-xs font-medium ${int.estado === "confirmado" ? "text-green-600" : int.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}
+                                >
+                                    {int.estado === "confirmado"
+                                        ? "Asiste"
+                                        : int.estado === "no_asiste"
+                                          ? "No asiste"
+                                          : "Pendiente"}
                                 </span>
                             </div>
                         ))}
                     </div>
                 ) : (
                     <div className="flex items-center justify-between text-sm">
-                        <span className="text-inherit/80">{invitado.nombre}</span>
-                        <span className={`text-xs font-medium ${invitado.estado === "confirmado" ? "text-green-600" : invitado.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}>
-                            {invitado.estado === "confirmado" ? "Asiste" : invitado.estado === "no_asiste" ? "No asiste" : "Pendiente"}
+                        <span className="text-inherit/80">
+                            {invitado.nombre}
+                        </span>
+                        <span
+                            className={`text-xs font-medium ${invitado.estado === "confirmado" ? "text-green-600" : invitado.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}
+                        >
+                            {invitado.estado === "confirmado"
+                                ? "Asiste"
+                                : invitado.estado === "no_asiste"
+                                  ? "No asiste"
+                                  : "Pendiente"}
                         </span>
                     </div>
                 )}
@@ -553,22 +988,28 @@ export default function RSVPSection({
         );
 
         return (
-            <section className="px-6 py-16 text-center">
-                <h2 className="mb-4 text-3xl font-semibold tracking-[0.15em] text-inherit/90">
-                    {isMuestra ? "Modo muestra" : "Gracias!"}
-                </h2>
-                <p className="text-sm tracking-wide text-inherit/65">
-                    {confirmMsg}
-                </p>
-                {resumen}
-                {panel?.enabled && (
-                    <button
-                        onClick={handleEdit}
-                        className="mt-6 text-xs font-medium tracking-wider text-inherit/50 underline underline-offset-4 transition-colors hover:text-inherit/80"
-                    >
-                        Editar mi confirmacion
-                    </button>
-                )}
+            <section
+                ref={confirmationSectionRef}
+                className="flex flex-col justify-start px-6 py-8 text-center md:min-h-[min(85dvh,920px)] md:justify-center md:py-12"
+            >
+                <div className="mx-auto w-full max-w-md">
+                    <h2 className="mb-4 text-3xl font-semibold tracking-[0.15em] text-inherit/90">
+                        {isMuestra ? "Modo muestra" : "Confirmación enviada"}
+                    </h2>
+                    <p className="text-sm tracking-wide text-inherit/65">
+                        {confirmMsg}
+                    </p>
+                    {resumen}
+                    {panel?.enabled && (
+                        <button
+                            type="button"
+                            onClick={handleEdit}
+                            className="mt-6 text-xs font-medium tracking-wider text-inherit/50 underline underline-offset-4 transition-colors hover:text-inherit/80"
+                        >
+                            Editar mi confirmacion
+                        </button>
+                    )}
+                </div>
             </section>
         );
     }
@@ -609,12 +1050,20 @@ export default function RSVPSection({
                             </label>
                             <select
                                 value={guestCount}
-                                onChange={(e) => handleGuestCountChange(Number(e.target.value))}
+                                onChange={(e) =>
+                                    handleGuestCountChange(
+                                        Number(e.target.value),
+                                    )
+                                }
                                 className="w-full rounded-md border border-current/15 bg-current/10 px-4 py-3 text-sm tracking-wide text-inherit/90 backdrop-blur-sm"
                                 style={{ fontSize: "16px" }}
                             >
                                 {guestCountOptions.map((n) => (
-                                    <option key={n} value={n} className="bg-primary text-primary-foreground">
+                                    <option
+                                        key={n}
+                                        value={n}
+                                        className="bg-primary text-primary-foreground"
+                                    >
                                         {n} {n === 1 ? "persona" : "personas"}
                                     </option>
                                 ))}
@@ -628,146 +1077,312 @@ export default function RSVPSection({
                         </div>
                     )}
 
-                    {guests.map((guest, index) => (
-                        <Fragment key={index}>
-                            {guestCount > 1 && (
-                                <p className="mt-1 text-[11px] font-semibold tracking-[0.15em] uppercase text-inherit/65">
-                                    Invitado {index + 1}
-                                </p>
-                            )}
-                            <div className="flex flex-col gap-0 overflow-hidden rounded-md border border-current/15 bg-current/10 backdrop-blur-sm">
-                                <input
-                                    type="text"
-                                    placeholder={fields.firstName + " *"}
-                                    required
-                                    value={guest.firstName}
-                                    onChange={(e) => updateGuest(index, "firstName", e.target.value)}
-                                    disabled={Boolean(invitado)}
-                                    className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
-                                    style={{ fontSize: "16px" }}
-                                />
-                                {guest.showLastName !== false && (
+                    {guests.map((guest, index) => {
+                        const coladoPosition = guest.isColado
+                            ? guests
+                                  .slice(0, index + 1)
+                                  .filter((g) => g.isColado).length
+                            : 0;
+                        const invitadoPosition = guest.isColado
+                            ? 0
+                            : guests
+                                  .slice(0, index + 1)
+                                  .filter((g) => !g.isColado).length;
+                        return (
+                            <Fragment key={guest.id ?? `guest-${index}`}>
+                                {guests.length > 1 && (
+                                    <div className="mt-1 flex items-center justify-between gap-2">
+                                        <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-inherit/65">
+                                            {guest.isColado
+                                                ? `${coladoTitleSingular(coladoWordSingular)} ${coladoPosition}`
+                                                : `Invitado ${invitadoPosition}`}
+                                        </p>
+                                        {guest.isColado && canUseColados && (
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    handleRemoveColado(index)
+                                                }
+                                                className="group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-current/20 bg-current/[0.06] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-inherit/65 shadow-sm transition-all hover:border-red-400/35 hover:bg-red-500/[0.09] hover:text-red-700 active:scale-[0.98]"
+                                                aria-label={`Quitar ${coladoWordSingular}`}
+                                            >
+                                                <Trash2
+                                                    className="h-3 w-3 opacity-70 transition-opacity group-hover:opacity-100"
+                                                    aria-hidden
+                                                />
+                                                Quitar
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                                <div className="flex flex-col gap-0 overflow-hidden rounded-md border border-current/15 bg-current/10 backdrop-blur-sm">
                                     <input
                                         type="text"
                                         placeholder={
-                                            invitado
-                                                ? fields.lastName
-                                                : fields.lastName + " *"
+                                            guest.isColado
+                                                ? fields.firstName
+                                                : fields.firstName + " *"
                                         }
-                                        required={!invitado}
-                                        value={guest.lastName}
-                                        onChange={(e) => updateGuest(index, "lastName", e.target.value)}
-                                        disabled={Boolean(invitado)}
+                                        required={!guest.isColado}
+                                        value={guest.firstName}
+                                        onChange={(e) =>
+                                            updateGuest(
+                                                index,
+                                                "firstName",
+                                                e.target.value,
+                                            )
+                                        }
+                                        disabled={
+                                            Boolean(invitado) && !guest.isColado
+                                        }
                                         className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                                         style={{ fontSize: "16px" }}
                                     />
-                                )}
-
-                                <div className="border-b border-current/10 px-4 py-3">
-                                    <p className="mb-2 text-[11px] font-medium tracking-wide text-inherit/55">
-                                        {fields.attendance}
-                                    </p>
-                                    <div className="flex flex-col gap-2">
-                                        <label className="flex items-center gap-2 text-sm tracking-wide text-inherit/80">
-                                            <input
-                                                type="radio"
-                                                name={`attendance-${index}`}
-                                                value="yes"
-                                                checked={guest.attendance === "yes"}
-                                                onChange={() => updateGuest(index, "attendance", "yes")}
-                                                className="h-4 w-4 accent-current"
-                                                required
-                                            />
-                                            {fields.attendanceYes}
-                                        </label>
-                                        <label className="flex items-center gap-2 text-sm tracking-wide text-inherit/80">
-                                            <input
-                                                type="radio"
-                                                name={`attendance-${index}`}
-                                                value="no"
-                                                checked={guest.attendance === "no"}
-                                                onChange={() => updateGuest(index, "attendance", "no")}
-                                                className="h-4 w-4 accent-current"
-                                            />
-                                            {fields.attendanceNo}
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div className="border-b border-current/10 px-4 py-3">
-                                    <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
-                                        {fields.dietary}
-                                    </label>
-                                    <select
-                                        value={guest.dietary}
-                                        onChange={(e) => updateGuest(index, "dietary", e.target.value)}
-                                        className="w-full bg-transparent text-sm tracking-wide text-inherit/80 focus:outline-none"
-                                        style={{ fontSize: "16px" }}
-                                    >
-                                        {fields.dietaryOptions.map((opt) => (
-                                            <option key={opt} value={opt} className="bg-primary text-primary-foreground">
-                                                {opt}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {showSongRequest && (
-                                    <div className="px-4 py-3">
-                                        {fields.songRequestLabel && (
-                                            <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
-                                                {fields.songRequestLabel}
-                                            </label>
-                                        )}
+                                    {guest.showLastName !== false && (
                                         <input
                                             type="text"
-                                            placeholder={fields.songRequest}
-                                            value={guest.songRequest}
-                                            onChange={(e) => updateGuest(index, "songRequest", e.target.value)}
-                                            className="w-full bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
-                                            style={{ fontSize: "16px" }}
-                                        />
-                                    </div>
-                                )}
-                                {extraInputs.map((extraInput) => (
-                                    <div key={extraInput.id} className="border-t border-current/10 px-4 py-3">
-                                        <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
-                                            {extraInput.label}
-                                            {extraInput.required ? " *" : ""}
-                                        </label>
-                                        <textarea
-                                            ref={(el) => {
-                                                extraTextareaRefs.current[`${index}-${extraInput.id}`] = el;
-                                            }}
-                                            placeholder={extraInput.placeholder || extraInput.label}
-                                            value={guest.extraValues?.[extraInput.label] || ""}
-                                            onChange={(e) => updateGuestExtraValue(index, extraInput.label, e.target.value)}
-                                            onInput={(e) => {
-                                                const target = e.currentTarget;
-                                                target.style.height = "auto";
-                                                target.style.height = `${target.scrollHeight}px`;
-                                            }}
-                                            required={
-                                                Boolean(extraInput.required) &&
-                                                guest.attendance === "yes"
+                                            placeholder={
+                                                invitado
+                                                    ? fields.lastName
+                                                    : guest.isColado
+                                                      ? fields.lastName
+                                                      : fields.lastName + " *"
                                             }
-                                            rows={1}
-                                            className="w-full resize-none overflow-hidden bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
+                                            required={
+                                                !invitado && !guest.isColado
+                                            }
+                                            value={guest.lastName}
+                                            onChange={(e) =>
+                                                updateGuest(
+                                                    index,
+                                                    "lastName",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            disabled={
+                                                Boolean(invitado) &&
+                                                !guest.isColado
+                                            }
+                                            className="w-full border-b border-current/10 bg-transparent px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                                             style={{ fontSize: "16px" }}
                                         />
-                                    </div>
-                                ))}
-                            </div>
-                        </Fragment>
-                    ))}
+                                    )}
 
-                    <button
-                        type="submit"
-                        disabled={submitting}
-                        className="mt-1 min-h-[48px] w-full rounded-md border border-current/25 bg-current/10 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit/90 transition-colors hover:bg-current/20 disabled:opacity-50"
-                    >
-                        {submitting ? "Enviando..." : fields.submitButton}
-                    </button>
+                                    <div className="border-b border-current/10 px-4 py-3">
+                                        <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
+                                            {fields.dietary}
+                                        </label>
+                                        <select
+                                            value={guest.dietary}
+                                            onChange={(e) =>
+                                                updateGuest(
+                                                    index,
+                                                    "dietary",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="w-full bg-transparent text-sm tracking-wide text-inherit/80 focus:outline-none"
+                                            style={{ fontSize: "16px" }}
+                                        >
+                                            {fields.dietaryOptions.map(
+                                                (opt) => (
+                                                    <option
+                                                        key={opt}
+                                                        value={opt}
+                                                        className="bg-primary text-primary-foreground"
+                                                    >
+                                                        {opt}
+                                                    </option>
+                                                ),
+                                            )}
+                                        </select>
+                                    </div>
+
+                                    {showSongRequest && (
+                                        <div className="border-b border-current/10 px-4 py-3">
+                                            {fields.songRequestLabel && (
+                                                <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
+                                                    {fields.songRequestLabel}
+                                                </label>
+                                            )}
+                                            <input
+                                                type="text"
+                                                placeholder={fields.songRequest}
+                                                value={guest.songRequest}
+                                                onChange={(e) =>
+                                                    updateGuest(
+                                                        index,
+                                                        "songRequest",
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="w-full bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
+                                                style={{ fontSize: "16px" }}
+                                            />
+                                        </div>
+                                    )}
+
+                                    <div className="border-b border-current/10 px-4 py-3">
+                                        <p className="mb-2 text-[11px] font-medium tracking-wide text-inherit/55">
+                                            {fields.attendance}
+                                        </p>
+                                        <div className="flex flex-col gap-2">
+                                            <label className="flex items-center gap-2 text-sm tracking-wide text-inherit/80">
+                                                <input
+                                                    type="radio"
+                                                    name={`attendance-${index}`}
+                                                    value="yes"
+                                                    checked={
+                                                        guest.attendance ===
+                                                        "yes"
+                                                    }
+                                                    onChange={() =>
+                                                        updateGuest(
+                                                            index,
+                                                            "attendance",
+                                                            "yes",
+                                                        )
+                                                    }
+                                                    className="h-4 w-4 accent-current"
+                                                    required={
+                                                        !guest.isColado ||
+                                                        guestDisplayName(guest)
+                                                            .length > 0
+                                                    }
+                                                />
+                                                {fields.attendanceYes}
+                                            </label>
+                                            <label className="flex items-center gap-2 text-sm tracking-wide text-inherit/80">
+                                                <input
+                                                    type="radio"
+                                                    name={`attendance-${index}`}
+                                                    value="no"
+                                                    checked={
+                                                        guest.attendance ===
+                                                        "no"
+                                                    }
+                                                    onChange={() =>
+                                                        updateGuest(
+                                                            index,
+                                                            "attendance",
+                                                            "no",
+                                                        )
+                                                    }
+                                                    className="h-4 w-4 accent-current"
+                                                />
+                                                {fields.attendanceNo}
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {extraInputs.map((extraInput) => (
+                                        <div
+                                            key={extraInput.id}
+                                            className="border-t border-current/10 px-4 py-3"
+                                        >
+                                            <label className="mb-2 block text-[11px] font-medium tracking-wide text-inherit/55">
+                                                {extraInput.label}
+                                                {extraInput.required
+                                                    ? " *"
+                                                    : ""}
+                                            </label>
+                                            <textarea
+                                                ref={(el) => {
+                                                    extraTextareaRefs.current[
+                                                        `${index}-${extraInput.id}`
+                                                    ] = el;
+                                                }}
+                                                placeholder={
+                                                    extraInput.placeholder ||
+                                                    extraInput.label
+                                                }
+                                                value={
+                                                    guest.extraValues?.[
+                                                        extraInput.label
+                                                    ] || ""
+                                                }
+                                                onChange={(e) =>
+                                                    updateGuestExtraValue(
+                                                        index,
+                                                        extraInput.label,
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                onInput={(e) => {
+                                                    const target =
+                                                        e.currentTarget;
+                                                    target.style.height =
+                                                        "auto";
+                                                    target.style.height = `${target.scrollHeight}px`;
+                                                }}
+                                                required={
+                                                    Boolean(
+                                                        extraInput.required,
+                                                    ) &&
+                                                    guest.attendance === "yes"
+                                                }
+                                                rows={1}
+                                                className="w-full resize-none overflow-hidden bg-transparent text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none"
+                                                style={{ fontSize: "16px" }}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </Fragment>
+                        );
+                    })}
+
+                    {visibleColadosCupoMessage && (
+                        <div className="rounded-md border border-current/15 bg-current/5 px-4 py-3">
+                            <p className="text-[11px] font-medium tracking-wide text-inherit/70">
+                                {maxColados === 1
+                                    ? `Tenés 1 lugar adicional para sumar a 1 ${coladoWordSingular}. ¿Deseás agregarlo?`
+                                    : `Tenés ${maxColados} lugares adicionales para sumar ${maxColados} ${coladoWordPlural}. ¿Deseás agregarlos?`}
+                            </p>
+                            <p className="mt-1 text-[11px] text-inherit/50">
+                                {currentColadosCount} / {maxColados} agregado
+                                {maxColados === 1 ? "" : "s"}.
+                            </p>
+                            {canAddMoreColados && (
+                                <button
+                                    type="button"
+                                    onClick={handleAddColado}
+                                    className="mt-3 rounded-md border border-current/25 bg-current/10 px-3 py-2 text-[11px] font-medium tracking-wide uppercase text-inherit/85 transition-colors hover:bg-current/20"
+                                >
+                                    + Sumar {coladoWordSingular}
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {editing ? (
+                        <div className="mt-1 flex w-full gap-2 sm:gap-3">
+                            <button
+                                type="button"
+                                onClick={handleCancelEdit}
+                                className="flex min-h-[48px] flex-1 items-center justify-center rounded-md border border-current/25 bg-transparent px-5 py-2.5 text-center text-[11px] font-medium uppercase leading-snug tracking-[0.12em] text-inherit/75 transition-colors hover:bg-current/[0.06] sm:px-3 sm:py-3 sm:tracking-[0.2em]"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={submitting || confirmEditDisabled}
+                                className="flex min-h-[48px] flex-1 items-center justify-center rounded-md border border-current/25 bg-current/10 px-5 py-2.5 text-center text-[11px] font-medium uppercase leading-snug tracking-[0.12em] text-inherit/90 transition-colors hover:bg-current/20 disabled:cursor-not-allowed disabled:opacity-50 sm:px-3 sm:py-3 sm:tracking-[0.2em]"
+                            >
+                                {submitting
+                                    ? "Enviando..."
+                                    : "Confirmar cambios"}
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            type="submit"
+                            disabled={submitting}
+                            className="mt-1 min-h-[48px] w-full rounded-md border border-current/25 bg-current/10 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit/90 transition-colors hover:bg-current/20 disabled:opacity-50"
+                        >
+                            {submitting ? "Enviando..." : fields.submitButton}
+                        </button>
+                    )}
                 </form>
             </div>
         </section>

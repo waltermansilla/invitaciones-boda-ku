@@ -22,6 +22,13 @@ import {
     eventTypeLabelFromFolderTipo,
     invitationPathFromPanelIdSlug,
 } from "@/lib/client-helpers-shared";
+import {
+    coladoPlural,
+    coladoTitlePlural,
+    coladoTitleSingular,
+    normalizeColadoSingular,
+} from "@/lib/colado-label";
+import { DEFAULT_LIMITE_COLADOS_PANEL } from "@/lib/panel-plazas";
 
 interface Integrante {
     id: string;
@@ -29,6 +36,7 @@ interface Integrante {
     estado: "pendiente" | "confirmado" | "no_asiste";
     restricciones?: string;
     fecha_confirmacion?: string;
+    es_colado?: boolean;
 }
 interface Invitado {
     id: string;
@@ -47,6 +55,7 @@ interface Invitado {
     familiaNombre?: string;
     pago?: boolean;
     panel_variant?: string;
+    cupo_colados?: number;
 }
 interface Evento {
     id: string;
@@ -99,6 +108,11 @@ interface PanelData {
         variantes?: PanelVariantConfig[];
         defaultVariante?: string;
         activeVariante?: string;
+        coladosEnabled?: boolean;
+        /** Desde JSON (`rsvpPanel.coladoLabel`); plural = + "s" a cada palabra. */
+        coladoLabel?: string;
+        /** Máx. cupo de colados por invitado en el panel (`rsvpPanel.limiteColados`, default 5). */
+        limiteColados?: number;
     };
 }
 
@@ -116,17 +130,17 @@ const fetcher = async (url: string): Promise<PanelData> => {
     let json: Record<string, unknown> | null = null;
     try {
         json = raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
-  } catch {
-    throw new Error(
-      !res.ok
-        ? `Error HTTP ${res.status}. El servidor no devolvió JSON (¿Supabase o .env.local?).`
-        : "Respuesta del servidor no es JSON válido.",
+    } catch {
+        throw new Error(
+            !res.ok
+                ? `Error HTTP ${res.status}. El servidor no devolvió JSON (¿Supabase o .env.local?).`
+                : "Respuesta del servidor no es JSON válido.",
         );
-  }
-  if (!res.ok) {
-    const msg =
-      (typeof json?.error === "string" && json.error) ||
-      (typeof json?.message === "string" && json.message) ||
+    }
+    if (!res.ok) {
+        const msg =
+            (typeof json?.error === "string" && json.error) ||
+            (typeof json?.message === "string" && json.message) ||
             `HTTP ${res.status}`;
         throw new Error(msg);
     }
@@ -195,6 +209,7 @@ export default function PanelPage({
         | "con_alimentacion"
         | "con_musica"
         | "con_extra"
+        | "colados"
     >("todos");
     const [showAddModal, setShowAddModal] = useState(false);
     const [editingInvitado, setEditingInvitado] = useState<Invitado | null>(
@@ -244,8 +259,8 @@ export default function PanelPage({
             window.history.replaceState({}, "", url.toString());
         }
     }, [data?.panelConfig?.activeVariante, panelVariant]);
-  
-  // Configuración del panel desde el JSON del cliente
+
+    // Configuración del panel desde el JSON del cliente
     const theme = data?.panelConfig?.theme;
     const labels = data?.panelConfig?.labels;
     const primaryColor = theme?.primaryColor || "#b8a88a";
@@ -400,7 +415,8 @@ export default function PanelPage({
                 | "pago_pendiente"
                 | "con_alimentacion"
                 | "con_musica"
-                | "con_extra",
+                | "con_extra"
+                | "colados",
         ) => {
             setExpandedId(null);
             setFilter(next);
@@ -450,7 +466,7 @@ export default function PanelPage({
         );
     }
 
-  // Nombre del evento (sin "La boda de" ni "Los XV de")
+    // Nombre del evento (sin "La boda de" ni "Los XV de")
     const tipoEvento = String(evento.tipo_evento || "boda").toLowerCase();
     const nombreEvento = evento.nombre_evento || "Anto & Walter";
     const tituloEvento =
@@ -464,11 +480,27 @@ export default function PanelPage({
     const hasMusic = (inv: Invitado) => Boolean(inv.cancion?.trim());
     const hasExtra = (inv: Invitado) =>
         Boolean(inv.mensaje?.trim() && inv.mensaje !== inv.cancion);
+    /** Integrantes marcados como colado (agregados desde el RSVP). */
+    const hasColadosRegistrados = (inv: Invitado) =>
+        Boolean(inv.integrantes?.some((i) => i.es_colado));
     const getEstadoOrdenLista = (
         inv: Invitado,
     ): "pendiente" | "no_asiste" | "confirmado" => {
         if (inv.tipo === "familia" && inv.integrantes?.length) {
             const estados = inv.integrantes.map((int) => int.estado);
+            if (estados.includes("no_asiste")) return "no_asiste";
+            if (estados.includes("pendiente")) return "pendiente";
+            return "confirmado";
+        }
+        if (
+            inv.tipo === "persona" &&
+            inv.integrantes &&
+            inv.integrantes.length > 0
+        ) {
+            const estados = [
+                inv.estado,
+                ...inv.integrantes.map((int) => int.estado),
+            ];
             if (estados.includes("no_asiste")) return "no_asiste";
             if (estados.includes("pendiente")) return "pendiente";
             return "confirmado";
@@ -490,6 +522,13 @@ export default function PanelPage({
                 if (!Number.isNaN(t)) times.push(t);
             });
         }
+        if (inv.tipo === "persona" && inv.integrantes?.length) {
+            inv.integrantes.forEach((int) => {
+                if (!int.fecha_confirmacion) return;
+                const t = new Date(int.fecha_confirmacion).getTime();
+                if (!Number.isNaN(t)) times.push(t);
+            });
+        }
         if (!times.length) return null;
         return Math.max(...times);
     };
@@ -500,10 +539,13 @@ export default function PanelPage({
     const canFilterDietary = invitados.some((inv) => hasDietary(inv));
     const canFilterMusic = invitados.some((inv) => hasMusic(inv));
     const canFilterExtra = invitados.some((inv) => hasExtra(inv));
+    const canFilterColados = invitados.some((inv) =>
+        hasColadosRegistrados(inv),
+    );
     const estadoFilter = filterToEstado[filter] || filter;
     let itemsToDisplay: Invitado[] = [];
 
-  if (filter === "todos") {
+    if (filter === "todos") {
         // Orden:
         // 1) Nuevos (última confirmación más reciente primero)
         // 2) Lista estándar por estado (pendiente, no_asiste, confirmado) y alfabético
@@ -543,8 +585,8 @@ export default function PanelPage({
             ...estandarOtros,
         ];
         itemsToDisplay = [...nuevos, ...estandar];
-  } else if (filter === "pago_pendiente") {
-    // Mostrar solo los que no pagaron tarjeta
+    } else if (filter === "pago_pendiente") {
+        // Mostrar solo los que no pagaron tarjeta
         itemsToDisplay = invitados
             .filter((inv) => !inv.pago_tarjeta)
             .map((inv) => ({ ...inv }));
@@ -560,8 +602,12 @@ export default function PanelPage({
         itemsToDisplay = invitados
             .filter((inv) => hasExtra(inv))
             .map((inv) => ({ ...inv }));
-  } else {
-    for (const inv of invitados) {
+    } else if (filter === "colados") {
+        itemsToDisplay = invitados
+            .filter((inv) => hasColadosRegistrados(inv))
+            .map((inv) => ({ ...inv }));
+    } else {
+        for (const inv of invitados) {
             if (
                 inv.tipo === "familia" &&
                 inv.integrantes &&
@@ -570,15 +616,16 @@ export default function PanelPage({
                 const estados = new Set(
                     inv.integrantes.map((int) => int.estado),
                 );
-        if (estados.size > 1) {
-          for (const int of inv.integrantes) {
-            if (int.estado === estadoFilter) {
+                if (estados.size > 1) {
+                    for (const int of inv.integrantes) {
+                        if (int.estado === estadoFilter) {
                             itemsToDisplay.push({
                                 id: int.id,
                                 nombre: int.nombre,
                                 tipo: "integrante",
                                 estado: int.estado,
                                 restricciones: int.restricciones,
+                                es_colado: Boolean(int.es_colado),
                                 familiaId: inv.id,
                                 familiaNombre: inv.nombre,
                                 codigo: inv.codigo,
@@ -587,6 +634,51 @@ export default function PanelPage({
                         }
                     }
                 } else if (estados.has(estadoFilter as Invitado["estado"])) {
+                    itemsToDisplay.push({ ...inv });
+                }
+            } else if (
+                inv.tipo === "persona" &&
+                inv.integrantes &&
+                inv.integrantes.length > 0
+            ) {
+                const titularEstado = inv.estado;
+                const ints = inv.integrantes;
+                const uniq = new Set([
+                    titularEstado,
+                    ...ints.map((x) => x.estado),
+                ]);
+                if (uniq.size > 1) {
+                    if (titularEstado === estadoFilter) {
+                        itemsToDisplay.push({
+                            id: `${inv.id}-titular`,
+                            nombre: inv.nombre,
+                            tipo: "integrante",
+                            estado: titularEstado,
+                            restricciones: inv.restricciones,
+                            familiaId: inv.id,
+                            familiaNombre: inv.nombre,
+                            codigo: inv.codigo,
+                            pago: inv.pago_tarjeta,
+                            es_colado: false,
+                        });
+                    }
+                    for (const int of ints) {
+                        if (int.estado === estadoFilter) {
+                            itemsToDisplay.push({
+                                id: int.id,
+                                nombre: int.nombre,
+                                tipo: "integrante",
+                                estado: int.estado,
+                                restricciones: int.restricciones,
+                                es_colado: Boolean(int.es_colado),
+                                familiaId: inv.id,
+                                familiaNombre: inv.nombre,
+                                codigo: inv.codigo,
+                                pago: inv.pago_tarjeta,
+                            });
+                        }
+                    }
+                } else if ([...uniq][0] === estadoFilter) {
                     itemsToDisplay.push({ ...inv });
                 }
             } else {
@@ -615,8 +707,8 @@ export default function PanelPage({
         return false;
     });
 
-  return (
-    <div className="min-h-screen bg-[#faf9f7]">
+    return (
+        <div className="min-h-screen bg-[#faf9f7]">
             <header
                 className="relative px-5 py-8 text-center text-white"
                 style={{ backgroundColor: primaryColor }}
@@ -641,9 +733,9 @@ export default function PanelPage({
                         ¿Cómo usar?
                     </button>
                 </div>
-      </header>
+            </header>
 
-      <div className="px-5 py-6">
+            <div className="px-5 py-6">
                 <div className="mb-3">
                     <div className="rounded-lg bg-white px-4 py-6 text-center shadow-sm">
                         <p className="text-4xl font-bold text-neutral-700">
@@ -654,7 +746,7 @@ export default function PanelPage({
                         </p>
                     </div>
                 </div>
-        <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                     <div
                         className="rounded-lg px-3 py-4 text-center"
                         style={{ backgroundColor: "#d4edda" }}
@@ -697,10 +789,10 @@ export default function PanelPage({
                             {labels?.declinedLabel || "No asisten"}
                         </p>
                     </div>
-        </div>
-      </div>
+                </div>
+            </div>
 
-      <div className="px-5 pb-4">
+            <div className="px-5 pb-4">
                 {variantes.length > 1 && (
                     <div className="mb-4">
                         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
@@ -759,7 +851,7 @@ export default function PanelPage({
                     />
                     <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 opacity-70" />
                 </div>
-        <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                     {(
                         [
                             "todos",
@@ -788,8 +880,27 @@ export default function PanelPage({
                                   : f === "pago_pendiente"
                                     ? labels?.paymentPending || "Pago pendiente"
                                     : f.charAt(0).toUpperCase() + f.slice(1)}
-            </button>
-          ))}
+                        </button>
+                    ))}
+                    {canFilterColados && (
+                        <button
+                            type="button"
+                            onClick={() => applyFilter("colados")}
+                            title="Solo invitados que sumaron colados desde el RSVP"
+                            className="rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors"
+                            style={{
+                                backgroundColor:
+                                    filter === "colados" ? primaryColor : "#fff",
+                                color: filter === "colados" ? "#fff" : "#666",
+                                border:
+                                    filter === "colados"
+                                        ? "none"
+                                        : "1px solid #e5e5e5",
+                            }}
+                        >
+                            Colados
+                        </button>
+                    )}
                     {canFilterDietary && (
                         <button
                             onClick={() => applyFilter("con_alimentacion")}
@@ -854,8 +965,8 @@ export default function PanelPage({
                             <MessageSquare className="h-3 w-3" />
                         </button>
                     )}
-        </div>
-      </div>
+                </div>
+            </div>
 
             {typeof limitePlazas === "number" && (
                 <div className="px-5 pb-2 text-center">
@@ -907,17 +1018,19 @@ export default function PanelPage({
                 </div>
             </div>
 
-      <div className="px-5 pb-8">
-        {invitadosFiltrados.length === 0 ? (
+            <div className="px-5 pb-8">
+                {invitadosFiltrados.length === 0 ? (
                     <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-12 text-center">
                         <p className="text-neutral-500">
                             {searchTerm
                                 ? "No se encontraron resultados"
-                                : "No hay invitados"}
+                                : filter === "colados"
+                                  ? "No hay colados registrados"
+                                  : "No hay invitados"}
                         </p>
                     </div>
-        ) : (
-          <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
+                ) : (
+                    <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white">
                         {invitadosFiltrados.map((inv, idx) => (
                             <InvitadoRow
                                 key={inv.id}
@@ -931,6 +1044,7 @@ export default function PanelPage({
                                 canTransfer={canTransferInvitado(inv)}
                                 giftCardEnabled={giftCardEnabled}
                                 primaryColor={primaryColor}
+                                coladoLabel={data.panelConfig?.coladoLabel}
                                 labels={labels}
                                 expanded={expandedId === inv.id}
                                 onToggleExpand={() =>
@@ -948,9 +1062,9 @@ export default function PanelPage({
                                 onOpenTransfer={() => setTransferInvitado(inv)}
                             />
                         ))}
-          </div>
-        )}
-      </div>
+                    </div>
+                )}
+            </div>
 
             {showAddModal && (
                 <AddInvitadoModal
@@ -958,6 +1072,12 @@ export default function PanelPage({
                     panelVariant={panelVariant}
                     primaryColor={primaryColor}
                     soloPersona={data.panelConfig?.confirmacion === "comun"}
+                    coladosEnabled={Boolean(data.panelConfig?.coladosEnabled)}
+                    coladoLabel={data.panelConfig?.coladoLabel}
+                    limiteColadosMax={
+                        data.panelConfig?.limiteColados ??
+                        DEFAULT_LIMITE_COLADOS_PANEL
+                    }
                     onLimitReached={() => setShowLimitHelpModal(true)}
                     onClose={() => setShowAddModal(false)}
                     onSuccess={() => {
@@ -980,6 +1100,12 @@ export default function PanelPage({
                     panelId={panelId}
                     invitado={editingInvitado}
                     primaryColor={primaryColor}
+                    coladosEnabled={Boolean(data.panelConfig?.coladosEnabled)}
+                    coladoLabel={data.panelConfig?.coladoLabel}
+                    limiteColadosMax={
+                        data.panelConfig?.limiteColados ??
+                        DEFAULT_LIMITE_COLADOS_PANEL
+                    }
                     onClose={() => setEditingInvitado(null)}
                     onSuccess={() => {
                         setEditingInvitado(null);
@@ -1025,7 +1151,7 @@ export default function PanelPage({
                     }}
                 />
             )}
-    </div>
+        </div>
     );
 }
 
@@ -1037,6 +1163,7 @@ function InvitadoRow({
     canTransfer,
     giftCardEnabled,
     primaryColor,
+    coladoLabel,
     labels,
     expanded,
     onToggleExpand,
@@ -1054,6 +1181,7 @@ function InvitadoRow({
     canTransfer: boolean;
     giftCardEnabled: boolean;
     primaryColor: string;
+    coladoLabel?: string;
     labels?: PanelLabels;
     expanded: boolean;
     onToggleExpand: () => void;
@@ -1077,23 +1205,38 @@ function InvitadoRow({
     };
     const bgColor = estadoBg[invitado.estado] || "#f5f5f5";
     const txtColor = estadoText[invitado.estado] || "#888";
-  
-  // Para familias: determinar si todos tienen el mismo estado
+
+    const colSing = normalizeColadoSingular(coladoLabel);
+    const colPlur = coladoPlural(colSing);
+
+    const integrantesRow = invitado.integrantes ?? [];
+    const personaConColados =
+        invitado.tipo === "persona" && integrantesRow.length > 0;
+    const esFamiliaConInts =
+        invitado.tipo === "familia" && integrantesRow.length > 0;
+
+    /** Estados del grupo: familia = solo integrantes; persona+colados = titular + colados */
+    const estadosGrupo: string[] | null = esFamiliaConInts
+        ? integrantesRow.map((i) => i.estado)
+        : personaConColados
+          ? [invitado.estado, ...integrantesRow.map((i) => i.estado)]
+          : null;
+
     let familiaEstadoUnico: string | null = null;
     let estadosMixtos = false;
-  if (invitado.tipo === "familia" && invitado.integrantes?.length) {
-        const estados = new Set(invitado.integrantes.map((i) => i.estado));
-    if (estados.size === 1) {
-            familiaEstadoUnico = invitado.integrantes[0].estado;
-    } else {
+    if (estadosGrupo && estadosGrupo.length > 0) {
+        const estados = new Set(estadosGrupo);
+        if (estados.size === 1) {
+            familiaEstadoUnico = estadosGrupo[0];
+        } else {
             estadosMixtos = true;
+        }
     }
-  }
 
-  // Color del ícono
+    // Color del ícono (familia o persona con colados)
     let iconBg = bgColor,
         iconTxt = txtColor;
-  if (invitado.tipo === "familia" && invitado.integrantes?.length) {
+    if (estadosGrupo && estadosGrupo.length > 0) {
         if (estadosMixtos) {
             iconBg = "#e5e5e5";
             iconTxt = "#666";
@@ -1107,18 +1250,17 @@ function InvitadoRow({
             iconBg = estadoBg.pendiente;
             iconTxt = estadoText.pendiente;
         }
-  }
+    }
 
-  // Badge de estado para mostrar
-  const renderEstadoBadge = () => {
-    // Para familias
-    if (invitado.tipo === "familia" && invitado.integrantes?.length) {
-      if (estadosMixtos) {
-        // Estados mixtos: mostrar números
+    const renderEstadoBadge = () => {
+        if (estadosGrupo && estadosGrupo.length > 0) {
+            if (estadosMixtos) {
                 const e = { confirmado: 0, pendiente: 0, no_asiste: 0 };
-                invitado.integrantes!.forEach((i) => e[i.estado]++);
-        return (
-          <div className="flex gap-1">
+                estadosGrupo.forEach((s) => {
+                    e[s as keyof typeof e]++;
+                });
+                return (
+                    <div className="flex gap-1">
                         {e.confirmado > 0 && (
                             <span
                                 className="rounded px-2 py-1 text-[10px] font-medium"
@@ -1152,34 +1294,34 @@ function InvitadoRow({
                                 {e.no_asiste}
                             </span>
                         )}
-          </div>
+                    </div>
                 );
-      } else {
-        // Todos tienen el mismo estado: mostrar texto en plural
-                const color =
-                    familiaEstadoUnico === "confirmado"
-                        ? estadoBg.confirmado
-                        : familiaEstadoUnico === "no_asiste"
-                          ? estadoBg.no_asiste
-                          : estadoBg.pendiente;
-                const txt =
-                    familiaEstadoUnico === "confirmado"
-                        ? estadoText.confirmado
-                        : familiaEstadoUnico === "no_asiste"
-                          ? estadoText.no_asiste
-                          : estadoText.pendiente;
-                return (
-                    <span
-                        className="rounded px-2 py-1 text-[10px] font-medium"
-                        style={{ backgroundColor: color, color: txt }}
-                    >
-                        {getEstadoTexto(familiaEstadoUnico!, true)}
-                    </span>
-                );
-      }
-    }
-    
-    // Para personas individuales o integrantes: singular
+            }
+            const color =
+                familiaEstadoUnico === "confirmado"
+                    ? estadoBg.confirmado
+                    : familiaEstadoUnico === "no_asiste"
+                      ? estadoBg.no_asiste
+                      : estadoBg.pendiente;
+            const txt =
+                familiaEstadoUnico === "confirmado"
+                    ? estadoText.confirmado
+                    : familiaEstadoUnico === "no_asiste"
+                      ? estadoText.no_asiste
+                      : estadoText.pendiente;
+            return (
+                <span
+                    className="rounded px-2 py-1 text-[10px] font-medium"
+                    style={{ backgroundColor: color, color: txt }}
+                >
+                    {getEstadoTexto(
+                        familiaEstadoUnico!,
+                        estadosGrupo.length > 1,
+                    )}
+                </span>
+            );
+        }
+
         return (
             <span
                 className="rounded px-2 py-1 text-[10px] font-medium"
@@ -1226,7 +1368,7 @@ function InvitadoRow({
         return () => window.cancelAnimationFrame(raf);
     }, [expanded]);
 
-  return (
+    return (
         <div
             ref={rowRef}
             className={!isLast ? "border-b border-neutral-100" : ""}
@@ -1249,28 +1391,45 @@ function InvitadoRow({
                     className="relative flex h-8 w-8 items-center justify-center rounded-full"
                     style={{ backgroundColor: iconBg }}
                 >
-                    {invitado.tipo === "familia" ? (
+                    {invitado.tipo === "familia" || personaConColados ? (
                         <Users className="h-4 w-4" style={{ color: iconTxt }} />
                     ) : (
                         <User className="h-4 w-4" style={{ color: iconTxt }} />
                     )}
                 </div>
-        <div className="flex-1">
+                <div className="flex-1">
                     <p className="font-medium text-neutral-800">
                         {invitado.nombre}
                     </p>
-                    {invitado.tipo === "familia" && invitado.integrantes && (
+                    {invitado.tipo === "familia" &&
+                        integrantesRow.length > 0 && (
+                            <p className="text-xs text-neutral-500">
+                                {integrantesRow.length} integrantes
+                                {integrantesRow.some((i) => i.es_colado)
+                                    ? ` (${integrantesRow.filter((i) => i.es_colado).length} ${
+                                          integrantesRow.filter(
+                                              (i) => i.es_colado,
+                                          ).length === 1
+                                              ? colSing
+                                              : colPlur
+                                      })`
+                                    : ""}
+                            </p>
+                        )}
+                    {personaConColados && (
                         <p className="text-xs text-neutral-500">
-                            {invitado.integrantes.length} integrantes
+                            {integrantesRow.length}{" "}
+                            {integrantesRow.length === 1 ? colSing : colPlur}
                         </p>
                     )}
                     {invitado.tipo === "integrante" &&
                         invitado.familiaNombre && (
                             <p className="text-xs text-neutral-500">
                                 de {invitado.familiaNombre}
+                                {invitado.es_colado ? ` · ${colSing}` : ""}
                             </p>
                         )}
-        </div>
+                </div>
                 {(hasDietaryInfo || hasSongInfo || hasExtraInfo) && (
                     <div className="flex items-center gap-1 text-neutral-500">
                         {hasDietaryInfo && <Utensils className="h-3.5 w-3.5" />}
@@ -1280,11 +1439,56 @@ function InvitadoRow({
                         )}
                     </div>
                 )}
-        {renderEstadoBadge()}
-      </div>
-      {expanded && (
-        <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3">
-          <div className="flex flex-wrap gap-2">
+                {renderEstadoBadge()}
+            </div>
+            {expanded && (
+                <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3">
+                    {invitado.tipo !== "familia" && invitado.restricciones && (
+                        <div className="mb-3 flex items-center gap-2 text-xs text-neutral-600">
+                            <Utensils className="h-3 w-3" />
+                            <span>{invitado.restricciones}</span>
+                        </div>
+                    )}
+                    {invitado.tipo !== "familia" &&
+                    personaConColados &&
+                    songsByMember[invitado.nombre]?.length ? (
+                        <div className="mb-2 flex items-start gap-2 text-xs text-neutral-600">
+                            <Music className="mt-0.5 h-3 w-3 shrink-0" />
+                            <span className="whitespace-pre-wrap break-words">
+                                {songsByMember[invitado.nombre]!.join(" | ")}
+                            </span>
+                        </div>
+                    ) : invitado.tipo !== "familia" &&
+                      !personaConColados &&
+                      invitado.cancion ? (
+                        <div className="mb-2 flex items-start gap-2 text-xs text-neutral-600">
+                            <Music className="mt-0.5 h-3 w-3 shrink-0" />
+                            <span className="whitespace-pre-wrap break-words">
+                                {invitado.cancion}
+                            </span>
+                        </div>
+                    ) : null}
+                    {invitado.tipo !== "familia" &&
+                    personaConColados &&
+                    extraByMember[invitado.nombre]?.length ? (
+                        <div className="mb-3 flex items-start gap-2 text-xs text-neutral-600">
+                            <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
+                            <span className="whitespace-pre-wrap break-words">
+                                {extraByMember[invitado.nombre]!.join(" | ")}
+                            </span>
+                        </div>
+                    ) : invitado.tipo !== "familia" &&
+                      !personaConColados &&
+                      invitado.mensaje &&
+                      invitado.mensaje !== invitado.cancion ? (
+                        <div className="mb-3 flex items-start gap-2 text-xs text-neutral-600">
+                            <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
+                            <span className="whitespace-pre-wrap break-words">
+                                {invitado.mensaje}
+                            </span>
+                        </div>
+                    ) : null}
+                    <div className="flex flex-wrap gap-2">
                         {invitado.codigo && (
                             <button
                                 onClick={(e) => {
@@ -1367,112 +1571,88 @@ function InvitadoRow({
                                 </button>
                             </>
                         )}
-          </div>
-                    {invitado.tipo !== "familia" && invitado.restricciones && (
-                        <div className="mt-3 flex items-center gap-2 text-xs text-neutral-600">
-                            <Utensils className="h-3 w-3" />
-                            <span>{invitado.restricciones}</span>
-                        </div>
-                    )}
-                    {invitado.tipo !== "familia" && invitado.cancion && (
-                        <div className="mt-2 flex items-start gap-2 text-xs text-neutral-600">
-                            <Music className="mt-0.5 h-3 w-3 shrink-0" />
-                            <span className="whitespace-pre-wrap break-words">
-                                {invitado.cancion}
-                            </span>
-                        </div>
-                    )}
-                    {invitado.tipo !== "familia" &&
-                        invitado.mensaje &&
-                        invitado.mensaje !== invitado.cancion && (
-                            <div className="mt-2 flex items-start gap-2 text-xs text-neutral-600">
-                                <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
-                                <span className="whitespace-pre-wrap break-words">
-                                    {invitado.mensaje}
-                                </span>
-                            </div>
-                        )}
-                    {invitado.tipo === "familia" &&
-                        invitado.integrantes?.length && (
-            <div className="mt-3">
-                                <p className="mb-2 text-xs font-medium text-neutral-700">
-                                    Integrantes:
-                                </p>
-              <div className="space-y-1">
-                {invitado.integrantes!.map((i) => (
-                                        <div
-                                            key={i.id}
-                                            className="flex items-start justify-between gap-2 rounded bg-white px-2 py-1"
-                                        >
-                                            <div className="min-w-0 flex-1">
-                                                <span className="text-xs text-neutral-700">
-                                                    {i.nombre}
-                                                </span>
-                                                {songsByMember[i.nombre]
-                                                    ?.length ? (
-                                                    <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
-                                                        <Music className="mt-0.5 h-3 w-3 shrink-0" />
-                                                        <span className="whitespace-pre-wrap break-words">
-                                                            {songsByMember[
-                                                                i.nombre
-                                                            ].join(" | ")}
-                                                        </span>
-                                                    </div>
-                      ) : null}
-                                                {extraByMember[i.nombre]
-                                                    ?.length ? (
-                                                    <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
-                                                        <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
-                                                        <span className="whitespace-pre-wrap break-words">
-                                                            {extraByMember[
-                                                                i.nombre
-                                                            ].join(" | ")}
-                                                        </span>
-                                                    </div>
-                                                ) : null}
-                                            </div>
-                                            <div className="flex shrink-0 items-start gap-2">
-                                                {i.restricciones && (
-                                                    <span className="flex items-start gap-1 text-[10px] text-neutral-500">
-                                                        <Utensils className="mt-0.5 h-3 w-3 shrink-0" />
-                                                        <span className="whitespace-pre-wrap break-words">
-                                                            {i.restricciones}
-                                                        </span>
-                                                    </span>
-                                                )}
-                                                <span
-                                                    className="rounded px-2 py-0.5 text-[10px] font-medium"
-                                                    style={{
-                                                        backgroundColor:
-                                                            estadoBg[i.estado],
-                                                        color: estadoText[
-                                                            i.estado
-                                                        ],
-                                                    }}
-                                                >
-                                                    {getEstadoTexto(
-                                                        i.estado,
-                                                        false,
+                    </div>
+                    {(esFamiliaConInts || personaConColados) && (
+                        <div className="mt-3">
+                            <p className="mb-2 text-xs font-medium text-neutral-700">
+                                {personaConColados
+                                    ? `${coladoTitlePlural(colSing)}:`
+                                    : "Integrantes:"}
+                            </p>
+                            <div className="space-y-1">
+                                {integrantesRow.map((i) => (
+                                    <div
+                                        key={i.id}
+                                        className="flex items-start justify-between gap-2 rounded bg-white px-2 py-1"
+                                    >
+                                        <div className="min-w-0 flex-1">
+                                            <span className="text-xs text-neutral-700">
+                                                {i.nombre}
+                                            </span>
+                                            {i.es_colado && (
+                                                <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
+                                                    {coladoTitleSingular(
+                                                        colSing,
                                                     )}
                                                 </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-                                {invitado.restricciones && (
-                                    <div className="mt-2 rounded bg-white px-2 py-2">
-                                        {invitado.restricciones && (
-                                            <div className="flex items-center gap-2 text-xs text-neutral-600">
-                                                <Utensils className="h-3 w-3" />
-                                                <span>
-                                                    {invitado.restricciones}
+                                            )}
+                                            {songsByMember[i.nombre]?.length ? (
+                                                <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
+                                                    <Music className="mt-0.5 h-3 w-3 shrink-0" />
+                                                    <span className="whitespace-pre-wrap break-words">
+                                                        {songsByMember[
+                                                            i.nombre
+                                                        ].join(" | ")}
+                                                    </span>
+                                                </div>
+                                            ) : null}
+                                            {extraByMember[i.nombre]?.length ? (
+                                                <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
+                                                    <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
+                                                    <span className="whitespace-pre-wrap break-words">
+                                                        {extraByMember[
+                                                            i.nombre
+                                                        ].join(" | ")}
+                                                    </span>
+                                                </div>
+                                            ) : null}
+                                        </div>
+                                        <div className="flex shrink-0 items-start gap-2">
+                                            {i.restricciones && (
+                                                <span className="flex items-start gap-1 text-[10px] text-neutral-500">
+                                                    <Utensils className="mt-0.5 h-3 w-3 shrink-0" />
+                                                    <span className="whitespace-pre-wrap break-words">
+                                                        {i.restricciones}
+                                                    </span>
                                                 </span>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-                        )}
+                                            )}
+                                            <span
+                                                className="rounded px-2 py-0.5 text-[10px] font-medium"
+                                                style={{
+                                                    backgroundColor:
+                                                        estadoBg[i.estado],
+                                                    color: estadoText[i.estado],
+                                                }}
+                                            >
+                                                {getEstadoTexto(
+                                                    i.estado,
+                                                    false,
+                                                )}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            {esFamiliaConInts && invitado.restricciones && (
+                                <div className="mt-2 rounded bg-white px-2 py-2">
+                                    <div className="flex items-center gap-2 text-xs text-neutral-600">
+                                        <Utensils className="h-3 w-3" />
+                                        <span>{invitado.restricciones}</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             )}
         </div>
@@ -1491,7 +1671,7 @@ function ConfirmManualModal({
     onClose: () => void;
     onConfirm: (inv: Invitado, estado: "confirmado" | "no_asiste") => void;
 }) {
-  return (
+    return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
             onClick={onClose}
@@ -1506,7 +1686,7 @@ function ConfirmManualModal({
                 <p className="mb-6 text-sm text-neutral-500 text-center">
                     ¿{invitado.nombre} asiste al evento?
                 </p>
-        <div className="flex gap-3">
+                <div className="flex gap-3">
                     <button
                         onClick={() => onConfirm(invitado, "no_asiste")}
                         className="flex-1 rounded-lg bg-red-100 py-3 text-sm font-medium text-red-700"
@@ -1520,9 +1700,48 @@ function ConfirmManualModal({
                     >
                         Confirmar
                     </button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+    );
+}
+
+function CounterInput({
+    value,
+    min,
+    max,
+    onChange,
+}: {
+    value: number;
+    min: number;
+    max: number;
+    onChange: (value: number) => void;
+}) {
+    const safe = Math.max(min, Math.min(max, Math.floor(value || 0)));
+    const canDown = safe > min;
+    const canUp = safe < max;
+    return (
+        <div className="flex items-center justify-between rounded-lg border border-neutral-200 px-3 py-2">
+            <button
+                type="button"
+                onClick={() => canDown && onChange(safe - 1)}
+                disabled={!canDown}
+                className="h-8 w-8 rounded-md bg-neutral-100 text-lg leading-none text-neutral-700 disabled:opacity-40"
+            >
+                -
+            </button>
+            <span className="min-w-[40px] text-center text-base font-semibold text-neutral-800">
+                {safe}
+            </span>
+            <button
+                type="button"
+                onClick={() => canUp && onChange(safe + 1)}
+                disabled={!canUp}
+                className="h-8 w-8 rounded-md bg-neutral-100 text-lg leading-none text-neutral-700 disabled:opacity-40"
+            >
+                +
+            </button>
+        </div>
     );
 }
 
@@ -1531,6 +1750,9 @@ function AddInvitadoModal({
     panelVariant,
     primaryColor,
     soloPersona,
+    coladosEnabled,
+    coladoLabel,
+    limiteColadosMax = DEFAULT_LIMITE_COLADOS_PANEL,
     onClose,
     onSuccess,
     onLimitReached,
@@ -1539,6 +1761,10 @@ function AddInvitadoModal({
     panelVariant: string;
     primaryColor: string;
     soloPersona?: boolean;
+    coladosEnabled?: boolean;
+    coladoLabel?: string;
+    /** Máximo cupo de colados por invitado (desde `rsvpPanel.limiteColados`). */
+    limiteColadosMax?: number;
     onClose: () => void;
     onSuccess: () => void;
     onLimitReached?: () => void;
@@ -1548,6 +1774,9 @@ function AddInvitadoModal({
     const [integrantes, setIntegrantes] = useState<string[]>([]);
     const [newIntegrante, setNewIntegrante] = useState("");
     const [saving, setSaving] = useState(false);
+    const [cupoColados, setCupoColados] = useState(0);
+    const colSing = normalizeColadoSingular(coladoLabel);
+    const colPlur = coladoPlural(colSing);
     const integranteInputRef = useRef<HTMLInputElement>(null);
     const focusIntegranteInput = useCallback(() => {
         window.requestAnimationFrame(() => {
@@ -1565,7 +1794,7 @@ function AddInvitadoModal({
     };
     const handleRemoveIntegrante = (idx: number) =>
         setIntegrantes(integrantes.filter((_, i) => i !== idx));
-  const handleSave = async () => {
+    const handleSave = async () => {
         if (!nombre.trim()) return;
         const finalIntegrantes = [...integrantes];
         const effectiveTipo = soloPersona ? "persona" : tipo;
@@ -1584,6 +1813,12 @@ function AddInvitadoModal({
                     body: JSON.stringify({
                         nombre: nombre.trim(),
                         tipo: effectiveTipo,
+                        cupo_colados: coladosEnabled
+                            ? Math.max(
+                                  0,
+                                  Math.min(limiteColadosMax, cupoColados),
+                              )
+                            : 0,
                         integrantes:
                             effectiveTipo === "familia"
                                 ? finalIntegrantes
@@ -1613,7 +1848,7 @@ function AddInvitadoModal({
             setSaving(false);
         }
     };
-  return (
+    return (
         <div
             className="fixed inset-0 z-50 flex items-end justify-center bg-black/50"
             onClick={onClose}
@@ -1622,7 +1857,7 @@ function AddInvitadoModal({
                 className="w-full max-w-lg rounded-t-2xl bg-white p-6"
                 onClick={(e) => e.stopPropagation()}
             >
-        <h2 className="mb-4 text-lg font-semibold">Agregar Invitado</h2>
+                <h2 className="mb-4 text-lg font-semibold">Agregar Invitado</h2>
                 {!soloPersona && (
                     <div className="mb-4 flex gap-2">
                         <button
@@ -1646,14 +1881,14 @@ function AddInvitadoModal({
                     placeholder={
                         soloPersona || tipo === "persona"
                             ? "Nombre completo"
-                            : "Nombre de la familia"
+                            : "Nombre de la familia (Ej: 'Flia Díaz')"
                     }
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     className="mb-4 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
                 />
                 {!soloPersona && tipo === "familia" && (
-          <div className="mb-4">
+                    <div className="mb-4">
                         <p className="mb-2 text-sm font-medium text-neutral-700">
                             Integrantes:
                         </p>
@@ -1697,8 +1932,25 @@ function AddInvitadoModal({
                                 <Plus className="h-4 w-4" />
                             </button>
                         </div>
-          </div>
-        )}
+                    </div>
+                )}
+                {coladosEnabled && (
+                    <div className="mb-4">
+                        <label className="mb-2 block text-sm font-medium text-neutral-700">
+                            Cupo de {colPlur}
+                        </label>
+                        <CounterInput
+                            value={cupoColados}
+                            min={0}
+                            max={limiteColadosMax}
+                            onChange={setCupoColados}
+                        />
+                        <p className="mt-1 text-xs text-neutral-500">
+                            Cantidad máxima de personas extra que pueden sumar
+                            desde el RSVP (0 a {limiteColadosMax}).
+                        </p>
+                    </div>
+                )}
                 <div className="flex gap-2">
                     <button
                         onClick={onClose}
@@ -1714,8 +1966,8 @@ function AddInvitadoModal({
                     >
                         {saving ? "Guardando..." : "Guardar"}
                     </button>
-      </div>
-    </div>
+                </div>
+            </div>
         </div>
     );
 }
@@ -2232,12 +2484,18 @@ function EditInvitadoModal({
     panelId,
     invitado,
     primaryColor,
+    coladosEnabled,
+    coladoLabel,
+    limiteColadosMax = DEFAULT_LIMITE_COLADOS_PANEL,
     onClose,
     onSuccess,
 }: {
     panelId: string;
     invitado: Invitado;
     primaryColor: string;
+    coladosEnabled?: boolean;
+    coladoLabel?: string;
+    limiteColadosMax?: number;
     onClose: () => void;
     onSuccess: () => void;
 }) {
@@ -2250,18 +2508,33 @@ function EditInvitadoModal({
             id: string;
             nombre: string;
             estado: "pendiente" | "confirmado" | "no_asiste";
+            es_colado?: boolean;
         }>
     >(
         invitado.integrantes?.map((i) => ({
             id: i.id,
             nombre: i.nombre,
             estado: i.estado,
+            es_colado: Boolean(i.es_colado),
         })) || [],
     );
     const [editingIntegranteIdx, setEditingIntegranteIdx] = useState<
         number | null
     >(null);
     const [newIntegrante, setNewIntegrante] = useState("");
+    const [cupoColados, setCupoColados] = useState(
+        typeof invitado.cupo_colados === "number"
+            ? Math.max(
+                  0,
+                  Math.min(
+                      limiteColadosMax,
+                      Math.floor(invitado.cupo_colados),
+                  ),
+              )
+            : 0,
+    );
+    const colSing = normalizeColadoSingular(coladoLabel);
+    const colPlur = coladoPlural(colSing);
     const [saving, setSaving] = useState(false);
     const integranteInputRef = useRef<HTMLInputElement>(null);
     const focusIntegranteInput = useCallback(() => {
@@ -2280,6 +2553,7 @@ function EditInvitadoModal({
                 id: `new-${Date.now()}`,
                 nombre: newIntegrante.trim(),
                 estado: "pendiente",
+                es_colado: false,
             },
         ]);
         setNewIntegrante("");
@@ -2315,7 +2589,7 @@ function EditInvitadoModal({
         if (!ok) return;
         setEstado(newEstado);
     };
-  const handleSave = async () => {
+    const handleSave = async () => {
         if (!nombre.trim()) return;
         const finalIntegrantes = [...integrantes];
         if (
@@ -2326,6 +2600,7 @@ function EditInvitadoModal({
                 id: `new-${Date.now()}`,
                 nombre: integranteInputRef.current.value.trim(),
                 estado: "pendiente",
+                es_colado: false,
             });
         setSaving(true);
         try {
@@ -2338,6 +2613,12 @@ function EditInvitadoModal({
                         nombre: nombre.trim(),
                         estado:
                             invitado.tipo === "persona" ? estado : undefined,
+                        cupo_colados: coladosEnabled
+                            ? Math.max(
+                                  0,
+                                  Math.min(limiteColadosMax, cupoColados),
+                              )
+                            : 0,
                         integrantes:
                             invitado.tipo === "familia"
                                 ? finalIntegrantes
@@ -2361,7 +2642,7 @@ function EditInvitadoModal({
             setSaving(false);
         }
     };
-  return (
+    return (
         <div
             className="fixed inset-0 z-50 flex items-end justify-center bg-black/50"
             onClick={onClose}
@@ -2370,7 +2651,7 @@ function EditInvitadoModal({
                 className="w-full max-w-lg rounded-t-2xl bg-white p-6"
                 onClick={(e) => e.stopPropagation()}
             >
-        <h2 className="mb-4 text-lg font-semibold">Editar Invitado</h2>
+                <h2 className="mb-4 text-lg font-semibold">Editar Invitado</h2>
                 <input
                     type="text"
                     placeholder="Nombre"
@@ -2434,8 +2715,21 @@ function EditInvitadoModal({
                         </div>
                     </div>
                 )}
-        {invitado.tipo === "familia" && (
-          <div className="mb-4">
+                {coladosEnabled && (
+                    <div className="mb-4">
+                        <label className="mb-2 block text-sm font-medium text-neutral-700">
+                            Cupo de {colPlur}
+                        </label>
+                        <CounterInput
+                            value={cupoColados}
+                            min={0}
+                            max={limiteColadosMax}
+                            onChange={setCupoColados}
+                        />
+                    </div>
+                )}
+                {invitado.tipo === "familia" && (
+                    <div className="mb-4">
                         <p className="mb-2 text-sm font-medium text-neutral-700">
                             Integrantes:
                         </p>
@@ -2610,9 +2904,9 @@ function EditInvitadoModal({
                                             Cerrar
                                         </button>
                                     </div>
-          </div>
-        )}
-      </div>
+                                </div>
+                            )}
+                    </div>
                 )}
                 <div className="flex gap-2">
                     <button
@@ -2629,7 +2923,7 @@ function EditInvitadoModal({
                     >
                         {saving ? "Guardando..." : "Guardar"}
                     </button>
-    </div>
+                </div>
             </div>
         </div>
     );

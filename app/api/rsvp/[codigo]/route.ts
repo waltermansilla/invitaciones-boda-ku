@@ -34,7 +34,7 @@ export async function POST(
   // Obtener invitado
   const { data: invitado, error: getError } = await supabase
     .from("invitados")
-    .select("id, tipo")
+    .select("id, tipo, cupo_colados")
     .eq("codigo", codigo)
     .single()
 
@@ -61,19 +61,55 @@ export async function POST(
     return NextResponse.json({ error: "Error guardando confirmación" }, { status: 500 })
   }
 
-  // Si es familia y vienen integrantes, actualizar cada uno
-  if (invitado.tipo === "familia" && body.integrantes && Array.isArray(body.integrantes)) {
+  // Integrantes (familia + colados de persona/familia)
+  if (body.integrantes && Array.isArray(body.integrantes)) {
+    const cupoColados =
+      typeof invitado.cupo_colados === "number" && Number.isFinite(invitado.cupo_colados)
+        ? Math.max(0, Math.floor(invitado.cupo_colados))
+        : 0
+    const coladosEnPayload = body.integrantes.filter((int: { es_colado?: boolean }) =>
+      Boolean(int.es_colado),
+    ).length
+    if (coladosEnPayload > cupoColados) {
+      return NextResponse.json(
+        { error: `Solo se permiten ${cupoColados} colado(s) para este invitado.` },
+        { status: 400 },
+      )
+    }
+
+    const { data: currentIntegrantes } = await supabase
+      .from("integrantes")
+      .select("id")
+      .eq("invitado_id", invitado.id)
+
+    const currentIds = currentIntegrantes?.map((i) => i.id) || []
+    const newIds = body.integrantes
+      .filter((i: { id?: string }) => i.id && !String(i.id).startsWith("new"))
+      .map((i: { id: string }) => i.id)
+
+    const toDelete = currentIds.filter((id) => !newIds.includes(id))
+    if (toDelete.length > 0) {
+      await supabase.from("integrantes").delete().in("id", toDelete)
+    }
+
     for (const int of body.integrantes) {
-      if (int.id) {
-        await supabase
-          .from("integrantes")
-          .update({
-            estado: int.asiste ? "confirmado" : "no_asiste",
-            restricciones: int.restricciones || null,
-            fecha_confirmacion: new Date().toISOString(),
-          })
-          .eq("id", int.id)
+      const payload: Record<string, unknown> = {
+        nombre: String(int.nombre || "").trim(),
+        estado: int.asiste ? "confirmado" : "no_asiste",
+        restricciones: int.restricciones || null,
+        fecha_confirmacion: new Date().toISOString(),
+        es_colado: Boolean(int.es_colado),
       }
+
+      if (int.id && !String(int.id).startsWith("new") && currentIds.includes(int.id)) {
+        await supabase.from("integrantes").update(payload).eq("id", int.id)
+        continue
+      }
+
+      await supabase.from("integrantes").insert({
+        invitado_id: invitado.id,
+        ...payload,
+      })
     }
   }
 

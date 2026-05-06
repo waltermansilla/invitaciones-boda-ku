@@ -9,9 +9,11 @@ import {
   invitationPublicPathFromConfig,
   panelVariantesFromConfig,
 } from "@/lib/config-loader"
+import { normalizeColadoSingular } from "@/lib/colado-label"
 import { resolveEventoForPanelConfig } from "@/lib/panel-evento-resolve"
 import { panelConfirmacionFromConfig } from "@/lib/panel-confirmacion"
 import {
+  limiteColadosMaxFromConfig,
   limiteInvitadosPanelFromConfig,
   plazasDelAltaInvitado,
   plazasOcupadasPorInvitados,
@@ -49,6 +51,12 @@ function resolveStoredVariantToKnown(
   if (direct) return direct.id
   const byLegacy = variantes.find((v) => (v.legacyIds || []).includes(raw))
   return byLegacy?.id || fallback
+}
+
+function parseCupoColados(value: unknown): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) return 0
+  const n = Math.floor(value)
+  return n >= 0 ? n : 0
 }
 
 function mergeEventoFromConfig(
@@ -109,6 +117,9 @@ export async function GET(
       config.rsvpPanel?.confirmacion,
     )
     const limiteInvitados = limiteInvitadosPanelFromConfig(config.rsvpPanel)
+    const limiteColados = limiteColadosMaxFromConfig(config.rsvpPanel)
+    const coladosEnabled = Boolean(config.rsvpPanel?.colados)
+    const coladoLabel = normalizeColadoSingular(config.rsvpPanel?.coladoLabel)
 
     const canonicalPanelId = canonicalPanelIdFromConfig(config)
     if (!canonicalPanelId) {
@@ -177,10 +188,13 @@ export async function GET(
           labels: configData.panel_labels,
           confirmacion: confirmacionInvitacion,
           limiteInvitados,
+          limiteColados,
           plazasOcupadas: 0,
           variantes,
           defaultVariante,
           activeVariante,
+          coladosEnabled,
+          coladoLabel,
         },
       })
     }
@@ -218,17 +232,35 @@ export async function GET(
     })
 
     invitadosFiltradosPorVariante.forEach((inv) => {
-      if (inv.tipo === "persona") {
-        if (inv.estado === "confirmado") confirmados++
-        else if (inv.estado === "no_asiste") noAsisten++
-        else pendientes++
-      } else {
+      const hasIntegrantes =
+        Array.isArray(inv.integrantes) && inv.integrantes.length > 0
+
+      if (inv.tipo === "familia") {
         inv.integrantes?.forEach((int: { estado: string }) => {
           if (int.estado === "confirmado") confirmados++
           else if (int.estado === "no_asiste") noAsisten++
           else pendientes++
         })
+        return
       }
+
+      // persona
+      if (!hasIntegrantes) {
+        if (inv.estado === "confirmado") confirmados++
+        else if (inv.estado === "no_asiste") noAsisten++
+        else pendientes++
+        return
+      }
+
+      // persona + colados (integrantes en DB): cuenta titular + cada colado
+      if (inv.estado === "confirmado") confirmados++
+      else if (inv.estado === "no_asiste") noAsisten++
+      else pendientes++
+      inv.integrantes?.forEach((int: { estado: string }) => {
+        if (int.estado === "confirmado") confirmados++
+        else if (int.estado === "no_asiste") noAsisten++
+        else pendientes++
+      })
     })
 
     const plazasOcupadas = plazasOcupadasPorInvitados(invitados || [])
@@ -244,10 +276,13 @@ export async function GET(
         labels: configData.panel_labels,
         confirmacion: confirmacionInvitacion,
         limiteInvitados,
+        limiteColados,
         plazasOcupadas,
         variantes,
         defaultVariante,
         activeVariante,
+        coladosEnabled,
+        coladoLabel,
       },
     })
   } catch (e) {
@@ -337,6 +372,11 @@ export async function POST(
     variantes.map((v) => v.id),
     defaultVariante,
   )
+  const limiteColadosPost = limiteColadosMaxFromConfig(configPost.rsvpPanel)
+  const cupoColadosRaw = Boolean(configPost.rsvpPanel?.colados)
+    ? parseCupoColados(body.cupo_colados)
+    : 0
+  const cupoColados = Math.min(cupoColadosRaw, limiteColadosPost)
   if (limitePost !== null) {
     const { data: existentes } = await supabase
       .from("invitados")
@@ -364,6 +404,7 @@ export async function POST(
       codigo,
       tipo: body.tipo || "persona",
       panel_variant: activeVariante,
+      cupo_colados: cupoColados,
     })
     .select()
     .single()

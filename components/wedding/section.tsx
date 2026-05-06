@@ -72,6 +72,9 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
         confirmationMessage?: string
         confirmacion?: string
         registrarSinCodigoEnPanel?: boolean
+        colados?: boolean
+        /** Texto singular; en plural se añade "s" a cada palabra (espacios). */
+        coladoLabel?: string
       }
     | undefined
   const codigoInvitado = useCodigoInvitado()
@@ -356,6 +359,11 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
                       allowAnonymousToPanel: Boolean(
                         rsvpPanel?.registrarSinCodigoEnPanel,
                       ),
+                      allowColados: Boolean(rsvpPanel?.colados),
+                      coladoLabel:
+                          typeof rsvpPanel?.coladoLabel === "string"
+                              ? rsvpPanel.coladoLabel
+                              : undefined,
                       confirmationMessage:
                           rsvpPanel.confirmationMessage || "Gracias por confirmar!",
                   }
