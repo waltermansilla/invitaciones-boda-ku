@@ -32,7 +32,7 @@
     "rsvpPanel": {
         "enabled": true,
         "confirmacion": "formulario",
-        "registrarSinCodigoEnPanel": false,
+        "registrarSinCodigoEnPanel": true,
         "colados": true,
 
         "limiteInvitados": 150,
