@@ -18,6 +18,7 @@ import {
     Send,
     ArrowLeftRight,
     Search,
+    AlertTriangle,
 } from "lucide-react";
 import {
     eventTypeLabelFromFolderTipo,
@@ -29,7 +30,16 @@ import {
     coladoTitleSingular,
     normalizeColadoSingular,
 } from "@/lib/colado-label";
-import { DEFAULT_LIMITE_COLADOS_PANEL } from "@/lib/panel-plazas";
+import {
+    DEFAULT_LIMITE_COLADOS_PANEL,
+    plazasDelAltaInvitado,
+} from "@/lib/panel-plazas";
+import {
+    formatDeudaMontoAr,
+    panelDebtGateFromRsvp,
+    panelDebtShouldIntercept,
+    type PanelDebtGatePayload,
+} from "@/lib/panel-deuda";
 
 interface Integrante {
     id: string;
@@ -114,7 +124,40 @@ interface PanelData {
         coladoLabel?: string;
         /** Máx. cupo de colados por invitado en el panel (`rsvpPanel.limiteColados`, default 5). */
         limiteColados?: number;
+        deuda?: boolean;
+        deudaMonto?: number | null;
+        deudaInvitados?: number | null;
+        /** Alias/titular/banco: solo desde código (`panel-deuda-datos-cobro`). */
+        deudaPago?: {
+            alias?: string;
+            titular?: string;
+            banco?: string;
+        };
     };
+}
+
+/** Plazas ya cargadas en el evento (igual que `panelConfig.plazasOcupadas` en la API). */
+function plazasOcupadasFromPanelData(
+    panelConfig: PanelData["panelConfig"] | undefined,
+): number {
+    const n = panelConfig?.plazasOcupadas;
+    if (typeof n !== "number" || !Number.isFinite(n)) return 0;
+    return Math.max(0, Math.floor(n));
+}
+
+/** Reutiliza la misma lógica que en el JSON (`rsvpPanel`) para leer desde `panelConfig` de la API. */
+function debtGateFromPanelConfig(
+    panelConfig: PanelData["panelConfig"] | undefined,
+): PanelDebtGatePayload {
+    return panelDebtGateFromRsvp(
+        panelConfig
+            ? {
+                  deuda: panelConfig.deuda,
+                  deudaMonto: panelConfig.deudaMonto ?? undefined,
+                  deudaInvitados: panelConfig.deudaInvitados ?? undefined,
+              }
+            : undefined,
+    );
 }
 
 function canTransferInvitado(inv: Invitado): boolean {
@@ -229,6 +272,9 @@ export default function PanelPage({
     const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
     const [nowMs, setNowMs] = useState(() => Date.now());
     const giftCardEnabled = true;
+    const [debtModalPhase, setDebtModalPhase] = useState<
+        "closed" | "summary" | "detail"
+    >("closed");
 
     useEffect(() => {
         params.then((p) => setPanelId(p.panelId));
@@ -284,6 +330,12 @@ export default function PanelPage({
 
     const handleSendInvitation = useCallback(
         (invitado: Invitado) => {
+            const debtGate = debtGateFromPanelConfig(data?.panelConfig);
+            const plazas = plazasOcupadasFromPanelData(data?.panelConfig);
+            if (panelDebtShouldIntercept(debtGate, plazas)) {
+                setDebtModalPhase("summary");
+                return;
+            }
             const path =
                 data?.invitationPath?.trim() ||
                 (panelId ? invitationPathFromPanelIdSlug(panelId) : null) ||
@@ -343,6 +395,7 @@ export default function PanelPage({
             activeVariantConfig?.invitationVariant,
             activeVariantConfig?.eventName,
             activeVariantConfig?.eventTypeLabel,
+            data?.panelConfig,
         ],
     );
 
@@ -742,6 +795,20 @@ export default function PanelPage({
                     <button
                         type="button"
                         onClick={() => {
+                            const dg = debtGateFromPanelConfig(
+                                data.panelConfig,
+                            );
+                            if (
+                                panelDebtShouldIntercept(
+                                    dg,
+                                    plazasOcupadasFromPanelData(
+                                        data.panelConfig,
+                                    ),
+                                )
+                            ) {
+                                setDebtModalPhase("summary");
+                                return;
+                            }
                             const url = `/panel/${panelId}/print?pv=${encodeURIComponent(panelVariant)}`;
                             window.open(url, "_blank", "noopener,noreferrer");
                         }}
@@ -1123,6 +1190,24 @@ export default function PanelPage({
                         setShowAddModal(false);
                         mutate();
                     }}
+                    shouldInterceptDebt={(additionalPlazas) => {
+                        const dg = debtGateFromPanelConfig(data.panelConfig);
+                        const proyectado =
+                            plazasOcupadasFromPanelData(data.panelConfig) +
+                            additionalPlazas;
+                        if (!panelDebtShouldIntercept(dg, proyectado))
+                            return false;
+                        setDebtModalPhase("summary");
+                        return true;
+                    }}
+                />
+            )}
+            {debtModalPhase !== "closed" && (
+                <PanelDebtInterceptModals
+                    phase={debtModalPhase}
+                    gate={debtGateFromPanelConfig(data.panelConfig)}
+                    onCloseAll={() => setDebtModalPhase("closed")}
+                    onShowDetail={() => setDebtModalPhase("detail")}
                 />
             )}
             {showLimitHelpModal && (
@@ -1190,6 +1275,132 @@ export default function PanelPage({
                     }}
                 />
             )}
+        </div>
+    );
+}
+
+function PanelDebtInterceptModals({
+    phase,
+    gate,
+    onCloseAll,
+    onShowDetail,
+}: {
+    phase: "summary" | "detail";
+    gate: PanelDebtGatePayload;
+    onCloseAll: () => void;
+    onShowDetail: () => void;
+}) {
+    const pago = gate.deudaPago;
+    const montoStr = `$${formatDeudaMontoAr(gate.deudaMonto)}`;
+
+    if (phase === "summary") {
+        return (
+            <div
+                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 p-4"
+                onClick={onCloseAll}
+                role="presentation"
+            >
+                <div
+                    className="relative w-full max-w-md rounded-2xl border border-amber-400/50 bg-gradient-to-b from-amber-50 via-white to-white p-6 shadow-xl"
+                    role="dialog"
+                    aria-labelledby="panel-deuda-titulo"
+                    aria-modal="true"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="mb-4 flex flex-col items-center text-center">
+                        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-700 ring-8 ring-amber-100/50">
+                            <AlertTriangle
+                                className="h-7 w-7"
+                                strokeWidth={2}
+                                aria-hidden
+                            />
+                        </div>
+                        <h2
+                            id="panel-deuda-titulo"
+                            className="text-lg font-semibold text-amber-950"
+                        >
+                            Usted registra una deuda
+                        </h2>
+                    </div>
+                    <div className="flex gap-3">
+                        <button
+                            type="button"
+                            onClick={onCloseAll}
+                            className="flex-1 rounded-xl border border-neutral-200 bg-white py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:bg-neutral-50"
+                        >
+                            Cerrar
+                        </button>
+                        <button
+                            type="button"
+                            onClick={onShowDetail}
+                            className="flex-1 rounded-xl bg-amber-700 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-amber-800"
+                        >
+                            Ver detalle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 p-4"
+            onClick={onCloseAll}
+            role="presentation"
+        >
+            <div
+                className="relative w-full max-w-md rounded-2xl border border-amber-300/70 bg-white p-6 shadow-xl"
+                role="dialog"
+                aria-label="Detalle para abonar"
+                aria-modal="true"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="space-y-3 rounded-xl border border-amber-100 bg-amber-50/80 p-4 text-sm">
+                    <div className="flex justify-between gap-3 border-b border-amber-200/60 pb-2">
+                        <span className="shrink-0 font-medium text-amber-900/90">
+                            Monto
+                        </span>
+                        <span className="font-semibold tabular-nums text-amber-950">
+                            {montoStr}
+                        </span>
+                    </div>
+                    <div className="flex justify-between gap-3 border-b border-amber-200/60 pb-2">
+                        <span className="shrink-0 font-medium text-amber-900/90">
+                            Alias
+                        </span>
+                        <span className="break-all text-right font-mono font-medium text-neutral-900">
+                            {pago.alias}
+                        </span>
+                    </div>
+                    <div className="flex justify-between gap-3 border-b border-amber-200/60 pb-2">
+                        <span className="shrink-0 font-medium text-amber-900/90">
+                            Titular
+                        </span>
+                        <span className="text-right font-medium text-neutral-900">
+                            {pago.titular}
+                        </span>
+                    </div>
+                    <div className="flex justify-between gap-3">
+                        <span className="shrink-0 font-medium text-amber-900/90">
+                            Banco
+                        </span>
+                        <span className="text-right font-medium text-neutral-900">
+                            {pago.banco}
+                        </span>
+                    </div>
+                </div>
+                <p className="mt-5 text-center text-xs leading-relaxed text-amber-950/85">
+                    Después del pago, no olvide enviarnos el comprobante
+                </p>
+                <button
+                    type="button"
+                    onClick={onCloseAll}
+                    className="mt-5 w-full rounded-xl border border-neutral-200 bg-white py-3 text-sm font-semibold text-neutral-800 shadow-sm transition hover:bg-neutral-50"
+                >
+                    Cerrar
+                </button>
+            </div>
         </div>
     );
 }
@@ -1803,6 +2014,7 @@ function AddInvitadoModal({
     onClose,
     onSuccess,
     onLimitReached,
+    shouldInterceptDebt,
 }: {
     panelId: string;
     panelVariant: string;
@@ -1815,6 +2027,11 @@ function AddInvitadoModal({
     onClose: () => void;
     onSuccess: () => void;
     onLimitReached?: () => void;
+    /**
+     * Si devuelve true, no se ejecuta el guardado (p. ej. modal de deuda).
+     * `additionalPlazas` son las nuevas filas según alta (persona=1; familia=integrantes o 1).
+     */
+    shouldInterceptDebt?: (additionalPlazas: number) => boolean;
 }) {
     const [tipo, setTipo] = useState<"persona" | "familia">("persona");
     const [nombre, setNombre] = useState("");
@@ -1850,6 +2067,11 @@ function AddInvitadoModal({
             integranteInputRef.current?.value.trim()
         )
             finalIntegrantes.push(integranteInputRef.current.value.trim());
+        const plazaDelta = plazasDelAltaInvitado(
+            effectiveTipo,
+            effectiveTipo === "familia" ? finalIntegrantes : undefined,
+        );
+        if (shouldInterceptDebt?.(plazaDelta)) return;
         setSaving(true);
         try {
             const res = await fetch(

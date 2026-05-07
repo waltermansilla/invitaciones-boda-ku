@@ -24,6 +24,9 @@
     "fechaEvento": "",
     "confirmationMessage": "",
     "limiteInvitados": 0,
+    "deuda": false,
+    "deudaMonto": 0,
+    "deudaInvitados": 0,
     "theme": {
       "primaryColor": "#6F6A63"
     },

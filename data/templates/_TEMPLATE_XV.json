@@ -98,6 +98,10 @@
     "// coladoLabel: singular p/ invitado extra (default colado); plural = +\"s\" a cada palabra": "",
     "// limiteColados (opcional): máximo cupo_colados por invitado en el panel (default 5)": "",
     "// defaultVariante: lista por defecto en panel (\"default\" o id en variants)": "",
+    "// deuda / deudaMonto / deudaInvitados (opcional, panel; datos de cobro en    ": "",
+    "//   lib/panel-deuda-datos-cobro.ts, un solo lugar en el repo)              ": "",
+    "//   Si deuda=true y plazas ocupadas en panel >= deudaInvitados             ": "",
+    "//   bloquea: Descargar PDF, Enviar invitacion, Guardar al agregar invitado ": "",
     "// theme/labels: colores y textos del panel                                 ": "",
     "// ==========================================================================": "",
     "rsvpPanel": {
@@ -113,6 +117,10 @@
         "fechaEvento": "2027-02-17",
         "confirmationMessage": "Gracias por confirmar! Te esperamos en los XV.",
         "limiteInvitados": 120,
+        "// deuda: solo aplica cuando true + deudaInvitados numerico >= 0         ": "",
+        "deuda": false,
+        "deudaMonto": 0,
+        "deudaInvitados": 0,
         "theme": {
             "primaryColor": "#C4788A"
         },

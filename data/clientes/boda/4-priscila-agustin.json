@@ -32,6 +32,9 @@
         "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 200,
         "panelId": "priscila-agustin-24nmj9gQ",
+        "deuda": true,
+        "deudaMonto": 20000,
+        "deudaInvitados": 17,
         "fechaEvento": "2026-10-24",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 24 de Octubre.",
         "theme": {
@@ -121,10 +124,7 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "Después de tantos años compartiendo la vida juntos, llegó el momento de celebrar nuestro amor. Y no podemos imaginar este día sin vos",
                 "author": "",
@@ -137,11 +137,7 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "value",
-                "button"
-            ],
+            "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "24 de Octubre de 2026"
@@ -152,9 +148,7 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
                 "images": [
@@ -169,10 +163,7 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "timeline"
-            ],
+            "blocks": ["title", "timeline"],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -227,9 +218,7 @@
                 "modal"
             ],
             "data": {
-                "icons": [
-                    "gem"
-                ],
+                "icons": ["gem"],
                 "title": "Vestimenta",
                 "subtitle": "Evitar el blanco y beige",
                 "description": "Si podés, traé algo con tonos azules:",
@@ -237,12 +226,7 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
-                    "colors": [
-                        "#012a4a",
-                        "#013a63",
-                        "#01497c",
-                        "#2a6f97"
-                    ]
+                    "colors": ["#012a4a", "#013a63", "#01497c", "#2a6f97"]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -260,9 +244,7 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -276,10 +258,7 @@
             "type": "quote",
             "id": "quote-welcome2",
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "A veces el amor no es un camino perfecto, pero cuando es verdadero siempre encuentra la forma de seguir adelante.",
                 "author": "",
@@ -292,10 +271,7 @@
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "moments"
-            ],
+            "blocks": ["title", "moments"],
             "data": {
                 "aspectRatio": "1/1",
                 "title": "Nuestra historia",
@@ -323,12 +299,7 @@
             "type": "honeymoon",
             "id": "honeymoon",
             "bgColor": "primary",
-            "blocks": [
-                "icon",
-                "title",
-                "description",
-                "modal"
-            ],
+            "blocks": ["icon", "title", "description", "modal"],
             "data": {
                 "icon": "",
                 "title": "Regalos",
@@ -370,21 +341,12 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "form"
-            ],
+            "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 20 de Agosto",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
+                "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -414,10 +376,7 @@
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "Hoy celebramos nuestra historia, nuestra familia y el amor que nos trajo hasta acá. Nos haría muy felices compartir este día tan especial con vos.",
                 "author": "Pri & Agus",
@@ -429,10 +388,7 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": [
-                "image",
-                "coupleNames"
-            ],
+            "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/4-priscila-agustin/images/final.jpeg"
@@ -443,10 +399,7 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": [
-                "socialLinks",
-                "brandName"
-            ],
+            "blocks": ["socialLinks", "brandName"],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

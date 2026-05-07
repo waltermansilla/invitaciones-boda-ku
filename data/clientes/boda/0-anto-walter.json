@@ -25,13 +25,17 @@
         "token": "LqOC7v",
         "allowLegacyUntil": ""
     },
-    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
+    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos. Opcional deuda/deudaMonto/deudaInvitados: si deuda=true y plazas ocupadas en panel (misma cuenta que Plazas en panel) >= deudaInvitados, bloquea descarga PDF, enviar invitacion y Guardar en agregar invitado.",
     "rsvpPanel": {
         "enabled": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": true,
         "limiteInvitados": 150,
         "panelId": "anto-walter-boda",
+        "_comment_deuda": "Prueba modal deuda: umbral 1 = con 1+ plaza ocupada en el evento aplica bloqueo (deudaInvitados compara plazas, no el numero grande Total invitados). Quitar deuda:true o subir deudaInvitados para operar normal.",
+        "deuda": true,
+        "deudaMonto": 50000,
+        "deudaInvitados": 71,
         "fechaEvento": "2027-02-16",
         "confirmationMessage": "Gracias por confirmar! Nos vemos el 16 de febrero.",
         "theme": {
@@ -167,10 +171,7 @@
             "id": "quote-welcome",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "¡Al fin! Este momento especial está llegando, y queremos compartirlo con vos",
                 "author": "",
@@ -184,11 +185,7 @@
             "id": "date-info",
             "enabled": true,
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "value",
-                "button"
-            ],
+            "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "16 y 17 de Febrero 2027"
@@ -199,9 +196,7 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "4/3",
                 "images": [
@@ -217,11 +212,7 @@
             "type": "locationInfo",
             "id": "location-civil",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Civil",
                 "address": "Registro Civil, Villa Paranacito",
@@ -238,11 +229,7 @@
             "type": "locationInfo",
             "id": "location-discurso",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Discurso de boda",
                 "address": "Salón del Reino, Ramírez 276",
@@ -259,11 +246,7 @@
             "type": "locationInfo",
             "id": "location-recepcion",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Recepcion",
                 "address": "Salón Restaurant, Barrio Náutico",
@@ -280,10 +263,7 @@
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "timeline"
-            ],
+            "blocks": ["title", "timeline"],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -342,11 +322,7 @@
             "type": "adultsOnly",
             "id": "adults-only",
             "bgColor": "background",
-            "blocks": [
-                "icon",
-                "title",
-                "description"
-            ],
+            "blocks": ["icon", "title", "description"],
             "data": {
                 "icon": "baby",
                 "title": "Evento solo para adultos",
@@ -368,9 +344,7 @@
                 "modal"
             ],
             "data": {
-                "icons": [
-                    "star"
-                ],
+                "icons": ["star"],
                 "title": "Vestimenta",
                 "subtitle": "Evento al aire libre",
                 "description": "Por favor, evitar los siguientes colores",
@@ -378,11 +352,7 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "circle",
-                    "colors": [
-                        "#ffffff",
-                        "#1ABC9C",
-                        "#6deebe"
-                    ]
+                    "colors": ["#ffffff", "#1ABC9C", "#6deebe"]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -414,12 +384,7 @@
             "type": "photos",
             "id": "shared-photos",
             "bgColor": "primary",
-            "blocks": [
-                "icon",
-                "title",
-                "description",
-                "button"
-            ],
+            "blocks": ["icon", "title", "description", "button"],
             "data": {
                 "title": "Queremos ver tus fotos",
                 "description": "Pueden subir todas las fotos del gran dia a nuestro album compartido",
@@ -436,10 +401,7 @@
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "moments"
-            ],
+            "blocks": ["title", "moments"],
             "data": {
                 "aspectRatio": "3/4",
                 "title": "Nuestra historia",
@@ -468,10 +430,7 @@
             "type": "truths",
             "id": "truths-game",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "questions"
-            ],
+            "blocks": ["title", "questions"],
             "data": {
                 "title": "Pequeñas verdades sobre nosotros",
                 "finishText": "Gracias por jugar. Ahora ya saben un poco mas sobre nosotros. Nos vemos en la fiesta.",
@@ -527,9 +486,7 @@
             "type": "emotionalQuote",
             "id": "emotional-quote",
             "bgColor": "background",
-            "blocks": [
-                "text"
-            ],
+            "blocks": ["text"],
             "data": {
                 "text": "A veces lo que empieza como una locura se convierte en lo mejor de tu vida"
             }
@@ -540,21 +497,12 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "form"
-            ],
+            "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 11 de noviembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
+                "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -591,10 +539,7 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": [
-                "image",
-                "coupleNames"
-            ],
+            "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/0-anto-walter/images/final.jpg"
@@ -605,10 +550,7 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": [
-                "socialLinks",
-                "brandName"
-            ],
+            "blocks": ["socialLinks", "brandName"],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [
@@ -628,10 +570,7 @@
         "civil": {
             "baseLabel": "Completo",
             "label": "Sólo civil",
-            "legacyIds": [
-                "solo-civil",
-                "entre-rios"
-            ],
+            "legacyIds": ["solo-civil", "entre-rios"],
             "sections": [
                 {
                     "id": "location-recepcion",

@@ -50,6 +50,10 @@ export interface EventConfig {
      * se haya actualizado al nuevo id (ocurre en el primer GET del panel).
      */
     legacyPanelIds?: string[]
+    /** Pendiente económico: bloqueo suave desde N plazas (ver `panel-deuda`). */
+    deuda?: boolean
+    deudaMonto?: number
+    deudaInvitados?: number
   }
   slug?: string
   /** Carpeta bajo data/clientes/ (boda, xv, baby, cumple, …) */
