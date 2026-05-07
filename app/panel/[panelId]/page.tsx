@@ -30,10 +30,7 @@ import {
     coladoTitleSingular,
     normalizeColadoSingular,
 } from "@/lib/colado-label";
-import {
-    DEFAULT_LIMITE_COLADOS_PANEL,
-    plazasDelAltaInvitado,
-} from "@/lib/panel-plazas";
+import { DEFAULT_LIMITE_COLADOS_PANEL } from "@/lib/panel-plazas";
 import {
     formatDeudaMontoAr,
     panelDebtGateFromRsvp,
@@ -774,6 +771,24 @@ export default function PanelPage({
         return false;
     });
 
+    const desktopConfirmados = invitadosFiltrados.filter(
+        (inv) => getEstadoOrdenLista(inv as Invitado) === "confirmado",
+    );
+    const desktopPendientes = invitadosFiltrados.filter(
+        (inv) => getEstadoOrdenLista(inv as Invitado) === "pendiente",
+    );
+    const desktopNoAsisten = invitadosFiltrados.filter(
+        (inv) => getEstadoOrdenLista(inv as Invitado) === "no_asiste",
+    );
+    const personasRepresentadasEnLista = (items: Invitado[]) =>
+        items.reduce((acc, inv) => {
+            if (inv.tipo === "familia")
+                return acc + (inv.integrantes?.length || 0);
+            if (inv.tipo === "persona")
+                return acc + 1 + (inv.integrantes?.length || 0);
+            return acc + 1;
+        }, 0);
+
     return (
         <div className="min-h-screen bg-[#faf9f7]">
             <header
@@ -831,66 +846,120 @@ export default function PanelPage({
             </header>
 
             <div className="px-5 py-6">
-                <div className="mb-3">
-                    <div className="rounded-lg bg-white px-4 py-6 text-center shadow-sm">
-                        <p className="text-4xl font-bold text-neutral-700">
-                            {total}
-                        </p>
-                        <p className="mt-1 text-xs uppercase tracking-wide text-neutral-500">
-                            {labels?.totalLabel || "Total invitados"}
-                        </p>
+                <div className="md:hidden">
+                    <div className="mb-3">
+                        <div className="rounded-lg bg-white px-4 py-6 text-center shadow-sm">
+                            <p className="text-4xl font-bold text-neutral-700">
+                                {total}
+                            </p>
+                            <p className="mt-1 text-xs uppercase tracking-wide text-neutral-500">
+                                {labels?.totalLabel || "Total invitados"}
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div className="grid grid-cols-3 gap-3">
-                    <div
-                        className="flex min-h-[118px] flex-col items-center justify-center rounded-lg px-3 py-4 text-center"
-                        style={{ backgroundColor: "#d4edda" }}
-                    >
-                        <p
-                            className="text-2xl font-bold"
-                            style={{ color: "#155724" }}
+                    <div className="grid grid-cols-3 gap-3">
+                        <div
+                            className="flex min-h-[106px] flex-col items-center justify-center rounded-lg px-3 py-3 text-center"
+                            style={{ backgroundColor: "#d4edda" }}
                         >
-                            {stats.confirmados}
-                        </p>
-                        <p
-                            className="mt-1 text-[10px] uppercase tracking-wide"
-                            style={{ color: "#155724", opacity: 0.8 }}
-                        >
-                            {labels?.confirmedLabel || "Confirmados"}
-                        </p>
-                        {coladosConfirmados > 0 && (
                             <p
-                                className="mt-1 text-[10px]"
+                                className="text-2xl font-bold"
+                                style={{ color: "#155724" }}
+                            >
+                                {stats.confirmados}
+                            </p>
+                            <p
+                                className="mt-1 text-[10px] uppercase tracking-wide"
                                 style={{ color: "#155724", opacity: 0.8 }}
                             >
-                                ({confirmadosSinColados} + {coladosConfirmados}{" "}
-                                colados)
+                                {labels?.confirmedLabel || "Confirmados"}
+                            </p>
+                            {coladosConfirmados > 0 && (
+                                <p
+                                    className="mt-1 text-[10px]"
+                                    style={{ color: "#155724", opacity: 0.8 }}
+                                >
+                                    ({confirmadosSinColados} +{" "}
+                                    {coladosConfirmados} colados)
+                                </p>
+                            )}
+                        </div>
+                        <div className="flex min-h-[106px] flex-col items-center justify-center rounded-lg bg-neutral-100 px-3 py-3 text-center">
+                            <p className="text-2xl font-bold text-neutral-600">
+                                {stats.pendientes}
+                            </p>
+                            <p className="mt-1 text-[10px] uppercase tracking-wide text-neutral-500">
+                                {labels?.pendingLabel || "Pendientes"}
+                            </p>
+                        </div>
+                        <div
+                            className="flex min-h-[106px] flex-col items-center justify-center rounded-lg px-3 py-3 text-center"
+                            style={{ backgroundColor: "#f5d5d5" }}
+                        >
+                            <p
+                                className="text-2xl font-bold"
+                                style={{ color: "#8b6b6b" }}
+                            >
+                                {stats.noAsisten}
+                            </p>
+                            <p
+                                className="mt-1 text-[10px] uppercase tracking-wide"
+                                style={{ color: "#8b6b6b", opacity: 0.8 }}
+                            >
+                                {labels?.declinedLabel || "No asisten"}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div className="hidden grid-cols-4 gap-4 md:grid">
+                    <div className="rounded-xl border border-neutral-200 bg-white px-4 py-3 shadow-sm">
+                        <p className="text-xs uppercase tracking-wide text-neutral-500">
+                            {labels?.totalLabel || "Total invitados"}
+                        </p>
+                        <p className="mt-1 text-3xl font-bold text-neutral-700">
+                            {total}
+                        </p>
+                    </div>
+                    <div
+                        className="rounded-xl border px-4 py-3 shadow-sm"
+                        style={{
+                            backgroundColor: "#d4edda",
+                            borderColor: "#bcdac4",
+                        }}
+                    >
+                        <p className="text-xs uppercase tracking-wide text-[#155724]/80">
+                            {labels?.confirmedLabel || "Confirmados"}
+                        </p>
+                        <p className="mt-1 text-3xl font-bold text-[#155724]">
+                            {stats.confirmados}
+                        </p>
+                        {coladosConfirmados > 0 && (
+                            <p className="mt-1 text-[11px] text-[#155724]/80">
+                                {confirmadosSinColados} + {coladosConfirmados}{" "}
+                                colados
                             </p>
                         )}
                     </div>
-                    <div className="flex min-h-[118px] flex-col items-center justify-center rounded-lg bg-neutral-100 px-3 py-4 text-center">
-                        <p className="text-2xl font-bold text-neutral-600">
-                            {stats.pendientes}
-                        </p>
-                        <p className="mt-1 text-[10px] uppercase tracking-wide text-neutral-500">
+                    <div className="rounded-xl border border-neutral-200 bg-neutral-100 px-4 py-3 shadow-sm">
+                        <p className="text-xs uppercase tracking-wide text-neutral-500">
                             {labels?.pendingLabel || "Pendientes"}
+                        </p>
+                        <p className="mt-1 text-3xl font-bold text-neutral-600">
+                            {stats.pendientes}
                         </p>
                     </div>
                     <div
-                        className="flex min-h-[118px] flex-col items-center justify-center rounded-lg px-3 py-4 text-center"
-                        style={{ backgroundColor: "#f5d5d5" }}
+                        className="rounded-xl border px-4 py-3 shadow-sm"
+                        style={{
+                            backgroundColor: "#f5d5d5",
+                            borderColor: "#e9c0c0",
+                        }}
                     >
-                        <p
-                            className="text-2xl font-bold"
-                            style={{ color: "#8b6b6b" }}
-                        >
-                            {stats.noAsisten}
-                        </p>
-                        <p
-                            className="mt-1 text-[10px] uppercase tracking-wide"
-                            style={{ color: "#8b6b6b", opacity: 0.8 }}
-                        >
+                        <p className="text-xs uppercase tracking-wide text-[#8b6b6b]/80">
                             {labels?.declinedLabel || "No asisten"}
+                        </p>
+                        <p className="mt-1 text-3xl font-bold text-[#8b6b6b]">
+                            {stats.noAsisten}
                         </p>
                     </div>
                 </div>
@@ -921,7 +990,7 @@ export default function PanelPage({
                                                     variant.id,
                                                 )
                                             }
-                                            className="rounded-lg px-3 py-2.5 text-xs font-semibold transition-colors"
+                                            className="rounded-lg px-3 py-3 text-xs font-semibold transition-colors"
                                             style={{
                                                 backgroundColor: selected
                                                     ? primaryColor
@@ -1124,7 +1193,7 @@ export default function PanelPage({
                 </div>
             </div>
 
-            <div className="px-5 pb-8">
+            <div className="px-5 pb-8 md:hidden">
                 {invitadosFiltrados.length === 0 ? (
                     <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-12 text-center">
                         <p className="text-neutral-500">
@@ -1171,6 +1240,138 @@ export default function PanelPage({
                     </div>
                 )}
             </div>
+            <div className="hidden px-5 pb-8 md:block">
+                {invitadosFiltrados.length === 0 ? (
+                    <div className="rounded-lg border border-dashed border-neutral-300 bg-white py-12 text-center">
+                        <p className="text-neutral-500">
+                            {searchTerm
+                                ? "No se encontraron resultados"
+                                : filter === "colados"
+                                  ? "No hay colados registrados"
+                                  : "No hay invitados"}
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-3 gap-2">
+                        {[
+                            {
+                                id: "confirmado",
+                                title: labels?.confirmedLabel || "Confirmados",
+                                items: desktopConfirmados,
+                                personas:
+                                    personasRepresentadasEnLista(
+                                        desktopConfirmados,
+                                    ),
+                                border: "#bcdac4",
+                                bg: "#eef8f1",
+                            },
+                            {
+                                id: "pendiente",
+                                title: labels?.pendingLabel || "Pendientes",
+                                items: desktopPendientes,
+                                personas:
+                                    personasRepresentadasEnLista(
+                                        desktopPendientes,
+                                    ),
+                                border: "#e5e7eb",
+                                bg: "#f7f7f7",
+                            },
+                            {
+                                id: "no_asiste",
+                                title: labels?.declinedLabel || "No asisten",
+                                items: desktopNoAsisten,
+                                personas:
+                                    personasRepresentadasEnLista(
+                                        desktopNoAsisten,
+                                    ),
+                                border: "#e9c0c0",
+                                bg: "#fbefef",
+                            },
+                        ].map((col) => (
+                            <section
+                                key={col.id}
+                                className="overflow-hidden rounded-xl border bg-white shadow-sm"
+                                style={{ borderColor: col.border }}
+                            >
+                                <header
+                                    className="flex items-center justify-between border-b px-4 py-3"
+                                    style={{
+                                        backgroundColor: col.bg,
+                                        borderColor: col.border,
+                                    }}
+                                >
+                                    <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-700">
+                                        {col.title}
+                                    </h3>
+                                    <span className="rounded bg-white/85 px-2 py-0.5 text-xs font-semibold text-neutral-700">
+                                        {col.personas}
+                                    </span>
+                                </header>
+                                <div className="max-h-[68vh] overflow-y-auto bg-white [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                                    {col.items.length === 0 ? (
+                                        <p className="px-4 py-6 text-center text-sm text-neutral-500">
+                                            Sin invitados
+                                        </p>
+                                    ) : (
+                                        col.items.map((inv, idx) => (
+                                            <InvitadoRow
+                                                key={`${col.id}-${inv.id}`}
+                                                invitado={inv}
+                                                isLast={
+                                                    idx === col.items.length - 1
+                                                }
+                                                isNew={
+                                                    inv.tipo !== "integrante" &&
+                                                    isNewInvitado(inv)
+                                                }
+                                                hasVariantLists={
+                                                    variantes.length > 1
+                                                }
+                                                canTransfer={canTransferInvitado(
+                                                    inv,
+                                                )}
+                                                giftCardEnabled={
+                                                    giftCardEnabled
+                                                }
+                                                primaryColor={primaryColor}
+                                                coladoLabel={
+                                                    data.panelConfig
+                                                        ?.coladoLabel
+                                                }
+                                                labels={labels}
+                                                expanded={expandedId === inv.id}
+                                                onToggleExpand={() =>
+                                                    setExpandedId(
+                                                        expandedId === inv.id
+                                                            ? null
+                                                            : inv.id,
+                                                    )
+                                                }
+                                                onSendInvitation={
+                                                    handleSendInvitation
+                                                }
+                                                onDelete={handleDelete}
+                                                onEdit={() =>
+                                                    setEditingInvitado(inv)
+                                                }
+                                                onTogglePago={handleTogglePago}
+                                                onOpenConfirmManual={() =>
+                                                    setConfirmManualInvitado(
+                                                        inv,
+                                                    )
+                                                }
+                                                onOpenTransfer={() =>
+                                                    setTransferInvitado(inv)
+                                                }
+                                            />
+                                        ))
+                                    )}
+                                </div>
+                            </section>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             {showAddModal && (
                 <AddInvitadoModal
@@ -1190,12 +1391,12 @@ export default function PanelPage({
                         setShowAddModal(false);
                         mutate();
                     }}
-                    shouldInterceptDebt={(additionalPlazas) => {
+                    shouldInterceptDebt={() => {
                         const dg = debtGateFromPanelConfig(data.panelConfig);
-                        const proyectado =
-                            plazasOcupadasFromPanelData(data.panelConfig) +
-                            additionalPlazas;
-                        if (!panelDebtShouldIntercept(dg, proyectado))
+                        const plazasActuales = plazasOcupadasFromPanelData(
+                            data.panelConfig,
+                        );
+                        if (!panelDebtShouldIntercept(dg, plazasActuales))
                             return false;
                         setDebtModalPhase("summary");
                         return true;
@@ -1624,7 +1825,7 @@ function InvitadoRow({
             className={!isLast ? "border-b border-neutral-100" : ""}
         >
             <div
-                className="relative flex items-center gap-3 px-4 py-3 cursor-pointer"
+                className="relative flex cursor-pointer items-center gap-3 px-4 py-3 md:gap-2 md:px-3 md:py-2"
                 onClick={onToggleExpand}
             >
                 {isNew && (
@@ -1638,7 +1839,7 @@ function InvitadoRow({
                     />
                 )}
                 <div
-                    className="relative flex h-8 w-8 items-center justify-center rounded-full"
+                    className="relative flex h-8 w-8 items-center justify-center rounded-full md:h-7 md:w-7"
                     style={{ backgroundColor: iconBg }}
                 >
                     {invitado.tipo === "familia" || personaConColados ? (
@@ -1648,7 +1849,7 @@ function InvitadoRow({
                     )}
                 </div>
                 <div className="flex-1">
-                    <p className="font-medium text-neutral-800">
+                    <p className="font-medium text-neutral-800 md:text-[13px]">
                         {invitado.nombre}
                     </p>
                     {invitado.tipo === "familia" &&
@@ -1698,9 +1899,94 @@ function InvitadoRow({
                         )}
                     {renderEstadoBadge()}
                 </div>
+                {invitado.tipo !== "integrante" && (
+                    <div className="hidden">
+                        {invitado.codigo && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onSendInvitation(invitado);
+                                }}
+                                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-white"
+                                style={{ backgroundColor: primaryColor }}
+                                title="Enviar invitación"
+                            >
+                                <Send className="h-3 w-3" />
+                                Enviar
+                            </button>
+                        )}
+                        {hasVariantLists && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (canTransfer) onOpenTransfer();
+                                }}
+                                disabled={!canTransfer}
+                                className="inline-flex items-center gap-1 rounded-md bg-neutral-200 px-2 py-1 text-[11px] font-medium text-neutral-700 disabled:cursor-not-allowed disabled:opacity-45"
+                                title="Cambiar de lista"
+                            >
+                                <ArrowLeftRight className="h-3 w-3" />
+                                Lista
+                            </button>
+                        )}
+                        {invitado.estado === "pendiente" && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onOpenConfirmManual();
+                                }}
+                                className="inline-flex items-center gap-1 rounded-md bg-neutral-200 px-2 py-1 text-[11px] font-medium text-neutral-700"
+                                title="Confirmación manual"
+                            >
+                                <Settings className="h-3 w-3" />
+                                Confirmar
+                            </button>
+                        )}
+                        {giftCardEnabled && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onTogglePago(invitado);
+                                }}
+                                className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-700"}`}
+                                title={
+                                    invitado.pago_tarjeta
+                                        ? labels?.paidButton || "Ya pagó"
+                                        : labels?.unpaidButton ||
+                                          "¿Pagó tarjeta?"
+                                }
+                            >
+                                <Check className="h-3 w-3" />
+                                {invitado.pago_tarjeta ? "Pagó" : "Tarjeta"}
+                            </button>
+                        )}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onEdit();
+                            }}
+                            className="inline-flex items-center gap-1 rounded-md bg-neutral-200 px-2 py-1 text-[11px] font-medium text-neutral-700"
+                            title="Editar"
+                        >
+                            <Edit2 className="h-3 w-3" />
+                            Editar
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(invitado.id);
+                            }}
+                            className="inline-flex items-center gap-1 rounded-md bg-red-100 px-2 py-1 text-[11px] font-medium text-red-600"
+                            title="Eliminar"
+                        >
+                            <Trash2 className="h-3 w-3" />
+                            Eliminar
+                        </button>
+                    </div>
+                )}
             </div>
             {expanded && (
-                <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3">
+                <div className="border-t border-neutral-100 bg-neutral-50 px-4 py-3 md:px-3 md:py-2">
                     {invitado.tipo !== "familia" && invitado.restricciones && (
                         <div className="mb-3 flex items-center gap-2 text-xs text-neutral-600">
                             <Utensils className="h-3 w-3" />
@@ -1753,7 +2039,7 @@ function InvitadoRow({
                                     e.stopPropagation();
                                     onSendInvitation(invitado);
                                 }}
-                                className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white"
+                                className="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium text-white md:px-2 md:py-1 md:text-[11px]"
                                 style={{ backgroundColor: primaryColor }}
                             >
                                 <Send className="h-3 w-3" />
@@ -1767,7 +2053,7 @@ function InvitadoRow({
                                     if (canTransfer) onOpenTransfer();
                                 }}
                                 disabled={!canTransfer}
-                                className="flex items-center gap-1 rounded-lg bg-neutral-200 px-2 py-1.5 text-[10px] font-medium text-neutral-700 disabled:cursor-not-allowed disabled:opacity-45"
+                                className="flex items-center gap-1 rounded-lg bg-neutral-200 px-2 py-1.5 text-[10px] font-medium text-neutral-700 disabled:cursor-not-allowed disabled:opacity-45 md:px-1.5 md:py-1 md:text-[10px]"
                             >
                                 <ArrowLeftRight className="h-3 w-3 shrink-0" />
                                 <span className="leading-[1] text-left">
@@ -1784,7 +2070,7 @@ function InvitadoRow({
                                         e.stopPropagation();
                                         onOpenConfirmManual();
                                     }}
-                                    className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"
+                                    className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600 md:px-2 md:py-1 md:text-[11px]"
                                 >
                                     <Settings className="h-3 w-3" />
                                     {labels?.manualConfirm ||
@@ -1797,7 +2083,7 @@ function InvitadoRow({
                                     e.stopPropagation();
                                     onTogglePago(invitado);
                                 }}
-                                className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}
+                                className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium md:px-2 md:py-1 md:text-[11px] ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}
                             >
                                 <Check className="h-3 w-3" />
                                 {invitado.pago_tarjeta
@@ -1812,7 +2098,7 @@ function InvitadoRow({
                                         e.stopPropagation();
                                         onEdit();
                                     }}
-                                    className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600"
+                                    className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600 md:px-2 md:py-1 md:text-[11px]"
                                 >
                                     <Edit2 className="h-3 w-3" />
                                     Editar
@@ -1822,7 +2108,7 @@ function InvitadoRow({
                                         e.stopPropagation();
                                         onDelete(invitado.id);
                                     }}
-                                    className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600"
+                                    className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600 md:px-2 md:py-1 md:text-[11px]"
                                 >
                                     <Trash2 className="h-3 w-3" />
                                     Eliminar
@@ -2029,9 +2315,9 @@ function AddInvitadoModal({
     onLimitReached?: () => void;
     /**
      * Si devuelve true, no se ejecuta el guardado (p. ej. modal de deuda).
-     * `additionalPlazas` son las nuevas filas según alta (persona=1; familia=integrantes o 1).
+     * Se evalúa con plazas actuales antes de guardar.
      */
-    shouldInterceptDebt?: (additionalPlazas: number) => boolean;
+    shouldInterceptDebt?: () => boolean;
 }) {
     const [tipo, setTipo] = useState<"persona" | "familia">("persona");
     const [nombre, setNombre] = useState("");
@@ -2067,11 +2353,7 @@ function AddInvitadoModal({
             integranteInputRef.current?.value.trim()
         )
             finalIntegrantes.push(integranteInputRef.current.value.trim());
-        const plazaDelta = plazasDelAltaInvitado(
-            effectiveTipo,
-            effectiveTipo === "familia" ? finalIntegrantes : undefined,
-        );
-        if (shouldInterceptDebt?.(plazaDelta)) return;
+        if (shouldInterceptDebt?.()) return;
         setSaving(true);
         try {
             const res = await fetch(
@@ -2545,7 +2827,7 @@ function TransferListModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="flex-1 rounded-lg bg-neutral-100 py-2.5 text-sm font-medium text-neutral-700"
+                        className="flex-1 rounded-lg bg-neutral-100 py-3 text-sm font-medium text-neutral-700"
                     >
                         Cancelar
                     </button>
@@ -2574,7 +2856,7 @@ function TransferListModal({
                                 setSaving(false);
                             }
                         }}
-                        className="flex-1 rounded-lg py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+                        className="flex-1 rounded-lg py-3 text-sm font-semibold text-white disabled:opacity-50"
                         style={{ backgroundColor: primaryColor }}
                     >
                         Confirmar
@@ -2707,7 +2989,7 @@ function BulkTransferListModal({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="flex-1 rounded-lg bg-neutral-100 py-2.5 text-sm font-medium text-neutral-700"
+                        className="flex-1 rounded-lg bg-neutral-100 py-3 text-sm font-medium text-neutral-700"
                     >
                         Cancelar
                     </button>
@@ -2738,7 +3020,7 @@ function BulkTransferListModal({
                                 setSaving(false);
                             }
                         }}
-                        className="flex-1 rounded-lg py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+                        className="flex-1 rounded-lg py-3 text-sm font-semibold text-white disabled:opacity-50"
                         style={{ backgroundColor: primaryColor }}
                     >
                         Confirmar

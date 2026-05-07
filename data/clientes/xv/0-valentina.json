@@ -19,6 +19,7 @@
         "enabled": true,
         "confirmacion": "comun",
         "panelId": "valentina-xv-5xF4M2",
+
         "legacyPanelIds": [],
         "fechaEvento": "2026-09-19",
         "confirmationMessage": "Gracias por confirmar! Te espero en mis 15.",
@@ -117,10 +118,7 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "Hoy comienza un nuevo capítulo en mi vida y quiero vivirlo con las personas que más quiero",
                 "author": "",
@@ -132,10 +130,7 @@
             "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
             "type": "dateInfo",
             "id": "date-info",
-            "blocks": [
-                "title",
-                "value"
-            ],
+            "blocks": ["title", "value"],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "19 de Septiembre 2026"
@@ -146,11 +141,7 @@
             "_comment": "Seccion para presentar a la quinceanera con una foto y un texto personal. image = foto en /public/images/. description = texto de presentacion.",
             "type": "presentation",
             "id": "presentation",
-            "blocks": [
-                "image",
-                "name",
-                "description"
-            ],
+            "blocks": ["image", "name", "description"],
             "data": {
                 "image": "/clientes/xv/0-valentina/images/quince-portrait.jpg",
                 "name": "Valentina",
@@ -164,10 +155,7 @@
             "type": "parents",
             "id": "parents",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "parents"
-            ],
+            "blocks": ["title", "parents"],
             "data": {
                 "title": "Mis Padres",
                 "subtitle": "Con todo su amor me acompañan en esta celebración",
@@ -188,9 +176,7 @@
             "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -205,11 +191,7 @@
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-ceremonia",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Ceremonia",
                 "address": "Parroquia San José, Av. San Martín 456",
@@ -225,11 +207,7 @@
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-fiesta",
-            "blocks": [
-                "title",
-                "address",
-                "button"
-            ],
+            "blocks": ["title", "address", "button"],
             "data": {
                 "title": "Fiesta",
                 "address": "Salón Las Orquídeas, Ruta 8 Km 3.5",
@@ -245,10 +223,7 @@
             "_comment": "Timeline visual con fotos de la quinceanera creciendo. Cada momento tiene imagen, titulo y texto. Se puede adaptar a cualquier cantidad de momentos.",
             "type": "ourStory",
             "id": "my-story",
-            "blocks": [
-                "title",
-                "moments"
-            ],
+            "blocks": ["title", "moments"],
             "data": {
                 "title": "Mi Historia",
                 "aspectRatio": "3/4",
@@ -276,10 +251,7 @@
             "_comment": "Cada evento tiene icon, name y time. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus. Agregar/quitar/reordenar libremente.",
             "type": "itinerary",
             "id": "itinerary-timeline",
-            "blocks": [
-                "title",
-                "timeline"
-            ],
+            "blocks": ["title", "timeline"],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -331,11 +303,7 @@
             "_comment": "Seccion para que los invitados sugieran canciones. link = link a Spotify playlist o similar.",
             "type": "playlist",
             "id": "playlist-suggestion",
-            "blocks": [
-                "title",
-                "description",
-                "button"
-            ],
+            "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Arma la playlist",
                 "description": "Quiero que esta noche suene todo lo que nos gusta. Agregá tus canciones a la playlist de la fiesta.",
@@ -352,9 +320,7 @@
             "type": "emotionalQuote",
             "id": "emotional-quote",
             "bgColor": "primary",
-            "blocks": [
-                "text"
-            ],
+            "blocks": ["text"],
             "data": {
                 "text": "No es solo una fiesta. Es el inicio de todo lo que quiero ser."
             }
@@ -364,12 +330,7 @@
             "_comment": "Al presionar el boton se abre modal con preguntas. Cada pregunta: question, options (2-4), correctIndex (0=primera), explanation. finishTitle y finishText = pantalla final.",
             "type": "trivia",
             "id": "trivia-game",
-            "blocks": [
-                "title",
-                "subtitle",
-                "button",
-                "modal"
-            ],
+            "blocks": ["title", "subtitle", "button", "modal"],
             "data": {
                 "title": "¿Cuánto me conocés?",
                 "subtitle": "¿Jugamos un poco?",
@@ -445,13 +406,7 @@
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "primary",
-            "blocks": [
-                "icon",
-                "title",
-                "description",
-                "button",
-                "modal"
-            ],
+            "blocks": ["icon", "title", "description", "button", "modal"],
             "data": {
                 "icon": "gift",
                 "title": "Regalos",
@@ -482,10 +437,7 @@
             "type": "confirmarWhatsapp",
             "id": "confirmar-whatsapp",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "button"
-            ],
+            "blocks": ["title", "button"],
             "data": {
                 "title": "Confirmar asistencia",
                 "subtitle": "Antes del 20 de agosto",
@@ -504,10 +456,7 @@
             "_comment": "Fondo rosa. Un mensaje personal de la quinceanera a los invitados.",
             "type": "specialMessage",
             "id": "special-message",
-            "blocks": [
-                "title",
-                "text"
-            ],
+            "blocks": ["title", "text"],
             "data": {
                 "title": "Gracias por estar",
                 "text": "A cada uno de ustedes: gracias por ser parte de mi vida. No seria quien soy sin las personas que me rodean. Esta noche es para celebrar juntos, reir, bailar y crear recuerdos que duren para siempre. Los quiero.",
@@ -520,10 +469,7 @@
             "_comment": "Imagen a ancho completo con nombre debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": [
-                "image",
-                "name"
-            ],
+            "blocks": ["image", "name"],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/xv/0-valentina/images/closing.jpg"
@@ -534,10 +480,7 @@
             "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": [
-                "socialLinks",
-                "brandName"
-            ],
+            "blocks": ["socialLinks", "brandName"],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

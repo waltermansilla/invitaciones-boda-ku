@@ -2458,108 +2458,116 @@ function IncluyeSection({
                       document.body,
                   )
                 : null}
-            <div ref={revealRef} className="mx-auto max-w-6xl">
-                {showVideo ? (
-                    <div className="relative mx-auto -mt-2 flex justify-center pt-1 md:-mt-3 md:pt-2">
-                        <div
-                            className="relative inline-flex max-w-full overflow-hidden rounded-2xl"
-                            style={{ background: theme.background }}
-                        >
-                            <div className="relative aspect-[9/16] h-auto w-[min(88vw,300px)] max-h-[min(70vh,520px)] max-w-full sm:w-[min(86vw,360px)] md:w-[min(84vw,480px)]">
-                                <video
-                                    ref={incluyeVideoRef}
-                                    className="absolute inset-0 z-0 h-full w-full object-contain"
-                                    muted
-                                    playsInline
-                                    loop
-                                    preload="auto"
-                                    aria-label={data.imageAlt}
-                                >
-                                    <source
-                                        src={mediaSrc}
-                                        type={incluyeVideoMime}
-                                    />
-                                </video>
-                                {posterSrc ? (
-                                    <div
-                                        className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-2xl"
-                                        style={
-                                            incluyePosterDismissed
-                                                ? {
-                                                      ...blockRevealStyle(
+            <div
+                ref={revealRef}
+                className="mx-auto max-w-6xl md:grid md:grid-cols-[minmax(280px,460px)_minmax(320px,1fr)] md:items-center md:gap-10"
+            >
+                <div>
+                    {showVideo ? (
+                        <div className="relative mx-auto -mt-2 flex justify-center pt-1 md:-mt-1 md:pt-0">
+                            <div
+                                className="relative inline-flex max-w-full overflow-hidden rounded-2xl"
+                                style={{ background: theme.background }}
+                            >
+                                <div className="relative aspect-[9/16] h-auto w-[min(88vw,300px)] max-h-[min(70vh,520px)] max-w-full sm:w-[min(86vw,360px)] md:w-[min(40vw,430px)]">
+                                    <video
+                                        ref={incluyeVideoRef}
+                                        className="absolute inset-0 z-0 h-full w-full object-contain"
+                                        muted
+                                        playsInline
+                                        loop
+                                        preload="auto"
+                                        aria-label={data.imageAlt}
+                                    >
+                                        <source
+                                            src={mediaSrc}
+                                            type={incluyeVideoMime}
+                                        />
+                                    </video>
+                                    {posterSrc ? (
+                                        <div
+                                            className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-2xl"
+                                            style={
+                                                incluyePosterDismissed
+                                                    ? {
+                                                          ...blockRevealStyle(
+                                                              revealed,
+                                                              0,
+                                                          ),
+                                                          opacity: 0,
+                                                          transitionProperty:
+                                                              "opacity, transform",
+                                                          transitionDuration:
+                                                              "0.38s, 0s",
+                                                          transitionTimingFunction:
+                                                              "ease-out, ease-out",
+                                                      }
+                                                    : blockRevealStyle(
                                                           revealed,
                                                           0,
-                                                      ),
-                                                      opacity: 0,
-                                                      transitionProperty:
-                                                          "opacity, transform",
-                                                      transitionDuration:
-                                                          "0.38s, 0s",
-                                                      transitionTimingFunction:
-                                                          "ease-out, ease-out",
-                                                  }
-                                                : blockRevealStyle(revealed, 0)
-                                        }
-                                        aria-hidden
-                                    >
-                                        <Image
-                                            src={posterSrc}
-                                            alt=""
-                                            fill
-                                            className="object-contain"
-                                            sizes="(max-width: 768px) 90vw, 480px"
-                                            priority
-                                        />
-                                    </div>
-                                ) : null}
+                                                      )
+                                            }
+                                            aria-hidden
+                                        >
+                                            <Image
+                                                src={posterSrc}
+                                                alt=""
+                                                fill
+                                                className="object-contain"
+                                                sizes="(max-width: 768px) 90vw, 480px"
+                                                priority
+                                            />
+                                        </div>
+                                    ) : null}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ) : (
-                    <div
-                        className="relative mx-auto mt-4 aspect-video w-full max-w-4xl overflow-hidden rounded-2xl border shadow-sm md:mt-6"
-                        style={{
-                            borderColor: theme.cardBorder,
-                            background: theme.cardBg,
-                            ...blockRevealStyle(revealed, 0),
-                        }}
-                    >
-                        {mediaSrc ? (
-                            <Image
-                                src={mediaSrc}
-                                alt={data.imageAlt}
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 1200px) 100vw, 900px"
-                            />
-                        ) : (
-                            <div
-                                className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
-                                style={{ color: tx.muted }}
-                            >
-                                <Sparkles
-                                    size={32}
-                                    strokeWidth={1.25}
-                                    className="opacity-40"
+                    ) : (
+                        <div
+                            className="relative mx-auto mt-4 aspect-video w-full max-w-4xl overflow-hidden rounded-2xl border shadow-sm md:mt-0"
+                            style={{
+                                borderColor: theme.cardBorder,
+                                background: theme.cardBg,
+                                ...blockRevealStyle(revealed, 0),
+                            }}
+                        >
+                            {mediaSrc ? (
+                                <Image
+                                    src={mediaSrc}
+                                    alt={data.imageAlt}
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 1200px) 100vw, 900px"
                                 />
-                                <span className="text-sm">
-                                    Agregá la imagen o video en
-                                </span>
-                                <code className="rounded-md bg-black/[0.05] px-2 py-1 text-xs">
-                                    sections.incluye.imageSrc
-                                </code>
-                            </div>
-                        )}
-                    </div>
-                )}
+                            ) : (
+                                <div
+                                    className="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
+                                    style={{ color: tx.muted }}
+                                >
+                                    <Sparkles
+                                        size={32}
+                                        strokeWidth={1.25}
+                                        className="opacity-40"
+                                    />
+                                    <span className="text-sm">
+                                        Agregá la imagen o video en
+                                    </span>
+                                    <code className="rounded-md bg-black/[0.05] px-2 py-1 text-xs">
+                                        sections.incluye.imageSrc
+                                    </code>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
 
-                <div className="mx-auto mt-10 max-w-3xl">
+                <div className="mx-auto mt-10 max-w-3xl md:mt-0 md:max-w-none">
                     <div
-                        className="mb-3 flex items-center justify-center"
+                        className="mb-3 flex items-center justify-center md:justify-start"
                         style={blockRevealStyle(revealed, 65)}
                     >
                         <h2
-                            className="text-center text-xl font-semibold tracking-tight md:text-2xl"
+                            className="text-center text-xl font-semibold tracking-tight md:text-left md:text-2xl"
                             style={{
                                 fontFamily:
                                     "var(--font-landing-hero), Georgia, serif",
@@ -2575,7 +2583,7 @@ function IncluyeSection({
                         </h2>
                     </div>
                     <p
-                        className="mb-5 text-center text-sm leading-relaxed md:text-[15px]"
+                        className="mb-5 text-center text-sm leading-relaxed md:text-left md:text-[15px]"
                         style={{
                             color: tx.muted,
                             ...blockRevealStyle(revealed, 95),
@@ -2588,7 +2596,10 @@ function IncluyeSection({
                             wordStepMs={20}
                         />
                     </p>
-                    <ul className="flex flex-col px-2 sm:px-0" style={{ gap }}>
+                    <ul
+                        className="flex flex-col px-2 sm:px-0 md:px-0"
+                        style={{ gap }}
+                    >
                         {items.map((item, i) => (
                             <li
                                 key={item.text}
@@ -3671,8 +3682,8 @@ function EstilosCarousel({
                         </ul>
                     </div>
                     <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-3 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
-                        <div className="flex items-start gap-3">
-                            <div className="min-w-0 basis-[54%]">
+                        <div className="flex flex-col gap-3 md:grid md:grid-cols-[minmax(240px,1fr)_180px] md:items-start">
+                            <div className="min-w-0">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
                                     {panelAvailableTitle}
                                 </p>
@@ -3680,7 +3691,7 @@ function EstilosCarousel({
                                     {panelAvailableCopy}
                                 </p>
                             </div>
-                            <div className="relative basis-[46%] shrink-0 overflow-hidden rounded-lg">
+                            <div className="relative mx-auto w-full max-w-[180px] shrink-0 overflow-hidden rounded-lg md:mx-0">
                                 <div className="relative aspect-[9/16] w-full">
                                     <Image
                                         src={
@@ -3695,7 +3706,7 @@ function EstilosCarousel({
                                         }
                                         fill
                                         className="object-contain"
-                                        sizes="120px"
+                                        sizes="(max-width: 768px) 46vw, 180px"
                                     />
                                 </div>
                             </div>
@@ -4002,78 +4013,132 @@ function PanelSection({
             style={{ background: theme.background }}
         >
             <div ref={revealRef} className="mx-auto max-w-6xl">
-                <p
-                    className="text-center text-[11px] font-semibold uppercase tracking-[0.3em]"
-                    style={{
-                        color: theme.accents.softGold,
-                        ...blockRevealStyle(revealed, 0),
-                    }}
-                >
-                    <StaggerText
-                        text={data.eyebrow}
-                        revealed={revealed}
-                        baseDelayMs={0}
-                        wordStepMs={22}
-                    />
-                </p>
-                <h2
-                    className="mt-3 text-center text-3xl font-normal tracking-tight md:text-4xl lg:text-[2.75rem]"
-                    style={{
-                        fontFamily: theme.typography.headingFont,
-                        color: tx.heading,
-                        ...blockRevealStyle(revealed, 50),
-                    }}
-                >
-                    <StaggerText
-                        text={data.title}
-                        revealed={revealed}
-                        baseDelayMs={52}
-                        wordStepMs={20}
-                    />
-                </h2>
-                <p
-                    className="mx-auto mt-4 max-w-2xl text-center text-base"
-                    style={{
-                        color: tx.muted,
-                        ...blockRevealStyle(revealed, 100),
-                    }}
-                >
-                    <StaggerText
-                        text={data.subtitle}
-                        revealed={revealed}
-                        baseDelayMs={104}
-                        wordStepMs={14}
-                    />
-                </p>
-                {data.imageSrc ? (
-                    <div
-                        className="relative mx-auto mt-10 flex justify-center"
-                        style={blockRevealStyle(revealed, 195)}
-                    >
-                        <div
-                            className="relative inline-flex max-w-full overflow-hidden rounded-2xl"
-                            style={{ background: theme.background }}
+                <div className="md:grid md:grid-cols-[minmax(320px,1fr)_minmax(260px,440px)] md:items-start md:gap-10 lg:gap-14">
+                    <div>
+                        <p
+                            className="text-center text-[11px] font-semibold uppercase tracking-[0.3em] md:text-left"
+                            style={{
+                                color: theme.accents.softGold,
+                                ...blockRevealStyle(revealed, 0),
+                            }}
                         >
-                            <div className="relative aspect-[9/16] h-auto w-[min(88vw,300px)] max-h-[min(70vh,520px)] max-w-full sm:w-[min(86vw,360px)] md:w-[min(84vw,480px)]">
-                                <Image
-                                    src={data.imageSrc}
-                                    alt={data.imageAlt}
-                                    fill
-                                    className="object-contain"
-                                    sizes="(max-width: 768px) 90vw, 480px"
-                                />
-                            </div>
+                            <StaggerText
+                                text={data.eyebrow}
+                                revealed={revealed}
+                                baseDelayMs={0}
+                                wordStepMs={22}
+                            />
+                        </p>
+                        <h2
+                            className="mt-3 text-center text-3xl font-normal tracking-tight md:text-left md:text-4xl lg:text-[2.75rem]"
+                            style={{
+                                fontFamily: theme.typography.headingFont,
+                                color: tx.heading,
+                                ...blockRevealStyle(revealed, 50),
+                            }}
+                        >
+                            <StaggerText
+                                text={data.title}
+                                revealed={revealed}
+                                baseDelayMs={52}
+                                wordStepMs={20}
+                            />
+                        </h2>
+                        <p
+                            className="mx-auto mt-4 max-w-2xl text-center text-base md:mx-0 md:text-left"
+                            style={{
+                                color: tx.muted,
+                                ...blockRevealStyle(revealed, 100),
+                            }}
+                        >
+                            <StaggerText
+                                text={data.subtitle}
+                                revealed={revealed}
+                                baseDelayMs={104}
+                                wordStepMs={14}
+                            />
+                        </p>
+                        <div className="mt-7 hidden md:grid md:grid-cols-3 md:gap-3">
+                            {data.features.map((f, i) => (
+                                <div
+                                    key={`desktop-inline-${f.title}`}
+                                    className="rounded-2xl px-4 py-4 shadow-lg"
+                                    style={{
+                                        background: "#EDE6DC",
+                                        ...blockRevealStyle(revealed, 265 + i * 72),
+                                    }}
+                                >
+                                    <span
+                                        className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg"
+                                        style={{
+                                            background: "#D9CFC2",
+                                            color: "#4A3F35",
+                                        }}
+                                    >
+                                        <TdyIcon
+                                            name={f.icon ?? "barChart"}
+                                            size={16}
+                                            color="#4A3F35"
+                                        />
+                                    </span>
+                                    <h3
+                                        className="mt-1 text-base font-normal leading-tight"
+                                        style={{
+                                            fontFamily: theme.typography.headingFont,
+                                            color: tx.heading,
+                                        }}
+                                    >
+                                        <StaggerText
+                                            text={f.title}
+                                            revealed={revealed}
+                                            baseDelayMs={268 + i * 72}
+                                            wordStepMs={16}
+                                        />
+                                    </h3>
+                                    <p
+                                        className="mt-1.5 text-xs leading-relaxed"
+                                        style={{ color: tx.muted }}
+                                    >
+                                        <StaggerText
+                                            text={f.subtitle}
+                                            revealed={revealed}
+                                            baseDelayMs={286 + i * 72}
+                                            wordStepMs={10}
+                                        />
+                                    </p>
+                                </div>
+                            ))}
                         </div>
                     </div>
-                ) : (
-                <div
-                    className="relative mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border shadow-lg"
-                    style={{
-                        borderColor: theme.cardBorder,
-                        background: theme.cardBg,
-                        ...blockRevealStyle(revealed, 195),
-                    }}
-                >
+                    {data.imageSrc ? (
+                        <div
+                            className="relative mx-auto mt-10 flex justify-center md:mt-0 md:justify-end"
+                            style={blockRevealStyle(revealed, 195)}
+                        >
+                            <div
+                                className="relative inline-flex max-w-full overflow-hidden rounded-2xl"
+                                style={{ background: theme.background }}
+                            >
+                                <div className="relative aspect-[9/16] h-auto w-[min(88vw,300px)] max-h-[min(70vh,520px)] max-w-full sm:w-[min(86vw,360px)] md:w-[min(36vw,420px)]">
+                                    <Image
+                                        src={data.imageSrc}
+                                        alt={data.imageAlt}
+                                        fill
+                                        className="object-contain"
+                                        sizes="(max-width: 768px) 90vw, 420px"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div
+                            className="relative mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl border shadow-lg md:mt-0"
+                            style={{
+                                borderColor: theme.cardBorder,
+                                background: theme.cardBg,
+                                ...blockRevealStyle(revealed, 195),
+                            }}
+                        >
                         <div className="p-6 md:p-10">
                             <div className="grid grid-cols-3 gap-3 md:gap-4">
                                 {data.stats.map((s) => (
@@ -4153,9 +4218,10 @@ function PanelSection({
                                 </code>
                             </p>
                         </div>
+                        </div>
+                    )}
                 </div>
-                )}
-                <div className="mt-12 grid gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
+                <div className="mt-12 grid gap-4 md:hidden">
                     {data.features.map((f, i) => (
                         <div
                             key={f.title}

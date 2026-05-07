@@ -35,7 +35,7 @@
         "panelId": "quique-vero-5v7sY7jg",
         "deuda": true,
         "deudaMonto": 20000,
-        "deudaInvitados": 5,
+        "deudaInvitados": 10,
         "fechaEvento": "2026-12-26",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 26 de Diciembre.",
         "theme": {
