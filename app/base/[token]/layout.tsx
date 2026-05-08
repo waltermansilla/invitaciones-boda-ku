@@ -27,8 +27,8 @@ export default async function BaseTokenLayout({ children, params }: LayoutProps)
               background-repeat: no-repeat !important;
               background-size: 100% 100% !important;
             }
-            body {
-              color-scheme: dark;
+            html, body {
+              color-scheme: dark !important;
             }
             :root {
               --base-primary-color: ${primaryColor};

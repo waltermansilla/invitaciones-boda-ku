@@ -55,6 +55,7 @@ const SECTION_LABELS: Record<string, string> = {
     faq: "Preguntas frecuentes",
     alojamiento: "Alojamientos",
     adultos: "Niños y cuidados",
+    dietas: "RSVP, dietas, mensajes",
 };
 
 const DETAILS_SECTION_ORDER = [
@@ -125,6 +126,8 @@ const STEP_HELP_TEXT: Record<string, string> = {
         "Comparte hasta 5 opciones de alojamiento para invitados que viajan desde otra ciudad.",
     adultos:
         "Aclara si hay políticas sobre niños, cuidados o modalidad del evento.",
+    dietas:
+        "Detallá cómo querés la confirmación: opciones de menú o restricciones alimentarias, campo libre para mensajes o dedicatorias, límites de cantidad, etc.",
     personalizacion:
         "Elegí 1 o 2 tonalidades para guiar el diseño y, si querés, dejá una frase o texto especial para incluir en la invitación.",
     resumen:
@@ -938,6 +941,12 @@ export default function DetallesPage() {
                     return [
                         `- ${sectionTitleUpper}:`,
                         `  Mensaje: ${kidsMessage || "-"}`,
+                    ].join("\n");
+                }
+                if (section.id === "dietas") {
+                    return [
+                        `- ${sectionTitleUpper}:`,
+                        `  Detalle: ${note || "-"}`,
                     ].join("\n");
                 }
                 if (section.id === "fotos10") {
@@ -2764,6 +2773,24 @@ export default function DetallesPage() {
                             />
                             {showRequiredHints &&
                             kidsMessage.trim().length === 0 ? (
+                                <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
+                                    * Campo obligatorio
+                                </p>
+                            ) : null}
+                        </>
+                    ) : null}
+                    {activeStep.id === "dietas" ? (
+                        <>
+                            <Textarea
+                                label="RSVP, dietas, mensajes"
+                                value={sectionNotes.dietas || ""}
+                                onChange={(value) =>
+                                    setNote("dietas", value)
+                                }
+                                placeholder="Ej: Opciones tipo menú estándar / vegetariano / celíaco; campo para mensaje o tema de música para el DJ; si hay cupo máximo por invitación…"
+                            />
+                            {showRequiredHints &&
+                            !(sectionNotes.dietas || "").trim() ? (
                                 <p className="-mt-1 text-[11px] font-semibold text-[#B71C1C]">
                                     * Campo obligatorio
                                 </p>

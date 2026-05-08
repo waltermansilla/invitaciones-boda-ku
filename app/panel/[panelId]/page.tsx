@@ -19,6 +19,7 @@ import {
     ArrowLeftRight,
     Search,
     AlertTriangle,
+    Copy,
 } from "lucide-react";
 import {
     eventTypeLabelFromFolderTipo,
@@ -1407,6 +1408,7 @@ export default function PanelPage({
                 <PanelDebtInterceptModals
                     phase={debtModalPhase}
                     gate={debtGateFromPanelConfig(data.panelConfig)}
+                    primaryColor={primaryColor}
                     onCloseAll={() => setDebtModalPhase("closed")}
                     onShowDetail={() => setDebtModalPhase("detail")}
                 />
@@ -1483,42 +1485,62 @@ export default function PanelPage({
 function PanelDebtInterceptModals({
     phase,
     gate,
+    primaryColor,
     onCloseAll,
     onShowDetail,
 }: {
     phase: "summary" | "detail";
     gate: PanelDebtGatePayload;
+    primaryColor: string;
     onCloseAll: () => void;
     onShowDetail: () => void;
 }) {
     const pago = gate.deudaPago;
     const montoStr = `$${formatDeudaMontoAr(gate.deudaMonto)}`;
+    /** Misma idea que modales de invitación (valor tarjeta / alias): fondo primary, texto claro */
+    const fg = "#FFFCF8";
+
+    const backdropStyle: React.CSSProperties = {
+        backgroundColor: "rgba(0,0,0,0.55)",
+        backdropFilter: "blur(6px)",
+        WebkitBackdropFilter: "blur(6px)",
+    };
 
     if (phase === "summary") {
         return (
             <div
-                className="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 p-4"
+                className="fixed inset-0 z-[100] flex items-center justify-center p-4 px-5 py-8"
+                style={backdropStyle}
                 onClick={onCloseAll}
                 role="presentation"
             >
                 <div
-                    className="relative w-full max-w-md rounded-2xl border border-amber-400/50 bg-gradient-to-b from-amber-50 via-white to-white p-6 shadow-xl"
+                    className="relative w-full max-w-sm rounded-sm px-7 py-8 shadow-xl"
+                    style={{ backgroundColor: primaryColor, color: fg }}
                     role="dialog"
                     aria-labelledby="panel-deuda-titulo"
                     aria-modal="true"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="mb-4 flex flex-col items-center text-center">
-                        <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-700 ring-8 ring-amber-100/50">
+                    <div className="mb-6 flex flex-col items-center text-center">
+                        <div
+                            className="mb-4 flex h-14 w-14 items-center justify-center rounded-full"
+                            style={{
+                                backgroundColor: "rgba(255,252,248,0.12)",
+                                boxShadow: "0 0 0 1px rgba(255,252,248,0.18)",
+                            }}
+                        >
                             <AlertTriangle
                                 className="h-7 w-7"
                                 strokeWidth={2}
+                                style={{ color: fg }}
                                 aria-hidden
                             />
                         </div>
                         <h2
                             id="panel-deuda-titulo"
-                            className="text-lg font-semibold text-amber-950"
+                            className="text-lg font-semibold uppercase tracking-wide"
+                            style={{ color: fg }}
                         >
                             Usted registra una deuda
                         </h2>
@@ -1527,14 +1549,19 @@ function PanelDebtInterceptModals({
                         <button
                             type="button"
                             onClick={onCloseAll}
-                            className="flex-1 rounded-xl border border-neutral-200 bg-white py-3 text-sm font-semibold text-neutral-700 shadow-sm transition hover:bg-neutral-50"
+                            className="flex-1 rounded-sm border border-white/25 py-3 text-sm font-semibold transition-colors hover:bg-white/10"
+                            style={{ color: fg }}
                         >
                             Cerrar
                         </button>
                         <button
                             type="button"
                             onClick={onShowDetail}
-                            className="flex-1 rounded-xl bg-amber-700 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-amber-800"
+                            className="flex-1 rounded-sm py-3 text-sm font-semibold shadow-md transition-opacity hover:opacity-95"
+                            style={{
+                                backgroundColor: fg,
+                                color: primaryColor,
+                            }}
                         >
                             Ver detalle
                         </button>
@@ -1546,62 +1573,120 @@ function PanelDebtInterceptModals({
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/55 p-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 px-5 py-8"
+            style={backdropStyle}
             onClick={onCloseAll}
             role="presentation"
         >
             <div
-                className="relative w-full max-w-md rounded-2xl border border-amber-300/70 bg-white p-6 shadow-xl"
+                className="relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-sm px-7 py-8 shadow-xl"
+                style={{ backgroundColor: primaryColor, color: fg }}
                 role="dialog"
                 aria-label="Detalle para abonar"
                 aria-modal="true"
                 onClick={(e) => e.stopPropagation()}
             >
-                <div className="space-y-3 rounded-xl border border-amber-100 bg-amber-50/80 p-4 text-sm">
-                    <div className="flex justify-between gap-3 border-b border-amber-200/60 pb-2">
-                        <span className="shrink-0 font-medium text-amber-900/90">
-                            Monto
-                        </span>
-                        <span className="font-semibold tabular-nums text-amber-950">
-                            {montoStr}
-                        </span>
-                    </div>
-                    <div className="flex justify-between gap-3 border-b border-amber-200/60 pb-2">
-                        <span className="shrink-0 font-medium text-amber-900/90">
-                            Alias
-                        </span>
-                        <span className="break-all text-right font-mono font-medium text-neutral-900">
-                            {pago.alias}
-                        </span>
-                    </div>
-                    <div className="flex justify-between gap-3 border-b border-amber-200/60 pb-2">
-                        <span className="shrink-0 font-medium text-amber-900/90">
-                            Titular
-                        </span>
-                        <span className="text-right font-medium text-neutral-900">
-                            {pago.titular}
-                        </span>
-                    </div>
-                    <div className="flex justify-between gap-3">
-                        <span className="shrink-0 font-medium text-amber-900/90">
-                            Banco
-                        </span>
-                        <span className="text-right font-medium text-neutral-900">
-                            {pago.banco}
-                        </span>
-                    </div>
+                <div
+                    className="mb-5 rounded-sm px-5 py-4 text-center"
+                    style={{ backgroundColor: "rgba(255,252,248,0.1)" }}
+                >
+                    <p
+                        className="text-[11px] font-medium uppercase tracking-[0.15em]"
+                        style={{ color: `${fg}99` }}
+                    >
+                        Monto
+                    </p>
+                    <p
+                        className="mt-1 text-2xl font-light tabular-nums"
+                        style={{ color: fg }}
+                    >
+                        {montoStr}
+                    </p>
                 </div>
-                <p className="mt-5 text-center text-xs leading-relaxed text-amber-950/85">
+
+                <div className="space-y-3">
+                    <DebtTransferRow label="Alias" value={pago.alias} mono />
+                    <DebtTransferRow label="Titular" value={pago.titular} />
+                    <DebtTransferRow label="Banco" value={pago.banco} />
+                </div>
+
+                <p
+                    className="mt-6 text-center text-xs font-light leading-relaxed"
+                    style={{ color: `${fg}CC` }}
+                >
                     Después del pago, no olvide enviarnos el comprobante
                 </p>
                 <button
                     type="button"
                     onClick={onCloseAll}
-                    className="mt-5 w-full rounded-xl border border-neutral-200 bg-white py-3 text-sm font-semibold text-neutral-800 shadow-sm transition hover:bg-neutral-50"
+                    className="mt-6 w-full rounded-sm border border-white/25 py-3 text-sm font-semibold transition-colors hover:bg-white/10"
+                    style={{ color: fg }}
                 >
                     Cerrar
                 </button>
             </div>
+        </div>
+    );
+}
+
+function DebtTransferRow({
+    label,
+    value,
+    mono,
+}: {
+    label: string;
+    value: string;
+    mono?: boolean;
+}) {
+    const fg = "#FFFCF8";
+    const [copied, setCopied] = useState(false);
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopied(true);
+            window.setTimeout(() => setCopied(false), 2000);
+        } catch {
+            /* noop */
+        }
+    };
+
+    return (
+        <div
+            className="flex items-center justify-between rounded-sm border px-4 py-3"
+            style={{ borderColor: "rgba(255,252,248,0.15)" }}
+        >
+            <div className="min-w-0 flex-1">
+                <p
+                    className="text-[10px] font-medium uppercase tracking-[0.1em]"
+                    style={{ color: `${fg}80` }}
+                >
+                    {label}
+                </p>
+                <p
+                    className={`mt-0.5 text-sm font-light ${mono ? "break-all font-mono" : ""}`}
+                    style={{ color: fg }}
+                >
+                    {value}
+                </p>
+            </div>
+            {mono ? (
+                <button
+                    type="button"
+                    onClick={handleCopy}
+                    className="ml-2 inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-sm border transition-colors hover:bg-white/10"
+                    style={{
+                        borderColor: "rgba(255,252,248,0.2)",
+                        color: `${fg}80`,
+                    }}
+                    aria-label="Copiar alias"
+                >
+                    {copied ? (
+                        <Check className="h-3.5 w-3.5" strokeWidth={2} />
+                    ) : (
+                        <Copy className="h-3.5 w-3.5" strokeWidth={1.5} />
+                    )}
+                </button>
+            ) : null}
         </div>
     );
 }

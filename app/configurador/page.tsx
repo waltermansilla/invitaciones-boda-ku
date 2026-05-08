@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
     Baby,
     Check,
@@ -43,6 +43,10 @@ import {
     getUiStrings,
 } from "./strings";
 import { trackGaEvent } from "@/lib/google-analytics";
+import {
+    MU_CONFIG_FROM_LANDING_KEY,
+    MU_LANDING_RETURN_SCROLL_KEY,
+} from "@/lib/configurador-return-nav";
 import { trackMetaEvent, updateMetaPixelAdvancedMatching } from "@/lib/meta-pixel";
 
 type Currency = "ARS" | "USD";
@@ -81,8 +85,51 @@ const FREE_SECTIONS = 5;
 
 const INCLUDED_EXTRAS_BY_PLAN: Record<PlanKey, string[]> = {
     premium: [],
-    "diseno-unico": ["panel"],
+    "diseno-unico": ["bienvenida", "panel"],
 };
+
+/** Diseño único: 1ª pantalla = primeros N extras; 2ª = los N siguientes (mismo N). */
+const DESIGN_UNIQUE_EXTRAS_STEP_COUNT = 2;
+
+const CONFIG_PROGRESS_FILL = "#7A5F45";
+const CONFIG_PROGRESS_TRACK = "#E8E0D7";
+
+/** Una cápsula de barra de progreso: `fill` entre 0 y 1 permite mitad en extras (diseño único). */
+function ConfigProgressCapsule({ fill }: { fill: number }) {
+    if (fill >= 1 - 1e-6) {
+        return (
+            <span
+                className="h-2 min-h-[6px] min-w-0 rounded-full sm:h-1.5"
+                style={{ background: CONFIG_PROGRESS_FILL }}
+                aria-hidden
+            />
+        );
+    }
+    if (fill <= 0) {
+        return (
+            <span
+                className="h-2 min-h-[6px] min-w-0 rounded-full sm:h-1.5"
+                style={{ background: CONFIG_PROGRESS_TRACK }}
+                aria-hidden
+            />
+        );
+    }
+    return (
+        <span
+            className="relative h-2 min-h-[6px] min-w-0 overflow-hidden rounded-full sm:h-1.5"
+            style={{ background: CONFIG_PROGRESS_TRACK }}
+            aria-hidden
+        >
+            <span
+                className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-300 ease-out motion-reduce:transition-none"
+                style={{
+                    width: `${Math.round(fill * 100)}%`,
+                    background: CONFIG_PROGRESS_FILL,
+                }}
+            />
+        </span>
+    );
+}
 
 function HelpIcon() {
     return (
@@ -284,6 +331,7 @@ function splitEstiloDescripcion(desc: string | undefined): {
 }
 
 function ConfiguradorPageContent() {
+    const router = useRouter();
     const params = useSearchParams();
     const uiLang = params.get("lang") === "en" ? "en" : "es";
     const closeHref = `/?lang=${uiLang}`;
@@ -332,6 +380,7 @@ function ConfiguradorPageContent() {
     const [seccionesInfoOpen, setSeccionesInfoOpen] = useState(false);
     const [seccionesMinErrorShown, setSeccionesMinErrorShown] = useState(false);
     const [panelSkipModalOpen, setPanelSkipModalOpen] = useState(false);
+    const [designBrief, setDesignBrief] = useState("");
     const [detailsId] = useState(
         () =>
             `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
@@ -347,7 +396,16 @@ function ConfiguradorPageContent() {
 
     const steps: readonly string[] =
         plan === "diseno-unico"
-            ? (["idioma", "extras", "datos"] as const)
+            ? ([
+                  "evento",
+                  "estilo",
+                  "secciones",
+                  "idioma",
+                  "extras",
+                  "extras2",
+                  "briefing",
+                  "datos",
+              ] as const)
             : ([
                   "evento",
                   "estilo",
@@ -487,11 +545,7 @@ function ConfiguradorPageContent() {
             ? 0
             : paidSectionsCount * EXTRA_SECTION_PRICE[currency];
     const secondLanguageCost =
-        plan === "diseno-unico"
-            ? 0
-            : secondLanguage
-              ? SECOND_LANGUAGE_PRICE[currency]
-              : 0;
+        secondLanguage ? SECOND_LANGUAGE_PRICE[currency] : 0;
     const includedExtraIds = INCLUDED_EXTRAS_BY_PLAN[plan];
     const clampedPanelGuests = Math.max(
         PANEL_INCLUDED_GUESTS,
@@ -529,6 +583,24 @@ function ConfiguradorPageContent() {
     const planLabel = plan === "premium" ? t.planPremium : t.planUnique;
     const planLabelWa = plan === "premium" ? tWa.planPremium : tWa.planUnique;
     const waEx = configuradorEs.waExtras;
+    const styleLabelForWa = useMemo(() => {
+        if (!styleSelected.trim()) return "";
+        if (styleSelected === styleNoneOptionLabel) {
+            return configuradorEs.misc.styleNoneOption;
+        }
+        return styleSelected;
+    }, [styleSelected, styleNoneOptionLabel]);
+
+    /** Segundo idioma en el mensaje WhatsApp siempre como etiqueta ES (preset alineados por índice con EN). */
+    const secondLanguageLabelWa = useMemo(() => {
+        if (!secondLanguage.trim()) return tWa.none;
+        const presetEn = PRESET_LANGUAGES.en;
+        const idx = presetEn.indexOf(secondLanguage);
+        if (idx !== -1 && PRESET_LANGUAGES.es[idx])
+            return PRESET_LANGUAGES.es[idx];
+        return secondLanguage;
+    }, [secondLanguage, tWa.none]);
+
     const selectedExtraLabelsWa = selectedExtras.map((e) => {
         const match = extrasListWa.find((x) => x.id === e.id);
         const label = match?.label ?? e.label;
@@ -576,8 +648,9 @@ function ConfiguradorPageContent() {
         if (n1) query.set("name1", n1);
         if (n2) query.set("name2", n2);
         if (eventDate) query.set("eventDate", eventDate);
+        if (designBrief.trim()) query.set("designBrief", designBrief.trim());
         return query.toString();
-    }, [name1, name2, eventDate]);
+    }, [name1, name2, eventDate, designBrief]);
     const detailsUrl =
         typeof window !== "undefined"
             ? `${window.location.origin}/detalles/${detailsPathId}${detailsQuery ? `?${detailsQuery}` : ""}`
@@ -592,26 +665,25 @@ function ConfiguradorPageContent() {
         tWa.summaryHi(planLabelWa),
         "",
         wah.headingConfig,
-        ...(plan === "premium"
-            ? [
-                  `- ${tWa.event}: ${eventType ? `${eventLabelMapWa[eventType]}${eventType === "otro" && eventOther ? ` (${eventOther})` : ""}` : tWa.tbd}`,
-                  `- ${tWa.style}: ${styleSelected || tWa.tbd}`,
-                  `- ${tWa.sections} (${sections.length}):`,
-                  ...(sections.length
-                      ? selectedSectionLabelsWa.map((label) => `  - ${label}`)
-                      : [`  - ${tWa.tbd}`]),
-              ]
-            : []),
+        `- ${tWa.event}: ${eventType ? `${eventLabelMapWa[eventType]}${eventType === "otro" && eventOther ? ` (${eventOther})` : ""}` : tWa.tbd}`,
+        `- ${tWa.style}: ${styleSelected || tWa.tbd}`,
+        `- ${tWa.sections} (${sections.length}):`,
+        ...(sections.length
+            ? selectedSectionLabelsWa.map((label) => `  - ${label}`)
+            : [`  - ${tWa.tbd}`]),
         "",
         wah.headingLanguages,
         `- ${tWa.primaryLang}: ${tWa.spanish}`,
-        `- ${tWa.secondLang}: ${secondLanguage || tWa.none}`,
+        `- ${tWa.secondLang}: ${secondLanguageLabelWa}`,
         "",
         wah.headingExtras,
         ...(selectedExtraLabelsWa.length
             ? selectedExtraLabelsWa.map((label) => `  - ${label}`)
             : [`  - ${tWa.noneExtras}`]),
         ...(plan === "diseno-unico" ? [`  - ${tWa.uniqueExtrasNote}`] : []),
+        "",
+        wah.headingCreativeBrief,
+        `- ${tWa.creativeBriefLine}: ${designBrief.trim() || "-"}`,
         "",
         wah.headingContact,
         `- ${isBoda ? wah.name1Boda : wah.nameSolo}: ${name1 || "-"}`,
@@ -651,6 +723,10 @@ function ConfiguradorPageContent() {
             );
         if (step === "estilo") return Boolean(styleSelected);
         if (step === "secciones") return true;
+        if (step === "briefing")
+            return plan === "diseno-unico"
+                ? designBrief.trim().length >= 10
+                : true;
         if (step === "datos")
             return (
                 name1.trim().length > 1 &&
@@ -665,6 +741,7 @@ function ConfiguradorPageContent() {
         eventType,
         eventOther,
         styleSelected,
+        designBrief,
         name1,
         name2,
         isBoda,
@@ -675,6 +752,43 @@ function ConfiguradorPageContent() {
     const isLastStep = stepIdx === steps.length - 1;
 
     const step = steps[stepIdx];
+
+    const extrasToRender = useMemo(() => {
+        if (step !== "extras" && step !== "extras2") return [];
+        if (plan !== "diseno-unico") return extrasList;
+        return step === "extras"
+            ? extrasList.slice(0, DESIGN_UNIQUE_EXTRAS_STEP_COUNT)
+            : extrasList.slice(
+                  DESIGN_UNIQUE_EXTRAS_STEP_COUNT,
+                  DESIGN_UNIQUE_EXTRAS_STEP_COUNT * 2,
+              );
+    }, [plan, step, extrasList]);
+
+    const extrasStepTitle =
+        plan === "diseno-unico" && step === "extras2"
+            ? t.extrasTitlePart2
+            : plan === "diseno-unico" && step === "extras"
+              ? t.extrasTitlePart1
+              : t.extrasTitle;
+
+    const progressSegmentFills = useMemo(() => {
+        if (plan !== "diseno-unico") {
+            return steps.map((_, i) => (stepIdx >= i ? 1 : 0));
+        }
+        const fills: number[] = [];
+        for (let i = 0; i < steps.length; i++) {
+            const id = steps[i];
+            if (id === "extras2") continue;
+            if (id === "extras") {
+                if (stepIdx < i) fills.push(0);
+                else if (stepIdx === i) fills.push(0.5);
+                else fills.push(1);
+                continue;
+            }
+            fills.push(stepIdx >= i ? 1 : 0);
+        }
+        return fills;
+    }, [plan, stepIdx, steps]);
 
     const advanceOneStep = () => {
         setStepIdx((s) => Math.min(steps.length - 1, s + 1));
@@ -710,6 +824,12 @@ function ConfiguradorPageContent() {
     }, [step]);
 
     useEffect(() => {
+        if (step !== "extras" && step !== "extras2") {
+            setOpenExtraInfoId(null);
+        }
+    }, [step]);
+
+    useEffect(() => {
         setSections((prev) =>
             DEFAULT_SELECTED_SECTION_IDS.reduce<string[]>(
                 (acc, sectionId) =>
@@ -728,6 +848,40 @@ function ConfiguradorPageContent() {
                     <Link
                         href={closeHref}
                         className="justify-self-start text-sm font-medium text-[#6A5C52]"
+                        onClick={(event) => {
+                            if (
+                                event.button !== 0 ||
+                                event.metaKey ||
+                                event.ctrlKey ||
+                                event.shiftKey ||
+                                event.altKey
+                            ) {
+                                return;
+                            }
+                            event.preventDefault();
+                            try {
+                                if (typeof window !== "undefined") {
+                                    const fromLanding =
+                                        sessionStorage.getItem(
+                                            MU_CONFIG_FROM_LANDING_KEY,
+                                        ) === "1";
+                                    const hasReturnScroll =
+                                        sessionStorage.getItem(
+                                            MU_LANDING_RETURN_SCROLL_KEY,
+                                        ) !== null;
+                                    if (fromLanding || hasReturnScroll) {
+                                        sessionStorage.removeItem(
+                                            MU_CONFIG_FROM_LANDING_KEY,
+                                        );
+                                        router.back();
+                                        return;
+                                    }
+                                }
+                            } catch {
+                                /* */
+                            }
+                            router.push(closeHref);
+                        }}
                     >
                         {t.headerClose}
                     </Link>
@@ -741,18 +895,11 @@ function ConfiguradorPageContent() {
                 <div
                     className={`mx-auto grid w-full max-w-3xl min-w-0 gap-1.5 pb-3 sm:gap-2 ${PAGE_GUTTER}`}
                     style={{
-                        gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))`,
+                        gridTemplateColumns: `repeat(${progressSegmentFills.length}, minmax(0, 1fr))`,
                     }}
                 >
-                    {steps.map((_, i) => (
-                        <span
-                            key={i}
-                            className="h-2 min-w-0 rounded-full sm:h-1.5"
-                            style={{
-                                background:
-                                    i <= stepIdx ? "#7A5F45" : "#E8E0D7",
-                            }}
-                        />
+                    {progressSegmentFills.map((fill, idx) => (
+                        <ConfigProgressCapsule key={idx} fill={fill} />
                     ))}
                 </div>
             </header>
@@ -950,6 +1097,14 @@ function ConfiguradorPageContent() {
                         >
                             {t.seccionesTitle}
                         </h2>
+                        {plan === "diseno-unico" ? (
+                            <p className="mt-3 text-xs font-medium leading-snug text-[#7A5F45]">
+                                {t.seccionesPremiumCompareNote.replace(
+                                    /\{\{precioPorBloque\}\}/g,
+                                    `${formatMoney(EXTRA_SECTION_PRICE[currency], currency)}${t.perBlock}`,
+                                )}
+                            </p>
+                        ) : null}
                         {plan === "premium" ? (
                             <div className="mt-4 overflow-hidden rounded-2xl border border-[#D9CFC3] bg-transparent">
                                 <button
@@ -1018,25 +1173,32 @@ function ConfiguradorPageContent() {
                             </div>
                         ) : null}
                         {plan === "premium" ? (
-                            <p className="mt-3 text-xs font-medium tabular-nums text-[#7A5F45]">
-                                {FREE_SECTIONS} {t.seccionesCountFoot}{" "}
-                                {`+${formatMoney(EXTRA_SECTION_PRICE[currency], currency)}`}
-                                {t.perBlock}
+                            <>
+                                <p className="mt-3 text-xs font-medium tabular-nums text-[#7A5F45]">
+                                    {FREE_SECTIONS} {t.seccionesCountFoot}{" "}
+                                    {`+${formatMoney(EXTRA_SECTION_PRICE[currency], currency)}`}
+                                    {t.perBlock}
+                                </p>
+                                <p className="text-base font-semibold text-[#3F332B] mt-0.5">
+                                    {sections.length}/{FREE_SECTIONS}{" "}
+                                    <span className="font-medium text-[#2F7E56]">
+                                        {paidSectionsCount > 0
+                                            ? `(+${formatMoney(sectionsCost, currency)})`
+                                            : t.sinExtras}
+                                    </span>
+                                </p>
+                                <p className="mt-3 text-xs leading-snug text-[#6A5C52]">
+                                    {t.seccionesTopNote}
+                                </p>
+                            </>
+                        ) : (
+                            <p className="mt-3 text-sm tabular-nums text-[#6A5C52]">
+                                {t.seccionesSoloConteo.replace(
+                                    /\{\{count\}\}/g,
+                                    String(sections.length),
+                                )}
                             </p>
-                        ) : null}
-                        <p
-                            className={`text-base font-semibold text-[#3F332B] ${plan === "premium" ? "mt-0.5" : "mt-2"}`}
-                        >
-                            {sections.length}/{FREE_SECTIONS}{" "}
-                            <span className="font-medium text-[#2F7E56]">
-                                {paidSectionsCount > 0
-                                    ? `(+${formatMoney(sectionsCost, currency)})`
-                                    : t.sinExtras}
-                            </span>
-                        </p>
-                        <p className="mt-3 text-xs leading-snug text-[#6A5C52]">
-                            {t.seccionesTopNote}
-                        </p>
+                        )}
                         {seccionesMinErrorShown &&
                         sections.length < MIN_SECTION_BLOCKS ? (
                             <p
@@ -1051,13 +1213,14 @@ function ConfiguradorPageContent() {
                                 const on = sections.includes(s.id);
                                 const isRequiredSection =
                                     NON_REMOVABLE_SECTION_IDS.has(s.id);
-                                const isPaid =
+                                const tileShowsSectionSurcharge =
+                                    plan === "premium" &&
                                     !s.isAdder &&
                                     on &&
                                     paidSectionIds.includes(s.id);
                                 const isOtroOpen = s.isAdder && isAddingOther;
 
-                                const priceBadge = isPaid ? (
+                                const priceBadge = tileShowsSectionSurcharge ? (
                                     <span
                                         className="pointer-events-none absolute left-1/2 top-0 z-[1] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full border bg-[#FDFBF7] px-2 py-0.5 text-[10px] font-semibold leading-none text-[#7A5F45] shadow-sm"
                                         style={{
@@ -1245,15 +1408,15 @@ function ConfiguradorPageContent() {
                         <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-6 pt-2 sm:grid-cols-3 sm:gap-x-3 sm:gap-y-5">
                             {languageOptions.map((lang) => {
                                 const on = secondLanguage === lang;
-                                const showPricePill = on && plan === "premium";
-                                const showIncludedPill =
-                                    on && plan === "diseno-unico";
+                                const showSecondLangPricePill =
+                                    on &&
+                                    SECOND_LANGUAGE_PRICE[currency] > 0;
                                 return (
                                     <div
                                         key={lang}
                                         className="relative min-w-0"
                                     >
-                                        {showPricePill ? (
+                                        {showSecondLangPricePill ? (
                                             <span
                                                 className={LINE_BADGE_CLASS}
                                                 style={LINE_BADGE_BORDER}
@@ -1265,14 +1428,6 @@ function ConfiguradorPageContent() {
                                                     ],
                                                     currency,
                                                 )}
-                                            </span>
-                                        ) : null}
-                                        {showIncludedPill ? (
-                                            <span
-                                                className={LINE_BADGE_CLASS}
-                                                style={LINE_BADGE_BORDER}
-                                            >
-                                                {t.included}
                                             </span>
                                         ) : null}
                                         <button
@@ -1360,14 +1515,12 @@ function ConfiguradorPageContent() {
                             </div>
                         </div>
                         <p className="mt-3 text-sm font-medium text-[#7A5F45]">
-                            {plan === "diseno-unico"
-                                ? t.secondLangUnique
-                                : `${t.secondLangPremiumPrefix} +${formatMoney(SECOND_LANGUAGE_PRICE[currency], currency)}`}
+                            {`${t.secondLangPremiumPrefix} +${formatMoney(SECOND_LANGUAGE_PRICE[currency], currency)}`}
                         </p>
                     </>
                 ) : null}
 
-                {step === "extras" ? (
+                {step === "extras" || step === "extras2" ? (
                     <>
                         <h2
                             className="text-3xl font-normal"
@@ -1376,10 +1529,10 @@ function ConfiguradorPageContent() {
                                     "var(--font-landing-hero), Georgia, serif",
                             }}
                         >
-                            {t.extrasTitle}
+                            {extrasStepTitle}
                         </h2>
                         <div className="mt-4 space-y-4 pt-1">
-                            {extrasList.map((ex) => {
+                            {extrasToRender.map((ex) => {
                                 const on = extras.includes(ex.id);
                                 const isPanel = ex.id === "panel";
                                 const locked = INCLUDED_EXTRAS_BY_PLAN[
@@ -1696,6 +1849,41 @@ function ConfiguradorPageContent() {
                                 );
                             })}
                         </div>
+                    </>
+                ) : null}
+
+                {step === "briefing" ? (
+                    <>
+                        <h2
+                            className="text-3xl font-normal"
+                            style={{
+                                fontFamily:
+                                    "var(--font-landing-hero), Georgia, serif",
+                            }}
+                        >
+                            {t.briefingTitle}
+                        </h2>
+                        <p className="mt-3 text-sm leading-relaxed text-[#6A5C52]">
+                            {t.briefingLead}
+                        </p>
+                        <label className="mt-4 block">
+                            <textarea
+                                value={designBrief}
+                                onChange={(e) =>
+                                    setDesignBrief(e.target.value)
+                                }
+                                placeholder={t.briefingPlaceholder}
+                                rows={7}
+                                className="w-full rounded-2xl border px-3 py-3 text-sm leading-relaxed outline-none transition-colors focus:border-[#7A5F45]"
+                                style={{
+                                    borderColor: "#DCCFC0",
+                                    background: "#FFF",
+                                }}
+                            />
+                        </label>
+                        <p className="mt-2 text-xs text-[#7A6A5D]">
+                            {t.briefingHint}
+                        </p>
                     </>
                 ) : null}
 

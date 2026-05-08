@@ -140,7 +140,7 @@ export const SECTION_LABEL_EN: Record<string, string> = {
     faq: "FAQ",
     alojamiento: "Accommodations",
     adultos: "Kids & childcare notes",
-    dietas: "Detailed RSVP (vegan, celiac, etc.)",
+    dietas: "RSVP, dietary preferences, messages",
     otro: "Other",
 };
 
@@ -192,6 +192,8 @@ export function getUiStrings(lang: ConfiguratorLang) {
             seccionesTitle: "Invitation sections",
             seccionesTopNote:
                 "Your invitation already includes up to 5 photos and RSVP confirmation",
+            seccionesTopNoteUnique:
+                "In Unique design you can pick all sections at no extra cost. A 5-block minimum still applies to define the structure.",
             incluyeTitle: "What’s included in your invitation?",
             incluyeOpen: "Tap to close",
             incluyeClosed:
@@ -202,26 +204,41 @@ export function getUiStrings(lang: ConfiguratorLang) {
             incluyeP1After: ". All of that is included.",
             incluyeP2Before: "In this grid you can add",
             incluyeP2Free: "5 free sections",
-            incluyeP2Mid: "(dress code, more photos, story, etc.).",
-            incluyeP2From5: "From the 6th block you select onward,",
-            incluyeP2After: "we add",
-            incluyeP2Each: "each.",
+            incluyeP2Mid:
+                "(dress code, more photos, story, etc.). For the RSVP, dietary preferences, and messages block (to you, DJ, etc.), add the section ",
+            incluyeP2From5: "\"RSVP, dietary preferences, messages\".",
+            incluyeP2After: "Further sections bill extra.",
+            incluyeP2Each: "",
             seccionesCountFoot: "blocks included (free) · Extra",
             seccionesMinThree: "Pick at least 5 blocks to continue.",
             perBlock: "/block",
             sinExtras: "(no extras)",
+            seccionesUniqueIncluded: "(all included)",
+            seccionesSoloConteo: "{{count}} blocks selected",
+            seccionesPremiumCompareNote:
+                "On Premium, each block after the first five adds {{precioPorBloque}}. On Unique design, all blocks are included.",
+            seccionesSummaryUnique:
+                "You selected {{count}} blocks. Minimum 5 to continue — on this plan every section is included, with no extra per-block fee.",
             seccionOtroPh: "Describe the section you want to add…",
             seccionOtroAria: "Describe the section you want to add",
             idiomaTitle: "Language",
             idiomaLead:
-                "Spanish is included by default. You can add a second language.",
+                "Spanish is included by default, and you can add a second language. On the finished invitation, recipients can switch languages with a single tap.",
             idiomaDefault: "Spanish (included by default)",
             noLanguage: "Don’t see your language?",
             typeLanguage: "Type it here",
             addBtn: "Add",
-            secondLangUnique: "Second language included in this plan.",
             secondLangPremiumPrefix: "Second language:",
+            briefingTitle: "Tell us your design vision",
+            briefingLead:
+                "Before the final step, share how you imagine your invitation. Include references, visual style, phrases, palettes, textures, or special effects.",
+            briefingPlaceholder:
+                "Ex: Describe your visual idea, paste reference links or a mood board, and if you have special artwork—your own sketches or illustrations—a looping video in the background, custom fonts… whatever you have in mind helps.",
+            briefingHint:
+                "The more context you share, the more accurate the creative direction can be.",
             extrasTitle: "Add-ons",
+            extrasTitlePart1: "Add-ons (1 of 2)",
+            extrasTitlePart2: "Add-ons (2 of 2)",
             included: "Included",
             verDetalle: "Details",
             ocultarDetalle: "Hide details",
@@ -259,11 +276,14 @@ export function getUiStrings(lang: ConfiguratorLang) {
             none: "None",
             extrasLine: "Add-ons",
             noneExtras: "None",
-            uniqueExtrasNote: "(dashboard included; other add-ons optional)",
+            uniqueExtrasNote:
+                "(custom welcome screen + guest dashboard up to 150 guests included; custom domain & rush optional, paid separately)",
             name1Line: "Name 1",
             name2Line: "Name 2",
             emailLine: "Email",
             eventDateLine: "Event date",
+            headingCreativeBrief: "CREATIVE BRIEF",
+            creativeBriefLine: "Design vision",
         };
     }
     const u = configuradorEs.ui;

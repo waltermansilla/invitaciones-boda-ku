@@ -52,9 +52,10 @@ import { trackGaEvent } from "@/lib/google-analytics";
 import { trackMetaEvent } from "@/lib/meta-pixel";
 import FooterSection from "@/components/wedding/footer-section";
 import pricingData from "@/data/landing/pricing.json";
-
-/** sessionStorage: posición vertical al abrir /configurador (restaurar al volver). */
-const MU_LANDING_RETURN_SCROLL_KEY = "mu-landing-return-scroll";
+import {
+    MU_CONFIG_FROM_LANDING_KEY,
+    MU_LANDING_RETURN_SCROLL_KEY,
+} from "@/lib/configurador-return-nav";
 
 /* ─── Icon registry ─── */
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -225,8 +226,16 @@ export interface LandingData {
             enabled: boolean;
             /** @deprecated No se usa en el hero. */
             languagesBadge?: string;
-            title: { line1: string; line2: string; rotatingWords?: string[] };
+            title: {
+                line1: string;
+                line2: string;
+                rotatingWords?: string[];
+                /** Solo en `landing-2.json`. Si es `false`, la tercera línea es fija (primer ítem de `rotatingWords`). La vista EN toma este valor del español. */
+                rotateWords?: boolean;
+            };
             subtitle: string;
+            /** Texto sobre la flecha que enlaza a `#muestras` (hero compacto). */
+            scrollToModelsHint?: string;
             /** Texto pequeño con icono, justo encima del bloque de opiniones (p. ej. dos idiomas). */
             languagesHint?: string;
             reviews?: {
@@ -1130,9 +1139,9 @@ function Landing2PrimaryPill({
             >
                 <span>{label}</span>
                 {showPriceBelowLabel ? (
-                <span className="mt-0.5 text-[11px] font-medium opacity-90">
-                    {priceLine}
-                </span>
+                    <span className="mt-0.5 text-[11px] font-medium opacity-90">
+                        {priceLine}
+                    </span>
                 ) : null}
             </a>
         );
@@ -1160,9 +1169,9 @@ function Landing2PrimaryPill({
             >
                 <span>{label}</span>
                 {showPriceBelowLabel ? (
-                <span className="mt-0.5 text-[11px] font-medium opacity-90">
-                    {priceLine}
-                </span>
+                    <span className="mt-0.5 text-[11px] font-medium opacity-90">
+                        {priceLine}
+                    </span>
                 ) : null}
             </a>
         );
@@ -1188,9 +1197,9 @@ function Landing2PrimaryPill({
         >
             <span>{label}</span>
             {showPriceBelowLabel ? (
-            <span className="mt-0.5 text-[11px] font-medium opacity-90">
-                {priceLine}
-            </span>
+                <span className="mt-0.5 text-[11px] font-medium opacity-90">
+                    {priceLine}
+                </span>
             ) : null}
         </a>
     );
@@ -1340,7 +1349,13 @@ function FloatingCta({
             cancelAnimationFrame(raf1);
             cancelAnimationFrame(raf2);
         };
-    }, [data.enabled, showAllowed, hiddenBySection, pastPlanes, showAfterPlanes]);
+    }, [
+        data.enabled,
+        showAllowed,
+        hiddenBySection,
+        pastPlanes,
+        showAfterPlanes,
+    ]);
 
     if (!data.enabled) return null;
 
@@ -1775,12 +1790,17 @@ function HeroTdy({
         setLoaded(true);
     }, []);
     const primary = buttons.heroPrimary;
-    const secondary = buttons.heroSecondary;
     const tx = theme.text;
     const rev = data.reviews;
     const rotating = (data.title.rotatingWords ?? []).filter(
         (w) => w.length > 0,
     );
+    const rotateWordsEnabled = data.title.rotateWords !== false;
+    const scrollToModelsHint =
+        data.scrollToModelsHint?.trim() ||
+        (locale === "en"
+            ? "Scroll to see samples"
+            : "Desliza para ver modelos");
     const hint = data.languagesHint?.trim();
 
     return (
@@ -1834,10 +1854,21 @@ function HeroTdy({
                     </span>
                     {rotating.length > 0 ? (
                         <span className="mt-1.5 block min-h-[1.05em]">
-                            <HeroStaggerPhrase
-                                phrases={rotating}
-                                color={theme.accents.softGold}
-                            />
+                            {rotateWordsEnabled ? (
+                                <HeroStaggerPhrase
+                                    phrases={rotating}
+                                    color={theme.accents.softGold}
+                                />
+                            ) : (
+                                <span
+                                    className={HERO_ROTATING_LINE_CLASS}
+                                    style={{
+                                        color: theme.accents.softGold,
+                                    }}
+                                >
+                                    {rotating[0]}
+                                </span>
+                            )}
                         </span>
                     ) : null}
                 </h1>
@@ -2016,7 +2047,10 @@ function HeroTdy({
                 {reviewsTopSimple ? (
                     <div
                         className={`mx-auto flex w-full max-w-[280px] flex-col items-stretch gap-2 sm:max-w-md ${rev?.enabled ? "mt-8" : "mt-10"}`}
-                        style={blockRevealStyle(loaded, rev?.enabled ? 170 : 120)}
+                        style={blockRevealStyle(
+                            loaded,
+                            rev?.enabled ? 170 : 120,
+                        )}
                     >
                         {rev?.enabled ? (
                             rev.url ? (
@@ -2103,22 +2137,26 @@ function HeroTdy({
                             showPriceBelowLabel={false}
                         />
                         <a
-                            href="#incluye"
+                            href="#muestras"
                             onClick={(event) =>
-                                handleLocalAnchorClick(event, "#incluye")
+                                handleLocalAnchorClick(event, "#muestras")
                             }
-                            className="mx-auto mt-7 inline-flex items-center justify-center animate-bounce"
-                            style={{
-                                color: `${tx.muted}B8`,
-                                textDecoration: "none",
-                            }}
-                            aria-label={
-                                locale === "en"
-                                    ? "Scroll down"
-                                    : "Deslizar hacia abajo"
-                            }
+                            className="mx-auto mt-3 flex cursor-pointer flex-col items-center gap-1 no-underline"
                         >
-                            <ChevronDown size={26} aria-hidden />
+                            <span
+                                className="animate-landing-hero-scroll-hint max-w-[18rem] text-center text-[13px] font-medium leading-snug sm:text-sm"
+                                style={{ color: tx.muted }}
+                            >
+                                {scrollToModelsHint}
+                            </span>
+                            <span
+                                className="inline-flex items-center justify-center animate-bounce"
+                                style={{
+                                    color: `${tx.muted}B8`,
+                                }}
+                            >
+                                <ChevronDown size={26} aria-hidden />
+                            </span>
                         </a>
                     </div>
                 ) : (
@@ -2145,18 +2183,6 @@ function HeroTdy({
                                 style={{
                                     background: theme.buttons.floatingBg,
                                     color: theme.buttons.floatingText,
-                                }}
-                            />
-                        )}
-                        {secondary && (
-                            <CtaLink
-                                btn={secondary}
-                                waNumber={waNumber}
-                                className="inline-flex min-h-[52px] items-center justify-center rounded-xl border px-10 py-3 text-[15px] font-semibold shadow-sm transition-colors duration-200 hover:brightness-[0.98]"
-                                style={{
-                                    borderColor: "#7A5F45",
-                                    color: "#7A5F45",
-                                    background: "#F8F1E6",
                                 }}
                             />
                         )}
@@ -3406,352 +3432,365 @@ function EstilosCarousel({
                 cardBaseDelay + i * car.stepBetweenCardsMs,
             ),
         };
-            return (
+        return (
             <button
-                    key={item.titulo}
+                key={item.titulo}
                 type="button"
                 onClick={() => setActiveModel(item)}
                 className={`${cardClass} text-center transition-transform duration-200 hover:scale-[1.01]`}
-                    style={cardStyle}
+                style={cardStyle}
                 aria-label={
                     locale === "en"
                         ? `Open details for ${item.titulo}`
                         : `Abrir detalles de ${item.titulo}`
                 }
-                >
-                    {inner}
+            >
+                {inner}
             </button>
         );
     };
 
     return (
         <>
-        <section
-            id={data.id || "muestras"}
-            className="px-0 py-20 md:py-28"
-            style={{ background: theme.surfaceAlt }}
-        >
-            <div ref={revealRef}>
-                <div className="mx-auto max-w-6xl px-5 md:px-8">
+            <section
+                id={data.id || "muestras"}
+                className="px-0 py-20 md:py-28"
+                style={{ background: theme.surfaceAlt }}
+            >
+                <div ref={revealRef}>
+                    <div className="mx-auto max-w-6xl px-5 md:px-8">
+                        <p
+                            className="text-center text-[11px] font-semibold uppercase tracking-[0.3em]"
+                            style={{
+                                color: theme.accents.softGold,
+                                ...blockRevealStyle(revealed, 0),
+                            }}
+                        >
+                            <StaggerText
+                                text={data.eyebrow}
+                                revealed={revealed}
+                                baseDelayMs={0}
+                                wordStepMs={24}
+                            />
+                        </p>
+                        <h2
+                            className="mt-3 text-center text-3xl font-normal tracking-tight md:text-4xl lg:text-[2.75rem]"
+                            style={{
+                                fontFamily: theme.typography.headingFont,
+                                color: tx.heading,
+                                ...blockRevealStyle(revealed, 55),
+                            }}
+                        >
+                            <StaggerText
+                                text={data.title}
+                                revealed={revealed}
+                                baseDelayMs={55}
+                                wordStepMs={20}
+                            />
+                        </h2>
+                        <p
+                            className="mx-auto mt-4 max-w-2xl text-center text-base"
+                            style={{
+                                color: tx.muted,
+                                ...blockRevealStyle(revealed, 105),
+                            }}
+                        >
+                            <StaggerText
+                                text={data.subtitle}
+                                revealed={revealed}
+                                baseDelayMs={108}
+                                wordStepMs={14}
+                            />
+                        </p>
+                    </div>
+                    {showKindSplit ? (
+                        <div className="mt-4 space-y-12 md:space-y-16">
+                            {kindGroups.map((group, groupIndex) => {
+                                const cardOffset = kindGroups
+                                    .slice(0, groupIndex)
+                                    .reduce((n, g) => n + g.items.length, 0);
+                                return (
+                                    <div
+                                        key={group.kind}
+                                        id={`estilos-grupo-${group.kind}`}
+                                        className="scroll-mt-28"
+                                    >
+                                        <div className="mx-auto max-w-6xl px-5 md:px-8">
+                                            <h3
+                                                className="text-lg font-medium tracking-tight md:text-xl"
+                                                style={{
+                                                    fontFamily:
+                                                        theme.typography
+                                                            .headingFont,
+                                                    color: tx.heading,
+                                                    ...blockRevealStyle(
+                                                        revealed,
+                                                        128 + groupIndex * 20,
+                                                    ),
+                                                }}
+                                            >
+                                                {estiloCatalogGroupTitle(
+                                                    group.kind,
+                                                    locale,
+                                                )}
+                                            </h3>
+                                        </div>
+                                        <div
+                                            className={`mt-4 ${estilosCarouselRowClass}`}
+                                        >
+                                            {group.items.map((item, li) =>
+                                                renderEstiloCard(
+                                                    item,
+                                                    cardOffset + li,
+                                                ),
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className={`mt-12 ${estilosCarouselRowClass}`}>
+                            {data.items.map((item, i) =>
+                                renderEstiloCard(item, i),
+                            )}
+                        </div>
+                    )}
+                    {endHeroPrimaryCta ? (
+                        <div
+                            className="mx-auto mt-12 flex w-full max-w-[280px] flex-col items-stretch sm:max-w-md"
+                            style={blockRevealStyle(
+                                revealed,
+                                cardBaseDelay +
+                                    data.items.length * car.stepBetweenCardsMs +
+                                    car.footerAfterCardsExtraMs +
+                                    95,
+                            )}
+                        >
+                            <Landing2PrimaryPill
+                                primary={endHeroPrimaryCta.primary}
+                                theme={theme}
+                                locale={endHeroPrimaryCta.locale}
+                                waNumber={waNumber}
+                                trackingSource="muestras_mid"
+                            />
+                        </div>
+                    ) : null}
                     <p
-                        className="text-center text-[11px] font-semibold uppercase tracking-[0.3em]"
-                        style={{
-                            color: theme.accents.softGold,
-                            ...blockRevealStyle(revealed, 0),
-                        }}
-                    >
-                        <StaggerText
-                            text={data.eyebrow}
-                            revealed={revealed}
-                            baseDelayMs={0}
-                            wordStepMs={24}
-                        />
-                    </p>
-                    <h2
-                        className="mt-3 text-center text-3xl font-normal tracking-tight md:text-4xl lg:text-[2.75rem]"
-                        style={{
-                            fontFamily: theme.typography.headingFont,
-                            color: tx.heading,
-                            ...blockRevealStyle(revealed, 55),
-                        }}
-                    >
-                        <StaggerText
-                            text={data.title}
-                            revealed={revealed}
-                            baseDelayMs={55}
-                            wordStepMs={20}
-                        />
-                    </h2>
-                    <p
-                        className="mx-auto mt-4 max-w-2xl text-center text-base"
+                        className="mt-10 px-5 text-center text-xs leading-relaxed md:px-8 md:text-[13px]"
                         style={{
                             color: tx.muted,
-                            ...blockRevealStyle(revealed, 105),
+                            ...blockRevealStyle(
+                                revealed,
+                                cardBaseDelay +
+                                    data.items.length * car.stepBetweenCardsMs +
+                                    car.footerAfterCardsExtraMs,
+                            ),
                         }}
                     >
                         <StaggerText
-                            text={data.subtitle}
-                            revealed={revealed}
-                            baseDelayMs={108}
-                            wordStepMs={14}
-                        />
-                    </p>
-                </div>
-                {showKindSplit ? (
-                    <div className="mt-4 space-y-12 md:space-y-16">
-                        {kindGroups.map((group, groupIndex) => {
-                            const cardOffset = kindGroups
-                                .slice(0, groupIndex)
-                                .reduce((n, g) => n + g.items.length, 0);
-                            return (
-                                <div
-                                    key={group.kind}
-                                    id={`estilos-grupo-${group.kind}`}
-                                    className="scroll-mt-28"
-                                >
-                                    <div className="mx-auto max-w-6xl px-5 md:px-8">
-                                        <h3
-                                            className="text-lg font-medium tracking-tight md:text-xl"
-                                            style={{
-                                                fontFamily:
-                                                    theme.typography
-                                                        .headingFont,
-                                                color: tx.heading,
-                                                ...blockRevealStyle(
-                                                    revealed,
-                                                    128 + groupIndex * 20,
-                                                ),
-                                            }}
-                                        >
-                                            {estiloCatalogGroupTitle(
-                                                group.kind,
-                                                locale,
-                                            )}
-                                        </h3>
-                                    </div>
-                                    <div
-                                        className={`mt-4 ${estilosCarouselRowClass}`}
-                                    >
-                                        {group.items.map((item, li) =>
-                                            renderEstiloCard(
-                                                item,
-                                                cardOffset + li,
-                                            ),
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                ) : (
-                    <div className={`mt-12 ${estilosCarouselRowClass}`}>
-                        {data.items.map((item, i) => renderEstiloCard(item, i))}
-                    </div>
-                )}
-                {endHeroPrimaryCta ? (
-                    <div
-                        className="mx-auto mt-12 flex w-full max-w-[280px] flex-col items-stretch sm:max-w-md"
-                        style={blockRevealStyle(
-                            revealed,
-                            cardBaseDelay +
-                                data.items.length * car.stepBetweenCardsMs +
-                                car.footerAfterCardsExtraMs +
-                                95,
-                        )}
-                    >
-                        <Landing2PrimaryPill
-                            primary={endHeroPrimaryCta.primary}
-                            theme={theme}
-                            locale={endHeroPrimaryCta.locale}
-                            waNumber={waNumber}
-                            trackingSource="muestras_mid"
-                        />
-                    </div>
-                ) : null}
-                <p
-                    className="mt-10 px-5 text-center text-xs leading-relaxed md:px-8 md:text-[13px]"
-                    style={{
-                        color: tx.muted,
-                        ...blockRevealStyle(
-                            revealed,
-                            cardBaseDelay +
-                                data.items.length * car.stepBetweenCardsMs +
-                                car.footerAfterCardsExtraMs,
-                        ),
-                    }}
-                >
-                    <StaggerText
-                        text={data.noStylePrompt}
-                        revealed={revealed}
-                        baseDelayMs={
-                            cardBaseDelay +
-                            data.items.length * car.stepBetweenCardsMs +
-                            car.footerAfterCardsExtraMs +
-                            18
-                        }
-                        wordStepMs={10}
-                    />{" "}
-                    <a
-                        href={waNoStyle}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(event) => {
-                            event.preventDefault();
-                            const ok = window.confirm(noStyleConfirmMessage);
-                            if (!ok) return;
-                            window.open(
-                                waNoStyle,
-                                "_blank",
-                                "noopener,noreferrer",
-                            );
-                        }}
-                        className="font-semibold underline decoration-1 underline-offset-[3px]"
-                        style={{ color: tx.link }}
-                    >
-                        <StaggerText
-                            text={data.noStyleCta}
+                            text={data.noStylePrompt}
                             revealed={revealed}
                             baseDelayMs={
                                 cardBaseDelay +
                                 data.items.length * car.stepBetweenCardsMs +
                                 car.footerAfterCardsExtraMs +
-                                32
+                                18
                             }
-                            wordStepMs={12}
-                        />
-                    </a>
-                </p>
-            </div>
-        </section>
-        {activeModel ? (
-            <div
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="modelo-modal-title"
-                className="fixed inset-0 z-[220] flex items-end justify-center bg-[rgba(22,14,10,0.72)] p-3 backdrop-blur-[4px] sm:items-center sm:p-6"
-                onClick={() => setActiveModel(null)}
-            >
-                <div
-                    className="relative w-full max-w-4xl overflow-hidden rounded-[34px] border border-[#CDB69D] bg-gradient-to-b from-[#FFFDF8] via-[#F8F0E5] to-[#EFE2D2] shadow-[0_40px_110px_rgba(24,15,10,0.45)]"
-                    onClick={(event) => event.stopPropagation()}
-                >
-                    <button
-                        type="button"
-                        onClick={() => setActiveModel(null)}
-                        aria-label={locale === "en" ? "Close modal" : "Cerrar modal"}
-                        className="absolute right-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF9F1]/85 text-[#7A5F45] backdrop-blur-md transition-colors hover:bg-[#FFF3E4]"
-                    >
-                        <X size={18} />
-                    </button>
-                    <div
-                        className="max-h-[92dvh] overflow-y-auto overscroll-contain px-4 py-6 sm:px-6 sm:py-8"
-                        style={{
-                            WebkitOverflowScrolling: "touch",
-                            touchAction: "pan-y",
-                        }}
-                    >
-                    <h3
-                        id="modelo-modal-title"
-                        className="pr-8 text-2xl font-normal text-[#3D2A1F] sm:text-3xl"
-                        style={{ fontFamily: theme.typography.headingFont }}
-                    >
-                        {activeModel.titulo}
-                    </h3>
-                    {activeModel.descripcion ? (
-                        <p className="mt-1 text-sm text-[#6A5C52]">
-                            {activeModel.descripcion}
-                        </p>
-                    ) : null}
-                    <div
-                        className="mt-4 relative overflow-hidden rounded-2xl border border-[#E7DFD4] shadow-[0_10px_28px_rgba(48,32,20,0.12)]"
-                        style={{ background: theme.surfaceAlt }}
-                    >
-                        <div
-                            className="relative aspect-[9/16]"
-                            style={{ background: theme.surfaceAlt }}
+                            wordStepMs={10}
+                        />{" "}
+                        <a
+                            href={waNoStyle}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(event) => {
+                                event.preventDefault();
+                                const ok = window.confirm(
+                                    noStyleConfirmMessage,
+                                );
+                                if (!ok) return;
+                                window.open(
+                                    waNoStyle,
+                                    "_blank",
+                                    "noopener,noreferrer",
+                                );
+                            }}
+                            className="font-semibold underline decoration-1 underline-offset-[3px]"
+                            style={{ color: tx.link }}
                         >
-                            <CatalogMedia
-                                image={activeModel.image}
-                                videoSrc={activeModel.videoSrc}
-                                alt={activeModel.titulo}
-                                imageObjectFit="contain"
+                            <StaggerText
+                                text={data.noStyleCta}
+                                revealed={revealed}
+                                baseDelayMs={
+                                    cardBaseDelay +
+                                    data.items.length * car.stepBetweenCardsMs +
+                                    car.footerAfterCardsExtraMs +
+                                    32
+                                }
+                                wordStepMs={12}
                             />
-                            {activeModel.href ? (
-                                <a
-                                    href={activeModel.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full border border-white/50 bg-[#3F3127]/75 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-[#3F3127]/90"
+                        </a>
+                    </p>
+                </div>
+            </section>
+            {activeModel ? (
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="modelo-modal-title"
+                    className="fixed inset-0 z-[220] flex items-end justify-center bg-[rgba(22,14,10,0.72)] p-3 backdrop-blur-[4px] sm:items-center sm:p-6"
+                    onClick={() => setActiveModel(null)}
+                >
+                    <div
+                        className="relative w-full max-w-4xl overflow-hidden rounded-[34px] border border-[#CDB69D] bg-gradient-to-b from-[#FFFDF8] via-[#F8F0E5] to-[#EFE2D2] shadow-[0_40px_110px_rgba(24,15,10,0.45)]"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <button
+                            type="button"
+                            onClick={() => setActiveModel(null)}
+                            aria-label={
+                                locale === "en" ? "Close modal" : "Cerrar modal"
+                            }
+                            className="absolute right-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF9F1]/85 text-[#7A5F45] backdrop-blur-md transition-colors hover:bg-[#FFF3E4]"
+                        >
+                            <X size={18} />
+                        </button>
+                        <div
+                            className="max-h-[92dvh] overflow-y-auto overscroll-contain px-4 py-6 sm:px-6 sm:py-8"
+                            style={{
+                                WebkitOverflowScrolling: "touch",
+                                touchAction: "pan-y",
+                            }}
+                        >
+                            <h3
+                                id="modelo-modal-title"
+                                className="pr-8 text-2xl font-normal text-[#3D2A1F] sm:text-3xl"
+                                style={{
+                                    fontFamily: theme.typography.headingFont,
+                                }}
+                            >
+                                {activeModel.titulo}
+                            </h3>
+                            {activeModel.descripcion ? (
+                                <p className="mt-1 text-sm text-[#6A5C52]">
+                                    {activeModel.descripcion}
+                                </p>
+                            ) : null}
+                            <div
+                                className="mt-4 relative overflow-hidden rounded-2xl border border-[#E7DFD4] shadow-[0_10px_28px_rgba(48,32,20,0.12)]"
+                                style={{ background: theme.surfaceAlt }}
+                            >
+                                <div
+                                    className="relative aspect-[9/16]"
+                                    style={{ background: theme.surfaceAlt }}
                                 >
-                                    {locale === "en" ? "View invitation" : "Ver invitación"}
-                                    <ChevronRight size={15} />
-                                </a>
+                                    <CatalogMedia
+                                        image={activeModel.image}
+                                        videoSrc={activeModel.videoSrc}
+                                        alt={activeModel.titulo}
+                                        imageObjectFit="contain"
+                                    />
+                                    {activeModel.href ? (
+                                        <a
+                                            href={activeModel.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full border border-white/50 bg-[#3F3127]/75 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-[#3F3127]/90"
+                                        >
+                                            {locale === "en"
+                                                ? "View invitation"
+                                                : "Ver invitación"}
+                                            <ChevronRight size={15} />
+                                        </a>
+                                    ) : null}
+                                </div>
+                            </div>
+                            <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-4 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
+                                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
+                                    {locale === "en"
+                                        ? "What stands out in this sample"
+                                        : "Lo destacable de esta muestra"}
+                                </p>
+                                <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-snug text-[#5A4A3F]">
+                                    {activeModelHighlights.map((line) => (
+                                        <li key={line}>{line}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-3 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
+                                <div className="flex flex-col gap-3 md:grid md:grid-cols-[minmax(240px,1fr)_180px] md:items-start">
+                                    <div className="min-w-0">
+                                        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
+                                            {panelAvailableTitle}
+                                        </p>
+                                        <p className="mt-1 text-xs leading-snug text-[#6A5C52]">
+                                            {panelAvailableCopy}
+                                        </p>
+                                    </div>
+                                    <div className="relative mx-auto w-full max-w-[180px] shrink-0 overflow-hidden rounded-lg md:mx-0">
+                                        <div className="relative aspect-[9/16] w-full">
+                                            <Image
+                                                src={
+                                                    panelPreviewImageSrc ||
+                                                    "/landing/media/images/panel.PNG"
+                                                }
+                                                alt={
+                                                    panelPreviewImageAlt ||
+                                                    (locale === "en"
+                                                        ? "Guest dashboard preview"
+                                                        : "Vista previa del panel de invitados")
+                                                }
+                                                fill
+                                                className="object-contain"
+                                                sizes="(max-width: 768px) 46vw, 180px"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p
+                                className="mx-auto my-8 max-w-2xl text-center text-[1.45rem] font-normal leading-tight text-[#3D2A1F] sm:my-10 sm:text-[1.75rem]"
+                                style={{
+                                    fontFamily: theme.typography.headingFont,
+                                }}
+                            >
+                                {modalPitch}
+                            </p>
+                            {premiumLeadButton ? (
+                                <div className="mt-4 flex flex-col items-center gap-1">
+                                    <CtaLink
+                                        btn={{
+                                            ...premiumLeadButton,
+                                            text:
+                                                locale === "en"
+                                                    ? "Start my invitation"
+                                                    : "Comenzar mi invitación",
+                                        }}
+                                        waNumber={waNumber}
+                                        trackingEvent="Lead"
+                                        trackingSource="plan_premium"
+                                        className="inline-flex min-h-[56px] w-auto min-w-[250px] flex-col items-center justify-center rounded-full px-6 py-3 text-[15px] font-semibold leading-tight shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99]"
+                                        style={{
+                                            background:
+                                                theme.buttons.floatingBg,
+                                            color: theme.buttons.floatingText,
+                                        }}
+                                    >
+                                        <span className="text-[15px] font-semibold">
+                                            {locale === "en"
+                                                ? "Start my invitation"
+                                                : "Comenzar mi invitación"}
+                                        </span>
+                                        <span className="mt-0.5 text-xs font-medium opacity-90">
+                                            {premiumPriceLabel}
+                                        </span>
+                                    </CtaLink>
+                                </div>
                             ) : null}
                         </div>
                     </div>
-                    <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-4 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
-                        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
-                            {locale === "en"
-                                ? "What stands out in this sample"
-                                : "Lo destacable de esta muestra"}
-                        </p>
-                        <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-snug text-[#5A4A3F]">
-                            {activeModelHighlights.map((line) => (
-                                <li key={line}>{line}</li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-3 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
-                        <div className="flex flex-col gap-3 md:grid md:grid-cols-[minmax(240px,1fr)_180px] md:items-start">
-                            <div className="min-w-0">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
-                                    {panelAvailableTitle}
-                                </p>
-                                <p className="mt-1 text-xs leading-snug text-[#6A5C52]">
-                                    {panelAvailableCopy}
-                                </p>
-                            </div>
-                            <div className="relative mx-auto w-full max-w-[180px] shrink-0 overflow-hidden rounded-lg md:mx-0">
-                                <div className="relative aspect-[9/16] w-full">
-                                    <Image
-                                        src={
-                                            panelPreviewImageSrc ||
-                                            "/landing/media/images/panel.PNG"
-                                        }
-                                        alt={
-                                            panelPreviewImageAlt ||
-                                            (locale === "en"
-                                                ? "Guest dashboard preview"
-                                                : "Vista previa del panel de invitados")
-                                        }
-                                        fill
-                                        className="object-contain"
-                                        sizes="(max-width: 768px) 46vw, 180px"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p
-                        className="mx-auto my-8 max-w-2xl text-center text-[1.45rem] font-normal leading-tight text-[#3D2A1F] sm:my-10 sm:text-[1.75rem]"
-                        style={{ fontFamily: theme.typography.headingFont }}
-                    >
-                        {modalPitch}
-                    </p>
-                    {premiumLeadButton ? (
-                        <div className="mt-4 flex flex-col items-center gap-1">
-                            <CtaLink
-                                btn={{
-                                    ...premiumLeadButton,
-                                    text:
-                                        locale === "en"
-                                            ? "Start my invitation"
-                                            : "Comenzar mi invitación",
-                                }}
-                                waNumber={waNumber}
-                                trackingEvent="Lead"
-                                trackingSource="plan_premium"
-                                className="inline-flex min-h-[56px] w-auto min-w-[250px] flex-col items-center justify-center rounded-full px-6 py-3 text-[15px] font-semibold leading-tight shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99]"
-                                style={{
-                                    background: theme.buttons.floatingBg,
-                                    color: theme.buttons.floatingText,
-                                }}
-                            >
-                                <span className="text-[15px] font-semibold">
-                                    {locale === "en"
-                                        ? "Start my invitation"
-                                        : "Comenzar mi invitación"}
-                                </span>
-                                <span className="mt-0.5 text-xs font-medium opacity-90">
-                                    {premiumPriceLabel}
-                                </span>
-                            </CtaLink>
-                    </div>
-                ) : null}
-            </div>
                 </div>
-            </div>
-        ) : null}
+            ) : null}
         </>
     );
 }
@@ -4065,7 +4104,10 @@ function PanelSection({
                                     className="rounded-2xl px-4 py-4 shadow-lg"
                                     style={{
                                         background: "#EDE6DC",
-                                        ...blockRevealStyle(revealed, 265 + i * 72),
+                                        ...blockRevealStyle(
+                                            revealed,
+                                            265 + i * 72,
+                                        ),
                                     }}
                                 >
                                     <span
@@ -4084,7 +4126,8 @@ function PanelSection({
                                     <h3
                                         className="mt-1 text-base font-normal leading-tight"
                                         style={{
-                                            fontFamily: theme.typography.headingFont,
+                                            fontFamily:
+                                                theme.typography.headingFont,
                                             color: tx.heading,
                                         }}
                                     >
@@ -4139,85 +4182,90 @@ function PanelSection({
                                 ...blockRevealStyle(revealed, 195),
                             }}
                         >
-                        <div className="p-6 md:p-10">
-                            <div className="grid grid-cols-3 gap-3 md:gap-4">
-                                {data.stats.map((s) => (
-                                    <div
-                                        key={s.label}
-                                        className="rounded-xl border p-4 text-center"
-                                        style={{
-                                            borderColor: theme.cardBorder,
-                                            background: theme.surfaceAlt,
-                                        }}
-                                    >
-                                        <p
-                                            className="text-3xl font-normal tabular-nums"
-                                            style={{
-                                                fontFamily:
-                                                    theme.typography
-                                                        .headingFont,
-                                                color: tx.heading,
-                                            }}
-                                        >
-                                            {s.value}
-                                        </p>
-                                        <p
-                                            className="mt-1 text-xs font-medium uppercase tracking-wider"
-                                            style={{ color: tx.muted }}
-                                        >
-                                            {s.label}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                            <div
-                                className="mt-6 rounded-xl border p-4 md:p-6"
-                                style={{ borderColor: theme.cardBorder }}
-                            >
-                                <div className="mb-4 flex justify-between text-sm">
-                                    <span
-                                        className="font-medium"
-                                        style={{ color: tx.heading }}
-                                    >
-                                        {data.guestListTitle}
-                                    </span>
-                                    <span style={{ color: tx.muted }}>
-                                        {data.guestListTotal}
-                                    </span>
-                                </div>
-                                <ul className="space-y-2">
-                                    {data.sampleGuests.map((g) => (
-                                        <li
-                                            key={g.name}
-                                            className="flex justify-between rounded-lg border px-3 py-2 text-sm"
+                            <div className="p-6 md:p-10">
+                                <div className="grid grid-cols-3 gap-3 md:gap-4">
+                                    {data.stats.map((s) => (
+                                        <div
+                                            key={s.label}
+                                            className="rounded-xl border p-4 text-center"
                                             style={{
                                                 borderColor: theme.cardBorder,
+                                                background: theme.surfaceAlt,
                                             }}
                                         >
-                                            <span style={{ color: tx.body }}>
-                                                {g.name}
-                                            </span>
-                                            {g.note ? (
-                                                <span
-                                                    style={{ color: tx.muted }}
-                                                >
-                                                    {g.note}
-                                                </span>
-                                            ) : null}
-                                        </li>
+                                            <p
+                                                className="text-3xl font-normal tabular-nums"
+                                                style={{
+                                                    fontFamily:
+                                                        theme.typography
+                                                            .headingFont,
+                                                    color: tx.heading,
+                                                }}
+                                            >
+                                                {s.value}
+                                            </p>
+                                            <p
+                                                className="mt-1 text-xs font-medium uppercase tracking-wider"
+                                                style={{ color: tx.muted }}
+                                            >
+                                                {s.label}
+                                            </p>
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
+                                <div
+                                    className="mt-6 rounded-xl border p-4 md:p-6"
+                                    style={{ borderColor: theme.cardBorder }}
+                                >
+                                    <div className="mb-4 flex justify-between text-sm">
+                                        <span
+                                            className="font-medium"
+                                            style={{ color: tx.heading }}
+                                        >
+                                            {data.guestListTitle}
+                                        </span>
+                                        <span style={{ color: tx.muted }}>
+                                            {data.guestListTotal}
+                                        </span>
+                                    </div>
+                                    <ul className="space-y-2">
+                                        {data.sampleGuests.map((g) => (
+                                            <li
+                                                key={g.name}
+                                                className="flex justify-between rounded-lg border px-3 py-2 text-sm"
+                                                style={{
+                                                    borderColor:
+                                                        theme.cardBorder,
+                                                }}
+                                            >
+                                                <span
+                                                    style={{ color: tx.body }}
+                                                >
+                                                    {g.name}
+                                                </span>
+                                                {g.note ? (
+                                                    <span
+                                                        style={{
+                                                            color: tx.muted,
+                                                        }}
+                                                    >
+                                                        {g.note}
+                                                    </span>
+                                                ) : null}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <p
+                                    className="mt-4 text-center text-xs"
+                                    style={{ color: tx.caption }}
+                                >
+                                    Screenshot:{" "}
+                                    <code className="rounded bg-black/[0.06] px-1">
+                                        sections.panel.imageSrc
+                                    </code>
+                                </p>
                             </div>
-                            <p
-                                className="mt-4 text-center text-xs"
-                                style={{ color: tx.caption }}
-                            >
-                                Screenshot:{" "}
-                                <code className="rounded bg-black/[0.06] px-1">
-                                    sections.panel.imageSrc
-                                </code>
-                            </p>
-                        </div>
                         </div>
                     )}
                 </div>
@@ -4427,12 +4475,12 @@ function PlanesTdy({
                                             )}
                                         </span>
                                     ) : (
-                                    <StaggerText
-                                        text={plan.description}
-                                        revealed={revealed}
-                                        baseDelayMs={214 + i * 75}
-                                        wordStepMs={10}
-                                    />
+                                        <StaggerText
+                                            text={plan.description}
+                                            revealed={revealed}
+                                            baseDelayMs={214 + i * 75}
+                                            wordStepMs={10}
+                                        />
                                     )}
                                 </p>
                                 {data.showPrices && (
@@ -4485,14 +4533,14 @@ function PlanesTdy({
                                                             )}
                                                         </span>
                                                     ) : (
-                                                    <StaggerText
-                                                        text={f}
-                                                        revealed={revealed}
-                                                        baseDelayMs={
-                                                            232 + i * 75
-                                                        }
-                                                        wordStepMs={9}
-                                                    />
+                                                        <StaggerText
+                                                            text={f}
+                                                            revealed={revealed}
+                                                            baseDelayMs={
+                                                                232 + i * 75
+                                                            }
+                                                            wordStepMs={9}
+                                                        />
                                                     )}
                                                 </span>
                                             </li>
@@ -4834,7 +4882,18 @@ export default function LandingPageHome({
     const [locale, setLocale] = useState<LandingLocale>(initialLocale);
     const baseData = locale === "en" && dataEn ? dataEn : dataEs;
     const data = useMemo(() => {
-        const pricedData = applyPricingToLandingData(baseData, locale);
+        let pricedData = applyPricingToLandingData(baseData, locale);
+        /** `rotateWords` solo está en `landing-2.json`; al ver EN se toma de ahí. */
+        const rotateWordsEs = dataEs.sections.hero.title?.rotateWords;
+        const titleRw = pricedData.sections.hero?.title?.rotateWords;
+        if (
+            pricedData.sections.hero?.title &&
+            titleRw !== rotateWordsEs
+        ) {
+            pricedData = structuredClone(pricedData) as LandingData;
+            pricedData.sections.hero.title.rotateWords = rotateWordsEs;
+        }
+
         const from = pricedData.pageLayout?.configuradorFromQuery;
         if (!from) return pricedData;
 
@@ -4848,7 +4907,7 @@ export default function LandingPageHome({
             btn.url = `${path}?${params.toString()}`;
         });
         return next;
-    }, [baseData, locale]);
+    }, [baseData, locale, dataEs]);
     const theme = useMemo(() => mergeTheme(baseData.theme), [baseData.theme]);
     const themeAlt = useMemo<LandingTheme>(
         () => ({
@@ -4882,6 +4941,14 @@ export default function LandingPageHome({
 
     useLayoutEffect(() => {
         if (typeof window === "undefined") return;
+        try {
+            if (sessionStorage.getItem(MU_LANDING_RETURN_SCROLL_KEY) !== null) {
+                return;
+            }
+        } catch {
+            /* private mode */
+        }
+
         const prev = window.history.scrollRestoration;
         window.history.scrollRestoration = "manual";
         const resetTop = () =>
@@ -4909,6 +4976,7 @@ export default function LandingPageHome({
                     MU_LANDING_RETURN_SCROLL_KEY,
                     String(window.scrollY),
                 );
+                sessionStorage.setItem(MU_CONFIG_FROM_LANDING_KEY, "1");
             } catch {
                 /* private mode / quota */
             }
@@ -4918,15 +4986,10 @@ export default function LandingPageHome({
             document.removeEventListener("click", onClickCapture, true);
     }, []);
 
+    /** Restaura scroll tras volver del configurador. No debe depender de `locale`:
+     *  con `?lang=en` el primer layout aún tiene locale por defecto y antes se omitía la restauración. */
     useLayoutEffect(() => {
         if (typeof window === "undefined") return;
-        if (syncLocaleFromSearch) {
-            const urlLang =
-                new URLSearchParams(window.location.search).get("lang") === "en"
-                    ? "en"
-                    : "es";
-            if (locale !== urlLang) return;
-        }
 
         let raw: string | null = null;
         try {
@@ -4943,15 +5006,16 @@ export default function LandingPageHome({
         const top = Number.parseInt(raw, 10);
         if (!Number.isFinite(top) || top < 0) return;
 
-        const apply = () => window.scrollTo(0, top);
+        const apply = () => window.scrollTo({ top, left: 0, behavior: "auto" });
         apply();
         requestAnimationFrame(() => {
             apply();
             requestAnimationFrame(apply);
         });
-        const t = window.setTimeout(apply, 220);
-        return () => window.clearTimeout(t);
-    }, [locale, syncLocaleFromSearch]);
+        const delays = [120, 260, 420, 620];
+        const timers = delays.map((ms) => window.setTimeout(apply, ms));
+        return () => timers.forEach((tid) => window.clearTimeout(tid));
+    }, []);
 
     const pageLayout = data.pageLayout;
     const compactHeroLayout = Boolean(pageLayout?.reviewsTopSimple);
@@ -5064,26 +5128,26 @@ export default function LandingPageHome({
                     {postEstilosRows
                         .filter((row) => row.id !== "panel")
                         .map((row, i) => (
-                        <Fragment key={`post-estilos-${i}-${row.id}`}>
-                            {renderLandingPostEstilosSection(row, {
-                                sections,
-                                theme,
-                                themeAlt,
-                                ctaButtons,
-                                wa,
-                                modelsLink,
-                                compactHeroLayout,
-                                locale,
-                                showLang,
-                            })}
+                            <Fragment key={`post-estilos-${i}-${row.id}`}>
+                                {renderLandingPostEstilosSection(row, {
+                                    sections,
+                                    theme,
+                                    themeAlt,
+                                    ctaButtons,
+                                    wa,
+                                    modelsLink,
+                                    compactHeroLayout,
+                                    locale,
+                                    showLang,
+                                })}
                                 {row.id === "servicio" ? (
                                     <ComparativaSection
                                         data={sections.comparativa}
                                         theme={theme}
                                     />
                                 ) : null}
-                        </Fragment>
-                    ))}
+                            </Fragment>
+                        ))}
                 </>
             ) : (
                 <>

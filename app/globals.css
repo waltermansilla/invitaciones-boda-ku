@@ -56,6 +56,15 @@
   --sidebar-ring: #1A1A1A;
 }
 
+/*
+  Por defecto el sitio es tema claro (landing, configurador, detalles, etc.).
+  Ayuda a que el modo oscuro del SO no re-tinte tanto la UI del navegador.
+  La ruta /base/[token] fuerza oscuro en su layout.
+*/
+html {
+  color-scheme: light;
+}
+
 @theme inline {
   --font-sans: inherit;
   --font-serif: 'Playfair Display', 'Playfair Display Fallback', Georgia, serif;
@@ -192,6 +201,28 @@
 
 .animate-icon-touch {
   animation: iconTouch 0.45s ease-out;
+}
+
+/* Hero landing: “Desliza para ver modelos” — pulso suave de opacidad */
+@keyframes landingHeroScrollHint {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-landing-hero-scroll-hint {
+  animation: landingHeroScrollHint 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-landing-hero-scroll-hint {
+    animation: none;
+    opacity: 0.85;
+  }
 }
 
 /* CTA flotante landing home: estrellas decorativas */

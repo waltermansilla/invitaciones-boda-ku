@@ -149,14 +149,9 @@
     },
     "ctaButtons": {
         "heroPrimary": {
-            "text": "Quiero mi invitación",
-            "type": "anchor",
-            "anchor": "#muestras"
-        },
-        "heroSecondary": {
-            "text": "Ver muestras",
-            "type": "anchor",
-            "anchor": "#muestras"
+            "text": "Reservar invitación",
+            "type": "link",
+            "url": "/configurador?plan=premium"
         },
         "planPremium": {
             "text": "Reservar Premium",
@@ -166,7 +161,7 @@
         "planDisenoUnico": {
             "text": "Reservar Diseño único",
             "type": "link",
-            "url": "/configurador?plan=diseno-unico&start=idioma"
+            "url": "/configurador?plan=diseno-unico"
         }
     },
     "sections": {
@@ -176,15 +171,17 @@
                 "line1": "Invitaciones digitales",
                 "line2": "para tu",
                 "rotatingWords": [
-                    "Momento único",
+                    "Momento Único",
                     "recuerdo único",
                     "noche única",
                     "historia única",
                     "evento único",
                     "fiesta única"
-                ]
+                ],
+                "rotateWords": false
             },
-            "subtitle": "Con RSVP, lista de invitados, mapa, música y un diseño pensado para emocionar. Un solo pago, sin suscripciones.",
+            "subtitle": "Con RSVP, lista de invitados, mapa, música y un diseño minimalista que te encantará. Un solo pago, sin suscripciones.",
+            "scrollToModelsHint": "Deslizá para ver modelos",
             "languagesHint": "Tu invitación, multilingüe",
             "reviews": {
                 "enabled": true,
@@ -392,7 +389,7 @@
                 {
                     "image": "/landing/media/images/indiana-xv.jpeg",
                     "titulo": "Indiana",
-                    "descripcion": "Identidad XV marcada, RSVP y secciones especiales.",
+                    "descripcion": "Identidad XV marcada, RSVP, dietas, mensajes y secciones especiales.",
                     "href": "/m/xv/indiana"
                 },
                 {
@@ -416,17 +413,17 @@
                 "/m/boda/carolina-jose": [
                     "Recorrido con historia, galería y detalles del evento.",
                     "Composición limpia con foco en contenidos clave.",
-                    "RSVP integrado para centralizar respuestas."
+                    "Formulario RSVP, dietas, mensajes para centralizar respuestas."
                 ],
                 "/m/boda/yesica-hernan": [
                     "Diseño más premium con estética floral.",
                     "Combina historia, galería y secciones especiales.",
-                    "RSVP detallado para confirmar con más datos."
+                    "RSVP, dietas, mensajes para confirmar con más datos."
                 ],
                 "/m/boda/anto-walter": [
                     "Recorrido narrativo con historia de pareja y trivia interactiva.",
                     "Múltiples ubicaciones con itinerario bien definido.",
-                    "Confirmación detallada tipo formulario (RSVP)."
+                    "Confirmación detallada con la sección RSVP, dietas, mensajes."
                 ],
                 "/m/boda/mirta-pelu": [
                     "Paleta cálida ideal para bodas de oro o aniversarios.",
@@ -441,7 +438,7 @@
                 "/m/xv/dasha": [
                     "Estilo mágico y bloques blanco y negro.",
                     "Incluye trivia y sección para compartir fotos.",
-                    "Confirmación detallada tipo formulario."
+                    "RSVP, dietas, mensajes — confirmación detallada por formulario."
                 ],
                 "/m/xv/carmela": [
                     "Sin fotos, centrado en portada elegante.",
@@ -451,7 +448,7 @@
                 "/m/xv/indiana": [
                     "Blanco/negro + estrellado.",
                     "Alias para regalos + sección fotos Google Drive.",
-                    "RSVP práctico para confirmar asistencia."
+                    "RSVP, dietas, mensajes para confirmar asistencia."
                 ],
                 "/m/baby/maxima": [
                     "Estilo dulce y limpio para baby shower.",
@@ -637,8 +634,8 @@
                     "features": [
                         "Diseño completo a tu medida",
                         "Todas las secciones disponibles incluidas",
-                        "Panel de invitados en tiempo real incluido",
-                        "Segundo idioma incluido"
+                        "Pantalla de bienvenida personalizada incluida",
+                        "Panel de invitados (hasta 150) incluido; segundo idioma opcional con cargo"
                     ]
                 }
             ],
@@ -674,7 +671,7 @@
                 },
                 {
                     "question": "¿Qué diferencia hay entre confirmaciones de asistencia por WhatsApp y usar Panel?",
-                    "answer": "Con WhatsApp te llegan las confirmaciones por mensaje. Muchas veces es suficiente, pero si tenés muchos invitados o querés evitar llevar la cuenta de quienes confirmaron, te recomendamos el Panel. Con panel, todo se ordena en un tablero en tiempo real (asisten, pendientes, no asisten y dietas)."
+                    "answer": "Con WhatsApp te llegan las confirmaciones por mensaje. Muchas veces es suficiente, pero si tenés muchos invitados o querés evitar llevar la cuenta de quienes confirmaron, te recomendamos el Panel. Con panel, todo se ordena en un tablero en tiempo real: asisten, pendientes, no asisten, y lo que cargan en RSVP, dietas, mensajes."
                 },
                 {
                     "question": "¿Puedo hacer cambios después de enviar el formulario de reserva?",

@@ -144,14 +144,9 @@
     },
     "ctaButtons": {
         "heroPrimary": {
-            "text": "Create my invitation",
-            "type": "anchor",
-            "anchor": "#muestras"
-        },
-        "heroSecondary": {
-            "text": "View samples",
-            "type": "anchor",
-            "anchor": "#muestras"
+            "text": "Reserve invitation",
+            "type": "link",
+            "url": "/configurador?plan=premium"
         },
         "planPremium": {
             "text": "Choose Premium",
@@ -161,7 +156,7 @@
         "planDisenoUnico": {
             "text": "Choose Unique design",
             "type": "link",
-            "url": "/configurador?plan=diseno-unico&start=idioma"
+            "url": "/configurador?plan=diseno-unico"
         }
     },
     "sections": {
@@ -180,6 +175,7 @@
                 ]
             },
             "subtitle": "With RSVP, guest list, map, music, and a design made to move people. One payment, no subscriptions.",
+            "scrollToModelsHint": "Scroll to see samples",
             "languagesHint": "Your invitation, multilingual",
             "reviews": {
                 "enabled": true,
@@ -387,7 +383,7 @@
                 {
                     "image": "/landing/media/images/indiana-xv.jpeg",
                     "titulo": "Indiana",
-                    "descripcion": "Strong XV identity, RSVP and special sections.",
+                    "descripcion": "Strong XV identity — RSVP, dietary preferences, messages — plus special sections.",
                     "href": "/m/xv/indiana"
                 },
                 {
@@ -411,17 +407,17 @@
                 "/m/boda/carolina-jose": [
                     "Story-driven flow with gallery and event details.",
                     "Clean composition focused on key content blocks.",
-                    "Integrated RSVP to centralize responses."
+                    "RSVP, dietary preferences, messages form to centralize responses."
                 ],
                 "/m/boda/yesica-hernan": [
                     "Premium floral aesthetic with stronger visual impact.",
                     "Story section plus extra gallery moments.",
-                    "Detailed RSVP with meal preferences."
+                    "RSVP, dietary preferences, messages—for richer confirmations."
                 ],
                 "/m/boda/anto-walter": [
                     "Narrative flow with their story and interactive trivia.",
                     "Multiple event locations with clear timeline.",
-                    "Detailed RSVP form for guest confirmations."
+                    "RSVP, dietary preferences, messages section for guest confirmations."
                 ],
                 "/m/boda/mirta-pelu": [
                     "Warm palette ideal for golden anniversaries.",
@@ -431,12 +427,12 @@
                 "/m/xv/camila": [
                     "Personalized typography and bold XV identity.",
                     "Interactive trivia to engage guests.",
-                    "Detailed RSVP and dedicated photo moments."
+                    "RSVP, dietary preferences, messages plus dedicated photo moments."
                 ],
                 "/m/xv/dasha": [
                     "Fantasy-style presentation with special message section.",
                     "Interactive trivia and photo block.",
-                    "Detailed RSVP for easier confirmation tracking."
+                    "RSVP, dietary preferences, messages for easier confirmation tracking."
                 ],
                 "/m/xv/carmela": [
                     "No-photo concept focused on refined cover design.",
@@ -446,7 +442,7 @@
                 "/m/xv/indiana": [
                     "Strong XV identity with distinctive special sections.",
                     "Structure designed to organize guest information.",
-                    "Practical RSVP for attendance tracking."
+                    "Practical RSVP, dietary preferences, messages flow for attendance."
                 ],
                 "/m/baby/maxima": [
                     "Sweet and clean baby shower style.",
@@ -632,8 +628,8 @@
                     "features": [
                         "Fully custom design",
                         "Every available section included",
-                        "Real-time guest dashboard included",
-                        "Second language included"
+                        "Custom welcome screen included",
+                        "Guest dashboard (up to 150) included; second language optional, billed separately"
                     ]
                 }
             ],
@@ -669,7 +665,7 @@
                 },
                 {
                     "question": "What’s the difference between RSVP confirmations by WhatsApp and using the Dashboard?",
-                    "answer": "With WhatsApp, confirmations arrive as messages. That’s often enough, but if you have many guests or want to avoid tracking responses manually, we recommend the Dashboard. It keeps everything organized in real time (attending, pending, not attending, and dietary needs)."
+                    "answer": "With WhatsApp, confirmations arrive as messages. That’s often enough, but if you have many guests or want to avoid tracking responses manually, we recommend the Dashboard. It keeps everything organized in real time—attending, pending, not attending, and everything guests submit in RSVP, dietary preferences, messages."
                 },
                 {
                     "question": "Can I make changes after sending the booking form?",
