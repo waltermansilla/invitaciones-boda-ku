@@ -81,13 +81,13 @@
         "bgImage": "/clientes/boda/2-quique-vero/images/overlay.jpeg",
         "textPositionsPx": {
             "topLineY": "",
-            "brideY": "190, center",
-            "separatorY": "250, center",
-            "groomY": "300, center",
-            "bottomLineY": 380,
-            "phraseY": 410,
-            "paddingPhrase": 60,
-            "buttonY": 480
+            "brideY": "25%, center",
+            "separatorY": "33%, center",
+            "groomY": "40%, center",
+            "bottomLineY": "49%",
+            "phraseY": "53%",
+            "paddingPhrase": "",
+            "buttonY": "65%"
         }
     },
     "// ==========================================:": "",
