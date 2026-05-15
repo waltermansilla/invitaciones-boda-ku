@@ -150,12 +150,7 @@
             "blocks": ["slider"],
             "data": {
                 "aspectRatio": "1/1",
-                "images": [
-                    "/clientes/boda/2-quique-vero/images/galeria1.jpg",
-                    "/clientes/boda/2-quique-vero/images/galeria2.jpg",
-                    "/clientes/boda/2-quique-vero/images/vertical1.jpeg",
-                    "/clientes/boda/2-quique-vero/images/vertical2.jpeg"
-                ]
+                "images": ["/clientes/boda/2-quique-vero/images/galeria1.jpg"]
             }
         },
         {
@@ -230,6 +225,22 @@
                 }
             }
         },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": [
+                    "/clientes/boda/2-quique-vero/images/1.jpeg",
+                    "/clientes/boda/2-quique-vero/images/2.jpeg",
+                    "/clientes/boda/2-quique-vero/images/3.jpeg"
+                ]
+            }
+        },
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
@@ -243,23 +254,7 @@
                 "decorativeLines": true
             }
         },
-        {
-            "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
-            "type": "gallery",
-            "id": "gallery-photos2",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "1/1",
-                "images": [
-                    "/clientes/boda/2-quique-vero/images/galeria3.jpg",
-                    "/clientes/boda/2-quique-vero/images/galeria4.jpg",
-                    "/clientes/boda/2-quique-vero/images/family1.jpeg",
-                    "/clientes/boda/2-quique-vero/images/vertical3.jpeg",
-                    "/clientes/boda/2-quique-vero/images/family2.jpeg"
-                ]
-            }
-        },
+
         {
             "_comment": "PHOTOS: Invitar a subir fotos al album compartido.",
             "type": "photos",
@@ -276,6 +271,22 @@
                     "url": "https://drive.google.com/drive/folders/170IvXDCau4314nO7_pySlJPm07_jDVru",
                     "variant": "primary"
                 }
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos4",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/2-quique-vero/images/4.jpeg",
+                    "/clientes/boda/2-quique-vero/images/5.jpeg",
+                    "/clientes/boda/2-quique-vero/images/6.jpeg"
+                ]
             }
         },
         {

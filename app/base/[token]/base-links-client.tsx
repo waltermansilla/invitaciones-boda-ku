@@ -139,13 +139,13 @@ export function BaseLinksClient({
                                     </p>
                                     <ul className="mt-2 space-y-1.5 text-sm text-white/85 md:space-y-2 md:text-[13px]">
                                         <li>
-                                            1. Tocá cualquier botón para abrir
-                                            directo la invitación o el panel.
+                                            1. Tocá "Abrir" para ingresar a la
+                                            invitación o el panel de invitados.
                                         </li>
                                         <li>
-                                            2. En invitaciones, podés usar el
-                                            botón con avioncito para enviar por
-                                            WhatsApp.
+                                            2. En las invitaciones, podés usar
+                                            el botón derecho (avioncito) para
+                                            enviar la invitación por WhatsApp.
                                         </li>
                                     </ul>
                                 </div>

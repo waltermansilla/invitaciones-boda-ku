@@ -261,7 +261,9 @@
                     "shape": "square",
                     "colors": [
                         "#f9f6ee",
+                        "#999",
                         "#253a61",
+
                         "#1b2a49",
                         "#410c16",
                         "#630d16"
@@ -274,7 +276,7 @@
                 },
                 "modal": {
                     "title": "Consejos de vestimenta",
-                    "intro": "Queremos que la noche tenga un estilo elegante y armonioso, por eso te dejamos algunas sugerencias:",
+                    "intro": "Queremos que ese día tenga un estilo elegante y armonioso, por eso te dejamos algunas sugerencias:",
                     "sections": [
                         {
                             "heading": "✨ Estilo general",
@@ -282,7 +284,7 @@
                         },
                         {
                             "heading": "🎨 Colores a evitar ",
-                            "text": "Para mantener una estética uniforme, les pedimos evitar los tonos que están indicados en la paleta de colores (manteca, azul francia y vino)."
+                            "text": "Para mantener una estética uniforme, les pedimos evitar los tonos que están indicados en la paleta de colores (manteca, gris, azul índigo y vino)."
                         },
                         {
                             "heading": "💡 Sugerencias",
