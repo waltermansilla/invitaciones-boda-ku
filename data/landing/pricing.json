@@ -4,18 +4,18 @@
         "maxBusinessDays": 7
     },
     "plans": {
-        "premium": { "ars": 49000, "usd": 79 },
-        "disenoUnico": { "ars": 109000, "usd": 169 }
+        "premium": { "ars": 49000, "usd": 69 },
+        "disenoUnico": { "ars": 109000, "usd": 149 }
     },
     "configurator": {
         "extraSection": { "ars": 4500, "usd": 5 },
         "secondLanguage": { "ars": 18000, "usd": 18 },
         "extras": {
-            "bienvenida": { "ars": 9000, "usd": 13 },
+            "bienvenida": { "ars": 9000, "usd": 12 },
             "panel": { "ars": 20000, "usd": 19 },
-            "panelPer100": { "ars": 9000, "usd": 7 },
-            "dominio": { "ars": 59000, "usd": 49 },
-            "rapida24h": { "ars": 23000, "usd": 25 }
+            "panelPer100": { "ars": 9000, "usd": 6 },
+            "dominio": { "ars": 59000, "usd": 48 },
+            "rapida24h": { "ars": 23000, "usd": 24 }
         }
     },
     "landing": {

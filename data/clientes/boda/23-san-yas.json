@@ -437,7 +437,7 @@
             "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Esta invitación es personal. Te pedimos amablemente no reenviarla ni compartirla en redes sociales. ¡Te esperamos para compartir una noche inolvidable!",
+                "text": "Esta invitación es personal. Te pedimos amablemente no reenviarla ni compartirla en redes sociales. ¡Te esperamos para compartir un momento inolvidable!",
                 "author": "",
                 "decorativeLines": true
             }
