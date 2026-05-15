@@ -23,7 +23,7 @@
     },
 
     "access": {
-        "tokenEnabled": false,
+        "tokenEnabled": true,
         "token": "8Jmk21",
         "allowLegacyUntil": ""
     },
