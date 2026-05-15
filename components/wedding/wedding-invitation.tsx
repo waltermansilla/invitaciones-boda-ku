@@ -38,7 +38,8 @@ function WeddingInvitationContent() {
         (s) => (s as { type?: string }).type === "footer",
     ) as { enabled?: boolean } | undefined;
     const showFooter =
-        footerConfig?.enabled !== false && footerSectionOverride?.enabled !== false;
+        footerConfig?.enabled !== false &&
+        footerSectionOverride?.enabled !== false;
     const meta = config.meta;
     const nameOrder = (
         meta.coupleNames as { nameOrder?: CoupleNamesDisplayOrder } | undefined
@@ -53,24 +54,26 @@ function WeddingInvitationContent() {
               confirmacion?: "formulario" | "comun";
           }
         | undefined;
-    
+
     // Datos del invitado (cuando viene con código)
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
-    const [loadingInvitado, setLoadingInvitado] = useState(!!codigoInvitado && !!rsvpPanel?.enabled);
-    
+    const [loadingInvitado, setLoadingInvitado] = useState(
+        !!codigoInvitado && !!rsvpPanel?.enabled,
+    );
+
     // Track if overlay has been dismissed
     const [overlayDismissed, setOverlayDismissed] = useState(false);
-    
+
     // Track if music should start (triggered by overlay dismiss when autoplay is true)
     const [shouldPlayMusic, setShouldPlayMusic] = useState(false);
-    
+
     // Obtener datos del invitado si hay código
     useEffect(() => {
         if (codigoInvitado && rsvpPanel?.enabled) {
             setLoadingInvitado(true);
             fetch(`/api/rsvp/${codigoInvitado}`)
-                .then(res => res.json())
-                .then(data => {
+                .then((res) => res.json())
+                .then((data) => {
                     if (data.invitado) {
                         setInvitado(data.invitado);
                     }
@@ -82,12 +85,14 @@ function WeddingInvitationContent() {
 
     // Si hay código y estamos cargando, mostrar pantalla de carga en lugar del overlay
     const showOverlay =
-        overlay.enabled && !overlayDismissed && !loadingInvitado && !skipOverlay;
+        overlay.enabled &&
+        !overlayDismissed &&
+        !loadingInvitado &&
+        !skipOverlay;
     const shouldBlockMainUntilEntry =
         overlay.enabled && !overlayDismissed && !skipOverlay;
 
-    const overlayWantsFullBleedEntry =
-        overlay.enabled === true && !skipOverlay;
+    const overlayWantsFullBleedEntry = overlay.enabled === true && !skipOverlay;
 
     // Si el overlay está activo, al recargar siempre arrancamos desde arriba.
     // Si overlay.enabled !== true, no forzamos scroll aquí (trabajo operativo / sin pantalla de ingreso).
@@ -120,9 +125,9 @@ function WeddingInvitationContent() {
             return;
         }
 
-        const nav = performance.getEntriesByType(
-            "navigation",
-        )[0] as PerformanceNavigationTiming | undefined;
+        const nav = performance.getEntriesByType("navigation")[0] as
+            | PerformanceNavigationTiming
+            | undefined;
         const hasMeaningfulHash =
             typeof window.location.hash === "string" &&
             window.location.hash.length > 1;
@@ -253,22 +258,58 @@ function WeddingInvitationContent() {
                     separator={meta.coupleNames.separator}
                     phrase={overlay.phrase}
                     buttonText={overlay.buttonText}
-                    bgColor={(overlay as Record<string, unknown>).bgColor as string | undefined}
-                    bgImage={(overlay as Record<string, unknown>).bgImage as string | undefined}
-                    showNames={(overlay as Record<string, unknown>).showNames as boolean | undefined}
-                    showPhrase={(overlay as Record<string, unknown>).showPhrase as boolean | undefined}
-                    nameStyle={(overlay as Record<string, unknown>).nameStyle as { font?: string; size?: string; weight?: string; color?: string } | undefined}
-                    buttonPosition={(overlay as Record<string, unknown>).buttonPosition as "center" | "top" | "bottom" | number | undefined}
-                    textPositionsPx={(overlay as Record<string, unknown>).textPositionsPx as {
-                        brideY?: number | string
-                        separatorY?: number | string
-                        groomY?: number | string
-                        phraseY?: number | string
-                        topLineY?: number | string
-                        bottomLineY?: number | string
-                        buttonY?: number | string
-                        paddingPhrase?: number | string
-                    } | undefined}
+                    bgColor={
+                        (overlay as Record<string, unknown>).bgColor as
+                            | string
+                            | undefined
+                    }
+                    bgImage={
+                        (overlay as Record<string, unknown>).bgImage as
+                            | string
+                            | undefined
+                    }
+                    showNames={
+                        (overlay as Record<string, unknown>).showNames as
+                            | boolean
+                            | undefined
+                    }
+                    showPhrase={
+                        (overlay as Record<string, unknown>).showPhrase as
+                            | boolean
+                            | undefined
+                    }
+                    nameStyle={
+                        (overlay as Record<string, unknown>).nameStyle as
+                            | {
+                                  font?: string;
+                                  size?: string;
+                                  weight?: string;
+                                  color?: string;
+                              }
+                            | undefined
+                    }
+                    buttonPosition={
+                        (overlay as Record<string, unknown>).buttonPosition as
+                            | "center"
+                            | "top"
+                            | "bottom"
+                            | number
+                            | undefined
+                    }
+                    textPositionsPx={
+                        (overlay as Record<string, unknown>).textPositionsPx as
+                            | {
+                                  brideY?: number | string;
+                                  separatorY?: number | string;
+                                  groomY?: number | string;
+                                  phraseY?: number | string;
+                                  topLineY?: number | string;
+                                  bottomLineY?: number | string;
+                                  buttonY?: number | string;
+                                  paddingPhrase?: number | string;
+                              }
+                            | undefined
+                    }
                     invitado={invitado}
                     nameOrder={nameOrder}
                 />
@@ -278,9 +319,9 @@ function WeddingInvitationContent() {
             )}
 
             {/* Hide main content until overlay is dismissed - fade in when overlay exits */}
-            <main 
+            <main
                 className="mx-auto min-h-screen max-w-lg md:max-w-xl lg:max-w-2xl transition-opacity duration-700 ease-out"
-                style={{ 
+                style={{
                     opacity: shouldBlockMainUntilEntry ? 0 : 1,
                 }}
             >
@@ -300,17 +341,23 @@ function WeddingInvitationContent() {
                     }
                     namesDisplay={
                         (hero as Record<string, unknown>).namesDisplay as
-                            | { 
-                                enabled: boolean
-                                position: "top" | "bottom"
-                                font?: string
-                                weight?: string
-                                size?: string
-                                style?: string
-                                color?: string
-                                decorativeLines?: boolean
-                                logo?: string
-                                texts?: { text: string; font?: string; weight?: string; size?: string; style?: string }[]
+                            | {
+                                  enabled: boolean;
+                                  position: "top" | "bottom";
+                                  font?: string;
+                                  weight?: string;
+                                  size?: string;
+                                  style?: string;
+                                  color?: string;
+                                  decorativeLines?: boolean;
+                                  logo?: string;
+                                  texts?: {
+                                      text: string;
+                                      font?: string;
+                                      weight?: string;
+                                      size?: string;
+                                      style?: string;
+                                  }[];
                               }
                             | undefined
                     }
@@ -322,17 +369,28 @@ function WeddingInvitationContent() {
                     countdownLabels={hero.countdownLabels}
                     countdownStyle={
                         (hero as Record<string, unknown>).countdownStyle as
-                            | { 
-                                background: "none" | "background" | "primary" | "secondary" | string
-                                shape: "rounded" | "circle" | "square" | "pill"
-                                layout?: "inline" | "overlay"
-                                overlayStyle?: "card" | "floating"
+                            | {
+                                  background:
+                                      | "none"
+                                      | "background"
+                                      | "primary"
+                                      | "secondary"
+                                      | string;
+                                  shape:
+                                      | "rounded"
+                                      | "circle"
+                                      | "square"
+                                      | "pill";
+                                  layout?: "inline" | "overlay";
+                                  overlayStyle?: "card" | "floating";
                               }
                             | undefined
                     }
                     countdownAreaBg={
                         (hero as Record<string, unknown>).countdownAreaBg as
-                            | "primary" | "background" | string
+                            | "primary"
+                            | "background"
+                            | string
                             | undefined
                     }
                     showCountdown={
@@ -350,27 +408,39 @@ function WeddingInvitationContent() {
                 {/* Dynamic sections: order controlled by array position in JSON */}
                 {/* Group consecutive sections with same bgImage */}
                 {(() => {
-                    const theme = config.theme as Record<string, unknown>
-                    const groups: { bgImage: string | null; sections: typeof sectionsForLayout }[] = []
-                    
+                    const theme = config.theme as Record<string, unknown>;
+                    const groups: {
+                        bgImage: string | null;
+                        sections: typeof sectionsForLayout;
+                    }[] = [];
+
                     sectionsForLayout.forEach((section) => {
-                        let resolvedBgImage = section.bgImage
+                        let resolvedBgImage = section.bgImage;
                         if (section.bgImage === "backgroundImage") {
-                            resolvedBgImage = (theme.backgroundImage as string) || undefined
+                            resolvedBgImage =
+                                (theme.backgroundImage as string) || undefined;
                         } else if (section.bgImage === "primaryImage") {
-                            resolvedBgImage = (theme.primaryImage as string) || undefined
+                            resolvedBgImage =
+                                (theme.primaryImage as string) || undefined;
                         }
-                        
-                        const lastGroup = groups[groups.length - 1]
-                        if (lastGroup && lastGroup.bgImage && lastGroup.bgImage === resolvedBgImage) {
+
+                        const lastGroup = groups[groups.length - 1];
+                        if (
+                            lastGroup &&
+                            lastGroup.bgImage &&
+                            lastGroup.bgImage === resolvedBgImage
+                        ) {
                             // Continue same group
-                            lastGroup.sections.push(section)
+                            lastGroup.sections.push(section);
                         } else {
                             // Start new group
-                            groups.push({ bgImage: resolvedBgImage || null, sections: [section] })
+                            groups.push({
+                                bgImage: resolvedBgImage || null,
+                                sections: [section],
+                            });
                         }
-                    })
-                    
+                    });
+
                     return groups.map((group, groupIndex) => {
                         if (group.bgImage && group.sections.length > 1) {
                             // Render grouped sections with shared background
@@ -385,17 +455,26 @@ function WeddingInvitationContent() {
                                     }}
                                 >
                                     {group.sections.map((section, index) => {
-                                        const prev = group.sections[index - 1]
-                                        const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage"]
-                                        const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
+                                        const prev = group.sections[index - 1];
+                                        const selfStyledTypes = [
+                                            "gallery",
+                                            "closingImage",
+                                            "presentation",
+                                            "specialMessage",
+                                        ];
+                                        const prevBg =
+                                            prev &&
+                                            !selfStyledTypes.includes(prev.type)
+                                                ? prev.bgColor || "background"
+                                                : undefined;
                                         const inheritedTextColor =
                                             section.textColor ||
                                             (section.bgColor === "primary"
-                                                ? ((theme.darkBgTextColor as string) ||
-                                                  "#FFFFFF")
-                                                : ((theme.lightBgTextColor as string) ||
+                                                ? (theme.darkBgTextColor as string) ||
+                                                  "#FFFFFF"
+                                                : (theme.lightBgTextColor as string) ||
                                                   (theme.primaryColor as string) ||
-                                                  "#6B7F5E"))
+                                                  "#6B7F5E");
                                         return (
                                             <Section
                                                 key={section.id}
@@ -403,24 +482,37 @@ function WeddingInvitationContent() {
                                                     ...section,
                                                     bgImage: undefined,
                                                     bgColor: "transparent",
-                                                    textColor: inheritedTextColor,
+                                                    textColor:
+                                                        inheritedTextColor,
                                                 }} // Remove bgImage and make transparent since parent has bg
                                                 coupleNames={meta.coupleNames}
                                                 prevBgColor={prevBg}
                                                 prevBgImage={undefined}
                                             />
-                                        )
+                                        );
                                     })}
                                 </div>
-                            )
+                            );
                         } else {
                             // Single section or no bgImage
                             return group.sections.map((section, index) => {
-                                const globalIndex = sectionsForLayout.indexOf(section)
-                                const prev = sectionsForLayout[globalIndex - 1]
-                                const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage"]
-                                const prevBg = prev && !selfStyledTypes.includes(prev.type) ? (prev.bgColor || "background") : undefined
-                                const prevBgImg = prev && !selfStyledTypes.includes(prev.type) ? prev.bgImage : undefined
+                                const globalIndex =
+                                    sectionsForLayout.indexOf(section);
+                                const prev = sectionsForLayout[globalIndex - 1];
+                                const selfStyledTypes = [
+                                    "gallery",
+                                    "closingImage",
+                                    "presentation",
+                                    "specialMessage",
+                                ];
+                                const prevBg =
+                                    prev && !selfStyledTypes.includes(prev.type)
+                                        ? prev.bgColor || "background"
+                                        : undefined;
+                                const prevBgImg =
+                                    prev && !selfStyledTypes.includes(prev.type)
+                                        ? prev.bgImage
+                                        : undefined;
                                 return (
                                     <Section
                                         key={section.id}
@@ -429,19 +521,27 @@ function WeddingInvitationContent() {
                                         prevBgColor={prevBg}
                                         prevBgImage={prevBgImg}
                                     />
-                                )
-                            })
+                                );
+                            });
                         }
-                    })
+                    });
                 })()}
 
                 {showFooter && <FooterSection />}
 
                 {music.enabled && (
-                    <MusicPlayer 
-                        src={music.src} 
-                        startTime={(music as Record<string, unknown>).startTime as number | undefined}
-                        endTime={(music as Record<string, unknown>).endTime as number | undefined}
+                    <MusicPlayer
+                        src={music.src}
+                        startTime={
+                            (music as Record<string, unknown>).startTime as
+                                | number
+                                | undefined
+                        }
+                        endTime={
+                            (music as Record<string, unknown>).endTime as
+                                | number
+                                | undefined
+                        }
                         triggerPlay={shouldPlayMusic}
                     />
                 )}

@@ -63,6 +63,14 @@
 */
 html {
   color-scheme: light;
+  /*
+    Safari / Chrome móvil suelen agrandar el texto si el usuario tiene “Texto más grande”
+    (accesibilidad). Eso rompe overlays con posiciones fijas y el diseño general.
+    Forzamos el tamaño declarado en CSS; quien necesite zoom puede usar el del navegador
+    donde el viewport lo permita (ya hay maximumScale en layout raíz).
+  */
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
 }
 
 @theme inline {
