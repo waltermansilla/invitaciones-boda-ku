@@ -267,6 +267,7 @@ function WeddingInvitationContent() {
                         topLineY?: number | string
                         bottomLineY?: number | string
                         buttonY?: number | string
+                        paddingPhrase?: number | string
                     } | undefined}
                     invitado={invitado}
                     nameOrder={nameOrder}

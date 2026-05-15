@@ -77,7 +77,18 @@
     "overlay": {
         "enabled": true,
         "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
-        "buttonText": "Ingresar"
+        "buttonText": "Ingresar",
+        "bgImage": "/clientes/boda/2-quique-vero/images/overlay.jpeg",
+        "textPositionsPx": {
+            "topLineY": "",
+            "brideY": "190, center",
+            "separatorY": "250, center",
+            "groomY": "300, center",
+            "bottomLineY": 380,
+            "phraseY": 410,
+            "paddingPhrase": 60,
+            "buttonY": 480
+        }
     },
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
@@ -237,7 +248,8 @@
                 "images": [
                     "/clientes/boda/2-quique-vero/images/1.jpeg",
                     "/clientes/boda/2-quique-vero/images/2.jpeg",
-                    "/clientes/boda/2-quique-vero/images/3.jpeg"
+                    "/clientes/boda/2-quique-vero/images/3.jpeg",
+                    "/clientes/boda/2-quique-vero/images/7.jpeg"
                 ]
             }
         },

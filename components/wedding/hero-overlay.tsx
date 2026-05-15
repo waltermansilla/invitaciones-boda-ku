@@ -42,6 +42,8 @@ interface HeroOverlayProps {
         topLineY?: number | string;
         bottomLineY?: number | string;
         buttonY?: number | string;
+        /** Padding horizontal de la frase en px (mismo valor a izquierda y derecha). */
+        paddingPhrase?: number | string;
     };
     /** Por defecto novia primero; "groom-first" = novio arriba (ej. San & Yas). */
     nameOrder?: CoupleNamesDisplayOrder;
@@ -173,16 +175,41 @@ export default function HeroOverlay({
     const parsePosition = (value?: number | string) => {
         if (value === undefined || value === null || value === "") return null;
         if (typeof value === "number") {
-            return { top: `${value}px`, left: "50%", centered: true };
+            return {
+                top: `${value}px`,
+                left: "50%",
+                transform: "translateX(-50%)",
+            };
         }
         const trimmed = value.trim();
         if (!trimmed) return null;
-        const [rawY, rawX] = trimmed.split(",").map((part) => part.trim());
-        const top = toPxValue(rawY);
+        const segments = trimmed.split(",").map((part) => part.trim());
+        const rawY = segments[0];
+        const rawX = segments.length > 1 ? segments[1] : "";
+        const yKey = (rawY || "").toLowerCase();
+        const vertCenter =
+            yKey === "center" || yKey === "centre" || yKey === "middle";
+        const top = vertCenter ? "50%" : toPxValue(rawY);
         if (!top) return null;
-        const left = toPxValue(rawX);
-        if (left) return { top, left, centered: false };
-        return { top, left: "50%", centered: true };
+        const xKey = (rawX || "").toLowerCase();
+        const horizCenter =
+            !rawX ||
+            xKey === "center" ||
+            xKey === "centre" ||
+            xKey === "middle";
+        let left: string;
+        if (horizCenter) {
+            left = "50%";
+        } else {
+            const lx = toPxValue(rawX);
+            if (!lx) return null;
+            left = lx;
+        }
+        let transform: string | undefined;
+        if (vertCenter && horizCenter) transform = "translate(-50%, -50%)";
+        else if (vertCenter) transform = "translateY(-50%)";
+        else if (horizCenter) transform = "translateX(-50%)";
+        return { top, left, transform };
     };
 
     const bridePos = parsePosition(textPositionsPx?.brideY);
@@ -193,13 +220,24 @@ export default function HeroOverlay({
     const bottomLinePos = parsePosition(textPositionsPx?.bottomLineY);
     const buttonPos = parsePosition(textPositionsPx?.buttonY);
 
+    const paddingPhrasePx = (() => {
+        const pp = textPositionsPx?.paddingPhrase;
+        if (pp === undefined || pp === null || pp === "") return undefined;
+        if (typeof pp === "number" && Number.isFinite(pp)) return `${pp}px`;
+        if (typeof pp === "string") {
+            const t = pp.trim();
+            if (t && /^\d+(\.\d+)?$/.test(t)) return `${t}px`;
+        }
+        return undefined;
+    })();
+
     if (buttonPos) {
         justifyClass = "";
         buttonStyle = {
             position: "absolute",
             top: buttonPos.top,
             left: buttonPos.left,
-            transform: buttonPos.centered ? "translateX(-50%)" : undefined,
+            transform: buttonPos.transform,
         };
     }
 
@@ -320,9 +358,7 @@ export default function HeroOverlay({
                                         style={{
                                             top: topLinePos?.top,
                                             left: topLinePos?.left,
-                                            transform: topLinePos?.centered
-                                                ? "translateX(-50%)"
-                                                : undefined,
+                                            transform: topLinePos?.transform,
                                         }}
                                     />
                                 )}
@@ -332,9 +368,7 @@ export default function HeroOverlay({
                                         style={{
                                             top: bridePos.top,
                                             left: bridePos.left,
-                                            transform: bridePos.centered
-                                                ? "translateX(-50%)"
-                                                : undefined,
+                                            transform: bridePos.transform,
                                             fontFamily: nameFontFamily,
                                             color: nameColor,
                                             textTransform: nameStyle?.lowercase
@@ -353,9 +387,7 @@ export default function HeroOverlay({
                                         style={{
                                             top: separatorPos.top,
                                             left: separatorPos.left,
-                                            transform: separatorPos.centered
-                                                ? "translateX(-50%)"
-                                                : undefined,
+                                            transform: separatorPos.transform,
                                         }}
                                     >
                                         {separator}
@@ -367,9 +399,7 @@ export default function HeroOverlay({
                                         style={{
                                             top: groomPos.top,
                                             left: groomPos.left,
-                                            transform: groomPos.centered
-                                                ? "translateX(-50%)"
-                                                : undefined,
+                                            transform: groomPos.transform,
                                             fontFamily: nameFontFamily,
                                             color: nameColor,
                                             textTransform: nameStyle?.lowercase
@@ -388,9 +418,7 @@ export default function HeroOverlay({
                                         style={{
                                             top: bottomLinePos.top,
                                             left: bottomLinePos.left,
-                                            transform: bottomLinePos.centered
-                                                ? "translateX(-50%)"
-                                                : undefined,
+                                            transform: bottomLinePos.transform,
                                         }}
                                     />
                                 )}
@@ -399,13 +427,19 @@ export default function HeroOverlay({
 
                         {showPhrase && !invitado && phrasePos && (
                             <p
-                                className="absolute mx-auto w-[88vw] max-w-md px-5 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:w-auto sm:px-8 sm:text-base"
+                                className={`absolute mx-auto w-[88vw] max-w-md text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:w-auto sm:text-base ${
+                                    paddingPhrasePx ? "" : "px-5 sm:px-8"
+                                }`}
                                 style={{
                                     top: phrasePos.top,
                                     left: phrasePos.left,
-                                    transform: phrasePos.centered
-                                        ? "translateX(-50%)"
-                                        : undefined,
+                                    transform: phrasePos.transform,
+                                    ...(paddingPhrasePx
+                                        ? {
+                                              paddingLeft: paddingPhrasePx,
+                                              paddingRight: paddingPhrasePx,
+                                          }
+                                        : {}),
                                 }}
                             >
                                 {phrase}

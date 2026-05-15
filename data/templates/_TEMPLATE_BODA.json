@@ -189,6 +189,7 @@
     "//   topLineY: linea decorativa superior (opcional)                          ": "",
     "//   bottomLineY: linea decorativa inferior (opcional)                       ": "",
     "//   buttonY: boton en px (opcional, tiene prioridad sobre buttonPosition)   ": "",
+    "//   paddingPhrase: padding horizontal de la frase en px (opcional, izquierda y derecha)": "",
     "//   Si NO pones topLineY/bottomLineY, las lineas no se muestran en modo px  ": "",
     "//   IMPORTANTE: si usas textPositionsPx, ajusta cada valor para tu imagen    ": "",
     "//                                                                            ": "",
