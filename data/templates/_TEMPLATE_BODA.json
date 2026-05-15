@@ -19,7 +19,8 @@
     "// description: descripcion para redes sociales                              ": "",
     "// ogImage (opcional): imagen Open Graph (ruta bajo public/), ~1200x630    ": "",
     "// image: alternativa legacy si no hay ogImage                               ": "",
-    "// coupleNames: nombres para mostrar en la invitacion                        ": "",
+    "// coupleNames: brideName/novia y groomName/novio (datos semanticos).            ": "",
+    "//   nameOrder (opcional): 'groom-first' = novio arriba en overlay/hero/cierre.  ": "",
     "// ==========================================================================": "",
 
     "meta": {
@@ -625,6 +626,7 @@
             "//   colors: array de hex                                                ": "",
             "// button: abre el modal (opcional si showButton=false)                  ": "",
             "// modal: contenido del popup con consejos (opcional si showButton=false)": "",
+            "//   intro: parrafo breve antes de sections (opcional)                   ": "",
             "//   sections: array de { heading, text }                                ": "",
             "// ----------------------------------------------------------------------": "",
             "type": "dressCode",
@@ -649,6 +651,7 @@
                 },
                 "modal": {
                     "title": "Consejos de vestimenta",
+                    "intro": "Queremos que la noche tenga un estilo elegante y armonioso, por eso te damos algunas sugerencias:",
                     "sections": [
                         {
                             "heading": "Hombres",

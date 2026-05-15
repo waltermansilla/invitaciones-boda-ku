@@ -5,15 +5,14 @@ export type ConfiguratorLang = "es" | "en";
 
 type Price = { ARS: number; USD: number };
 
-const USD_ARS = pricingData.usdArs;
 const DELIVERY_MIN_DAYS = pricingData.deliveryWindow.minBusinessDays;
 const DELIVERY_MAX_DAYS = pricingData.deliveryWindow.maxBusinessDays;
 const DELIVERY_RANGE_ES = `${DELIVERY_MIN_DAYS} a ${DELIVERY_MAX_DAYS} días hábiles`;
 const DELIVERY_RANGE_EN = `${DELIVERY_MIN_DAYS}–${DELIVERY_MAX_DAYS} business days`;
-const toPrice = (ars: number): Price => ({
-    ARS: ars,
-    USD: Math.ceil(ars / USD_ARS),
-});
+
+function pairToPrice(pair: { ars: number; usd: number }): Price {
+    return { ARS: pair.ars, USD: pair.usd };
+}
 
 function configuratorExtraPriceKey(
     id: string,
@@ -22,10 +21,10 @@ function configuratorExtraPriceKey(
     return id as keyof typeof pricingData.configurator.extras;
 }
 
-const EXTRA_SECTION_PRICE: Price = toPrice(
+const EXTRA_SECTION_PRICE: Price = pairToPrice(
     pricingData.configurator.extraSection,
 );
-const SECOND_LANGUAGE_PRICE: Price = toPrice(
+const SECOND_LANGUAGE_PRICE: Price = pairToPrice(
     pricingData.configurator.secondLanguage,
 );
 
@@ -43,25 +42,25 @@ export function getExtrasForLang(lang: ConfiguratorLang): ExtraOption[] {
                 id: "bienvenida",
                 label: "Custom welcome screen",
                 subtitle: "Tailored entry overlay",
-                price: toPrice(pricingData.configurator.extras.bienvenida),
+                price: pairToPrice(pricingData.configurator.extras.bienvenida),
             },
             {
                 id: "panel",
                 label: "Guest dashboard",
                 subtitle: "Real-time RSVPs",
-                price: toPrice(pricingData.configurator.extras.panel),
+                price: pairToPrice(pricingData.configurator.extras.panel),
             },
             {
                 id: "dominio",
                 label: "Custom domain",
                 subtitle: "e.g. yournames.com",
-                price: toPrice(pricingData.configurator.extras.dominio),
+                price: pairToPrice(pricingData.configurator.extras.dominio),
             },
             {
                 id: "rapida",
                 label: "24-hour rush delivery",
                 subtitle: `Top priority (standard: ${DELIVERY_RANGE_EN})`,
-                price: toPrice(pricingData.configurator.extras.rapida24h),
+                price: pairToPrice(pricingData.configurator.extras.rapida24h),
             },
         ];
     }
@@ -72,7 +71,7 @@ export function getExtrasForLang(lang: ConfiguratorLang): ExtraOption[] {
             /\{\{deliveryRangeEs\}\}/g,
             DELIVERY_RANGE_ES,
         ),
-        price: toPrice(
+        price: pairToPrice(
             pricingData.configurator.extras[configuratorExtraPriceKey(ex.id)],
         ),
     }));
@@ -92,7 +91,7 @@ export function getExtraDetailById(
             panel: {
                 title: "Guest dashboard",
                 summary: "Automatic, end-to-end RSVP management",
-                body: "With WhatsApp (included), messages arrive but you track everything manually. With the dashboard, each guest confirms and your board updates automatically: who’s in, who’s pending, filters by status, and clear totals. You can also see dietary requirements (vegetarian, celiac, etc.) and guest song requests. Includes up to 150 guests; then +9,000 ARS for each extra 100 guests.",
+                body: "With WhatsApp (included), messages arrive but you track everything manually. With the dashboard, each guest confirms and your board updates automatically: who’s in, who’s pending, filters by status, and clear totals. You can also see dietary requirements (vegetarian, celiac, etc.) and guest song requests. Includes up to 150 guests; for each additional block of 100 guests, a capacity surcharge applies (shown in your quote when you adjust the guest count).",
             },
             dominio: {
                 title: "Custom domain",

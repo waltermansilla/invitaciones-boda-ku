@@ -2,6 +2,8 @@
  * Helpers sin Node (fs): seguros para importar desde "use client".
  */
 
+import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
+
 /** Título corto para admin / Excel según carpeta (boda, xv, baby, …). */
 export function eventTypeLabelFromFolderTipo(tipo: string): string {
   const t = tipo.toLowerCase()
@@ -36,7 +38,12 @@ export function invitationPathFromPanelIdSlug(panelId: string): string | null {
 export function displayNameFromClientJson(
   json: Record<string, unknown> & {
     meta?: {
-      coupleNames?: { groomName?: string; brideName?: string; name?: string }
+      coupleNames?: {
+        groomName?: string
+        brideName?: string
+        name?: string
+        nameOrder?: "bride-first" | "groom-first"
+      }
       quinceaneraName?: string
     }
   },
@@ -47,7 +54,14 @@ export function displayNameFromClientJson(
   if (couple) {
     const bride = (couple.brideName || "").trim()
     const groom = (couple.groomName || "").trim()
-    if (bride && groom) return `${bride} y ${groom}`
+    if (bride && groom) {
+      const { first, second } = coupleNamesDisplayPair(
+        bride,
+        groom,
+        couple.nameOrder,
+      )
+      return `${first} y ${second}`
+    }
     if (bride) return bride
     if (groom) return groom
     const xvName = (couple.name || "").trim()

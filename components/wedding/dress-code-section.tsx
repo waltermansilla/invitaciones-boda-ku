@@ -74,9 +74,11 @@ interface DressCodeSectionProps {
   description?: string
   icons?: string[]
   showButton?: boolean
-  button?: { text: string; url: string; variant: "primary" | "secondary" }
+  button?: { text: string; url: string; variant?: "primary" | "secondary" }
   modal?: {
     title: string
+    /** Párrafo breve antes de las secciones (heading + text). */
+    intro?: string
     sections: { heading: string; text: string }[]
   }
   colorSwatches?: {
@@ -102,6 +104,11 @@ export default function DressCodeSection({
   )
   const shouldRenderButton = Boolean(showButton && canOpenModal && button?.text)
 
+  const buttonVariantClasses =
+    button?.variant === "primary"
+      ? "bg-primary text-primary-foreground border-primary hover:opacity-90"
+      : "border-current/30 text-inherit hover:bg-current/5"
+
   const handleOpen = () => {
     if (!canOpenModal) return
 
@@ -110,6 +117,11 @@ export default function DressCodeSection({
         <h3 className="mb-6 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
           {modal?.title}
         </h3>
+        {modal?.intro?.trim() ? (
+          <p className="mb-6 text-left text-sm font-light leading-relaxed text-primary-foreground/85">
+            {modal.intro.trim()}
+          </p>
+        ) : null}
         <div className="space-y-5">
           {modal?.sections?.map((section) => (
             <div key={section.heading} className="text-left">
@@ -181,7 +193,7 @@ export default function DressCodeSection({
       {shouldRenderButton && (
         <button
           onClick={handleOpen}
-          className="inline-flex min-h-[48px] items-center justify-center rounded-sm border border-current/30 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase text-inherit transition-all duration-200 hover:bg-current/5"
+          className={`inline-flex min-h-[48px] items-center justify-center rounded-sm border px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-200 ${buttonVariantClasses}`}
         >
           {button?.text}
         </button>

@@ -51,6 +51,7 @@ interface SectionProps {
     groomName: string
     brideName: string
     separator: string
+    nameOrder?: "bride-first" | "groom-first"
   }
   prevBgColor?: string
   prevBgImage?: string
@@ -301,7 +302,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
             icons={data.icons as string[] | undefined}
             showButton={data.showButton as boolean | undefined}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" } | undefined}
-            modal={data.modal as { title: string; sections: { heading: string; text: string }[] } | undefined}
+            modal={data.modal as { title: string; intro?: string; sections: { heading: string; text: string }[] } | undefined}
             colorSwatches={data.colorSwatches as { enabled: boolean; shape: "circle" | "square"; colors: string[] } | undefined}
           />
         )
@@ -341,6 +342,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
                   id: string
                   label: string
                   placeholder?: string
+                  tituloPanel?: string
                   required?: boolean
                 }[]
                 submitButton: string

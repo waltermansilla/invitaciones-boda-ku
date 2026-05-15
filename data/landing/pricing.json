@@ -1,31 +1,29 @@
 {
-    "usdArs": 1370,
-    "usdRounding": "ceil_per_item",
     "deliveryWindow": {
         "minBusinessDays": 4,
         "maxBusinessDays": 7
     },
     "plans": {
-        "premium": 49000,
-        "disenoUnico": 109000
+        "premium": { "ars": 49000, "usd": 79 },
+        "disenoUnico": { "ars": 109000, "usd": 169 }
     },
     "configurator": {
-        "extraSection": 4500,
-        "secondLanguage": 18000,
+        "extraSection": { "ars": 4500, "usd": 5 },
+        "secondLanguage": { "ars": 18000, "usd": 18 },
         "extras": {
-            "bienvenida": 9000,
-            "panel": 20000,
-            "panelPer100": 9000,
-            "dominio": 59000,
-            "rapida24h": 23000
+            "bienvenida": { "ars": 9000, "usd": 13 },
+            "panel": { "ars": 20000, "usd": 19 },
+            "panelPer100": { "ars": 9000, "usd": 7 },
+            "dominio": { "ars": 59000, "usd": 49 },
+            "rapida24h": { "ars": 23000, "usd": 25 }
         }
     },
     "landing": {
         "paper": {
-            "design": 260000,
-            "printing130": 160000,
-            "envelopesAndSeals": 120000,
-            "postalShipping": 95000
+            "design": { "ars": 260000, "usd": 220 },
+            "printing130": { "ars": 160000, "usd": 170 },
+            "envelopesAndSeals": { "ars": 120000, "usd": 105 },
+            "postalShipping": { "ars": 95000, "usd": 95 }
         }
     }
 }

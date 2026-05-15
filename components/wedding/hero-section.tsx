@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useConfig } from "@/lib/config-context"
+import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
+import type { CoupleNamesDisplayOrder } from "@/lib/couple-names-display-order"
 
 interface NamesText {
   text: string
@@ -37,6 +39,8 @@ interface HeroSectionProps {
     lowercase?: boolean // true = respeta mayusculas/minusculas, false/undefined = uppercase
     letterSpacing?: string // "none", "normal", "wide" (default)
   }
+  /** Igual que meta.coupleNames.nameOrder: novio arriba si "groom-first". */
+  nameOrder?: CoupleNamesDisplayOrder
   countdownPrefix?: string
   countdownLabels: {
     days: string
@@ -110,6 +114,7 @@ export default function HeroSection({
   countdownAreaBg,
   showCountdown = true,
   vignette,
+  nameOrder,
 }: HeroSectionProps) {
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
@@ -218,7 +223,6 @@ export default function HeroSection({
     { value: time?.minutes ?? 0, label: countdownLabels.minutes },
     { value: time?.seconds ?? 0, label: countdownLabels.seconds },
   ]
-  const hasSecondName = Boolean(groomName.trim())
   const vignetteEnabled = Boolean(vignette?.enabled)
   const vignetteOpacity =
     typeof vignette?.opacity === "number"
@@ -321,14 +325,21 @@ export default function HeroSection({
       ...getPositionStyle(),
     }
 
+    const { first: nameLine1, second: nameLine2 } = coupleNamesDisplayPair(
+      brideName,
+      groomName,
+      nameOrder,
+    )
+    const hasLine2 = Boolean(nameLine2.trim())
+
     return (
       <div className={`${getPositionClass()} flex flex-col items-center`} style={namesFontStyle}>
         {showDecorativeLines && <div className="mb-3 h-px w-12 bg-current opacity-40" />}
-        <p className={`text-center ${sizeClass}`}>{brideName}</p>
-        {separator && hasSecondName && (
+        <p className={`text-center ${sizeClass}`}>{nameLine1}</p>
+        {separator && hasLine2 && (
           <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">{separator}</span>
         )}
-        {hasSecondName && <p className={`text-center ${sizeClass}`}>{groomName}</p>}
+        {hasLine2 && <p className={`text-center ${sizeClass}`}>{nameLine2}</p>}
         {showDecorativeLines && <div className="mt-3 h-px w-12 bg-current opacity-40" />}
       </div>
     )

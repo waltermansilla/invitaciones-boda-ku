@@ -1,6 +1,7 @@
 import fs from "fs"
 import path from "path"
 import { listClienteTipoDirNames } from "@/lib/client-json-helpers"
+import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
 
 export interface EventConfig {
   base?: {
@@ -14,6 +15,8 @@ export interface EventConfig {
       groomName?: string
       brideName?: string
       name?: string // para XV
+      separator?: string
+      nameOrder?: "bride-first" | "groom-first"
     }
     quinceaneraName?: string
   }
@@ -222,8 +225,15 @@ export function getEventDataFromConfig(config: EventConfig) {
   } else if (config.meta?.quinceaneraName) {
     nombreEvento = String(config.meta.quinceaneraName).trim()
   } else if (config.meta?.coupleNames) {
-    const { groomName, brideName } = config.meta.coupleNames
-    nombreEvento = `${brideName || ""} & ${groomName || ""}`.trim()
+    const c = config.meta.coupleNames
+    const { first, second } = coupleNamesDisplayPair(
+      String(c.brideName ?? ""),
+      String(c.groomName ?? ""),
+      c.nameOrder,
+    )
+    const sep = typeof c.separator === "string" && c.separator.trim() ? c.separator.trim() : "&"
+    const parts = [first, second].filter((p) => p.trim())
+    nombreEvento = parts.join(` ${sep} `).trim()
   }
   
   return {

@@ -117,7 +117,21 @@ function serializeGuestForms(guests: GuestForm[]): string {
     );
 }
 
-function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
+function extraInputWhatsAppTitle(input: {
+    label: string;
+    tituloPanel?: string;
+}): string {
+    if (typeof input.tituloPanel === "string" && input.tituloPanel.trim()) {
+        return input.tituloPanel.trim();
+    }
+    return (input.label || "").trim();
+}
+
+function buildWhatsAppMessage(
+    template: string,
+    guests: GuestForm[],
+    extraInputs: NonNullable<RSVPSectionProps["fields"]["extraInputs"]> = [],
+): string {
     const lines = guests.map((g, i) => {
         const prefix = guests.length > 1 ? `${i + 1}:` : "1:";
         const attendance = g.attendance === "yes" ? "Asiste" : "No asiste";
@@ -130,11 +144,11 @@ function buildWhatsAppMessage(template: string, guests: GuestForm[]): string {
         if (g.dietary && g.dietary !== "Ninguno")
             detailLines.push(`- Alimentacion: ${g.dietary}`);
         if (g.songRequest) detailLines.push(`- Cancion: ${g.songRequest}`);
-        if (g.extraValues) {
-            Object.entries(g.extraValues).forEach(([label, value]) => {
-                if (value) detailLines.push(`- ${label}: ${value}`);
-            });
-        }
+        extraInputs.forEach((input) => {
+            const value = g.extraValues?.[input.label]?.trim();
+            if (!value) return;
+            detailLines.push(`- ${extraInputWhatsAppTitle(input)}: ${value}`);
+        });
         return detailLines.join("\n");
     });
     return template.replace("{resumen}", lines.join("\n\n"));
@@ -908,6 +922,7 @@ export default function RSVPSection({
                     : buildWhatsAppMessage(
                           whatsapp.messageTemplate,
                           guestsForSubmit,
+                          extraInputs,
                       );
             const message = applySingularPluralAdjustments(
                 baseMessage,

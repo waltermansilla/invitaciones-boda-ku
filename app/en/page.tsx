@@ -3,7 +3,7 @@ import { Cormorant_Garamond, Lora } from "next/font/google";
 import LandingPageHome, {
     type LandingData,
 } from "@/components/landing/landing-page-home";
-import landingHomeData from "@/data/landing/landing-2.json";
+import landingHomeDataEn from "@/data/landing/landing-2.en.json";
 import { landingCurrencyFromSearchParam } from "@/lib/landing/landing-public";
 
 const landingPriceFont = Cormorant_Garamond({
@@ -29,12 +29,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-    title: "Momento Único | Invitaciones digitales",
+    title: "Momento Único | Digital wedding invitations",
     description:
-        "Invitaciones digitales elegantes para bodas, XV y eventos. Elegí tu estilo y compartí tu link.",
+        "Elegant digital invitations for weddings and events. Choose your style and share your link.",
 };
 
-export default async function HomePage({
+export default async function LandingEnPage({
     searchParams,
 }: {
     searchParams: Promise<{ currency?: string | string[] }>;
@@ -47,8 +47,8 @@ export default async function HomePage({
             className={`landing-home-shell ${landingPriceFont.variable} ${landingHeroTitleFont.variable}`}
         >
             <LandingPageHome
-                landingData={landingHomeData as LandingData}
-                language="es"
+                landingData={landingHomeDataEn as LandingData}
+                language="en"
                 syncCurrencyFromSearch
                 initialCurrency={initialCurrency}
             />

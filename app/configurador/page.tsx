@@ -62,11 +62,9 @@ type EventType =
 
 type Price = { ARS: number; USD: number };
 
-const USD_ARS = pricingData.usdArs;
-const toPrice = (ars: number): Price => ({
-    ARS: ars,
-    USD: Math.ceil(ars / USD_ARS),
-});
+function pairToPrice(pair: { ars: number; usd: number }): Price {
+    return { ARS: pair.ars, USD: pair.usd };
+}
 
 interface SectionOption {
     id: string;
@@ -77,8 +75,8 @@ interface SectionOption {
 }
 
 const PLAN_BASE: Record<PlanKey, Price> = {
-    premium: toPrice(pricingData.plans.premium),
-    "diseno-unico": toPrice(pricingData.plans.disenoUnico),
+    premium: pairToPrice(pricingData.plans.premium),
+    "diseno-unico": pairToPrice(pricingData.plans.disenoUnico),
 };
 
 const FREE_SECTIONS = 5;
@@ -186,8 +184,7 @@ const DEFAULT_SELECTED_SECTION_IDS = [
 const NON_REMOVABLE_SECTION_IDS = new Set<string>(DEFAULT_SELECTED_SECTION_IDS);
 const PANEL_INCLUDED_GUESTS = 150;
 const PANEL_STEP_GUESTS = 100;
-const PANEL_STEP_PRICE_ARS =
-    pricingData.configurator.extras.panelPer100 ?? 9000;
+const PANEL_STEP_PAIR = pricingData.configurator.extras.panelPer100;
 const PANEL_MAX_GUESTS = 1000;
 const PANEL_GUEST_PRESETS = [150, 250, 350, 500] as const;
 
@@ -334,12 +331,13 @@ function ConfiguradorPageContent() {
     const router = useRouter();
     const params = useSearchParams();
     const uiLang = params.get("lang") === "en" ? "en" : "es";
-    const closeHref = `/?lang=${uiLang}`;
+    const closeLandingPath = uiLang === "en" ? "/en" : "/";
     const rawPlan = params.get("plan");
     const plan: PlanKey =
         rawPlan === "diseno-unico" ? "diseno-unico" : "premium";
     const curParam = params.get("currency");
-    const currencyDefault: Currency =
+    /** Moneda fijada por la landing vía `?currency=`; sin query se usa el mismo criterio que antes (EN→USD, ES→ARS). */
+    const currency: Currency =
         curParam === "USD"
             ? "USD"
             : curParam === "ARS"
@@ -349,7 +347,11 @@ function ConfiguradorPageContent() {
                 : "ARS";
     const start = params.get("start");
 
-    const [currency, setCurrency] = useState<Currency>(currencyDefault);
+    const closeHref = useMemo(() => {
+        const q = new URLSearchParams();
+        q.set("currency", currency);
+        return `${closeLandingPath}?${q.toString()}`;
+    }, [closeLandingPath, currency]);
     const [eventType, setEventType] = useState<EventTypeSelection>("");
     const [eventOther, setEventOther] = useState("");
     const [styleSelected, setStyleSelected] = useState<string>("");
@@ -558,11 +560,14 @@ function ConfiguradorPageContent() {
         0,
         clampedPanelGuests - PANEL_INCLUDED_GUESTS,
     );
-    const panelExtraGuestsCost = toPrice(
-        Math.round(
-            (panelExtraGuests * PANEL_STEP_PRICE_ARS) / PANEL_STEP_GUESTS,
-        ),
-    )[currency];
+    const panelExtraArs = Math.round(
+        (panelExtraGuests * PANEL_STEP_PAIR.ars) / PANEL_STEP_GUESTS,
+    );
+    const panelExtraUsd = Math.round(
+        (panelExtraGuests * PANEL_STEP_PAIR.usd) / PANEL_STEP_GUESTS,
+    );
+    const panelExtraGuestsCost =
+        currency === "ARS" ? panelExtraArs : panelExtraUsd;
     const panelBasePrice =
         extrasList.find((e) => e.id === "panel")?.price[currency] ?? 0;
     const panelSelected = extras.includes("panel");
@@ -1636,7 +1641,7 @@ function ConfiguradorPageContent() {
                                                 </span>
                                                 <p className="mb-2 text-[11px] leading-relaxed text-[#6A5C52]">
                                                     {uiLang === "en"
-                                                        ? `Includes up to ${PANEL_INCLUDED_GUESTS} guests. Then +${formatMoney(toPrice(PANEL_STEP_PRICE_ARS)[currency], currency)} every ${PANEL_STEP_GUESTS} extra guests.`
+                                                        ? `Includes up to ${PANEL_INCLUDED_GUESTS} guests. Then +${formatMoney(pairToPrice(PANEL_STEP_PAIR)[currency], currency)} every ${PANEL_STEP_GUESTS} extra guests.`
                                                         : configuradorEs.panelUi.includesLine
                                                               .replace(
                                                                   /\{\{included\}\}/g,
@@ -1647,8 +1652,8 @@ function ConfiguradorPageContent() {
                                                               .replace(
                                                                   /\{\{stepPrice\}\}/g,
                                                                   formatMoney(
-                                                                      toPrice(
-                                                                          PANEL_STEP_PRICE_ARS,
+                                                                      pairToPrice(
+                                                                          PANEL_STEP_PAIR,
                                                                       )[
                                                                           currency
                                                                       ],
@@ -2026,38 +2031,16 @@ function ConfiguradorPageContent() {
             >
                 <div className="mx-auto max-w-3xl">
                     <div className="mb-1 flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-1.5">
-                            <button
-                                type="button"
-                                onClick={() => setCurrency("ARS")}
-                                className="rounded-full border px-2.5 py-0.5 text-[11px] font-semibold"
-                                style={{
-                                    borderColor:
-                                        currency === "ARS"
-                                            ? "#7A5F45"
-                                            : "#DCCFC0",
-                                    background:
-                                        currency === "ARS" ? "#F3EBDD" : "#FFF",
-                                }}
-                            >
-                                ARS
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setCurrency("USD")}
-                                className="rounded-full border px-2.5 py-0.5 text-[11px] font-semibold"
-                                style={{
-                                    borderColor:
-                                        currency === "USD"
-                                            ? "#7A5F45"
-                                            : "#DCCFC0",
-                                    background:
-                                        currency === "USD" ? "#F3EBDD" : "#FFF",
-                                }}
-                            >
-                                USD
-                            </button>
-                        </div>
+                        <p
+                            className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#7A6A5D]"
+                            title={
+                                uiLang === "en"
+                                    ? "Currency was set on the landing page."
+                                    : "La moneda la elegiste en la landing."
+                            }
+                        >
+                            {t.currency}: {currency}
+                        </p>
                         <p className="text-base font-bold text-[#4A3729] sm:text-[17px]">
                             {t.total}: {formatMoney(total, currency)}
                         </p>

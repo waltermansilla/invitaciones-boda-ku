@@ -1,0 +1,489 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Nuestra Boda - San & Yas",
+        "description": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "ogImage": "/clientes/boda/23-san-yas/images/hero.jpeg",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "San",
+            "brideName": "Yas",
+            "separator": "&",
+            "nameOrder": "groom-first"
+        }
+    },
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "tKJ74Xhl",
+        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+    },
+
+    "access": {
+        "tokenEnabled": false,
+        "token": "8Jmk21",
+        "allowLegacyUntil": ""
+    },
+
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. verde grisaceo: 59695c, marron: 735751, gris oscuro 333",
+    "theme": {
+        "primaryColor": "#410c16",
+        "backgroundColor": "#f9f6ee",
+        "textColor": "#630d16",
+        "lightBgTextColor": "#555",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#EDF2E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "60px",
+            "weight": "600",
+            "color": "#000",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": false
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "hero": {
+        "coupleImage": "/clientes/boda/23-san-yas/images/hero.jpeg",
+        "headline": "¡Nos casamos!",
+        "showNamesOnPhoto": false,
+        "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
+        "namesDisplay": {
+            "enabled": false,
+            "position": "top",
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-07-25T12:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Si recibiste esta invitación, es porque queremos que estés con nosotros en uno de los días más importantes de nuestras vidas. Tu presencia haría este momento aún más especial.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "25 de Julio del 2026"
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/23-san-yas/images/1.jpeg"]
+            }
+        },
+
+        {
+            "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "enabled": false,
+            "id": "location-ceremonia",
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Ceremonia religiosa",
+                "address": "Parroquia San Pedro y San Pablo",
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/f5c2xKsVRKJgitNC9",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "// --- UBICACION: CIVIL y RECEPCION ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "enabled": false,
+            "id": "location-recepcion",
+            "bgColor": "primary",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Civil y ¡Fiesta!",
+                "address": "Salón de eventos 'San Cayetano'",
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/s3hhbVMq5JojVsRU6",
+                    "variant": "background"
+                }
+            }
+        },
+        {
+            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia religiosa",
+                        "address": "Quinta Los Juanes, Hipólito Vieytes 6783, Del Viso",
+                        "time": "12:00 hs",
+
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/9szkZdLfJbPZchEx8?g_st=iw",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "utensils",
+                        "name": "Almuerzo",
+
+                        "time": "13:00 hs"
+                    },
+                    {
+                        "icon": "heart",
+                        "name": "Vals",
+                        "time": "14:00 hs"
+                    },
+                    { "icon": "gift", "name": "Sorpresa", "time": "14:40 hs" },
+                    {
+                        "icon": "sparkles",
+                        "name": "Sorpresa 2",
+
+                        "time": "15:00 hs"
+                    },
+                    {
+                        "icon": "mesaDulce",
+                        "name": "Mesa dulce y brindis",
+                        "time": "16:00 hs"
+                    },
+
+                    {
+                        "icon": "clock",
+                        "name": "Fin",
+                        "time": "18:00 hs"
+                    }
+                ]
+            }
+        },
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
+            "type": "dressCode",
+            "id": "dress-code",
+            "bgColor": "background",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Dress code",
+                "subtitle": "Elegante",
+                "description": "Te pedimos amablemente evitar tonos de la siguiente paleta de colores:",
+                "showButton": true,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "square",
+                    "colors": [
+                        "#f9f6ee",
+                        "#253a61",
+                        "#1b2a49",
+                        "#410c16",
+                        "#630d16"
+                    ]
+                },
+                "button": {
+                    "text": "Ver consejos",
+                    "url": "#",
+                    "variant": "background"
+                },
+                "modal": {
+                    "title": "Consejos de vestimenta",
+                    "intro": "Queremos que la noche tenga un estilo elegante y armonioso, por eso te dejamos algunas sugerencias:",
+                    "sections": [
+                        {
+                            "heading": "✨ Estilo general",
+                            "text": "La propuesta es vestimenta formal: traje para ellos y vestido para ellas."
+                        },
+                        {
+                            "heading": "🎨 Colores a evitar ",
+                            "text": "Para mantener una estética uniforme, les pedimos evitar los tonos que están indicados en la paleta de colores (manteca, azul francia y vino)."
+                        },
+                        {
+                            "heading": "💡 Sugerencias",
+                            "text": "Pueden optar por combinar con colores de la paleta elegida siempre que esos colores no predominen, así se logra respetar el estilo de los novios."
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/23-san-yas/images/2.jpeg"]
+            }
+        },
+
+        {
+            "_comment": "PHOTOS: Invitar a subir fotos al album compartido. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "background",
+            "bgImage": "",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Subí las fotos de la boda y ayudanos a guardar los recuerdos de este momento tan especial",
+                "button": {
+                    "text": "Ir al álbum",
+                    "url": "https://drive.google.com/drive/folders/1r3U01rbnW-WWc0nC4qq37i2O9z7HKFJW?usp=sharing",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["icon", "title", "description", "modal"],
+            "data": {
+                "icon": "",
+                "title": "Regalos",
+                "description": "Tu presencia en este día es lo más importante para nosotros. Pero si además querés hacernos un regalo, podés acompañarnos con un aporte mediante nuestro alias",
+                "showButton": true,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
+                    "bankData": [
+                        {
+                            "label": "Alias",
+                            "value": "rumboalapesca (Sí, como el canal de Santi 😂)"
+                        }
+                    ],
+                    "thankYouText": "¡Gracias de corazón!"
+                }
+            }
+        },
+
+        {
+            "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
+            "type": "adultsOnly",
+            "id": "adults-only",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description"],
+            "data": {
+                "icon": "baby",
+                "title": "Sólo adultos",
+                "description": "PARA DISFRUTAR PLENAMENTE DE ESTA CELEBRACIÓN, SUGERIMOS ASISTIR SIN NIÑOS. DE TODOS MODOS, AL CONFIRMAR TU ASISTENCIA, POR FAVOR INDICANOS SI VENDRÁS CON ELLOS."
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
+                "author": "San & Yas",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- FORMULARIO RSVP ---": "",
+            "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "primary",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 18 de Julio",
+                "guestCountLabel": "Número de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "Confirmás tu asistencia?",
+                    "attendanceYes": "Confirmo!",
+                    "attendanceNo": "No podré asistir",
+                    "dietary": "¿Algún requerimiento en la alimentación?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celíaco",
+                        "Otro"
+                    ],
+                    "extraInputs": [
+                        {
+                            "id": "mensajersvp",
+                            "label": "¿Algún mensaje para los novios?",
+                            "placeholder": "Escribí tu mensaje",
+                            "tituloPanel": "Mensaje",
+                            "a4": "bottom"
+                        }
+                    ],
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "541161969095",
+                    "messageTemplate": "Hola San & Yas! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
+                }
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Esta invitación es personal. Te pedimos amablemente no reenviarla ni compartirla en redes sociales. ¡Te esperamos para compartir una noche inolvidable!",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/boda/23-san-yas/images/3.jpeg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#000",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -6,6 +6,7 @@ import {
   invitationPublicPathFromConfig,
   panelVariantesFromConfig,
 } from "@/lib/config-loader"
+import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
 import { BaseLinksClient } from "./base-links-client"
 
 export const dynamic = "force-dynamic"
@@ -17,6 +18,20 @@ export const viewport: Viewport = {
 const DEFAULT_BASE_SUBTITLE =
   "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
 
+function joinCoupleDisplayNames(coupleNames: Record<string, unknown>): string {
+  const brideName =
+    typeof coupleNames.brideName === "string" ? coupleNames.brideName.trim() : ""
+  const groomName =
+    typeof coupleNames.groomName === "string" ? coupleNames.groomName.trim() : ""
+  const separator =
+    typeof coupleNames.separator === "string" && coupleNames.separator.trim()
+      ? coupleNames.separator.trim()
+      : "&"
+  const order = coupleNames.nameOrder as "bride-first" | "groom-first" | undefined
+  const { first, second } = coupleNamesDisplayPair(brideName, groomName, order)
+  return [first, second].filter(Boolean).join(` ${separator} `)
+}
+
 interface PageProps {
   params: Promise<{ token: string }>
 }
@@ -26,14 +41,6 @@ function autoInvitationTitle(config: ReturnType<typeof findConfigByBaseToken>) {
   const meta = (config?.meta || {}) as Record<string, unknown>
   const coupleNames =
     (meta.coupleNames as Record<string, unknown> | undefined) || {}
-  const brideName =
-    typeof coupleNames.brideName === "string" ? coupleNames.brideName.trim() : ""
-  const groomName =
-    typeof coupleNames.groomName === "string" ? coupleNames.groomName.trim() : ""
-  const separator =
-    typeof coupleNames.separator === "string" && coupleNames.separator.trim()
-      ? coupleNames.separator.trim()
-      : "&"
   const xvNameFromCouple =
     typeof coupleNames.name === "string" ? coupleNames.name.trim() : ""
   const quinceaneraName =
@@ -44,7 +51,7 @@ function autoInvitationTitle(config: ReturnType<typeof findConfigByBaseToken>) {
     return name ? `XV de ${name}` : "XV"
   }
   if (tipo === "boda") {
-    const names = [brideName, groomName].filter(Boolean).join(` ${separator} `)
+    const names = joinCoupleDisplayNames(coupleNames)
     return names ? `Boda ${names}` : "Boda"
   }
   if (tipo === "baby") {
@@ -54,7 +61,7 @@ function autoInvitationTitle(config: ReturnType<typeof findConfigByBaseToken>) {
     const name = xvNameFromCouple || quinceaneraName
     return name ? `Cumple de ${name}` : "Cumple"
   }
-  const fallbackNames = [brideName, groomName].filter(Boolean).join(` ${separator} `)
+  const fallbackNames = joinCoupleDisplayNames(coupleNames)
   return fallbackNames ? `Invitación ${fallbackNames}` : "Invitación"
 }
 
@@ -63,21 +70,13 @@ function autoBaseTitle(config: ReturnType<typeof findConfigByBaseToken>) {
   const meta = (config?.meta || {}) as Record<string, unknown>
   const coupleNames =
     (meta.coupleNames as Record<string, unknown> | undefined) || {}
-  const brideName =
-    typeof coupleNames.brideName === "string" ? coupleNames.brideName.trim() : ""
-  const groomName =
-    typeof coupleNames.groomName === "string" ? coupleNames.groomName.trim() : ""
-  const separator =
-    typeof coupleNames.separator === "string" && coupleNames.separator.trim()
-      ? coupleNames.separator.trim()
-      : "&"
   const xvNameFromCouple =
     typeof coupleNames.name === "string" ? coupleNames.name.trim() : ""
   const quinceaneraName =
     typeof meta.quinceaneraName === "string" ? meta.quinceaneraName.trim() : ""
 
   if (tipo === "boda") {
-    const names = [brideName, groomName].filter(Boolean).join(` ${separator} `)
+    const names = joinCoupleDisplayNames(coupleNames)
     return names ? `Boda - ${names}` : "Boda"
   }
   if (tipo === "xv") {
@@ -92,7 +91,7 @@ function autoBaseTitle(config: ReturnType<typeof findConfigByBaseToken>) {
     const name = xvNameFromCouple || quinceaneraName
     return name ? `Cumple - ${name}` : "Cumple"
   }
-  const names = [brideName, groomName].filter(Boolean).join(` ${separator} `)
+  const names = joinCoupleDisplayNames(coupleNames)
   return names ? `Evento - ${names}` : "Evento"
 }
 

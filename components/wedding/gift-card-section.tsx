@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useModal } from "./modal-provider";
 import { useIsMuestra } from "@/lib/config-context";
+import { copyValueForBankField } from "@/lib/copy-bank-field-value";
 
 /**
  * ICONOS DISPONIBLES para giftCard:
@@ -59,7 +60,8 @@ interface GiftCardModalData {
     transferData: { label: string; value: string }[];
 }
 
-function CopyBtn({ value }: { value: string }) {
+function CopyBtn({ value, label }: { value: string; label: string }) {
+    const copyText = copyValueForBankField(label, value);
     const [copied, setCopied] = useState(false);
     const fallbackCopy = (text: string) => {
         const ta = document.createElement("textarea");
@@ -82,9 +84,9 @@ function CopyBtn({ value }: { value: string }) {
     const handleCopy = async () => {
         try {
             if (navigator.clipboard?.writeText && window.isSecureContext) {
-                await navigator.clipboard.writeText(value);
+                await navigator.clipboard.writeText(copyText);
             } else {
-                const ok = fallbackCopy(value);
+                const ok = fallbackCopy(copyText);
                 if (!ok) throw new Error("copy-failed");
             }
             setCopied(true);
@@ -220,17 +222,19 @@ function GiftCardModalContent({
                 {modal.transferData.map((item) => (
                     <div
                         key={item.label}
-                        className="flex items-center justify-between rounded-sm border border-primary-foreground/15 px-4 py-3"
+                        className="flex items-start justify-between gap-2 rounded-sm border border-primary-foreground/15 px-4 py-3"
                     >
                         <div className="min-w-0 flex-1">
                             <p className="text-[10px] font-medium tracking-[0.1em] uppercase text-primary-foreground/50">
                                 {item.label}
                             </p>
-                            <p className="mt-0.5 truncate text-sm font-light text-primary-foreground">
+                            <p className="mt-0.5 break-words text-sm font-light leading-snug text-primary-foreground">
                                 {isMuestra ? "XXXX-XXXX-XXXX" : item.value}
                             </p>
                         </div>
-                        {!isMuestra && <CopyBtn value={item.value} />}
+                        {!isMuestra && (
+                            <CopyBtn value={item.value} label={item.label} />
+                        )}
                     </div>
                 ))}
             </div>

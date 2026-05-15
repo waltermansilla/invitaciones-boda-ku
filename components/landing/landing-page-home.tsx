@@ -39,10 +39,7 @@ import {
     useState,
 } from "react";
 import { createPortal } from "react-dom";
-import {
-    LandingHeader,
-    type LandingLocale,
-} from "@/components/landing/landing-header-home";
+import { LandingHeader } from "@/components/landing/landing-header-home";
 import {
     HeroSampleMarquee,
     isExcludedHeroMarqueeAsset,
@@ -51,7 +48,18 @@ import { eventTypeLabelFromFolderTipo } from "@/lib/client-helpers-shared";
 import { trackGaEvent } from "@/lib/google-analytics";
 import { trackMetaEvent } from "@/lib/meta-pixel";
 import FooterSection from "@/components/wedding/footer-section";
-import pricingData from "@/data/landing/pricing.json";
+import {
+    LandingPricingProvider,
+    useLandingPricing,
+} from "@/components/landing/landing-pricing-context";
+import {
+    type LandingPriceBook,
+    LANDING_PRICE_BOOK,
+} from "@/lib/landing/landing-price-book";
+import type {
+    LandingCurrency,
+    LandingLanguage,
+} from "@/lib/landing/landing-public";
 import {
     MU_CONFIG_FROM_LANDING_KEY,
     MU_LANDING_RETURN_SCROLL_KEY,
@@ -452,35 +460,60 @@ function priceTypeStyle(theme: LandingTheme): React.CSSProperties {
     };
 }
 
-function formatArs(amount: number, locale: LandingLocale): string {
-    if (locale === "en") return `ARS ${amount.toLocaleString("en-US")}`;
-    return `$${amount.toLocaleString("es-AR")}`;
+function pickMoney(
+    pair: { ars: number; usd: number },
+    currency: LandingCurrency,
+): number {
+    return currency === "ARS" ? pair.ars : pair.usd;
 }
 
-function formatUsd(
+function formatLandingMoney(
     amount: number,
-    locale: LandingLocale,
-    variant: "USD" | "US$" = "USD",
+    currency: LandingCurrency,
 ): string {
-    const n = Math.ceil(amount);
-    const unit = variant === "US$" ? "US$" : "USD";
-    return `≈ ${unit} ${n.toLocaleString("en-US")}`;
+    if (currency === "ARS") return `$${amount.toLocaleString("es-AR")}`;
+    return `USD ${amount.toLocaleString("en-US")}`;
 }
 
-function formatUsdMain(amount: number): string {
-    return `USD ${Math.ceil(amount).toLocaleString("en-US")}`;
+function formatExtraSectionParen(
+    book: LandingPriceBook,
+    language: LandingLanguage,
+    currency: LandingCurrency,
+): string {
+    const n = pickMoney(book.configurator.extraSection, currency);
+    if (language === "en") {
+        return currency === "ARS"
+            ? `(+ARS ${n.toLocaleString("en-US")} per extra section)`
+            : `(+USD ${n.toLocaleString("en-US")} per extra section)`;
+    }
+    return currency === "ARS"
+        ? `(+$${n.toLocaleString("es-AR")} por sección extra)`
+        : `(+USD ${n.toLocaleString("en-US")} por sección extra)`;
 }
 
-function toUsdPerItem(ars: number): number {
-    return Math.ceil(ars / pricingData.usdArs);
+function formatSecondLangParen(
+    book: LandingPriceBook,
+    language: LandingLanguage,
+    currency: LandingCurrency,
+): string {
+    const n = pickMoney(book.configurator.secondLanguage, currency);
+    if (language === "en") {
+        return currency === "ARS"
+            ? `(+ARS ${n.toLocaleString("en-US")})`
+            : `(+USD ${n.toLocaleString("en-US")})`;
+    }
+    return currency === "ARS"
+        ? `(+$${n.toLocaleString("es-AR")})`
+        : `(+USD ${n.toLocaleString("en-US")})`;
 }
 
 function replaceDeliveryWindowTokens(
     value: string,
-    locale: LandingLocale,
+    language: LandingLanguage,
+    book: LandingPriceBook,
 ): string {
-    const min = pricingData.deliveryWindow.minBusinessDays;
-    const max = pricingData.deliveryWindow.maxBusinessDays;
+    const min = book.deliveryWindow.minBusinessDays;
+    const max = book.deliveryWindow.maxBusinessDays;
     const deliveryRangeEs = `${min} a ${max} días hábiles`;
     const deliveryRangeEn = `${min}\u2013${max} business days`;
     return value
@@ -488,23 +521,27 @@ function replaceDeliveryWindowTokens(
         .replace(/\{\{deliveryRangeEn\}\}/g, deliveryRangeEn)
         .replace(
             /\{\{deliveryRange\}\}/g,
-            locale === "en" ? deliveryRangeEn : deliveryRangeEs,
+            language === "en" ? deliveryRangeEn : deliveryRangeEs,
         );
 }
 
-function applyDeliveryWindowTokens<T>(input: T, locale: LandingLocale): T {
+function applyDeliveryWindowTokens<T>(
+    input: T,
+    language: LandingLanguage,
+    book: LandingPriceBook,
+): T {
     if (typeof input === "string") {
-        return replaceDeliveryWindowTokens(input, locale) as T;
+        return replaceDeliveryWindowTokens(input, language, book) as T;
     }
     if (Array.isArray(input)) {
         return input.map((item) =>
-            applyDeliveryWindowTokens(item, locale),
+            applyDeliveryWindowTokens(item, language, book),
         ) as T;
     }
     if (input && typeof input === "object") {
         const out: Record<string, unknown> = {};
         Object.entries(input as Record<string, unknown>).forEach(([k, v]) => {
-            out[k] = applyDeliveryWindowTokens(v, locale);
+            out[k] = applyDeliveryWindowTokens(v, language, book);
         });
         return out as T;
     }
@@ -513,31 +550,26 @@ function applyDeliveryWindowTokens<T>(input: T, locale: LandingLocale): T {
 
 function applyPricingToLandingData(
     raw: LandingData,
-    locale: LandingLocale,
+    language: LandingLanguage,
+    currency: LandingCurrency,
+    priceBook: LandingPriceBook,
 ): LandingData {
-    const premiumArs = pricingData.plans.premium;
-    const disenoUnicoArs = pricingData.plans.disenoUnico;
-    const premiumUsd = toUsdPerItem(premiumArs);
-    const disenoUnicoUsd = toUsdPerItem(disenoUnicoArs);
-    const secondLangArs = pricingData.configurator.secondLanguage;
-    const secondLangLabel =
-        locale === "en"
-            ? `+$${secondLangArs.toLocaleString("en-US")}`
-            : `+$${secondLangArs.toLocaleString("es-AR")}`;
+    const premiumPair = priceBook.plans.premium;
+    const uniquePair = priceBook.plans.disenoUnico;
+    const premiumAmt = pickMoney(premiumPair, currency);
+    const uniqueAmt = pickMoney(uniquePair, currency);
 
-    const paperLines = [
-        pricingData.landing.paper.design,
-        pricingData.landing.paper.printing130,
-        pricingData.landing.paper.envelopesAndSeals,
-        pricingData.landing.paper.postalShipping,
+    const paperPairs = [
+        priceBook.landing.paper.design,
+        priceBook.landing.paper.printing130,
+        priceBook.landing.paper.envelopesAndSeals,
+        priceBook.landing.paper.postalShipping,
     ];
-    const paperTotalArs = paperLines.reduce((sum, v) => sum + v, 0);
-    const paperTotalUsd = paperLines.reduce(
-        (sum, ars) => sum + toUsdPerItem(ars),
+    const paperTotal = paperPairs.reduce(
+        (sum, pair) => sum + pickMoney(pair, currency),
         0,
     );
-    const savingsArs = Math.max(0, paperTotalArs - premiumArs);
-    const savingsUsd = Math.max(0, paperTotalUsd - premiumUsd);
+    const savings = Math.max(0, paperTotal - premiumAmt);
 
     const paperLineLabelsEs = [
         "Diseño",
@@ -552,12 +584,12 @@ function applyPricingToLandingData(
         "Postal shipping",
     ];
     const paperLineLabels =
-        locale === "en" ? paperLineLabelsEn : paperLineLabelsEs;
-    const usdVariant = locale === "en" ? "US$" : "USD";
+        language === "en" ? paperLineLabelsEn : paperLineLabelsEs;
 
     const next = applyDeliveryWindowTokens(
         structuredClone(raw) as LandingData,
-        locale,
+        language,
+        priceBook,
     );
 
     Object.values(next.ctaButtons).forEach((btn) => {
@@ -565,65 +597,43 @@ function applyPricingToLandingData(
             return;
         const [path, query = ""] = btn.url.split("?");
         const params = new URLSearchParams(query);
-        params.set("lang", locale);
+        params.set("lang", language);
+        params.set("currency", currency);
         btn.url = `${path}?${params.toString()}`;
     });
 
     if (next.floatingCta) {
         next.floatingCta.line1 =
-            locale === "en"
-                ? `Start here from ${formatUsdMain(premiumUsd)}`
-                : `Empezá aquí desde ${formatArs(premiumArs, locale)}`;
+            language === "en"
+                ? `Start here from ${formatLandingMoney(premiumAmt, currency)}`
+                : `Empezá aquí desde ${formatLandingMoney(premiumAmt, currency)}`;
     }
 
-    if (locale === "en") {
-        next.sections.comparativa.paper.lines = paperLineLabels.map(
-            (label, i) => ({
-                label,
-                value: formatUsdMain(toUsdPerItem(paperLines[i] ?? 0)),
-            }),
-        );
-        next.sections.comparativa.paper.totalValue =
-            formatUsdMain(paperTotalUsd);
-        next.sections.comparativa.paper.totalValueUsd = `≈ ${formatArs(paperTotalArs, locale)}`;
-    } else {
-        next.sections.comparativa.paper.lines = paperLineLabels.map(
-            (label, i) => ({
-                label,
-                value: formatArs(paperLines[i] ?? 0, locale),
-            }),
-        );
-        next.sections.comparativa.paper.totalValue = formatArs(
-            paperTotalArs,
-            locale,
-        );
-        next.sections.comparativa.paper.totalValueUsd = formatUsd(
-            paperTotalUsd,
-            locale,
-            usdVariant,
-        );
-    }
-    if (locale === "en") {
-        next.sections.comparativa.digital.fromPrice = formatUsdMain(premiumUsd);
-        next.sections.comparativa.digital.fromPriceUsd = formatArs(
-            premiumArs,
-            locale,
-        );
-    } else {
-        next.sections.comparativa.digital.fromPrice = formatArs(
-            premiumArs,
-            locale,
-        );
-        next.sections.comparativa.digital.fromPriceUsd = formatUsd(
-            premiumUsd,
-            locale,
-            usdVariant,
-        );
-    }
+    next.sections.comparativa.paper.lines = paperLineLabels.map(
+        (label, i) => ({
+            label,
+            value: formatLandingMoney(
+                pickMoney(paperPairs[i] ?? { ars: 0, usd: 0 }, currency),
+                currency,
+            ),
+        }),
+    );
+    next.sections.comparativa.paper.totalValue = formatLandingMoney(
+        paperTotal,
+        currency,
+    );
+    delete next.sections.comparativa.paper.totalValueUsd;
+
+    next.sections.comparativa.digital.fromPrice = formatLandingMoney(
+        premiumAmt,
+        currency,
+    );
+    delete next.sections.comparativa.digital.fromPriceUsd;
+
     next.sections.comparativa.digital.savingsLine =
-        locale === "en"
-            ? `Save approx. ${formatUsdMain(savingsUsd)} compared to paper`
-            : `Ahorrá aprox. ${formatArs(savingsArs, locale)} frente al papel`;
+        language === "en"
+            ? `Save approx. ${formatLandingMoney(savings, currency)} compared to paper`
+            : `Ahorrá aprox. ${formatLandingMoney(savings, currency)} frente al papel`;
 
     const premiumPlan = next.sections.servicio.planes.find((p) =>
         p.name.toLowerCase().includes("premium"),
@@ -633,50 +643,53 @@ function applyPricingToLandingData(
             p.name.toLowerCase().includes("diseño") ||
             p.name.toLowerCase().includes("unique"),
     );
+    const extraParen = formatExtraSectionParen(
+        priceBook,
+        language,
+        currency,
+    );
+    const secondParen = formatSecondLangParen(
+        priceBook,
+        language,
+        currency,
+    );
+
     if (premiumPlan) {
-        if (locale === "en") {
-            premiumPlan.price = formatUsdMain(premiumUsd);
-            premiumPlan.priceUsd = formatArs(premiumArs, locale);
-        } else {
-            premiumPlan.price = formatArs(premiumArs, locale);
-            premiumPlan.priceUsd = formatUsd(premiumUsd, locale, "USD");
-        }
+        premiumPlan.price = formatLandingMoney(premiumAmt, currency);
+        delete premiumPlan.priceUsd;
         premiumPlan.features = premiumPlan.features.map((f) => {
-            if (locale === "en") {
-                if (f.toLowerCase().includes("extra section")) {
-                    return f.replace(
+            const lower = f.toLowerCase();
+            if (
+                lower.includes("extra section") ||
+                lower.includes("sección extra")
+            ) {
+                return f
+                    .replace(
                         /\(\+ARS [\d,]+ per extra section\)|\(\+\$[\d,]+ per extra section\)/,
-                        `(+ARS ${pricingData.configurator.extraSection.toLocaleString("en-US")} per extra section)`,
+                        extraParen,
+                    )
+                    .replace(
+                        /\(\+\$[\d.]+ por sección extra\)/,
+                        extraParen,
                     );
-                }
-                if (f.toLowerCase().includes("second language")) {
-                    return f.replace(
+            }
+            if (
+                lower.includes("second language") ||
+                lower.includes("2do idioma")
+            ) {
+                return f
+                    .replace(
                         /\(\+ARS [\d,]+\)|\(\+\$[\d,]+\)/,
-                        `(+ARS ${secondLangArs.toLocaleString("en-US")})`,
-                    );
-                }
-                return f;
-            }
-            if (f.toLowerCase().includes("sección extra")) {
-                return f.replace(
-                    /\(\+\$[\d.]+ por sección extra\)/,
-                    `(+$${pricingData.configurator.extraSection.toLocaleString("es-AR")} por sección extra)`,
-                );
-            }
-            if (f.toLowerCase().includes("2do idioma")) {
-                return f.replace(/\(\+\$[\d.]+\)/, `(${secondLangLabel})`);
+                        secondParen,
+                    )
+                    .replace(/\(\+\$[\d.]+\)/, secondParen);
             }
             return f;
         });
     }
     if (uniquePlan) {
-        if (locale === "en") {
-            uniquePlan.price = formatUsdMain(disenoUnicoUsd);
-            uniquePlan.priceUsd = formatArs(disenoUnicoArs, locale);
-        } else {
-            uniquePlan.price = formatArs(disenoUnicoArs, locale);
-            uniquePlan.priceUsd = formatUsd(disenoUnicoUsd, locale, "USD");
-        }
+        uniquePlan.price = formatLandingMoney(uniqueAmt, currency);
+        delete uniquePlan.priceUsd;
     }
 
     return next;
@@ -1076,37 +1089,40 @@ function handleLocalAnchorClick(
     window.history.replaceState(null, "", cleanUrl);
 }
 
-function heroPremiumPriceLine(locale: LandingLocale): string {
-    const premiumArs = pricingData.plans.premium;
-    if (locale === "en") {
-        return `from USD ${Math.ceil(premiumArs / pricingData.usdArs).toLocaleString("en-US")}`;
-    }
-    return `desde $${premiumArs.toLocaleString("es-AR")}`;
+function heroPremiumPriceLine(
+    language: LandingLanguage,
+    currency: LandingCurrency,
+    book: LandingPriceBook,
+): string {
+    const amt = pickMoney(book.plans.premium, currency);
+    const line = formatLandingMoney(amt, currency);
+    return language === "en" ? `from ${line}` : `desde ${line}`;
 }
 
 /** Primary pill (label + opcional “desde …”) en hero compacto y tras el carrusel de estilos. */
 function Landing2PrimaryPill({
     primary,
     theme,
-    locale,
+    language,
     waNumber,
     trackingSource = "hero",
     showPriceBelowLabel = true,
 }: {
     primary?: CtaButton;
     theme: LandingTheme;
-    locale: LandingLocale;
+    language: LandingLanguage;
     waNumber: string;
     trackingSource?: string;
     /** En el hero compacto suele ir solo el texto, sin línea de precio. */
     showPriceBelowLabel?: boolean;
 }) {
+    const { priceBook, currency } = useLandingPricing();
     const gaButtonName =
         trackingSource === "muestras_mid" ? "CTA - MUESTRAS" : "CTA - HERO";
     const label =
         primary?.text ??
-        (locale === "en" ? "Create my invitation" : "Crear mi invitación");
-    const priceLine = heroPremiumPriceLine(locale);
+        (language === "en" ? "Create my invitation" : "Crear mi invitación");
+    const priceLine = heroPremiumPriceLine(language, currency, priceBook);
     const className = showPriceBelowLabel
         ? "inline-flex min-h-[56px] w-full flex-col items-center justify-center rounded-full px-6 py-3 text-[15px] font-semibold shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99]"
         : "inline-flex min-h-[56px] w-full items-center justify-center rounded-full px-6 py-3.5 text-[17px] font-semibold shadow-[0_10px_30px_rgba(120,98,72,0.18)] transition-[transform,box-shadow] duration-200 hover:scale-[1.02] hover:shadow-[0_12px_34px_rgba(120,98,72,0.24)] active:scale-[0.99] sm:text-lg";
@@ -1770,7 +1786,7 @@ function HeroTdy({
     theme,
     buttons,
     waNumber,
-    locale,
+    language,
     reviewsTopSimple = false,
     heroSectionId,
     heroMarqueeImageSrcs,
@@ -1779,7 +1795,7 @@ function HeroTdy({
     theme: LandingTheme;
     buttons: Record<string, CtaButton>;
     waNumber: string;
-    locale: LandingLocale;
+    language: LandingLanguage;
     reviewsTopSimple?: boolean;
     heroSectionId?: string;
     /** Rutas `/landing/media/...` para bandas tipo showcase encima del título (solo layout compacto). */
@@ -1798,7 +1814,7 @@ function HeroTdy({
     const rotateWordsEnabled = data.title.rotateWords !== false;
     const scrollToModelsHint =
         data.scrollToModelsHint?.trim() ||
-        (locale === "en"
+        (language === "en"
             ? "Scroll to see samples"
             : "Desliza para ver modelos");
     const hint = data.languagesHint?.trim();
@@ -1913,7 +1929,7 @@ function HeroTdy({
                             className="shrink-0 text-[10px] font-semibold tracking-[0.14em] md:text-[11px]"
                             style={{ color: theme.accents.softGold }}
                             aria-label={
-                                locale === "en"
+                                language === "en"
                                     ? "Available languages: Spanish and English"
                                     : "Idiomas disponibles: español e inglés"
                             }
@@ -1970,7 +1986,7 @@ function HeroTdy({
                                     className="text-[13px] font-bold leading-tight md:text-[14px]"
                                     style={{ color: "#6E5A45" }}
                                 >
-                                    {locale === "en"
+                                    {language === "en"
                                         ? "Happy clients"
                                         : "Clientes felices"}
                                 </span>
@@ -2029,7 +2045,7 @@ function HeroTdy({
                                     className="text-[13px] font-bold leading-tight md:text-[14px]"
                                     style={{ color: "#6E5A45" }}
                                 >
-                                    {locale === "en"
+                                    {language === "en"
                                         ? "Happy clients"
                                         : "Clientes felices"}
                                 </span>
@@ -2132,7 +2148,7 @@ function HeroTdy({
                         <Landing2PrimaryPill
                             primary={primary}
                             theme={theme}
-                            locale={locale}
+                            language={language}
                             waNumber={waNumber}
                             showPriceBelowLabel={false}
                         />
@@ -3245,12 +3261,12 @@ function estiloItemsGroupedByKind(
 
 function estiloCatalogGroupTitle(
     kind: EstiloCatalogKind,
-    locale: LandingLocale,
+    language: LandingLanguage,
 ): string {
     if (kind === "otros") {
-        return locale === "en" ? "More samples" : "Más modelos";
+        return language === "en" ? "More samples" : "Más modelos";
     }
-    if (locale === "en") {
+    if (language === "en") {
         const en: Record<string, string> = {
             boda: "Weddings",
             xv: "XV",
@@ -3277,7 +3293,7 @@ function EstilosCarousel({
     data,
     theme,
     waNumber,
-    locale = "es",
+    language = "es",
     endHeroPrimaryCta,
     premiumLeadButton,
     panelPreviewImageSrc,
@@ -3286,10 +3302,10 @@ function EstilosCarousel({
     data: LandingData["sections"]["estilos"];
     theme: LandingTheme;
     waNumber: string;
-    locale?: LandingLocale;
+    language?: LandingLanguage;
     /** Mismo CTA principal que el hero (#planes + precio) debajo del carrusel (layout compacto). */
     endHeroPrimaryCta?: {
-        locale: LandingLocale;
+        language: LandingLanguage;
         primary?: CtaButton;
     };
     premiumLeadButton?: CtaButton;
@@ -3305,7 +3321,7 @@ function EstilosCarousel({
     const waNoStyle = waHref(waNumber, data.noStyleWhatsappMessage);
     const noStyleConfirmMessage =
         data.noStyleConfirmMessage ??
-        (locale === "en"
+        (language === "en"
             ? "You will be redirected to the designer's WhatsApp. Continue?"
             : "Serás redirigida al WhatsApp del diseñador. ¿Querés continuar?");
     const car = LANDING_MOTION.estilosCarousel;
@@ -3315,10 +3331,12 @@ function EstilosCarousel({
         [data.items],
     );
     const showKindSplit = kindGroups.length > 1;
+    const { priceBook, currency } = useLandingPricing();
+    const premiumAmt = pickMoney(priceBook.plans.premium, currency);
     const premiumPriceLabel =
-        locale === "en"
-            ? `for ${formatUsdMain(toUsdPerItem(pricingData.plans.premium))}`
-            : `por ${formatArs(pricingData.plans.premium, "es")}`;
+        language === "en"
+            ? `for ${formatLandingMoney(premiumAmt, currency)}`
+            : `por ${formatLandingMoney(premiumAmt, currency)}`;
     const activeModelHighlights = useMemo(() => {
         const href = activeModel?.href?.trim() ?? "";
         const fromJson = href ? data.highlightsByHref?.[href] : undefined;
@@ -3326,7 +3344,7 @@ function EstilosCarousel({
             .map((line) => line.trim())
             .filter(Boolean);
         if (cleaned.length > 0) return cleaned;
-        return locale === "en"
+        return language === "en"
             ? [
                   "Visual style and structure adaptable to your event.",
                   "Sections can be customized based on your priorities.",
@@ -3337,17 +3355,17 @@ function EstilosCarousel({
                   "Podés personalizar secciones según lo que necesites.",
                   "Confirmación por WhatsApp incluida de base.",
               ];
-    }, [activeModel?.href, data.highlightsByHref, locale]);
+    }, [activeModel?.href, data.highlightsByHref, language]);
     const panelAvailableTitle =
-        locale === "en"
+        language === "en"
             ? "Guest dashboard available as an add-on"
             : "Panel de invitados disponible como extra";
     const panelAvailableCopy =
-        locale === "en"
+        language === "en"
             ? "You can add the guest dashboard to track confirmations, dietary needs, and song requests in one place."
             : "También podés sumar el panel privado para ordenar confirmaciones, restricciones alimentarias y canciones sugeridas.";
     const modalPitch =
-        locale === "en"
+        language === "en"
             ? "Want to start your invitation inspired by this style?"
             : "¿Querés empezar tu invitación inspirándote en este estilo?";
 
@@ -3440,7 +3458,7 @@ function EstilosCarousel({
                 className={`${cardClass} text-center transition-transform duration-200 hover:scale-[1.01]`}
                 style={cardStyle}
                 aria-label={
-                    locale === "en"
+                    language === "en"
                         ? `Open details for ${item.titulo}`
                         : `Abrir detalles de ${item.titulo}`
                 }
@@ -3531,7 +3549,7 @@ function EstilosCarousel({
                                             >
                                                 {estiloCatalogGroupTitle(
                                                     group.kind,
-                                                    locale,
+                                                    language,
                                                 )}
                                             </h3>
                                         </div>
@@ -3570,7 +3588,7 @@ function EstilosCarousel({
                             <Landing2PrimaryPill
                                 primary={endHeroPrimaryCta.primary}
                                 theme={theme}
-                                locale={endHeroPrimaryCta.locale}
+                                language={endHeroPrimaryCta.language}
                                 waNumber={waNumber}
                                 trackingSource="muestras_mid"
                             />
@@ -3649,7 +3667,7 @@ function EstilosCarousel({
                             type="button"
                             onClick={() => setActiveModel(null)}
                             aria-label={
-                                locale === "en" ? "Close modal" : "Cerrar modal"
+                                language === "en" ? "Close modal" : "Cerrar modal"
                             }
                             className="absolute right-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF9F1]/85 text-[#7A5F45] backdrop-blur-md transition-colors hover:bg-[#FFF3E4]"
                         >
@@ -3697,7 +3715,7 @@ function EstilosCarousel({
                                             rel="noopener noreferrer"
                                             className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full border border-white/50 bg-[#3F3127]/75 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-[#3F3127]/90"
                                         >
-                                            {locale === "en"
+                                            {language === "en"
                                                 ? "View invitation"
                                                 : "Ver invitación"}
                                             <ChevronRight size={15} />
@@ -3707,7 +3725,7 @@ function EstilosCarousel({
                             </div>
                             <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-4 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
                                 <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
-                                    {locale === "en"
+                                    {language === "en"
                                         ? "What stands out in this sample"
                                         : "Lo destacable de esta muestra"}
                                 </p>
@@ -3736,7 +3754,7 @@ function EstilosCarousel({
                                                 }
                                                 alt={
                                                     panelPreviewImageAlt ||
-                                                    (locale === "en"
+                                                    (language === "en"
                                                         ? "Guest dashboard preview"
                                                         : "Vista previa del panel de invitados")
                                                 }
@@ -3762,7 +3780,7 @@ function EstilosCarousel({
                                         btn={{
                                             ...premiumLeadButton,
                                             text:
-                                                locale === "en"
+                                                language === "en"
                                                     ? "Start my invitation"
                                                     : "Comenzar mi invitación",
                                         }}
@@ -3777,7 +3795,7 @@ function EstilosCarousel({
                                         }}
                                     >
                                         <span className="text-[15px] font-semibold">
-                                            {locale === "en"
+                                            {language === "en"
                                                 ? "Start my invitation"
                                                 : "Comenzar mi invitación"}
                                         </span>
@@ -4048,7 +4066,7 @@ function PanelSection({
     return (
         <section
             id={data.id ?? "panel"}
-            className="px-5 py-20 md:px-8 md:py-28"
+            className="px-5 py-14 md:px-8 md:py-20"
             style={{ background: theme.background }}
         >
             <div ref={revealRef} className="mx-auto max-w-6xl">
@@ -4097,72 +4115,17 @@ function PanelSection({
                                 wordStepMs={14}
                             />
                         </p>
-                        <div className="mt-7 hidden md:grid md:grid-cols-3 md:gap-3">
-                            {data.features.map((f, i) => (
-                                <div
-                                    key={`desktop-inline-${f.title}`}
-                                    className="rounded-2xl px-4 py-4 shadow-lg"
-                                    style={{
-                                        background: "#EDE6DC",
-                                        ...blockRevealStyle(
-                                            revealed,
-                                            265 + i * 72,
-                                        ),
-                                    }}
-                                >
-                                    <span
-                                        className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg"
-                                        style={{
-                                            background: "#D9CFC2",
-                                            color: "#4A3F35",
-                                        }}
-                                    >
-                                        <TdyIcon
-                                            name={f.icon ?? "barChart"}
-                                            size={16}
-                                            color="#4A3F35"
-                                        />
-                                    </span>
-                                    <h3
-                                        className="mt-1 text-base font-normal leading-tight"
-                                        style={{
-                                            fontFamily:
-                                                theme.typography.headingFont,
-                                            color: tx.heading,
-                                        }}
-                                    >
-                                        <StaggerText
-                                            text={f.title}
-                                            revealed={revealed}
-                                            baseDelayMs={268 + i * 72}
-                                            wordStepMs={16}
-                                        />
-                                    </h3>
-                                    <p
-                                        className="mt-1.5 text-xs leading-relaxed"
-                                        style={{ color: tx.muted }}
-                                    >
-                                        <StaggerText
-                                            text={f.subtitle}
-                                            revealed={revealed}
-                                            baseDelayMs={286 + i * 72}
-                                            wordStepMs={10}
-                                        />
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                     {data.imageSrc ? (
                         <div
-                            className="relative mx-auto mt-10 flex justify-center md:mt-0 md:justify-end"
+                            className="relative mx-auto mt-8 flex justify-center md:mt-0 md:justify-end"
                             style={blockRevealStyle(revealed, 195)}
                         >
                             <div
                                 className="relative inline-flex max-w-full overflow-hidden rounded-2xl"
                                 style={{ background: theme.background }}
                             >
-                                <div className="relative aspect-[9/16] h-auto w-[min(88vw,300px)] max-h-[min(70vh,520px)] max-w-full sm:w-[min(86vw,360px)] md:w-[min(36vw,420px)]">
+                                <div className="relative aspect-[9/16] h-auto w-[min(88vw,300px)] max-h-[min(62vh,480px)] max-w-full sm:w-[min(86vw,340px)] md:w-[min(36vw,400px)]">
                                     <Image
                                         src={data.imageSrc}
                                         alt={data.imageAlt}
@@ -4269,56 +4232,64 @@ function PanelSection({
                         </div>
                     )}
                 </div>
-                <div className="mt-12 grid gap-4 md:hidden">
-                    {data.features.map((f, i) => (
-                        <div
-                            key={f.title}
-                            className="rounded-2xl px-4 py-5 shadow-lg md:px-5 md:py-6"
-                            style={{
-                                background: "#EDE6DC",
-                                ...blockRevealStyle(revealed, 265 + i * 72),
-                            }}
-                        >
-                            <span
-                                className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl"
+                <div
+                    className="mt-8 overflow-hidden rounded-xl border md:mt-10"
+                    style={{
+                        borderColor: theme.cardBorder,
+                        background: theme.background,
+                        ...blockRevealStyle(revealed, 240),
+                    }}
+                >
+                    <div className="flex flex-col md:flex-row">
+                        {data.features.map((f, i) => (
+                            <div
+                                key={f.title}
+                                className="flex min-w-0 gap-3 border-b border-solid px-4 py-3 last:border-b-0 md:flex-1 md:border-b-0 md:border-r md:px-5 md:py-3.5 md:last:border-r-0"
                                 style={{
-                                    background: "#D9CFC2",
-                                    color: "#4A3F35",
+                                    borderColor: theme.cardBorder,
+                                    ...blockRevealStyle(
+                                        revealed,
+                                        255 + i * 36,
+                                    ),
                                 }}
                             >
                                 <TdyIcon
                                     name={f.icon ?? "barChart"}
-                                    size={20}
-                                    color="#4A3F35"
+                                    size={18}
+                                    className="mt-0.5 shrink-0"
+                                    color={theme.accents.softGold}
                                 />
-                            </span>
-                            <h3
-                                className="mt-1 text-lg font-normal"
-                                style={{
-                                    fontFamily: theme.typography.headingFont,
-                                    color: tx.heading,
-                                }}
-                            >
-                                <StaggerText
-                                    text={f.title}
-                                    revealed={revealed}
-                                    baseDelayMs={268 + i * 72}
-                                    wordStepMs={16}
-                                />
-                            </h3>
-                            <p
-                                className="mt-2 text-sm leading-relaxed"
-                                style={{ color: tx.muted }}
-                            >
-                                <StaggerText
-                                    text={f.subtitle}
-                                    revealed={revealed}
-                                    baseDelayMs={286 + i * 72}
-                                    wordStepMs={10}
-                                />
-                            </p>
-                        </div>
-                    ))}
+                                <div className="min-w-0">
+                                    <h3
+                                        className="text-sm font-normal leading-snug md:text-[15px]"
+                                        style={{
+                                            fontFamily:
+                                                theme.typography.headingFont,
+                                            color: tx.heading,
+                                        }}
+                                    >
+                                        <StaggerText
+                                            text={f.title}
+                                            revealed={revealed}
+                                            baseDelayMs={258 + i * 36}
+                                            wordStepMs={12}
+                                        />
+                                    </h3>
+                                    <p
+                                        className="mt-0.5 text-[11px] leading-snug md:text-xs"
+                                        style={{ color: tx.muted }}
+                                    >
+                                        <StaggerText
+                                            text={f.subtitle}
+                                            revealed={revealed}
+                                            baseDelayMs={272 + i * 36}
+                                            wordStepMs={8}
+                                        />
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>
@@ -4625,7 +4596,7 @@ function FaqTdy({
     theme: LandingTheme;
     /** Título + mismo CTA principal que el hero al pie del FAQ (layout compacto). */
     heroCtaFooter?: {
-        locale: LandingLocale;
+        language: LandingLanguage;
         primary?: CtaButton;
         waNumber: string;
         footerTitle?: string;
@@ -4752,7 +4723,7 @@ function FaqTdy({
                             <StaggerText
                                 text={
                                     heroCtaFooter.footerTitle?.trim() ||
-                                    (heroCtaFooter.locale === "en"
+                                    (heroCtaFooter.language === "en"
                                         ? "Ready for the invitation you'll love to share?"
                                         : "¿Lista para la invitación que vas a amar compartir?")
                                 }
@@ -4771,7 +4742,7 @@ function FaqTdy({
                             <Landing2PrimaryPill
                                 primary={heroCtaFooter.primary}
                                 theme={theme}
-                                locale={heroCtaFooter.locale}
+                                language={heroCtaFooter.language}
                                 waNumber={heroCtaFooter.waNumber}
                             />
                         </div>
@@ -4811,8 +4782,7 @@ function renderLandingPostEstilosSection(
         wa: string;
         modelsLink?: { prompt: string; cta: string; anchor: string };
         compactHeroLayout: boolean;
-        locale: LandingLocale;
-        showLang: boolean;
+        language: LandingLanguage;
     },
 ): ReactNode {
     const {
@@ -4823,11 +4793,10 @@ function renderLandingPostEstilosSection(
         wa,
         modelsLink,
         compactHeroLayout,
-        locale,
-        showLang,
+        language,
     } = ctx;
     const surfT = row.surface === "alt" ? themeAlt : theme;
-    const loc = showLang ? locale : "es";
+    const loc = language;
     switch (row.id) {
         case "panel":
             return <PanelSection data={sections.panel} theme={surfT} />;
@@ -4853,7 +4822,7 @@ function renderLandingPostEstilosSection(
                     heroCtaFooter={
                         compactHeroLayout
                             ? {
-                                  locale: loc,
+                                  language: loc,
                                   primary: ctaButtons.heroPrimary,
                                   waNumber: wa,
                                   footerTitle: sections.faq.footerCtaTitle,
@@ -4868,31 +4837,49 @@ function renderLandingPostEstilosSection(
 }
 
 export default function LandingPageHome({
-    dataEs,
-    dataEn,
-    initialLocale = "es",
-    /** Si true, lee `?lang=en|es` de la URL al montar (solo página raíz). */
-    syncLocaleFromSearch = false,
+    landingData,
+    language,
+    syncCurrencyFromSearch = false,
+    initialCurrency,
 }: {
-    dataEs: LandingData;
-    dataEn?: LandingData;
-    initialLocale?: LandingLocale;
-    syncLocaleFromSearch?: boolean;
+    landingData: LandingData;
+    language: LandingLanguage;
+    /** Lee `?currency=USD|ARS` al montar y mantiene la URL al cambiar moneda. */
+    syncCurrencyFromSearch?: boolean;
+    /** Desde `searchParams` en el Server Component; evita mismatch de hidratación (no leer `window` en el estado inicial). */
+    initialCurrency?: LandingCurrency;
 }) {
-    const [locale, setLocale] = useState<LandingLocale>(initialLocale);
-    const baseData = locale === "en" && dataEn ? dataEn : dataEs;
+    const [currency, setCurrency] = useState<LandingCurrency>(() =>
+        initialCurrency === "USD" || initialCurrency === "ARS"
+            ? initialCurrency
+            : "ARS",
+    );
+
+    useEffect(() => {
+        if (!syncCurrencyFromSearch) return;
+        const c = new URLSearchParams(window.location.search).get("currency");
+        if (c === "USD" || c === "ARS") setCurrency(c);
+    }, [syncCurrencyFromSearch]);
+
+    useEffect(() => {
+        if (!syncCurrencyFromSearch) return;
+        const url = new URL(window.location.href);
+        url.searchParams.set("currency", currency);
+        window.history.replaceState(
+            null,
+            "",
+            `${url.pathname}${url.search}`,
+        );
+    }, [currency, syncCurrencyFromSearch]);
+
+    const priceBook = LANDING_PRICE_BOOK;
     const data = useMemo(() => {
-        let pricedData = applyPricingToLandingData(baseData, locale);
-        /** `rotateWords` solo está en `landing-2.json`; al ver EN se toma de ahí. */
-        const rotateWordsEs = dataEs.sections.hero.title?.rotateWords;
-        const titleRw = pricedData.sections.hero?.title?.rotateWords;
-        if (
-            pricedData.sections.hero?.title &&
-            titleRw !== rotateWordsEs
-        ) {
-            pricedData = structuredClone(pricedData) as LandingData;
-            pricedData.sections.hero.title.rotateWords = rotateWordsEs;
-        }
+        let pricedData = applyPricingToLandingData(
+            landingData,
+            language,
+            currency,
+            priceBook,
+        );
 
         const from = pricedData.pageLayout?.configuradorFromQuery;
         if (!from) return pricedData;
@@ -4907,8 +4894,8 @@ export default function LandingPageHome({
             btn.url = `${path}?${params.toString()}`;
         });
         return next;
-    }, [baseData, locale, dataEs]);
-    const theme = useMemo(() => mergeTheme(baseData.theme), [baseData.theme]);
+    }, [landingData, language, currency, priceBook]);
+    const theme = useMemo(() => mergeTheme(landingData.theme), [landingData.theme]);
     const themeAlt = useMemo<LandingTheme>(
         () => ({
             ...theme,
@@ -4919,8 +4906,10 @@ export default function LandingPageHome({
     );
     const { whatsapp, ctaButtons, sections, floatingCta, header } = data;
     const wa = whatsapp.number;
-    const showLang = Boolean(dataEn);
     const showHeader = Boolean(header);
+    useEffect(() => {
+        document.documentElement.lang = language === "en" ? "en" : "es";
+    }, [language]);
     const heroMarqueeSrcs = useMemo(() => {
         const raw = data.pageLayout?.heroMarqueeLiteSrcs ?? [];
         return raw
@@ -4928,16 +4917,6 @@ export default function LandingPageHome({
             .filter(Boolean)
             .filter((s) => !isExcludedHeroMarqueeAsset(s));
     }, [data.pageLayout?.heroMarqueeLiteSrcs]);
-
-    useEffect(() => {
-        if (!syncLocaleFromSearch) return;
-        const lang = new URLSearchParams(window.location.search).get("lang");
-        setLocale(lang === "en" ? "en" : "es");
-    }, [syncLocaleFromSearch]);
-
-    useEffect(() => {
-        document.documentElement.lang = locale === "en" ? "en" : "es";
-    }, [locale]);
 
     useLayoutEffect(() => {
         if (typeof window === "undefined") return;
@@ -4986,8 +4965,7 @@ export default function LandingPageHome({
             document.removeEventListener("click", onClickCapture, true);
     }, []);
 
-    /** Restaura scroll tras volver del configurador. No debe depender de `locale`:
-     *  con `?lang=en` el primer layout aún tiene locale por defecto y antes se omitía la restauración. */
+    /** Restaura scroll tras volver del configurador (siempre, con cualquier ruta de landing). */
     useLayoutEffect(() => {
         if (typeof window === "undefined") return;
 
@@ -5037,7 +5015,7 @@ export default function LandingPageHome({
 
     const modelsLink = useMemo(() => {
         const s = sections.servicio;
-        const loc = showLang ? locale : "es";
+        const loc = language;
         if (s.modelsLinkPrompt && s.modelsLinkCta) {
             return {
                 prompt: s.modelsLinkPrompt,
@@ -5056,7 +5034,7 @@ export default function LandingPageHome({
             };
         }
         return undefined;
-    }, [sections.servicio, compactHeroLayout, locale, showLang]);
+    }, [sections.servicio, compactHeroLayout, language]);
 
     const postEstilosRows = pageLayout?.postEstilosSections;
 
@@ -5064,8 +5042,18 @@ export default function LandingPageHome({
         ? "calc(5.75rem + env(safe-area-inset-bottom, 0px))"
         : undefined;
 
+    const brandHref = language === "en" ? "/en" : "/";
+
     return (
-        <main
+        <LandingPricingProvider
+            value={{
+                language,
+                currency,
+                setCurrency,
+                priceBook,
+            }}
+        >
+            <main
             className="flow-root antialiased"
             style={{
                 background: theme.background,
@@ -5079,9 +5067,11 @@ export default function LandingPageHome({
                     brand={header.brand}
                     nav={header.nav}
                     cta={header.cta}
-                    locale={showLang ? locale : "es"}
-                    onLocaleChange={setLocale}
-                    languageToggle={showLang}
+                    language={language}
+                    currency={currency}
+                    onCurrencyChange={setCurrency}
+                    syncCurrencyFromSearch={syncCurrencyFromSearch}
+                    brandHref={brandHref}
                 />
             ) : null}
             {sections.hero.enabled && (
@@ -5090,7 +5080,7 @@ export default function LandingPageHome({
                     theme={theme}
                     buttons={ctaButtons}
                     waNumber={wa}
-                    locale={showLang ? locale : "es"}
+                    language={language}
                     reviewsTopSimple={compactHeroLayout}
                     heroSectionId={heroSectionId}
                     heroMarqueeImageSrcs={
@@ -5098,19 +5088,19 @@ export default function LandingPageHome({
                     }
                 />
             )}
-            <IncluyeSection data={sections.incluye} theme={theme} />
+            <PanelSection data={sections.panel} theme={theme} />
             <EstilosCarousel
                 data={sections.estilos}
                 theme={theme}
                 waNumber={wa}
-                locale={showLang ? locale : "es"}
+                language={language}
                 premiumLeadButton={ctaButtons.planPremium}
                 panelPreviewImageSrc={sections.panel.imageSrc}
                 panelPreviewImageAlt={sections.panel.imageAlt}
                 endHeroPrimaryCta={
                     compactHeroLayout
                         ? {
-                              locale: showLang ? locale : "es",
+                              language,
                               primary: ctaButtons.heroPrimary
                                   ? {
                                         ...ctaButtons.heroPrimary,
@@ -5122,32 +5112,40 @@ export default function LandingPageHome({
                         : undefined
                 }
             />
-            <PanelSection data={sections.panel} theme={theme} />
             {postEstilosRows?.length ? (
                 <>
                     {postEstilosRows
                         .filter((row) => row.id !== "panel")
-                        .map((row, i) => (
-                            <Fragment key={`post-estilos-${i}-${row.id}`}>
-                                {renderLandingPostEstilosSection(row, {
-                                    sections,
-                                    theme,
-                                    themeAlt,
-                                    ctaButtons,
-                                    wa,
-                                    modelsLink,
-                                    compactHeroLayout,
-                                    locale,
-                                    showLang,
-                                })}
-                                {row.id === "servicio" ? (
-                                    <ComparativaSection
-                                        data={sections.comparativa}
-                                        theme={theme}
-                                    />
-                                ) : null}
-                            </Fragment>
-                        ))}
+                        .map((row, i) => {
+                            const surfT =
+                                row.surface === "alt" ? themeAlt : theme;
+                            return (
+                                <Fragment key={`post-estilos-${i}-${row.id}`}>
+                                    {renderLandingPostEstilosSection(row, {
+                                        sections,
+                                        theme,
+                                        themeAlt,
+                                        ctaButtons,
+                                        wa,
+                                        modelsLink,
+                                        compactHeroLayout,
+                                        language,
+                                    })}
+                                    {row.id === "servicio" ? (
+                                        <>
+                                            <IncluyeSection
+                                                data={sections.incluye}
+                                                theme={surfT}
+                                            />
+                                            <ComparativaSection
+                                                data={sections.comparativa}
+                                                theme={theme}
+                                            />
+                                        </>
+                                    ) : null}
+                                </Fragment>
+                            );
+                        })}
                 </>
             ) : (
                 <>
@@ -5157,6 +5155,10 @@ export default function LandingPageHome({
                         theme={theme}
                         buttons={ctaButtons}
                         waNumber={wa}
+                    />
+                    <IncluyeSection
+                        data={sections.incluye}
+                        theme={theme}
                     />
                     <ComparativaSection
                         data={sections.comparativa}
@@ -5173,5 +5175,6 @@ export default function LandingPageHome({
                 <FloatingCta data={floatingCtaForMode} theme={theme} />
             ) : null}
         </main>
+        </LandingPricingProvider>
     );
 }

@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useConfig, useIsMuestra } from "@/lib/config-context";
 import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
+import type { CoupleNamesDisplayOrder } from "@/lib/couple-names-display-order";
 import HeroSection from "./hero-section";
 import Section from "./section";
 import FooterSection from "./footer-section";
@@ -39,6 +40,9 @@ function WeddingInvitationContent() {
     const showFooter =
         footerConfig?.enabled !== false && footerSectionOverride?.enabled !== false;
     const meta = config.meta;
+    const nameOrder = (
+        meta.coupleNames as { nameOrder?: CoupleNamesDisplayOrder } | undefined
+    )?.nameOrder;
     const music = config.music;
     const overlay = config.overlay;
     const rsvpPanel = config.rsvpPanel as
@@ -265,6 +269,7 @@ function WeddingInvitationContent() {
                         buttonY?: number | string
                     } | undefined}
                     invitado={invitado}
+                    nameOrder={nameOrder}
                 />
             )}
             {shouldBlockMainUntilEntry && loadingInvitado && (
@@ -286,6 +291,7 @@ function WeddingInvitationContent() {
                     groomName={meta.coupleNames.groomName}
                     brideName={meta.coupleNames.brideName}
                     separator={meta.coupleNames.separator}
+                    nameOrder={nameOrder}
                     showNamesOnPhoto={
                         (hero as Record<string, unknown>).showNamesOnPhoto as
                             | boolean

@@ -1,4 +1,5 @@
 import { getClientConfig } from "@/lib/get-client-config";
+import { overlayNameStyleFontHref } from "@/lib/overlay-name-font-href";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -24,6 +25,7 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
     // Build Google Fonts URL - encode properly for fonts with spaces
     const encodedFamily = fontFamily.replace(/ /g, "+");
     const fontUrl = `https://fonts.googleapis.com/css2?family=${encodedFamily}:wght@${fontWeights}&display=swap`;
+    const overlayFontUrl = overlayNameStyleFontHref(config, fontFamily);
 
     return (
         <>
@@ -34,6 +36,9 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
                 crossOrigin="anonymous"
             />
             <link href={fontUrl} rel="stylesheet" />
+            {overlayFontUrl ? (
+                <link href={overlayFontUrl} rel="stylesheet" />
+            ) : null}
             <style
                 dangerouslySetInnerHTML={{
                     __html: `

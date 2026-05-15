@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { useConfig } from "@/lib/config-context"
+import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
 
 /**
  * Closing Section - Imagen de cierre con nombres
@@ -23,6 +24,8 @@ interface ClosingSectionProps {
     groomName: string
     brideName: string
     separator: string
+    /** Opcional: "groom-first" muestra novio arriba (mismo criterio que overlay/hero). */
+    nameOrder?: "bride-first" | "groom-first"
   }
   namesDisplay?: {
     enabled?: boolean
@@ -131,6 +134,13 @@ export default function ClosingSection({
   }
   const resolvedLetterSpacing = letterSpacingMap[namesLetterSpacing] || "0.2em"
 
+  const { first: closingFirst, second: closingSecond } = coupleNamesDisplayPair(
+    coupleNames.brideName,
+    coupleNames.groomName,
+    coupleNames.nameOrder,
+  )
+  const closingHasSecond = Boolean(closingSecond.trim())
+
   // Get size class - support pixel values like "48px"
   const isPixelSize = namesSize.endsWith("px")
   const sizeClass = isPixelSize ? "" : (sizeMap[namesSize] || sizeMap.lg)
@@ -195,16 +205,16 @@ export default function ClosingSection({
             // Show names as text
             <div style={namesFontStyle}>
               <p className={`text-center ${sizeClass}`}>
-                {coupleNames.brideName}
+                {closingFirst}
               </p>
-              {coupleNames.separator && (
+              {coupleNames.separator && closingHasSecond && (
                 <span className="my-1 block text-center text-base font-extralight tracking-[0.3em] opacity-50 md:text-lg">
                   {coupleNames.separator}
                 </span>
               )}
-              {coupleNames.groomName && (
+              {closingHasSecond && (
                 <p className={`text-center ${sizeClass}`}>
-                  {coupleNames.groomName}
+                  {closingSecond}
                 </p>
               )}
             </div>
