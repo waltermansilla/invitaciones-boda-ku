@@ -56,6 +56,13 @@ import {
     type LandingPriceBook,
     LANDING_PRICE_BOOK,
 } from "@/lib/landing/landing-price-book";
+import {
+    formatExtraSectionParen,
+    formatLandingMoney,
+    formatSecondLangParen,
+    isLandingCurrency,
+    pickLandingAmount,
+} from "@/lib/landing/landing-pricing";
 import type {
     LandingCurrency,
     LandingLanguage,
@@ -460,53 +467,6 @@ function priceTypeStyle(theme: LandingTheme): React.CSSProperties {
     };
 }
 
-function pickMoney(
-    pair: { ars: number; usd: number },
-    currency: LandingCurrency,
-): number {
-    return currency === "ARS" ? pair.ars : pair.usd;
-}
-
-function formatLandingMoney(
-    amount: number,
-    currency: LandingCurrency,
-): string {
-    if (currency === "ARS") return `$${amount.toLocaleString("es-AR")}`;
-    return `USD ${amount.toLocaleString("en-US")}`;
-}
-
-function formatExtraSectionParen(
-    book: LandingPriceBook,
-    language: LandingLanguage,
-    currency: LandingCurrency,
-): string {
-    const n = pickMoney(book.configurator.extraSection, currency);
-    if (language === "en") {
-        return currency === "ARS"
-            ? `(+ARS ${n.toLocaleString("en-US")} per extra section)`
-            : `(+USD ${n.toLocaleString("en-US")} per extra section)`;
-    }
-    return currency === "ARS"
-        ? `(+$${n.toLocaleString("es-AR")} por sección extra)`
-        : `(+USD ${n.toLocaleString("en-US")} por sección extra)`;
-}
-
-function formatSecondLangParen(
-    book: LandingPriceBook,
-    language: LandingLanguage,
-    currency: LandingCurrency,
-): string {
-    const n = pickMoney(book.configurator.secondLanguage, currency);
-    if (language === "en") {
-        return currency === "ARS"
-            ? `(+ARS ${n.toLocaleString("en-US")})`
-            : `(+USD ${n.toLocaleString("en-US")})`;
-    }
-    return currency === "ARS"
-        ? `(+$${n.toLocaleString("es-AR")})`
-        : `(+USD ${n.toLocaleString("en-US")})`;
-}
-
 function replaceDeliveryWindowTokens(
     value: string,
     language: LandingLanguage,
@@ -556,8 +516,8 @@ function applyPricingToLandingData(
 ): LandingData {
     const premiumPair = priceBook.plans.premium;
     const uniquePair = priceBook.plans.disenoUnico;
-    const premiumAmt = pickMoney(premiumPair, currency);
-    const uniqueAmt = pickMoney(uniquePair, currency);
+    const premiumAmt = pickLandingAmount(premiumPair, currency, priceBook);
+    const uniqueAmt = pickLandingAmount(uniquePair, currency, priceBook);
 
     const paperPairs = [
         priceBook.landing.paper.design,
@@ -566,7 +526,7 @@ function applyPricingToLandingData(
         priceBook.landing.paper.postalShipping,
     ];
     const paperTotal = paperPairs.reduce(
-        (sum, pair) => sum + pickMoney(pair, currency),
+        (sum, pair) => sum + pickLandingAmount(pair, currency, priceBook),
         0,
     );
     const savings = Math.max(0, paperTotal - premiumAmt);
@@ -613,7 +573,11 @@ function applyPricingToLandingData(
         (label, i) => ({
             label,
             value: formatLandingMoney(
-                pickMoney(paperPairs[i] ?? { ars: 0, usd: 0 }, currency),
+                pickLandingAmount(
+                    paperPairs[i] ?? { ars: 0, usd: 0 },
+                    currency,
+                    priceBook,
+                ),
                 currency,
             ),
         }),
@@ -1094,7 +1058,7 @@ function heroPremiumPriceLine(
     currency: LandingCurrency,
     book: LandingPriceBook,
 ): string {
-    const amt = pickMoney(book.plans.premium, currency);
+    const amt = pickLandingAmount(book.plans.premium, currency, book);
     const line = formatLandingMoney(amt, currency);
     return language === "en" ? `from ${line}` : `desde ${line}`;
 }
@@ -3332,7 +3296,11 @@ function EstilosCarousel({
     );
     const showKindSplit = kindGroups.length > 1;
     const { priceBook, currency } = useLandingPricing();
-    const premiumAmt = pickMoney(priceBook.plans.premium, currency);
+    const premiumAmt = pickLandingAmount(
+        priceBook.plans.premium,
+        currency,
+        priceBook,
+    );
     const premiumPriceLabel =
         language === "en"
             ? `for ${formatLandingMoney(premiumAmt, currency)}`
@@ -4844,13 +4812,13 @@ export default function LandingPageHome({
 }: {
     landingData: LandingData;
     language: LandingLanguage;
-    /** Lee `?currency=USD|ARS` al montar y mantiene la URL al cambiar moneda. */
+    /** Lee `?currency=USD|ARS|MXN` al montar y mantiene la URL al cambiar moneda. */
     syncCurrencyFromSearch?: boolean;
     /** Desde `searchParams` en el Server Component; evita mismatch de hidratación (no leer `window` en el estado inicial). */
     initialCurrency?: LandingCurrency;
 }) {
     const [currency, setCurrency] = useState<LandingCurrency>(() =>
-        initialCurrency === "USD" || initialCurrency === "ARS"
+        initialCurrency && isLandingCurrency(initialCurrency)
             ? initialCurrency
             : "ARS",
     );
@@ -4858,7 +4826,7 @@ export default function LandingPageHome({
     useEffect(() => {
         if (!syncCurrencyFromSearch) return;
         const c = new URLSearchParams(window.location.search).get("currency");
-        if (c === "USD" || c === "ARS") setCurrency(c);
+        if (isLandingCurrency(c)) setCurrency(c);
     }, [syncCurrencyFromSearch]);
 
     useEffect(() => {

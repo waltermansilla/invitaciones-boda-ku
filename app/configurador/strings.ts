@@ -1,18 +1,18 @@
 import configuradorEs from "@/data/landing/configurador-es.json";
 import pricingData from "@/data/landing/pricing.json";
+import {
+    pairToConfiguratorPrice,
+    type ConfiguratorPrice,
+} from "@/lib/landing/landing-pricing";
 
 export type ConfiguratorLang = "es" | "en";
 
-type Price = { ARS: number; USD: number };
+export type Price = ConfiguratorPrice;
 
 const DELIVERY_MIN_DAYS = pricingData.deliveryWindow.minBusinessDays;
 const DELIVERY_MAX_DAYS = pricingData.deliveryWindow.maxBusinessDays;
 const DELIVERY_RANGE_ES = `${DELIVERY_MIN_DAYS} a ${DELIVERY_MAX_DAYS} días hábiles`;
 const DELIVERY_RANGE_EN = `${DELIVERY_MIN_DAYS}–${DELIVERY_MAX_DAYS} business days`;
-
-function pairToPrice(pair: { ars: number; usd: number }): Price {
-    return { ARS: pair.ars, USD: pair.usd };
-}
 
 function configuratorExtraPriceKey(
     id: string,
@@ -21,10 +21,10 @@ function configuratorExtraPriceKey(
     return id as keyof typeof pricingData.configurator.extras;
 }
 
-const EXTRA_SECTION_PRICE: Price = pairToPrice(
+const EXTRA_SECTION_PRICE: Price = pairToConfiguratorPrice(
     pricingData.configurator.extraSection,
 );
-const SECOND_LANGUAGE_PRICE: Price = pairToPrice(
+const SECOND_LANGUAGE_PRICE: Price = pairToConfiguratorPrice(
     pricingData.configurator.secondLanguage,
 );
 
@@ -42,25 +42,33 @@ export function getExtrasForLang(lang: ConfiguratorLang): ExtraOption[] {
                 id: "bienvenida",
                 label: "Custom welcome screen",
                 subtitle: "Tailored entry overlay",
-                price: pairToPrice(pricingData.configurator.extras.bienvenida),
+                price: pairToConfiguratorPrice(
+                    pricingData.configurator.extras.bienvenida,
+                ),
             },
             {
                 id: "panel",
                 label: "Guest dashboard",
                 subtitle: "Real-time RSVPs",
-                price: pairToPrice(pricingData.configurator.extras.panel),
+                price: pairToConfiguratorPrice(
+                    pricingData.configurator.extras.panel,
+                ),
             },
             {
                 id: "dominio",
                 label: "Custom domain",
                 subtitle: "e.g. yournames.com",
-                price: pairToPrice(pricingData.configurator.extras.dominio),
+                price: pairToConfiguratorPrice(
+                    pricingData.configurator.extras.dominio,
+                ),
             },
             {
                 id: "rapida",
                 label: "24-hour rush delivery",
                 subtitle: `Top priority (standard: ${DELIVERY_RANGE_EN})`,
-                price: pairToPrice(pricingData.configurator.extras.rapida24h),
+                price: pairToConfiguratorPrice(
+                    pricingData.configurator.extras.rapida24h,
+                ),
             },
         ];
     }
@@ -71,7 +79,7 @@ export function getExtrasForLang(lang: ConfiguratorLang): ExtraOption[] {
             /\{\{deliveryRangeEs\}\}/g,
             DELIVERY_RANGE_ES,
         ),
-        price: pairToPrice(
+        price: pairToConfiguratorPrice(
             pricingData.configurator.extras[configuratorExtraPriceKey(ex.id)],
         ),
     }));

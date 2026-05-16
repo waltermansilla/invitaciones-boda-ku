@@ -60,7 +60,7 @@ function NavLinks({
     );
 }
 
-const CURRENCIES: LandingCurrency[] = ["ARS", "USD"];
+const CURRENCIES: LandingCurrency[] = ["ARS", "USD", "MXN"];
 
 function languageHrefWithCurrency(
     path: "/" | "/en",

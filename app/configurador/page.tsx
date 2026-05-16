@@ -33,6 +33,14 @@ import landingHomeDataEn from "@/data/landing/landing-2.en.json";
 import configuradorEs from "@/data/landing/configurador-es.json";
 import pricingData from "@/data/landing/pricing.json";
 import {
+    computePanelExtraGuestsCost,
+    configuradorCurrencyFromSearch,
+    formatLandingMoney,
+    pairToConfiguratorPrice,
+    type ConfiguratorPrice,
+} from "@/lib/landing/landing-pricing";
+import type { LandingCurrency } from "@/lib/landing/landing-public";
+import {
     EXTRA_SECTION_PRICE,
     PRESET_LANGUAGES,
     SECOND_LANGUAGE_PRICE,
@@ -49,7 +57,6 @@ import {
 } from "@/lib/configurador-return-nav";
 import { trackMetaEvent, updateMetaPixelAdvancedMatching } from "@/lib/meta-pixel";
 
-type Currency = "ARS" | "USD";
 type PlanKey = "premium" | "diseno-unico";
 type EventTypeSelection = EventType | "";
 type EventType =
@@ -60,23 +67,17 @@ type EventType =
     | "corporativo"
     | "otro";
 
-type Price = { ARS: number; USD: number };
-
-function pairToPrice(pair: { ars: number; usd: number }): Price {
-    return { ARS: pair.ars, USD: pair.usd };
-}
-
 interface SectionOption {
     id: string;
     label: string;
     icon: React.ReactNode;
-    price: Price;
+    price: ConfiguratorPrice;
     isAdder?: boolean;
 }
 
-const PLAN_BASE: Record<PlanKey, Price> = {
-    premium: pairToPrice(pricingData.plans.premium),
-    "diseno-unico": pairToPrice(pricingData.plans.disenoUnico),
+const PLAN_BASE: Record<PlanKey, ConfiguratorPrice> = {
+    premium: pairToConfiguratorPrice(pricingData.plans.premium),
+    "diseno-unico": pairToConfiguratorPrice(pricingData.plans.disenoUnico),
 };
 
 const FREE_SECTIONS = 5;
@@ -207,11 +208,6 @@ const BTN_SELECTED = {
     background: "rgba(122,95,69,0.12)",
 } as const;
 
-function formatMoney(amount: number, currency: Currency) {
-    if (currency === "ARS") return `$${amount.toLocaleString("es-AR")}`;
-    return `$${amount.toLocaleString("en-US")}`;
-}
-
 /** `*fragmento*` en textos de extraDetails → negrita (pares de un solo asterisco). */
 function renderTextWithBoldMarkers(
     text: string,
@@ -335,16 +331,11 @@ function ConfiguradorPageContent() {
     const rawPlan = params.get("plan");
     const plan: PlanKey =
         rawPlan === "diseno-unico" ? "diseno-unico" : "premium";
-    const curParam = params.get("currency");
-    /** Moneda fijada por la landing vía `?currency=`; sin query se usa el mismo criterio que antes (EN→USD, ES→ARS). */
-    const currency: Currency =
-        curParam === "USD"
-            ? "USD"
-            : curParam === "ARS"
-              ? "ARS"
-              : uiLang === "en"
-                ? "USD"
-                : "ARS";
+    /** Moneda fijada por la landing vía `?currency=ARS|USD|MXN`; sin query, EN→USD y ES→ARS. */
+    const currency: LandingCurrency = configuradorCurrencyFromSearch(
+        params.get("currency"),
+        uiLang,
+    );
     const start = params.get("start");
 
     const closeHref = useMemo(() => {
@@ -560,14 +551,12 @@ function ConfiguradorPageContent() {
         0,
         clampedPanelGuests - PANEL_INCLUDED_GUESTS,
     );
-    const panelExtraArs = Math.round(
-        (panelExtraGuests * PANEL_STEP_PAIR.ars) / PANEL_STEP_GUESTS,
+    const panelExtraGuestsCost = computePanelExtraGuestsCost(
+        panelExtraGuests,
+        PANEL_STEP_GUESTS,
+        PANEL_STEP_PAIR,
+        currency,
     );
-    const panelExtraUsd = Math.round(
-        (panelExtraGuests * PANEL_STEP_PAIR.usd) / PANEL_STEP_GUESTS,
-    );
-    const panelExtraGuestsCost =
-        currency === "ARS" ? panelExtraArs : panelExtraUsd;
     const panelBasePrice =
         extrasList.find((e) => e.id === "panel")?.price[currency] ?? 0;
     const panelSelected = extras.includes("panel");
@@ -616,7 +605,7 @@ function ConfiguradorPageContent() {
         if (panelExtraGuestsCost <= 0) return panelLine;
         return `${panelLine}${waEx.panelCapacitySuffix.replace(
             /\{\{price\}\}/g,
-            formatMoney(panelExtraGuestsCost, currency),
+            formatLandingMoney(panelExtraGuestsCost, currency),
         )}`;
     });
     const detailsToken = useMemo(() => {
@@ -698,8 +687,8 @@ function ConfiguradorPageContent() {
         "",
         wah.headingBudget,
         `- ${tWa.currency}: ${currency}`,
-        `- *${tWa.total}: ${formatMoney(total, currency)}*`,
-        `- *${tWa.deposit50}: ${formatMoney(downPayment, currency)}*`,
+        `- *${tWa.total}: ${formatLandingMoney(total, currency)}*`,
+        `- *${tWa.deposit50}: ${formatLandingMoney(downPayment, currency)}*`,
         "",
         wah.headingComplete,
         detailsUrl,
@@ -894,7 +883,7 @@ function ConfiguradorPageContent() {
                         {plan === "premium" ? t.planPremium : t.planUnique}
                     </div>
                     <div className="justify-self-end text-right text-[15px] font-bold tabular-nums leading-tight tracking-tight text-[#4A3729] sm:text-base">
-                        {formatMoney(total, currency)}
+                        {formatLandingMoney(total, currency)}
                     </div>
                 </div>
                 <div
@@ -1106,7 +1095,7 @@ function ConfiguradorPageContent() {
                             <p className="mt-3 text-xs font-medium leading-snug text-[#7A5F45]">
                                 {t.seccionesPremiumCompareNote.replace(
                                     /\{\{precioPorBloque\}\}/g,
-                                    `${formatMoney(EXTRA_SECTION_PRICE[currency], currency)}${t.perBlock}`,
+                                    `${formatLandingMoney(EXTRA_SECTION_PRICE[currency], currency)}${t.perBlock}`,
                                 )}
                             </p>
                         ) : null}
@@ -1181,14 +1170,14 @@ function ConfiguradorPageContent() {
                             <>
                                 <p className="mt-3 text-xs font-medium tabular-nums text-[#7A5F45]">
                                     {FREE_SECTIONS} {t.seccionesCountFoot}{" "}
-                                    {`+${formatMoney(EXTRA_SECTION_PRICE[currency], currency)}`}
+                                    {`+${formatLandingMoney(EXTRA_SECTION_PRICE[currency], currency)}`}
                                     {t.perBlock}
                                 </p>
                                 <p className="text-base font-semibold text-[#3F332B] mt-0.5">
                                     {sections.length}/{FREE_SECTIONS}{" "}
                                     <span className="font-medium text-[#2F7E56]">
                                         {paidSectionsCount > 0
-                                            ? `(+${formatMoney(sectionsCost, currency)})`
+                                            ? `(+${formatLandingMoney(sectionsCost, currency)})`
                                             : t.sinExtras}
                                     </span>
                                 </p>
@@ -1233,7 +1222,7 @@ function ConfiguradorPageContent() {
                                         }}
                                     >
                                         +
-                                        {formatMoney(
+                                        {formatLandingMoney(
                                             s.price[currency],
                                             currency,
                                         )}
@@ -1427,7 +1416,7 @@ function ConfiguradorPageContent() {
                                                 style={LINE_BADGE_BORDER}
                                             >
                                                 +
-                                                {formatMoney(
+                                                {formatLandingMoney(
                                                     SECOND_LANGUAGE_PRICE[
                                                         currency
                                                     ],
@@ -1520,7 +1509,7 @@ function ConfiguradorPageContent() {
                             </div>
                         </div>
                         <p className="mt-3 text-sm font-medium text-[#7A5F45]">
-                            {`${t.secondLangPremiumPrefix} +${formatMoney(SECOND_LANGUAGE_PRICE[currency], currency)}`}
+                            {`${t.secondLangPremiumPrefix} +${formatLandingMoney(SECOND_LANGUAGE_PRICE[currency], currency)}`}
                         </p>
                     </>
                 ) : null}
@@ -1558,7 +1547,7 @@ function ConfiguradorPageContent() {
                                                 style={LINE_BADGE_BORDER}
                                             >
                                                 +
-                                                {formatMoney(
+                                                {formatLandingMoney(
                                                     isPanel
                                                         ? ex.price[currency] +
                                                               panelExtraGuestsCost
@@ -1574,7 +1563,7 @@ function ConfiguradorPageContent() {
                                             >
                                                 {isPanel &&
                                                 panelExtraGuestsCost > 0
-                                                    ? `+${formatMoney(panelExtraGuestsCost, currency)}`
+                                                    ? `+${formatLandingMoney(panelExtraGuestsCost, currency)}`
                                                     : t.included}
                                             </span>
                                         ) : null}
@@ -1623,7 +1612,7 @@ function ConfiguradorPageContent() {
                                                 {!on && !locked ? (
                                                     <span className="shrink-0 text-sm font-semibold tabular-nums text-[#7A5F45]">
                                                         +
-                                                        {formatMoney(
+                                                        {formatLandingMoney(
                                                             ex.price[currency],
                                                             currency,
                                                         )}
@@ -1641,7 +1630,7 @@ function ConfiguradorPageContent() {
                                                 </span>
                                                 <p className="mb-2 text-[11px] leading-relaxed text-[#6A5C52]">
                                                     {uiLang === "en"
-                                                        ? `Includes up to ${PANEL_INCLUDED_GUESTS} guests. Then +${formatMoney(pairToPrice(PANEL_STEP_PAIR)[currency], currency)} every ${PANEL_STEP_GUESTS} extra guests.`
+                                                        ? `Includes up to ${PANEL_INCLUDED_GUESTS} guests. Then +${formatLandingMoney(pairToConfiguratorPrice(PANEL_STEP_PAIR)[currency], currency)} every ${PANEL_STEP_GUESTS} extra guests.`
                                                         : configuradorEs.panelUi.includesLine
                                                               .replace(
                                                                   /\{\{included\}\}/g,
@@ -1651,8 +1640,8 @@ function ConfiguradorPageContent() {
                                                               )
                                                               .replace(
                                                                   /\{\{stepPrice\}\}/g,
-                                                                  formatMoney(
-                                                                      pairToPrice(
+                                                                  formatLandingMoney(
+                                                                      pairToConfiguratorPrice(
                                                                           PANEL_STEP_PAIR,
                                                                       )[
                                                                           currency
@@ -1714,7 +1703,7 @@ function ConfiguradorPageContent() {
                                                 <div className="mt-2 rounded-lg border border-[#E4DCD1] bg-white p-2 text-[11px] leading-relaxed text-[#6A5C52]">
                                                     <p className="mt-1 font-medium text-[#4A3A2F]">
                                                         {uiLang === "en"
-                                                            ? `Capacity surcharge (${clampedPanelGuests}): ${formatMoney(panelExtraGuestsCost, currency)}`
+                                                            ? `Capacity surcharge (${clampedPanelGuests}): ${formatLandingMoney(panelExtraGuestsCost, currency)}`
                                                             : configuradorEs.panelUi.capacitySurcharge
                                                                   .replace(
                                                                       /\{\{guests\}\}/g,
@@ -1724,7 +1713,7 @@ function ConfiguradorPageContent() {
                                                                   )
                                                                   .replace(
                                                                       /\{\{price\}\}/g,
-                                                                      formatMoney(
+                                                                      formatLandingMoney(
                                                                           panelExtraGuestsCost,
                                                                           currency,
                                                                       ),
@@ -1732,10 +1721,10 @@ function ConfiguradorPageContent() {
                                                     </p>
                                                     <p className="mt-1 rounded-md bg-[#F3EBDD] px-2 py-1 text-sm font-bold text-[#4A3A2F]">
                                                         {uiLang === "en"
-                                                            ? `Panel total: ${formatMoney((locked ? 0 : ex.price[currency]) + panelExtraGuestsCost, currency)}`
+                                                            ? `Panel total: ${formatLandingMoney((locked ? 0 : ex.price[currency]) + panelExtraGuestsCost, currency)}`
                                                             : configuradorEs.panelUi.panelTotal.replace(
                                                                   /\{\{total\}\}/g,
-                                                                  formatMoney(
+                                                                  formatLandingMoney(
                                                                       (locked
                                                                           ? 0
                                                                           : ex
@@ -2042,7 +2031,7 @@ function ConfiguradorPageContent() {
                             {t.currency}: {currency}
                         </p>
                         <p className="text-base font-bold text-[#4A3729] sm:text-[17px]">
-                            {t.total}: {formatMoney(total, currency)}
+                            {t.total}: {formatLandingMoney(total, currency)}
                         </p>
                     </div>
                     <div className="flex items-center justify-between">

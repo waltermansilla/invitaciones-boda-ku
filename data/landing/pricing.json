@@ -1,29 +1,33 @@
 {
+    "mxn": {
+        "referenciaUSD": false,
+        "usdmxn": 17
+    },
     "deliveryWindow": {
         "minBusinessDays": 4,
         "maxBusinessDays": 7
     },
     "plans": {
-        "premium": { "ars": 49000, "usd": 69 },
-        "disenoUnico": { "ars": 109000, "usd": 149 }
+        "premium": { "ars": 49000, "usd": 69, "mxn": 1190 },
+        "disenoUnico": { "ars": 109000, "usd": 149, "mxn": 2490 }
     },
     "configurator": {
-        "extraSection": { "ars": 4500, "usd": 5 },
-        "secondLanguage": { "ars": 18000, "usd": 18 },
+        "extraSection": { "ars": 4500, "usd": 5, "mxn": 89 },
+        "secondLanguage": { "ars": 18000, "usd": 18, "mxn": 306 },
         "extras": {
-            "bienvenida": { "ars": 9000, "usd": 12 },
-            "panel": { "ars": 20000, "usd": 19 },
-            "panelPer100": { "ars": 9000, "usd": 6 },
-            "dominio": { "ars": 59000, "usd": 48 },
-            "rapida24h": { "ars": 23000, "usd": 24 }
+            "bienvenida": { "ars": 9000, "usd": 12, "mxn": 204 },
+            "panel": { "ars": 20000, "usd": 19, "mxn": 329 },
+            "panelPer100": { "ars": 9000, "usd": 6, "mxn": 100 },
+            "dominio": { "ars": 59000, "usd": 48, "mxn": 799 },
+            "rapida24h": { "ars": 23000, "usd": 24, "mxn": 400 }
         }
     },
     "landing": {
         "paper": {
-            "design": { "ars": 260000, "usd": 220 },
-            "printing130": { "ars": 160000, "usd": 170 },
-            "envelopesAndSeals": { "ars": 120000, "usd": 105 },
-            "postalShipping": { "ars": 95000, "usd": 95 }
+            "design": { "ars": 260000, "usd": 220, "mxn": 3740 },
+            "printing130": { "ars": 160000, "usd": 170, "mxn": 2890 },
+            "envelopesAndSeals": { "ars": 120000, "usd": 105, "mxn": 1785 },
+            "postalShipping": { "ars": 95000, "usd": 95, "mxn": 1615 }
         }
     }
 }
