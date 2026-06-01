@@ -131,10 +131,7 @@
             "id": "quote-welcome",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "Queremos compartir este momento muy especial con vos",
                 "author": "",
@@ -146,14 +143,10 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "libre",
-                "images": [
-                    "/clientes/boda/17-carolina-jose/images/collage.png"
-                ]
+                "images": ["/clientes/boda/17-carolina-jose/images/collage.png"]
             }
         },
         {
@@ -162,11 +155,7 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "value",
-                "button"
-            ],
+            "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "27 de Febrero 2027"
@@ -178,10 +167,7 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "timeline"
-            ],
+            "blocks": ["title", "timeline"],
             "data": {
                 "title": "Horarios y lugar",
                 "events": [
@@ -197,9 +183,9 @@
                         }
                     },
                     {
-                        "icon": "party",
-                        "name": "¡Fiesta!",
-                        "time": "21:00 hs",
+                        "icon": "heart",
+                        "name": "Recepción",
+                        "time": "20:00 hs",
                         "address": "'Mauka Eventos', Ruta nacional 11, 335",
                         "button": {
                             "text": "Cómo llegar",
@@ -208,8 +194,13 @@
                         }
                     },
                     {
+                        "icon": "party",
+                        "name": "Inicio fiesta",
+                        "time": "21:00 hs"
+                    },
+                    {
                         "icon": "clock",
-                        "name": "Fin",
+                        "name": "Fin de fiesta",
                         "time": "04:00 hs"
                     }
                 ]
@@ -275,14 +266,10 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "1/1",
-                "images": [
-                    "/clientes/boda/14-daiana-nicolas/images/ramo.png"
-                ]
+                "images": ["/clientes/boda/14-daiana-nicolas/images/ramo.png"]
             }
         },
         {
@@ -291,12 +278,7 @@
             "id": "honeymoon",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": [
-                "icon",
-                "title",
-                "description",
-                "modal"
-            ],
+            "blocks": ["icon", "title", "description", "modal"],
             "data": {
                 "icon": "plane",
                 "title": "Regalos",
@@ -339,10 +321,7 @@
             "id": "quote-welcome2",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "Elegirnos fue el comienzo, pero formar una familia juntos le dio sentido a todo",
                 "author": "",
@@ -354,9 +333,7 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": [
-                "slider"
-            ],
+            "blocks": ["slider"],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -371,10 +348,7 @@
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "background",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "Gracias por estar presentes en uno de los días más importantes de nuestras vidas. Su compañía significa mucho para nosotros",
                 "author": "Carolina & José",
@@ -387,21 +361,12 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": [
-                "title",
-                "form"
-            ],
+            "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 25 de Enero",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
+                "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -430,10 +395,7 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": [
-                "image",
-                "coupleNames"
-            ],
+            "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/14-daiana-nicolas/images/ramo.png"
@@ -444,10 +406,7 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": [
-                "socialLinks",
-                "brandName"
-            ],
+            "blocks": ["socialLinks", "brandName"],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [
