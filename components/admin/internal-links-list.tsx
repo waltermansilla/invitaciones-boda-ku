@@ -14,6 +14,15 @@ const tipoBadge: Record<string, string> = {
   v: "#E3E0DA",
 }
 
+const panelAccent = {
+  bg: "#e8f4fc",
+  border: "#b8d9f0",
+  text: "#3d5f78",
+} as const
+
+const featureCapsuleClass =
+  "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold box-border"
+
 export function InternalLinksList({
   rows,
   baseUrl,
@@ -27,6 +36,7 @@ export function InternalLinksList({
   const [sortByEventDate, setSortByEventDate] = useState(false)
   const [dateFilter, setDateFilter] = useState<"all" | "upcoming" | "past">("all")
   const [panelOnly, setPanelOnly] = useState(false)
+  const [baseOnly, setBaseOnly] = useState(false)
   const normalizeText = (value: string) =>
     value
       .normalize("NFD")
@@ -79,18 +89,21 @@ export function InternalLinksList({
         )
       })
     : byTipo
-  const afterPanelFilter =
-    !sortByEventDate && panelOnly
-      ? visibleRows.filter((r) => r.panelEnabled)
-      : visibleRows
+  const afterFeatureFilters = !sortByEventDate
+    ? visibleRows.filter((r) => {
+        if (baseOnly && !r.baseEnabled) return false
+        if (panelOnly && !r.panelEnabled) return false
+        return true
+      })
+    : visibleRows
   const byDate =
     sortByEventDate && dateFilter !== "all"
-      ? afterPanelFilter.filter((r) => {
+      ? afterFeatureFilters.filter((r) => {
           if (!r.eventDate) return false
           const past = isPastDate(r.eventDate)
           return dateFilter === "past" ? past : !past
         })
-      : afterPanelFilter
+      : afterFeatureFilters
   const rowsFinal = sortByEventDate
     ? [...byDate].sort((a, b) => {
         const da = a.eventDate ? new Date(a.eventDate).getTime() : Number.MAX_SAFE_INTEGER
@@ -104,7 +117,7 @@ export function InternalLinksList({
       <div className="rounded-2xl border border-[#DECDB8] bg-white px-3 py-2 shadow-[0_4px_14px_rgba(71,45,22,0.05)]">
         <div className="mb-2 flex items-center justify-between gap-2">
           <p className="text-sm text-[#6A5C52]">
-            Total invitaciones: <strong>{rows.length}</strong>
+            Total: <strong>{rows.length}</strong>
           </p>
           <div className="flex items-center gap-2">
             {sortByEventDate ? (
@@ -136,27 +149,50 @@ export function InternalLinksList({
               </>
             ) : null}
             {!sortByEventDate ? (
-              <button
-                type="button"
-                onClick={() => setPanelOnly((v) => !v)}
-                className="rounded-full px-3 py-1 text-xs font-semibold box-border"
-                style={
-                  panelOnly
-                    ? {
-                        backgroundColor: "#e8f4fc",
-                        border: "2px solid #b8d9f0",
-                        color: "#3d5f78",
-                      }
-                    : {
-                        backgroundColor: "#FFFDF9",
-                        border: "1px solid #D9CBB9",
-                        color: "#6A4F38",
-                      }
-                }
-                title="Mostrar solo invitaciones con panel activo"
-              >
-                Panel
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => setBaseOnly((v) => !v)}
+                  className="rounded-full px-3 py-1 text-xs font-semibold box-border"
+                  style={
+                    baseOnly
+                      ? {
+                          backgroundColor: "#ececec",
+                          border: "2px solid #111111",
+                          color: "#111111",
+                        }
+                      : {
+                          backgroundColor: "#FFFDF9",
+                          border: "1px solid #D9CBB9",
+                          color: "#6A4F38",
+                        }
+                  }
+                  title="Mostrar solo invitaciones con base activa"
+                >
+                  B
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPanelOnly((v) => !v)}
+                  className="rounded-full px-3 py-1 text-xs font-semibold box-border"
+                  style={
+                    panelOnly
+                      ? {
+                          backgroundColor: panelAccent.bg,
+                          border: `2px solid ${panelAccent.border}`,
+                          color: panelAccent.text,
+                        }
+                      : {
+                          backgroundColor: "#FFFDF9",
+                          border: "1px solid #D9CBB9",
+                          color: "#6A4F38",
+                        }
+                  }
+                  title="Mostrar solo invitaciones con panel activo"
+                >
+                  Panel
+                </button>
+              </>
             ) : null}
             <button
               type="button"
@@ -164,7 +200,10 @@ export function InternalLinksList({
                 setSortByEventDate((v) => {
                   const next = !v
                   if (!next) setDateFilter("all")
-                  if (next) setPanelOnly(false)
+                  if (next) {
+                    setPanelOnly(false)
+                    setBaseOnly(false)
+                  }
                   return next
                 })
               }
@@ -273,13 +312,26 @@ export function InternalLinksList({
                     {row.eventDate}
                   </span>
                 ) : null}
+                {row.baseEnabled ? (
+                  <span
+                    className={featureCapsuleClass}
+                    style={{
+                      backgroundColor: "rgba(255, 253, 249, 0.85)",
+                      border: "1px solid rgba(0, 0, 0, 0.22)",
+                      color: "rgba(0, 0, 0, 0.45)",
+                    }}
+                    title={row.baseUrl ? `Base activa · ${row.baseUrl}` : "Base activa"}
+                  >
+                    B
+                  </span>
+                ) : null}
                 {row.panelEnabled ? (
                   <span
-                    className="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide"
+                    className="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide box-border"
                     style={{
-                      backgroundColor: "#e8f4fc",
-                      border: "2px solid #b8d9f0",
-                      color: "#3d5f78",
+                      backgroundColor: panelAccent.bg,
+                      border: `2px solid ${panelAccent.border}`,
+                      color: panelAccent.text,
                     }}
                     title={row.panelId ? `Panel activo · ${row.panelId}` : "Panel activo"}
                   >
@@ -298,15 +350,23 @@ export function InternalLinksList({
             {isOpen ? (
               <div className="space-y-3 border-t border-[#EDE4D8] bg-[#FFFDFB] px-4 py-3 text-sm">
                 {fullBase && displayBase ? (
-                  <div className="rounded-xl border border-[#D8E8D2] bg-[#F6FBF4] px-3 py-2">
+                  <div
+                    className="rounded-xl border bg-[#ececec] px-3 py-2"
+                    style={{ borderColor: "rgba(0, 0, 0, 0.35)" }}
+                  >
                     <div className="flex w-full flex-nowrap items-center gap-2">
-                      <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#3E6A35]">
+                      <span
+                        className="shrink-0 text-xs font-semibold uppercase tracking-wide"
+                        style={{ color: "#1a1a1a" }}
+                      >
                         Base:
                       </span>
                       <a
-                        className="block min-w-0 flex-1 truncate whitespace-nowrap pr-1 text-[13px] leading-tight text-[#3E6A35] underline underline-offset-2"
+                        className="block min-w-0 flex-1 truncate whitespace-nowrap pr-1 text-[13px] leading-tight underline underline-offset-2"
+                        style={{ color: "#111111" }}
                         href={fullBase}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         {displayBase}
                       </a>
@@ -377,15 +437,26 @@ export function InternalLinksList({
                 </div>
 
                 {fullPanel && displayPanel ? (
-                  <div className="rounded-xl border border-[#D4CDE8] bg-[#F5F3FA] px-3 py-2">
+                  <div
+                    className="rounded-xl border px-3 py-2"
+                    style={{
+                      backgroundColor: panelAccent.bg,
+                      borderColor: panelAccent.border,
+                    }}
+                  >
                     <div className="flex w-full flex-nowrap items-center gap-2">
-                      <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#5A4F7A]">
+                      <span
+                        className="shrink-0 text-xs font-semibold uppercase tracking-wide"
+                        style={{ color: panelAccent.text }}
+                      >
                         Panel:
                       </span>
                       <a
-                        className="block min-w-0 flex-1 truncate whitespace-nowrap pr-1 text-[13px] leading-tight text-[#5A4F7A] underline underline-offset-2"
+                        className="block min-w-0 flex-1 truncate whitespace-nowrap pr-1 text-[13px] leading-tight underline underline-offset-2"
+                        style={{ color: panelAccent.text }}
                         href={fullPanel}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         {displayPanel}
                       </a>

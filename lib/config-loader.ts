@@ -8,7 +8,6 @@ export interface EventConfig {
     enabled?: boolean
     token?: string
     title?: string
-    subtitle?: string
   }
   meta?: {
     coupleNames?: {

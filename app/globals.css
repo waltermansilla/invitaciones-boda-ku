@@ -1,3 +1,8 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
 /* Keep trivia anchor targets lower in viewport (more centered). */
 #trivia-game,
 #truths-game {
@@ -9,10 +14,6 @@
     margin-top: -0.45rem;
     margin-bottom: 0.6rem;
 }
-@import 'tailwindcss';
-@import 'tw-animate-css';
-
-@custom-variant dark (&:is(.dark *));
 
 /* 
   Defaults neutros -- se sobreescriben por el <style> inyectado en cada ruta de cliente.

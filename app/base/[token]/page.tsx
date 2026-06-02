@@ -7,6 +7,7 @@ import {
     panelVariantesFromConfig,
 } from "@/lib/config-loader";
 import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order";
+import { defaultBaseWhatsappMessageFromConfig } from "@/lib/base-invitation-whatsapp";
 import { BaseLinksClient } from "./base-links-client";
 
 export const dynamic = "force-dynamic";
@@ -15,8 +16,8 @@ export const viewport: Viewport = {
     themeColor: "#111111",
 };
 
-const DEFAULT_BASE_SUBTITLE =
-    "Desde esta base podés entrar rápido a cada versión de la invitación y, si corresponde, al panel de invitados, sin tener que buscar links sueltos.";
+const BASE_SUBTITLE =
+    "Desde acá podés abrir tu invitación, enviarla por WhatsApp y acceder al panel de invitados, sin tener que buscar links sueltos.";
 
 function joinCoupleDisplayNames(coupleNames: Record<string, unknown>): string {
     const brideName =
@@ -141,7 +142,8 @@ export default async function BaseLinksPage({ params }: PageProps) {
             : "#7A5F45";
 
     const title = autoBaseTitle(config);
-    const subtitle = config.base?.subtitle?.trim() || DEFAULT_BASE_SUBTITLE;
+    const subtitle = BASE_SUBTITLE;
+    const defaultWhatsappMessage = defaultBaseWhatsappMessageFromConfig(config);
     const hasCustomVariants = variantes.length > 1;
     const singleInvitationTitle = autoInvitationTitle(config);
 
@@ -163,7 +165,8 @@ export default async function BaseLinksPage({ params }: PageProps) {
           }))
         : [];
 
-    const panelItems = panelId
+    const panelEnabled = Boolean(config.rsvpPanel?.enabled && panelId);
+    const panelItems = panelEnabled
         ? [
               {
                   id: "panel-default",
@@ -179,8 +182,11 @@ export default async function BaseLinksPage({ params }: PageProps) {
             title={title}
             subtitle={subtitle}
             primaryColor={primaryColor}
+            baseToken={token}
+            defaultWhatsappMessage={defaultWhatsappMessage}
             invitationItems={invitationItems}
             panelItems={panelItems}
+            showPanelUpsell={!panelEnabled}
         />
     );
 }

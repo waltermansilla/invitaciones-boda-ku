@@ -17,8 +17,7 @@
     "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
     "base": {
         "enabled": true,
-        "token": "p8JkNoDt",
-        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+        "token": "p8JkNoDt"
     },
     "access": {
         "tokenEnabled": true,
@@ -132,7 +131,10 @@
             "id": "quote-welcome",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Estamos emocionados de compartir este momento tan especial con las personas que más queremos. ¡Contamos con tu presencia!",
                 "author": "",
@@ -146,7 +148,11 @@
             "id": "date-info",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "31 de Octubre del 2026"
@@ -158,11 +164,18 @@
             "type": "locationInfo",
             "id": "location-recepcion",
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Civil y Fiesta",
                 "address": "Salón 'La Nonnina', Neuquén",
-                "order": ["address", "time"],
+                "order": [
+                    "address",
+                    "time"
+                ],
                 "datetime": {
                     "time": "20:00 hs"
                 },
@@ -178,7 +191,9 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -194,7 +209,10 @@
             "type": "itinerary",
             "id": "itinerary-timeline",
             "bgColor": "background",
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -236,7 +254,9 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Dress Code",
                 "subtitle": "Elegante, formal",
                 "description": "Por favor, evitar los siguientes colores:",
@@ -244,7 +264,12 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
-                    "colors": ["#ffffff", "#f3d9b9", "#d3b996", "#1982c4"]
+                    "colors": [
+                        "#ffffff",
+                        "#f3d9b9",
+                        "#d3b996",
+                        "#1982c4"
+                    ]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -258,7 +283,11 @@
             "type": "adultsOnly",
             "id": "adults-only",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description"],
+            "blocks": [
+                "icon",
+                "title",
+                "description"
+            ],
             "data": {
                 "icon": "baby",
                 "title": "Sólo adultos",
@@ -270,7 +299,9 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -285,7 +316,11 @@
             "id": "playlist-suggestion",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "description", "button"],
+            "blocks": [
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "title": "Playlist de la fiesta",
                 "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
@@ -302,7 +337,10 @@
             "type": "truths",
             "id": "truths-game",
             "bgColor": "primary",
-            "blocks": ["title", "questions"],
+            "blocks": [
+                "title",
+                "questions"
+            ],
             "data": {
                 "title": "¿Cuánto nos conoces?",
                 "finishText": "Gracias por jugar. Ahora ya saben un poco mas sobre nosotros. ¡Nos vemos en la fiesta!",
@@ -350,7 +388,13 @@
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "background",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modal"
+            ],
             "data": {
                 "icon": "plane",
                 "title": "Luna de miel",
@@ -385,10 +429,14 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos3",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/18-alex-fabi/images/5.jpeg"]
+                "images": [
+                    "/clientes/boda/18-alex-fabi/images/5.jpeg"
+                ]
             }
         },
         {
@@ -398,7 +446,10 @@
             "id": "quote-welcome2",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "El amor no sólo se construye entre dos, también se enriquece con quienes están presentes en los momentos más importantes de nuestra vida.",
                 "author": "",
@@ -411,12 +462,21 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 20 de Septiembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -452,7 +512,10 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/18-alex-fabi/images/final.jpeg"
@@ -463,7 +526,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

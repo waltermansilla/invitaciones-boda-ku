@@ -17,8 +17,7 @@
     "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
     "base": {
         "enabled": true,
-        "token": "aS8UoghD",
-        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+        "token": "aS8UoghD"
     },
     "access": {
         "tokenEnabled": true,

@@ -18,8 +18,7 @@
     "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
     "base": {
         "enabled": true,
-        "token": "Aib2eYCr",
-        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+        "token": "Aib2eYCr"
     },
     "access": {
         "tokenEnabled": true,
@@ -164,7 +163,10 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Hay historias que sólo se viven una vez... momentos que no se repiten.",
                 "author": "",
@@ -176,7 +178,10 @@
             "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
             "type": "dateInfo",
             "id": "date-info",
-            "blocks": ["title", "value"],
+            "blocks": [
+                "title",
+                "value"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "6 de Marzo del 2027"
@@ -187,12 +192,19 @@
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-fiesta",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "¿Dónde?",
                 "address": "Salón 'Las Marías', Claveles 4055, Sauce Viejo",
                 "showButton": true,
-                "order": ["address", "time"],
+                "order": [
+                    "address",
+                    "time"
+                ],
                 "datetime": {
                     "time": "20:30 hs"
                 },
@@ -219,7 +231,9 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Dress code",
                 "subtitle": "Elegante",
                 "description": "El color BLANCO es exclusivo de la quinceañera.",
@@ -232,7 +246,12 @@
             "id": "shared-photos",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["icon", "title", "description", "button"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "icon": "camera",
                 "title": "Compartí tus fotos",
@@ -251,7 +270,10 @@
             "id": "quote-welcome2",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Recuerdos que se atesoran en el corazón para siempre, junto a personas que no voy a olvidar.",
                 "author": "",
@@ -263,7 +285,13 @@
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "background",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modal"
+            ],
             "data": {
                 "icon": "gift",
                 "title": "Un pequeño aporte",
@@ -388,7 +416,10 @@
             "id": "quote-welcome8",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Me encantaría que compartas conmigo esta noche especial.",
                 "author": "",
@@ -401,12 +432,21 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "background",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 1 de Diciembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -435,7 +475,10 @@
             "_comment": "Imagen a ancho completo con nombre debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "name"],
+            "blocks": [
+                "image",
+                "name"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/xv/21-indiana/images/final.jpeg",
@@ -459,7 +502,10 @@
             "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

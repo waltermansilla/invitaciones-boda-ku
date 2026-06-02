@@ -1,28 +1,20 @@
 {
     "// ==========================================================================": "",
     "// TEMPLATE XV - GUIA COMPLETA                                               ": "",
-    "// ==========================================================================": "",
     "//                                                                            ": "",
     "// Este archivo es SOLO DE REFERENCIA. No se usa en la app.                  ": "",
     "// Para crear un XV: copiar a data/clientes/xv/[slug].json                   ": "",
-    "//                                                                            ": "",
     "// MIGRACION DE IMAGENES A BLOB:                                             ": "",
     "// 1. Trabaja con imagenes locales en public/clientes/xv/[slug]/             ": "",
     "// 2. Cuando esten listas, ejecuta: npx tsx scripts/migrate-to-blob.ts       ": "",
     "// 3. El script sube las imagenes y actualiza los JSONs automaticamente      ": "",
-    "// ==========================================================================": "",
-
-    "// ==========================================================================": "",
     "// META - Informacion basica de la invitacion                                ": "",
-    "// ==========================================================================": "",
     "// title: titulo de la pagina (SEO)                                          ": "",
     "// description: descripcion para redes sociales                              ": "",
     "// ogImage (opcional): imagen Open Graph (ruta bajo public/), ~1200x630    ": "",
     "// image: alternativa legacy si no hay ogImage                               ": "",
     "// quinceaneraName: nombre de la quinceanera                                 ": "",
     "// coupleNames: brideName/groomName en UI; name (opcional) prioriza titulo evento en panel si existe": "",
-    "// ==========================================================================": "",
-
     "meta": {
         "title": "XV de Nombre",
         "description": "Te invitamos a celebrar mis 15.",
@@ -37,47 +29,33 @@
             "separator": ""
         }
     },
-
-    "// ==========================================================================": "",
     "// BASE - Link unico de accesos para cliente                               ": "",
-    "// ==========================================================================": "",
     "// Si enabled=true, se habilita /base/{token}                              ": "",
     "// token: 8 caracteres alfanumericos (ej: A7mP2kQ9)                        ": "",
     "// title/subtitle: textos visibles en la pagina de accesos                 ": "",
     "// Desde esa base se puede abrir invitacion, panel y variantes             ": "",
-    "// ==========================================================================": "",
     "base": {
         "enabled": false,
         "token": "",
-        "title": "Accesos del evento",
-        "subtitle": "Links rapidos para invitacion y panel."
+        "title": "Accesos del evento"
     },
-
-    "// ==========================================================================": "",
     "// ACCESS - Token de acceso para la invitacion real                          ": "",
-    "// ==========================================================================": "",
     "// OPCION FACIL (recomendada para operar rapido):                            ": "",
     "//   - usar SOLO token corto (6 chars) en access.token                       ": "",
-    "//                                                                            ": "",
     "// OPCION MAS SEGURA:                                                        ": "",
     "//   - guardar access.tokenHash (SHA-256) y evitar token plano en repo       ": "",
     "//   - generar con: node scripts/gen-access-token.mjs                        ": "",
-    "//                                                                            ": "",
     "// tokenEnabled: true exige ?t=TOKEN en /tipo/slug                           ": "",
     "// token: token real de 6 chars (A-Z a-z 0-9). Puede usarse sin hash.        ": "",
     "// tokenHash: SHA-256 (hex) del token real de 6 caracteres (opcional)        ": "",
     "// allowLegacyUntil (opcional): fecha YYYY-MM-DD para permitir sin token     ": "",
-    "// ==========================================================================": "",
     "access": {
         "tokenEnabled": false,
         "token": "",
         "tokenHash": "",
         "allowLegacyUntil": ""
     },
-
-    "// ==========================================================================": "",
     "// RSVP PANEL - Panel de confirmaciones (opcional)                          ": "",
-    "// ==========================================================================": "",
     "// enabled: true = activa integracion con panel (Supabase)                  ": "",
     "// panelId: id unico del panel (URL: /panel/[panelId])                      ": "",
     "// fechaEvento: YYYY-MM-DD (para contador interno del panel)                ": "",
@@ -103,7 +81,6 @@
     "//   Si deuda=true y plazas ocupadas en panel >= deudaInvitados             ": "",
     "//   bloquea: Descargar PDF, Enviar invitacion, Guardar al agregar invitado ": "",
     "// theme/labels: colores y textos del panel                                 ": "",
-    "// ==========================================================================": "",
     "rsvpPanel": {
         "enabled": false,
         "confirmacion": "formulario",
@@ -138,10 +115,7 @@
             "unpaidButton": "¿Pagó tarjeta?"
         }
     },
-
-    "// ==========================================================================": "",
     "// THEME - Colores y tipografia                                              ": "",
-    "// ==========================================================================": "",
     "// primaryColor: color principal (botones, fondos destacados)                ": "",
     "// backgroundColor: fondo general claro                                      ": "",
     "// backgroundImage: imagen de fondo alternativa (opcional)                   ": "",
@@ -151,8 +125,6 @@
     "// darkBgTextColor: texto sobre fondo oscuro                                 ": "",
     "// font.family: fuente de Google Fonts                                       ": "",
     "// font.weights: pesos a cargar (separados por coma)                         ": "",
-    "// ==========================================================================": "",
-
     "theme": {
         "primaryColor": "#C4788A",
         "backgroundColor": "#FFF9F7",
@@ -168,10 +140,7 @@
             "weights": "100,200,300,400,500,600,700"
         }
     },
-
-    "// ==========================================================================": "",
     "// OVERLAY - Pantalla de bienvenida                                          ": "",
-    "// ==========================================================================": "",
     "// enabled: true/false                                                       ": "",
     "// phrase: frase de bienvenida (ej: 'Mis 15!')                               ": "",
     "// buttonText: texto del boton de entrada                                    ": "",
@@ -195,8 +164,6 @@
     "//   Si NO pones topLineY/bottomLineY, las lineas no se muestran en modo px  ": "",
     "//   IMPORTANTE: si usas textPositionsPx, ajusta cada valor para tu imagen    ": "",
     "// nameStyle: ver documentacion en template BODA                             ": "",
-    "// ==========================================================================": "",
-
     "overlay": {
         "enabled": true,
         "phrase": "Mis 15!",
@@ -224,18 +191,12 @@
             "buttonY": 560
         }
     },
-
-    "// ==========================================================================": "",
     "// MUSIC - Musica de fondo                                                   ": "",
-    "// ==========================================================================": "",
-    "// enabled: true/false                                                       ": "",
     "// src: ruta al archivo mp3                                                  ": "",
     "// autoplay: true = inicia al tocar 'Ingresar', false = manual               ": "",
     "// startTime: segundos desde donde empieza (0 = inicio)                      ": "",
     "// endTime: segundos donde termina/corta la musica (0 = sin corte)           ": "",
     "// Se puede usar solo startTime, solo endTime, o ambos                        ": "",
-    "// ==========================================================================": "",
-
     "music": {
         "enabled": true,
         "src": "/music/background.mp3",
@@ -243,12 +204,8 @@
         "startTime": 0,
         "endTime": 0
     },
-
-    "// ==========================================================================": "",
     "// QR CARD - Tarjeta imprimible con QR                                       ": "",
-    "// ==========================================================================": "",
     "// Accede en: /xv/{slug}/qr (misma regla que otros tipos)                    ": "",
-    "//                                                                            ": "",
     "// enabled: true/false (false = pagina 404)                                  ": "",
     "// names: text1 (titulo chico), text2 (nombre grande)                        ": "",
     "// icon: 'camera','sparkles','crown','star','heart','none'                   ": "",
@@ -257,8 +214,6 @@
     "// qrStyle: fgColor (color QR), bgColor (fondo QR)                           ": "",
     "// cardStyle: bgColor, textColor, accentColor                                ": "",
     "// brand.type: 'instagram', 'text', 'logo', 'none'                           ": "",
-    "// ==========================================================================": "",
-
     "qrCard": {
         "enabled": true,
         "names": {
@@ -285,14 +240,9 @@
             "instagramHandle": "@momentounico_invitaciones"
         }
     },
-
-    "// ==========================================================================": "",
     "// HERO - Seccion principal con foto y countdown                             ": "",
-    "// ==========================================================================": "",
     "// Ver documentacion completa en template BODA                               ": "",
     "// La estructura es identica                                                 ": "",
-    "// ==========================================================================": "",
-
     "hero": {
         "coupleImage": "/clientes/xv/[slug]/hero.jpg",
         "headline": "Mis 15!",
@@ -346,26 +296,18 @@
             "overlayStyle": "card"
         }
     },
-
-    "// ==========================================================================": "",
     "// SECTIONS - Secciones de contenido                                         ": "",
-    "// ==========================================================================": "",
     "// El ORDEN en el array define el orden visual en la pagina.                 ": "",
     "// Ver documentacion completa de cada tipo en template BODA.                 ": "",
-    "//                                                                            ": "",
     "// TIPOS EXCLUSIVOS DE XV:                                                    ": "",
     "//   presentation: foto + nombre + descripcion                               ": "",
     "//   parents: nombre de los padres                                           ": "",
-    "//                                                                            ": "",
     "// Pie de marca: no va en sections; se muestra siempre al final (landing-1  ": "",
     "//   -> brand), colores del primary del theme de la invitacion.               ": "",
-    "// ==========================================================================": "",
-
     "sections": [
         {
             "// ----------------------------------------------------------------------": "",
             "// QUOTE - Frase de bienvenida                                           ": "",
-            "// ----------------------------------------------------------------------": "",
             "// textColor (opcional): hex o nombre ('foreground'/'primary-foreground')": "",
             "//   util cuando usas bgImage y queres forzar contraste del texto         ": "",
             "type": "quote",
@@ -378,16 +320,13 @@
                 "decorativeLines": true
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// PRESENTATION - Foto y presentacion (EXCLUSIVO XV)                     ": "",
-            "// ----------------------------------------------------------------------": "",
             "// image: foto de la quinceanera                                         ": "",
             "// name: nombre                                                          ": "",
             "// description: texto de presentacion                                    ": "",
             "// aspectRatio: proporcion de la foto ('3/4', '4/3', '1/1', '16/9', 'libre')": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "presentation",
             "id": "presentation",
             "enabled": true,
@@ -398,15 +337,12 @@
                 "aspectRatio": "3/4"
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// PARENTS - Padres/Padrinos (EXCLUSIVO XV)                              ": "",
-            "// ----------------------------------------------------------------------": "",
             "// title: titulo de la seccion                                           ": "",
             "// subtitle: subtitulo                                                   ": "",
             "// parents: array de { name, role }                                      ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "parents",
             "id": "parents",
             "enabled": true,
@@ -415,16 +351,20 @@
                 "title": "Mis Padres",
                 "subtitle": "Con mucho amor me acompanan en este dia tan especial",
                 "parents": [
-                    { "name": "Nombre Mama", "role": "Mama" },
-                    { "name": "Nombre Papa", "role": "Papa" }
+                    {
+                        "name": "Nombre Mama",
+                        "role": "Mama"
+                    },
+                    {
+                        "name": "Nombre Papa",
+                        "role": "Papa"
+                    }
                 ]
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// OUR STORY - Momentos de crecimiento                                   ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "ourStory",
             "id": "my-story",
             "enabled": true,
@@ -451,11 +391,9 @@
                 ]
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// DATE INFO - Fecha del evento                                          ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "dateInfo",
             "id": "date-info",
             "enabled": true,
@@ -465,13 +403,10 @@
                 "value": "17 de Febrero 2027"
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// LOCATION INFO - Ubicacion con mapa                                    ": "",
-            "// ----------------------------------------------------------------------": "",
             "// Ver opciones de icon en template BODA                                 ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "locationInfo",
             "id": "location-fiesta",
             "enabled": true,
@@ -485,7 +420,11 @@
                     "date": "Sabado 17 de Febrero",
                     "time": "21:00 hs"
                 },
-                "order": ["date", "time", "address"],
+                "order": [
+                    "date",
+                    "time",
+                    "address"
+                ],
                 "button": {
                     "text": "Como llegar",
                     "url": "https://maps.google.com",
@@ -493,11 +432,9 @@
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// GALLERY - Slider de fotos                                             ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "gallery",
             "id": "gallery-photos",
             "enabled": true,
@@ -510,13 +447,10 @@
                 ]
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// ITINERARY - Linea de tiempo                                           ": "",
-            "// ----------------------------------------------------------------------": "",
             "// Ver lista de iconos en template BODA                                  ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "enabled": true,
@@ -530,14 +464,26 @@
                         "address": "Salon de Eventos",
                         "time": "20:00 hs"
                     },
-                    { "icon": "utensils", "name": "Cena", "time": "21:00 hs" },
+                    {
+                        "icon": "utensils",
+                        "name": "Cena",
+                        "time": "21:00 hs"
+                    },
                     {
                         "icon": "heart",
                         "name": "Vals con papa",
                         "time": "22:00 hs"
                     },
-                    { "icon": "cake", "name": "Torta", "time": "23:00 hs" },
-                    { "icon": "music", "name": "Fiesta", "time": "00:00 hs" },
+                    {
+                        "icon": "cake",
+                        "name": "Torta",
+                        "time": "23:00 hs"
+                    },
+                    {
+                        "icon": "music",
+                        "name": "Fiesta",
+                        "time": "00:00 hs"
+                    },
                     {
                         "icon": "fin",
                         "name": "Fin de fiesta",
@@ -546,19 +492,20 @@
                 ]
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// DRESS CODE - Codigo de vestimenta                                     ": "",
-            "// ----------------------------------------------------------------------": "",
             "// Ver opciones completas en template BODA                               ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "dressCode",
             "id": "dress-code",
             "enabled": true,
             "bgColor": "background",
             "data": {
-                "icons": ["dress", "suit", "gem"],
+                "icons": [
+                    "dress",
+                    "suit",
+                    "gem"
+                ],
                 "title": "Vestimenta",
                 "subtitle": "Elegante",
                 "description": "",
@@ -576,17 +523,21 @@
                 "modal": {
                     "title": "Consejos de vestimenta",
                     "sections": [
-                        { "heading": "Chicas", "text": "Descripcion." },
-                        { "heading": "Chicos", "text": "Descripcion." }
+                        {
+                            "heading": "Chicas",
+                            "text": "Descripcion."
+                        },
+                        {
+                            "heading": "Chicos",
+                            "text": "Descripcion."
+                        }
                     ]
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// PHOTOS - Invitacion a subir fotos                                     ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "photos",
             "id": "shared-photos",
             "enabled": true,
@@ -602,11 +553,9 @@
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// PLAYLIST - Link a Spotify                                             ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "playlist",
             "id": "playlist-suggestion",
             "enabled": true,
@@ -620,11 +569,9 @@
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// TRUTHS - Juego A o B                                                  ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "truths",
             "id": "truths-game",
             "enabled": true,
@@ -643,11 +590,9 @@
                 ]
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// GIFT CARD - Tarjeta de regalo                                         ": "",
-            "// ----------------------------------------------------------------------": "",
             "// showButton: true/false (opcional, default true)                       ": "",
             "// button/modal: opcionales si showButton=false                           ": "",
             "// suggestedValue: UN solo valor. Ej: '$15.000'                           ": "",
@@ -656,7 +601,6 @@
             "//   Cada tramo: { label, helperText?, suggestedValue? o suggestedValues? }": "",
             "//   Ejemplo: [{ label: 'Mayores', value: '$68.000' }, { label: 'Menores', value: '$30.000' }]": "",
             "// Ver mas opciones en template BODA                                     ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "giftCard",
             "id": "gift-card",
             "enabled": true,
@@ -680,39 +624,57 @@
                             "label": "Hasta 15/07",
                             "helperText": "Pago anticipado",
                             "suggestedValues": [
-                                { "label": "Mayores", "value": "$15.000" },
-                                { "label": "Menores", "value": "$8.000" }
+                                {
+                                    "label": "Mayores",
+                                    "value": "$15.000"
+                                },
+                                {
+                                    "label": "Menores",
+                                    "value": "$8.000"
+                                }
                             ]
                         },
                         {
                             "label": "Desde 16/07",
                             "helperText": "Pago tardio",
                             "suggestedValues": [
-                                { "label": "Mayores", "value": "$18.000" },
-                                { "label": "Menores", "value": "$10.000" }
+                                {
+                                    "label": "Mayores",
+                                    "value": "$18.000"
+                                },
+                                {
+                                    "label": "Menores",
+                                    "value": "$10.000"
+                                }
                             ]
                         }
                     ],
                     "description": "Podes transferir el monto que quieras.",
                     "transferData": [
-                        { "label": "Alias", "value": "MI.ALIAS" },
-                        { "label": "CBU", "value": "0000000000000000000000" },
+                        {
+                            "label": "Alias",
+                            "value": "MI.ALIAS"
+                        },
+                        {
+                            "label": "CBU",
+                            "value": "0000000000000000000000"
+                        },
                         {
                             "label": "Titular",
                             "value": "Nombre del padre/madre"
                         },
-                        { "label": "Banco", "value": "Nombre del Banco" }
+                        {
+                            "label": "Banco",
+                            "value": "Nombre del Banco"
+                        }
                     ]
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// HONEYMOON - Regalos con modal                                         ": "",
-            "// ----------------------------------------------------------------------": "",
             "// Ver opciones completas en template BODA                               ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "honeymoon",
             "id": "gifts",
             "enabled": true,
@@ -735,7 +697,10 @@
                         "title": "Datos de transferencia",
                         "description": "Muchas gracias!",
                         "bankData": [
-                            { "label": "Alias", "value": "MI.ALIAS" },
+                            {
+                                "label": "Alias",
+                                "value": "MI.ALIAS"
+                            },
                             {
                                 "label": "CBU",
                                 "value": "0000000000000000000000"
@@ -755,11 +720,9 @@
                 ]
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// UNIVERSAL INFO - Seccion flexible con modal                           ": "",
-            "// ----------------------------------------------------------------------": "",
             "// icon:                                                                 ": "",
             "//   car      -> Estacionamiento / auto                                  ": "",
             "//   bus      -> Shuttle / traslado                                       ": "",
@@ -778,7 +741,6 @@
             "// showButton: true/false                                                 ": "",
             "// button.variant: 'primary' o 'secondary'                                ": "",
             "// modal: estilo dressCode con sections [{ heading, text }]               ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "universalInfo",
             "id": "universal-info",
             "enabled": true,
@@ -800,16 +762,17 @@
                             "heading": "Tip 1",
                             "text": "Detalle o recomendacion."
                         },
-                        { "heading": "Tip 2", "text": "Otro dato importante." }
+                        {
+                            "heading": "Tip 2",
+                            "text": "Otro dato importante."
+                        }
                     ]
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// EMOTIONAL QUOTE - Frase emotiva simple                                ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "emotionalQuote",
             "id": "emotional-quote",
             "enabled": true,
@@ -818,25 +781,31 @@
                 "text": "Creciendo, sonando, brillando."
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// TRIVIA - Juego de preguntas multiples                                 ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "trivia",
             "id": "trivia-game",
             "enabled": true,
             "data": {
                 "title": "Cuanto me conoces?",
                 "subtitle": "Jugamos?",
-                "button": { "text": "Iniciar Trivia", "variant": "primary" },
+                "button": {
+                    "text": "Iniciar Trivia",
+                    "variant": "primary"
+                },
                 "modal": {
                     "finishTitle": "Eso es todo!",
                     "finishText": "Gracias por jugar.",
                     "questions": [
                         {
                             "question": "Cual es mi comida favorita?",
-                            "options": ["Pizza", "Sushi", "Asado", "Pasta"],
+                            "options": [
+                                "Pizza",
+                                "Sushi",
+                                "Asado",
+                                "Pasta"
+                            ],
                             "correctIndex": 2,
                             "explanation": "Asado siempre!"
                         }
@@ -844,11 +813,9 @@
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// RSVP - Formulario de confirmacion                                     ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "rsvp",
             "id": "rsvp-form",
             "enabled": true,
@@ -857,7 +824,13 @@
                 "title": "Confirma tu asistencia",
                 "deadline": "Antes del 1 de septiembre",
                 "guestCountLabel": "Numero de personas",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -902,11 +875,9 @@
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// CONFIRMAR WHATSAPP - Confirmacion simple (plan base)                  ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "confirmarWhatsapp",
             "id": "confirmar-whatsapp",
             "enabled": true,
@@ -924,11 +895,9 @@
                 }
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// ADULTS ONLY - Evento solo para adultos                                ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "adultsOnly",
             "id": "adults-only",
             "enabled": true,
@@ -939,11 +908,9 @@
                 "description": "Les pedimos disculpas, pero este evento es exclusivamente para adultos."
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// SPECIAL MESSAGE - Mensaje personal                                    ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "specialMessage",
             "id": "special-message",
             "enabled": true,
@@ -954,11 +921,9 @@
                 "decorativeLines": true
             }
         },
-
         {
             "// ----------------------------------------------------------------------": "",
             "// CLOSING IMAGE - Foto de cierre                                        ": "",
-            "// ----------------------------------------------------------------------": "",
             "type": "closingImage",
             "id": "closing-image",
             "enabled": true,
@@ -982,9 +947,7 @@
             }
         }
     ],
-    "// ==========================================================================": "",
     "// VARIANTS - Variantes por query param ?v=nombre                            ": "",
-    "// ==========================================================================": "",
     "// Colocar SIEMPRE al final del JSON                                        ": "",
     "// URL ejemplo: /xv/[slug]?v=version2                                       ": "",
     "// En cada variante podes overridear top-level (theme, hero, music, etc)    ": "",
@@ -995,7 +958,6 @@
     "// baseLabel: nombre visible de la version original/base (solo en 1 variante)": "",
     "// legacyIds: ids viejos para no perder listas en panel al renombrar         ": "",
     "// Podes crear todas las variantes que necesites                             ": "",
-    "// ==========================================================================": "",
     "variants": {
         "version2": {
             "theme": {

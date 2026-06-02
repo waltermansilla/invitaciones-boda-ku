@@ -17,8 +17,7 @@
     "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
     "base": {
         "enabled": true,
-        "token": "m3LiZaI9",
-        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+        "token": "m3LiZaI9"
     },
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
@@ -99,7 +98,10 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Si recibiste esta invitación, es porque queremos que estés con nosotros en uno de los días más importantes de nuestras vidas. Tu presencia haría este momento aún más especial.",
                 "author": "",
@@ -112,7 +114,11 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "23 de Mayo del 2026"
@@ -123,13 +129,16 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/3-meliza-ivan/images/galeria-1.jpeg"]
+                "images": [
+                    "/clientes/boda/3-meliza-ivan/images/galeria-1.jpeg"
+                ]
             }
         },
-
         {
             "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
@@ -137,7 +146,11 @@
             "enabled": false,
             "id": "location-ceremonia",
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Ceremonia religiosa",
                 "address": "Parroquia San Pedro y San Pablo",
@@ -155,7 +168,11 @@
             "enabled": false,
             "id": "location-recepcion",
             "bgColor": "primary",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Civil y ¡Fiesta!",
                 "address": "Salón de eventos 'San Cayetano'",
@@ -172,7 +189,10 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -181,7 +201,6 @@
                         "name": "Ceremonia religiosa",
                         "address": "Parroquia San Pedro y San Pablo",
                         "time": "20:30 hs",
-
                         "button": {
                             "text": "Cómo llegar",
                             "url": "https://maps.app.goo.gl/f5c2xKsVRKJgitNC9",
@@ -204,11 +223,14 @@
                         "name": "Ceremonia civil",
                         "time": "22:00 hs"
                     },
-                    { "icon": "utensils", "name": "Cena", "time": "22:30 hs" },
+                    {
+                        "icon": "utensils",
+                        "name": "Cena",
+                        "time": "22:30 hs"
+                    },
                     {
                         "icon": "sparkles",
                         "name": "Primer baile de los recién casados",
-
                         "time": "01:00 hs"
                     },
                     {
@@ -216,7 +238,6 @@
                         "name": "Fiesta",
                         "time": "01:10 hs"
                     },
-
                     {
                         "icon": "clock",
                         "name": "Fin",
@@ -240,7 +261,9 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Código de vestimenta",
                 "subtitle": "Elegante",
                 "description": "Te pedimos amablemente evitar colores de la siguiente paleta de colores",
@@ -272,14 +295,19 @@
                 }
             }
         },
-
         {
             "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "honeymoon",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modals"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modals"
+            ],
             "data": {
                 "icon": "gift",
                 "title": "Regalos",
@@ -310,8 +338,10 @@
                         "title": "Transferencias",
                         "description": "",
                         "bankData": [
-                            { "label": "Alias", "value": "BODAIVANYMELI" },
-
+                            {
+                                "label": "Alias",
+                                "value": "BODAIVANYMELI"
+                            },
                             {
                                 "label": "Titular",
                                 "value": "Iván Francisco Coronel"
@@ -327,7 +357,9 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "images": [
@@ -336,14 +368,16 @@
                 ]
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-final",
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
                 "author": "Meliza & Iván",
@@ -355,7 +389,13 @@
             "type": "giftCard",
             "id": "gift-card",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modal"
+            ],
             "data": {
                 "icon": "heart",
                 "title": "Valor Tarjeta",
@@ -370,13 +410,22 @@
                     "suggestedValue": "$65.000",
                     "description": "No olvides enviarnos el comprobante.",
                     "transferData": [
-                        { "label": "Alias", "value": "BODAIVANYMELI" },
+                        {
+                            "label": "Alias",
+                            "value": "BODAIVANYMELI"
+                        },
                         {
                             "label": "Titular",
                             "value": "Iván Francisco Coronel"
                         },
-                        { "label": "Banco", "value": "Nación Argentina" },
-                        { "label": "Cuit", "value": "20-38736617-3" }
+                        {
+                            "label": "Banco",
+                            "value": "Nación Argentina"
+                        },
+                        {
+                            "label": "Cuit",
+                            "value": "20-38736617-3"
+                        }
                     ]
                 }
             }
@@ -386,7 +435,10 @@
             "type": "confirmarWhatsapp",
             "id": "confirmar-whatsapp",
             "bgColor": "primary",
-            "blocks": ["title", "button"],
+            "blocks": [
+                "title",
+                "button"
+            ],
             "data": {
                 "title": "Confirmar asistencia",
                 "subtitle": "",
@@ -401,20 +453,25 @@
             "type": "quote",
             "id": "quote-final2",
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Esta invitación es personal. Te pedimos amablemente no reenviarla ni compartirla en redes sociales. ¡Te esperamos para compartir una noche inolvidable!",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/3-meliza-ivan/images/final.jpeg"
@@ -425,7 +482,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [
@@ -441,7 +501,6 @@
             }
         }
     ],
-
     "variants": {
         "1": {
             "baseLabel": "Original",

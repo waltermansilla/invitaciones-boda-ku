@@ -2,7 +2,6 @@
     "// ==========================================": "",
     "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
     "// ==========================================.": "",
-
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
     "meta": {
         "title": "Mis 15 - Ambar",
@@ -16,25 +15,20 @@
             "separator": ""
         }
     },
-
     "base": {
         "enabled": true,
-        "token": "Tmh5F92k",
-        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+        "token": "Tmh5F92k"
     },
-
     "access": {
         "tokenEnabled": true,
         "token": "mK02ls",
         "allowLegacyUntil": ""
     },
-
     "rsvpPanel": {
         "enabled": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": true,
         "colados": true,
-
         "limiteInvitados": 150,
         "panelId": "xv-ambar-P82bv19n",
         "fechaEvento": "2026-05-22",
@@ -56,11 +50,9 @@
             "unpaidButton": "¿Pagó tarjeta?"
         }
     },
-
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
-
     "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
     "theme": {
         "primaryColor": "#142d51",
@@ -76,11 +68,9 @@
             "weights": "100,200,300,400,500,600,700"
         }
     },
-
     "// ==========================================;": "",
     "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
     "// ==========================================...": "",
-
     "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
@@ -95,11 +85,9 @@
             "letterSpacing": "none"
         }
     },
-
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
     "// ==========================================....": "",
-
     "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
     "music": {
         "enabled": true,
@@ -107,11 +95,9 @@
         "autoplay": true,
         "startTime": 16
     },
-
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
     "// ==========================================.....": "",
-
     "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
     "hero": {
         "coupleImage": "/clientes/xv/22-ambar/images/hero.png",
@@ -121,7 +107,6 @@
             "enabled": true,
             "lowercase": true,
             "position": "bottom",
-
             "font": "",
             "weight": "300",
             "size": "lg",
@@ -162,11 +147,9 @@
             "overlayStyle": "floating"
         }
     },
-
     "// ==========================================+": "",
     "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
     "// ==========================================......": "",
-
     "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
     "sections": [
         {
@@ -176,49 +159,63 @@
             "id": "quote-welcome",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Entrando oficialmente a mis fabulous fifteen, y celebrando una noche que va a quedar para siempre en mi corazón.",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- FECHA DEL EVENTO ---": "",
             "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
             "type": "dateInfo",
             "id": "date-info",
-            "blocks": ["title", "value"],
+            "blocks": [
+                "title",
+                "value"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "Viernes 22 de Mayo"
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos-2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "libre",
-                "images": ["/clientes/xv/22-ambar/images/1.png"]
+                "images": [
+                    "/clientes/xv/22-ambar/images/1.png"
+                ]
             }
         },
-
         {
             "// --- UBICACION: FIESTA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
             "type": "locationInfo",
             "id": "location-fiesta",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "¿Dónde?",
                 "address": "Salón Lio (Planta alta), Av. 25 de Mayo 272",
                 "showButton": true,
-                "order": ["address", "time"],
+                "order": [
+                    "address",
+                    "time"
+                ],
                 "datetime": {
                     "time": "A las 23:00 hs"
                 },
@@ -229,19 +226,21 @@
                 }
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos-4",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/xv/22-ambar/images/5.jpg"]
+                "images": [
+                    "/clientes/xv/22-ambar/images/5.jpg"
+                ]
             }
         },
-
         {
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
             "type": "dressCode",
@@ -258,21 +257,26 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Dress code",
                 "subtitle": "Elegante",
                 "description": "Por favor, evitar los colores Nude y Dorado.",
                 "showButton": false
             }
         },
-
         {
             "_comment": "PLAYLIST: Link a playlist colaborativa de Spotify.",
             "type": "playlist",
             "id": "playlist-suggestion",
             "enabled": true,
             "bgColor": "primary",
-            "blocks": ["title", "description", "button"],
+            "blocks": [
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "title": "Playlist de la fiesta",
                 "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
@@ -283,40 +287,49 @@
                 }
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos-3",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "libre",
-                "images": ["/clientes/xv/22-ambar/images/4.jpg"]
+                "images": [
+                    "/clientes/xv/22-ambar/images/4.jpg"
+                ]
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-welcome2",
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Creciendo, soñando y aprendiendo que cada paso forma parte de algo mucho más grande.",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
             "type": "honeymoon",
             "id": "dream-trip",
             "bgColor": "primary",
-
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modal"
+            ],
             "data": {
                 "icon": "gift",
                 "title": "Regalos",
@@ -330,42 +343,58 @@
                     "title": "Mis datos",
                     "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para mí.",
                     "bankData": [
-                        { "label": "Alias", "value": "ambarbatoquio.mp" },
-
+                        {
+                            "label": "Alias",
+                            "value": "ambarbatoquio.mp"
+                        },
                         {
                             "label": "Titular",
                             "value": "Ambar Batoquio"
                         },
-                        { "label": "Banco", "value": "Mercado Pago" }
+                        {
+                            "label": "Banco",
+                            "value": "Mercado Pago"
+                        }
                     ]
                 }
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos-10",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "libre",
-                "images": ["/clientes/xv/22-ambar/images/3.jpg"]
+                "images": [
+                    "/clientes/xv/22-ambar/images/3.jpg"
+                ]
             }
         },
-
         {
             "// --- FORMULARIO RSVP ---": "",
             "_comment": "Fondo rosa. Formulario de confirmacion. Todos los labels, opciones y textos son editables.",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "background",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 9 de Mayo",
                 "guestCountLabel": "Numero de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -398,7 +427,6 @@
                 }
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
@@ -406,20 +434,25 @@
             "id": "quote-welcome3",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Gracias por ser parte de mi vida y acompañarme en una noche que voy a recordar para siempre.",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombre debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "name"],
+            "blocks": [
+                "image",
+                "name"
+            ],
             "data": {
                 "aspectRatio": "libre",
                 "image": "/clientes/xv/22-ambar/images/2.jpg",
@@ -438,13 +471,15 @@
                 }
             }
         },
-
         {
             "// --- FOOTER / PIE DE PAGINA ---": "",
             "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

@@ -1,0 +1,340 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Nuestra Boda - Flor & Gonza",
+        "description": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Gonza",
+            "brideName": "Flor",
+            "separator": "&"
+        }
+    },
+    "base": {
+        "enabled": true,
+        "token": "bhe7JHu0"
+    },
+    "access": {
+        "tokenEnabled": true,
+        "token": "Bls83u",
+        "allowLegacyUntil": ""
+    },
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Paleta solicitada: verdes menta/oliva y crema natural.",
+    "theme": {
+        "primaryColor": "#5f8463",
+        "backgroundColor": "#fff",
+        "textColor": "#555",
+        "lightBgTextColor": "#709775",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#EDF2E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "60px",
+            "weight": "600",
+            "color": "#000",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/boda/24-flor-gonza/music/fonseca.mp3",
+        "autoplay": true
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "hero": {
+        "coupleImage": "/clientes/boda/24-flor-gonza/images/1.jpg",
+        "headline": "¡Nos casamos!",
+        "showNamesOnPhoto": false,
+        "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
+        "namesDisplay": {
+            "enabled": false,
+            "position": "bottom",
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-11-21T21:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Nos llena de alegría poder celebrar junto a vos el comienzo de esta nueva etapa.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "21 de Noviembre 2026"
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": ["/clientes/boda/24-flor-gonza/images/2.jpg?v=1"]
+            }
+        },
+        {
+            "_comment": "ITINERARY: Linea de tiempo. Cada evento puede tener: icon, name, address (NUEVO: direccion arriba de la hora), time, date (opcional), button (opcional). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Horarios",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia Religiosa",
+                        "address": "Parroquia Santa Bernardita, Bernardo Houssay esq. Pedro Vargas, Barrio Univem",
+                        "time": "21:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/kTcNUr9KjzQKXEJXA?g_st=ac",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "sparkles",
+                        "name": "Recepción",
+                        "address": "Salón 'Báltico', Av. Bandera de los Andes 239, Guaymallén, Mendoza",
+                        "time": "22:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/6HkaRaVAwn4JNiK79?g_st=ac",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "civil",
+                        "name": "Ceremonia Civil",
+                        "time": "22:30 hs"
+                    },
+                    {
+                        "icon": "utensils",
+                        "name": "Cena",
+                        "time": "23:00 hs"
+                    },
+                    {
+                        "icon": "party",
+                        "name": "Comienza la fiesta",
+                        "time": "00:00 hs"
+                    },
+                    {
+                        "icon": "clock",
+                        "name": "Fin",
+                        "time": "04:00 hs"
+                    }
+                ]
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": ["/clientes/boda/24-flor-gonza/images/3.jpg?v=1"]
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "El verdadero valor de la vida no se mide por el tiempo que pasa, sino por las personas con quienes elegimos compartirlo y los recuerdos que construimos juntos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["icon", "title", "description", "modal"],
+            "data": {
+                "icon": "",
+                "title": "Regalos",
+                "description": "El mejor regalo es que nos acompañes, pero si querés ayudar a nuestro próximo sueño, te dejamos el alias.",
+                "showButton": true,
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
+                    "bankData": [
+                        {
+                            "label": "Alias",
+                            "value": "florlopez.nx.13"
+                        },
+                        {
+                            "label": "CBU",
+                            "value": "4530000800018559144696"
+                        },
+                        {
+                            "label": "Titular",
+                            "value": "Yanina Florencia Lopez"
+                        },
+                        {
+                            "label": "Banco",
+                            "value": "Naranja"
+                        }
+                    ],
+                    "thankYouText": "¡Gracias de corazón!"
+                }
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos3",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": ["/clientes/boda/24-flor-gonza/images/4.jpg?v=1"]
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Este día tiene un significado muy especial para nosotros, y poder vivirlo junto a ustedes lo hace aún más hermoso. Gracias por estar presentes.",
+                "author": "Flor & Gonza",
+                "decorativeLines": true
+            }
+        },
+        {
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "primary",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "subtitle": "Antes del 10 de Noviembre.",
+                "buttonText": "¡Confirmo!",
+                "whatsappNumber": "542616516851",
+                "message": "Hola Flor y Gonza! Confirmo mi asistencia a su boda. Quiero formar parte de este momento tan especial para ustedes 🫶🏼🤗",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Hola Flor y Gonza! Lamentablemente no podré asistir a su boda. Gracias por tenerme en cuenta 🫶🏼"
+                }
+            }
+        },
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["coupleNames"],
+            "data": {
+                "aspectRatio": "libre",
+                "image": "/clientes/boda/24-flor-gonza/images/5.jpg"
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}

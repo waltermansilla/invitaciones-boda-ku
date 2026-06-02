@@ -18,16 +18,13 @@
     "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
     "base": {
         "enabled": true,
-        "token": "tKJ74Xhl",
-        "subtitle": "Desde esta base podés entrar rápido a cada versión de la invitación y al panel de invitados, sin tener que buscar links sueltos."
+        "token": "tKJ74Xhl"
     },
-
     "access": {
         "tokenEnabled": true,
         "token": "8Jmk21",
         "allowLegacyUntil": ""
     },
-
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
@@ -115,7 +112,10 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Si recibiste esta invitación, es porque queremos que estés con nosotros en uno de los días más importantes de nuestras vidas. Tu presencia haría este momento aún más especial.",
                 "author": "",
@@ -128,7 +128,11 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "25 de Julio del 2026"
@@ -139,13 +143,16 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/23-san-yas/images/1.jpeg"]
+                "images": [
+                    "/clientes/boda/23-san-yas/images/1.jpeg"
+                ]
             }
         },
-
         {
             "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
@@ -153,7 +160,11 @@
             "enabled": false,
             "id": "location-ceremonia",
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Ceremonia religiosa",
                 "address": "Parroquia San Pedro y San Pablo",
@@ -171,7 +182,11 @@
             "enabled": false,
             "id": "location-recepcion",
             "bgColor": "primary",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Civil y ¡Fiesta!",
                 "address": "Salón de eventos 'San Cayetano'",
@@ -188,7 +203,10 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -197,7 +215,6 @@
                         "name": "Ceremonia religiosa",
                         "address": "Quinta Los Juanes, Hipólito Vieytes 6783, Del Viso",
                         "time": "12:00 hs",
-
                         "button": {
                             "text": "Cómo llegar",
                             "url": "https://maps.app.goo.gl/9szkZdLfJbPZchEx8?g_st=iw",
@@ -207,7 +224,6 @@
                     {
                         "icon": "utensils",
                         "name": "Almuerzo",
-
                         "time": "13:00 hs"
                     },
                     {
@@ -215,11 +231,14 @@
                         "name": "Vals",
                         "time": "14:00 hs"
                     },
-                    { "icon": "gift", "name": "Sorpresa", "time": "14:40 hs" },
+                    {
+                        "icon": "gift",
+                        "name": "Sorpresa",
+                        "time": "14:40 hs"
+                    },
                     {
                         "icon": "sparkles",
                         "name": "Sorpresa 2",
-
                         "time": "15:00 hs"
                     },
                     {
@@ -227,7 +246,6 @@
                         "name": "Mesa dulce y brindis",
                         "time": "16:00 hs"
                     },
-
                     {
                         "icon": "clock",
                         "name": "Fin",
@@ -251,7 +269,9 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Dress code",
                 "subtitle": "Elegante",
                 "description": "Te pedimos amablemente evitar tonos de la siguiente paleta de colores:",
@@ -263,7 +283,6 @@
                         "#f9f6ee",
                         "#999",
                         "#253a61",
-
                         "#1b2a49",
                         "#410c16",
                         "#630d16"
@@ -294,19 +313,21 @@
                 }
             }
         },
-
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/23-san-yas/images/2.jpeg"]
+                "images": [
+                    "/clientes/boda/23-san-yas/images/2.jpeg"
+                ]
             }
         },
-
         {
             "_comment": "PHOTOS: Invitar a subir fotos al album compartido. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
             "type": "photos",
@@ -314,7 +335,12 @@
             "enabled": true,
             "bgColor": "background",
             "bgImage": "",
-            "blocks": ["icon", "title", "description", "button"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "icon": "camera",
                 "title": "Compartí tus fotos",
@@ -326,14 +352,18 @@
                 }
             }
         },
-
         {
             "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "honeymoon",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["icon", "title", "description", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "modal"
+            ],
             "data": {
                 "icon": "",
                 "title": "Regalos",
@@ -357,46 +387,59 @@
                 }
             }
         },
-
         {
             "_comment": "ADULTS ONLY: Evento solo para adultos. ICONOS: baby-strike (bebe tachado, default), baby (bebe sin tachar), stroller (cochecito), stroller-strike (cochecito tachado), wine (copa de vino), cocktail (vaso cocktail), users (personas), heart (corazon), sparkles (brillos).",
             "type": "adultsOnly",
             "id": "adults-only",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description"],
+            "blocks": [
+                "icon",
+                "title",
+                "description"
+            ],
             "data": {
                 "icon": "baby",
                 "title": "Sólo adultos",
                 "description": "PARA DISFRUTAR PLENAMENTE DE ESTA CELEBRACIÓN, SUGERIMOS ASISTIR SIN NIÑOS. DE TODOS MODOS, AL CONFIRMAR TU ASISTENCIA, POR FAVOR INDICANOS SI VENDRÁS CON ELLOS."
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-final",
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
                 "author": "San & Yas",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- FORMULARIO RSVP ---": "",
             "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 18 de Julio",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -428,27 +471,31 @@
                 }
             }
         },
-
         {
             "// --- FRASE DE BIENVENIDA ---": "",
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-final2",
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Esta invitación es personal. Te pedimos amablemente no reenviarla ni compartirla en redes sociales. ¡Te esperamos para compartir un momento inolvidable!",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "// --- CIERRE VISUAL ---": "",
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/23-san-yas/images/3.jpeg",
@@ -472,7 +519,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [
