@@ -228,7 +228,7 @@ export function BaseLinksClient({
                 </span>
                 <span className="inline-flex shrink-0 items-center gap-1.5 text-white/90">
                     <span className="text-[12px] font-semibold leading-none tracking-wide">
-                        ABRIR
+                        VER
                     </span>
                     <ChevronRight className="h-4 w-4" />
                 </span>
@@ -344,8 +344,7 @@ export function BaseLinksClient({
                                                     <strong className="font-semibold text-white">
                                                         ver tu invitación
                                                     </strong>
-                                                    , tocá "Abrir" en la
-                                                    invitación.
+                                                    , tocá "Ver".
                                                 </li>
                                             </>
                                         ) : (
@@ -355,7 +354,7 @@ export function BaseLinksClient({
                                                     <strong className="font-semibold text-white">
                                                         ver tu invitación
                                                     </strong>
-                                                    , tocá "Abrir".
+                                                    , tocá "Ver".
                                                 </li>
                                                 <li className="leading-relaxed">
                                                     2. Para{" "}
@@ -400,7 +399,7 @@ export function BaseLinksClient({
                                 {hasPanel && (
                                     <p className="mt-2 text-[13px] leading-snug text-white/70">
                                         Solo previsualización. El envío de las
-                                        invitaciones se hacen desde el Panel.
+                                        invitaciones se hace desde el Panel.
                                     </p>
                                 )}
                                 <div className="mt-3 space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">

@@ -1,25 +1,30 @@
-import { findConfigByBaseToken } from "@/lib/config-loader"
-import { getBaseModalPrimaryButtonColors } from "@/lib/color-contrast"
+import { findConfigByBaseToken } from "@/lib/config-loader";
+import { getBaseModalPrimaryButtonColors } from "@/lib/color-contrast";
 
 interface LayoutProps {
-  children: React.ReactNode
-  params: Promise<{ token: string }>
+    children: React.ReactNode;
+    params: Promise<{ token: string }>;
 }
 
-export default async function BaseTokenLayout({ children, params }: LayoutProps) {
-  const { token } = await params
-  const config = findConfigByBaseToken(token)
-  const primaryColorRaw = (config?.theme as Record<string, unknown> | undefined)?.primaryColor
-  const primaryColor =
-    typeof primaryColorRaw === "string" && primaryColorRaw.trim()
-      ? primaryColorRaw.trim()
-      : "#111111"
-  const modalPrimaryBtn = getBaseModalPrimaryButtonColors(primaryColor)
-  return (
-    <>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
+export default async function BaseTokenLayout({
+    children,
+    params,
+}: LayoutProps) {
+    const { token } = await params;
+    const config = findConfigByBaseToken(token);
+    const primaryColorRaw = (
+        config?.theme as Record<string, unknown> | undefined
+    )?.primaryColor;
+    const primaryColor =
+        typeof primaryColorRaw === "string" && primaryColorRaw.trim()
+            ? primaryColorRaw.trim()
+            : "#111111";
+    const modalPrimaryBtn = getBaseModalPrimaryButtonColors(primaryColor);
+    return (
+        <>
+            <style
+                dangerouslySetInnerHTML={{
+                    __html: `
             html, body {
               min-height: 100%;
               background-color: ${primaryColor} !important;
@@ -132,9 +137,9 @@ export default async function BaseTokenLayout({ children, params }: LayoutProps)
               background-color: rgba(0, 0, 0, 0.72) !important;
             }
           `,
-        }}
-      />
-      {children}
-    </>
-  )
+                }}
+            />
+            {children}
+        </>
+    );
 }
