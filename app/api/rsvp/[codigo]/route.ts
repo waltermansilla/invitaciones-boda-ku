@@ -19,6 +19,10 @@ export async function GET(
     return NextResponse.json({ error: "Invitado no encontrado" }, { status: 404 })
   }
 
+  if (invitado.registro_auto_rsvp) {
+    return NextResponse.json({ error: "Invitado no encontrado" }, { status: 404 })
+  }
+
   return NextResponse.json({ invitado })
 }
 
@@ -34,12 +38,36 @@ export async function POST(
   // Obtener invitado
   const { data: invitado, error: getError } = await supabase
     .from("invitados")
-    .select("id, tipo, cupo_colados")
+    .select("id, tipo, cupo_colados, estado, fecha_confirmacion, registro_auto_rsvp")
     .eq("codigo", codigo)
     .single()
 
   if (getError || !invitado) {
     return NextResponse.json({ error: "Invitado no encontrado" }, { status: 404 })
+  }
+
+  if (invitado.registro_auto_rsvp) {
+    if (invitado.fecha_confirmacion || invitado.estado !== "pendiente") {
+      return NextResponse.json(
+        { error: "Esta confirmación no se puede modificar desde la invitación" },
+        { status: 403 },
+      )
+    }
+    const { data: integrantesPrevios } = await supabase
+      .from("integrantes")
+      .select("fecha_confirmacion, estado")
+      .eq("invitado_id", invitado.id)
+    const yaConfirmoIntegrante = (integrantesPrevios || []).some(
+      (int) =>
+        int.fecha_confirmacion ||
+        (int.estado && int.estado !== "pendiente"),
+    )
+    if (yaConfirmoIntegrante) {
+      return NextResponse.json(
+        { error: "Esta confirmación no se puede modificar desde la invitación" },
+        { status: 403 },
+      )
+    }
   }
 
   // Actualizar invitado

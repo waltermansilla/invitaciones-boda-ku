@@ -62,6 +62,12 @@ function useCodigoInvitado() {
   return searchParams.get("i") || searchParams.get("c") || ""
 }
 
+/** Vista proveedor: ignora confirmación guardada en localStorage y muestra el formulario RSVP. */
+function usePreviewRsvpForm() {
+  const searchParams = useSearchParams()
+  return searchParams.get("rsvpForm") === "1"
+}
+
 function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: SectionProps) {
   const config = useConfig()
   const { type, id, data, bgColor, bgImage, textColor, enabled = true } = section
@@ -79,6 +85,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
       }
     | undefined
   const codigoInvitado = useCodigoInvitado()
+  const previewRsvpForm = usePreviewRsvpForm()
 
   // Si enabled es false, no renderizar la seccion
   if (enabled === false) return null
@@ -371,6 +378,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
                   }
                 : undefined
             }
+            previewRsvpForm={previewRsvpForm}
           />
         )
 

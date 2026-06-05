@@ -65,6 +65,7 @@ interface Invitado {
     pago?: boolean;
     panel_variant?: string;
     cupo_colados?: number;
+    registro_auto_rsvp?: boolean;
 }
 interface Evento {
     id: string;
@@ -1986,7 +1987,7 @@ function InvitadoRow({
                 </div>
                 {invitado.tipo !== "integrante" && (
                     <div className="hidden">
-                        {invitado.codigo && (
+                        {invitado.codigo && !invitado.registro_auto_rsvp && (
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -2118,7 +2119,7 @@ function InvitadoRow({
                         </div>
                     ) : null}
                     <div className="flex flex-wrap gap-2">
-                        {invitado.codigo && (
+                        {invitado.codigo && !invitado.registro_auto_rsvp && (
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();

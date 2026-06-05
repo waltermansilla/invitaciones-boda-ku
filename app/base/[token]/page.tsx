@@ -147,22 +147,35 @@ export default async function BaseLinksPage({ params }: PageProps) {
     const hasCustomVariants = variantes.length > 1;
     const singleInvitationTitle = autoInvitationTitle(config);
 
+    const registrarSinCodigoEnPanel = Boolean(
+        config.rsvpPanel?.registrarSinCodigoEnPanel,
+    );
     const invitationItems = invitationPath
-        ? variantes.map((variant) => ({
-              id: `inv-${variant.id}`,
-              label:
-                  !hasCustomVariants && variant.id === "default"
-                      ? singleInvitationTitle
-                      : variant.label,
-              url: buildUrl(invitationPath, {
+        ? variantes.map((variant) => {
+              const variantQuery = {
                   t: invitationToken,
                   v:
                       variant.id === "default"
                           ? undefined
                           : variant.invitationVariant || variant.id,
-              }),
-              allowSend: true,
-          }))
+              };
+              const guestUrl = buildUrl(invitationPath, variantQuery);
+              return {
+                  id: `inv-${variant.id}`,
+                  label:
+                      !hasCustomVariants && variant.id === "default"
+                          ? singleInvitationTitle
+                          : variant.label,
+                  url: guestUrl,
+                  viewUrl: registrarSinCodigoEnPanel
+                      ? buildUrl(invitationPath, {
+                            ...variantQuery,
+                            rsvpForm: "1",
+                        })
+                      : undefined,
+                  allowSend: true,
+              };
+          })
         : [];
 
     const panelEnabled = Boolean(config.rsvpPanel?.enabled && panelId);
@@ -187,6 +200,7 @@ export default async function BaseLinksPage({ params }: PageProps) {
             invitationItems={invitationItems}
             panelItems={panelItems}
             showPanelUpsell={!panelEnabled}
+            registrarSinCodigoEnPanel={registrarSinCodigoEnPanel}
         />
     );
 }

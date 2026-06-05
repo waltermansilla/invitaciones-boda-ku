@@ -104,7 +104,11 @@ function LanguageToggle({
     currency: LandingCurrency;
     syncCurrencyFromSearch: boolean;
 }) {
-    const esHref = languageHrefWithCurrency("/", currency, syncCurrencyFromSearch);
+    const esHref = languageHrefWithCurrency(
+        "/",
+        currency,
+        syncCurrencyFromSearch,
+    );
     const enHref = languageHrefWithCurrency(
         "/en",
         currency,
@@ -117,8 +121,7 @@ function LanguageToggle({
             background: active ? theme.accents.softGold : "transparent",
         }) as React.CSSProperties;
 
-    const aria =
-        language === "es" ? "Idioma de la web" : "Site language";
+    const aria = language === "es" ? "Idioma de la web" : "Site language";
 
     /** Segmentos a altura del carril; texto centrado en el segmento. */
     const segmentClass =
@@ -221,8 +224,7 @@ function CurrencyToggle({
         language === "es"
             ? `Moneda: ${currency}. Tocá para cambiar`
             : `Currency: ${currency}. Click or tap to change`;
-    const listLabel =
-        language === "es" ? "Elegir moneda" : "Choose currency";
+    const listLabel = language === "es" ? "Elegir moneda" : "Choose currency";
     const listId = useId();
 
     return (
@@ -360,9 +362,7 @@ export function LandingHeader({
 
                     <nav
                         className="hidden flex-1 flex-wrap content-center items-center justify-center gap-x-6 gap-y-1 text-[10px] font-semibold uppercase tracking-[0.2em] md:flex lg:text-[11px]"
-                        aria-label={
-                            language === "es" ? "Principal" : "Main"
-                        }
+                        aria-label={language === "es" ? "Principal" : "Main"}
                     >
                         <NavLinks
                             nav={nav}

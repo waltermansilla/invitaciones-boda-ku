@@ -3,11 +3,76 @@
 import { useState, useEffect, Fragment, useRef, useMemo } from "react";
 import { useIsMuestra } from "@/lib/config-context";
 import { Trash2 } from "lucide-react";
+import { useModal } from "./modal-provider";
 import {
     coladoPlural,
     coladoTitleSingular,
     normalizeColadoSingular,
 } from "@/lib/colado-label";
+
+const GROUP_NAME_MAX_LENGTH = 30;
+
+type AutoConfirmEntry = {
+    nombre: string;
+    estado: "confirmado" | "no_asiste";
+    es_colado?: boolean;
+};
+
+type AutoConfirmSummary = {
+    displayName: string;
+    tipo: "persona" | "familia";
+    entries: AutoConfirmEntry[];
+};
+
+function autoConfirmStorageKey(panelId: string): string {
+    return `rsvp-auto-confirm:${panelId}`;
+}
+
+function loadAutoConfirmSummary(
+    panelId: string,
+): AutoConfirmSummary | null {
+    if (typeof window === "undefined") return null;
+    try {
+        const raw = localStorage.getItem(autoConfirmStorageKey(panelId));
+        if (!raw) return null;
+        const parsed = JSON.parse(raw) as AutoConfirmSummary;
+        if (
+            !parsed ||
+            typeof parsed.displayName !== "string" ||
+            !Array.isArray(parsed.entries)
+        ) {
+            return null;
+        }
+        return parsed;
+    } catch {
+        return null;
+    }
+}
+
+function saveAutoConfirmSummary(
+    panelId: string,
+    summary: AutoConfirmSummary,
+): void {
+    if (typeof window === "undefined") return;
+    try {
+        localStorage.setItem(
+            autoConfirmStorageKey(panelId),
+            JSON.stringify(summary),
+        );
+    } catch {
+        /* quota / private mode */
+    }
+}
+
+function friendlyPanelApiError(raw: string, fallback: string): string {
+    if (/l[ií]mite de plazas|l[ií]mite/i.test(raw)) {
+        return "Error al registrar confirmación. Contactá con el anfitrión del evento.";
+    }
+    if (/syntaxerror|unexpected token|unexpected identifier/i.test(raw)) {
+        return "No se pudo guardar en el panel. Recargá la página e intentá de nuevo.";
+    }
+    return raw.trim() || fallback;
+}
 
 interface InvitadoData {
     id: string;
@@ -74,6 +139,8 @@ interface RSVPSectionProps {
         coladoLabel?: string;
         confirmationMessage: string;
     };
+    /** Con `?rsvpForm=1`: siempre muestra el formulario (ignora localStorage). */
+    previewRsvpForm?: boolean;
 }
 
 interface GuestForm {
@@ -91,6 +158,44 @@ interface GuestForm {
 
 function guestDisplayName(g: GuestForm): string {
     return `${g.firstName || ""} ${g.lastName || ""}`.trim();
+}
+
+function buildAutoConfirmSummary(
+    guestsForSubmit: GuestForm[],
+    groupName: string,
+    guestCount: number,
+): AutoConfirmSummary {
+    const entries: AutoConfirmEntry[] = guestsForSubmit.map((g) => ({
+        nombre: guestDisplayName(g),
+        estado: g.attendance === "yes" ? "confirmado" : "no_asiste",
+        ...(g.isColado ? { es_colado: true } : {}),
+    }));
+    const displayName =
+        guestCount > 1
+            ? groupName.trim()
+            : guestDisplayName(
+                  guestsForSubmit[0] || { firstName: "", lastName: "" },
+              );
+    return {
+        displayName,
+        tipo: guestCount > 1 ? "familia" : "persona",
+        entries,
+    };
+}
+
+/** Sin ?i= y alta en panel: apellido obligatorio solo con 1 persona (evita "Juan" sueltos). */
+function guestLastNameRequired(
+    guest: GuestForm,
+    opts: {
+        invitadoLoaded: boolean;
+        allowAnonymousToPanel: boolean;
+        guestCount: number;
+    },
+): boolean {
+    if (guest.isColado) return false;
+    if (opts.invitadoLoaded) return false;
+    if (!opts.allowAnonymousToPanel) return false;
+    return opts.guestCount === 1;
 }
 
 /** Colados sin nombre ni apellido: no se envían (equivale a quitarlos). */
@@ -279,8 +384,11 @@ export default function RSVPSection({
     fields,
     whatsapp,
     panel,
+    previewRsvpForm = false,
 }: RSVPSectionProps) {
     const isMuestra = useIsMuestra();
+    const { openModal, closeModal } = useModal();
+    const anonymousSubmitLockRef = useRef(false);
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     const [guestCount, setGuestCount] = useState(1);
     const canUseColados = Boolean(panel?.enabled && panel?.allowColados);
@@ -305,8 +413,16 @@ export default function RSVPSection({
         },
     ]);
     const [submitted, setSubmitted] = useState(false);
+    const [autoConfirmSummary, setAutoConfirmSummary] =
+        useState<AutoConfirmSummary | null>(null);
+    const isAnonymousPanelFlow = Boolean(
+        panel?.allowAnonymousToPanel && !panel?.codigo,
+    );
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [groupName, setGroupName] = useState("");
+    const showGroupNameField =
+        !invitado && Boolean(panel?.allowAnonymousToPanel) && guestCount > 1;
     const getCupoColados = (): number => {
         const raw = invitado?.cupo_colados;
         if (typeof raw !== "number" || !Number.isFinite(raw)) return 0;
@@ -348,13 +464,25 @@ export default function RSVPSection({
     }, [editing]);
 
     useEffect(() => {
-        const showThanks = (alreadyConfirmed && !editing) || submitted;
+        const showThanks =
+            (alreadyConfirmed && !editing) || submitted || Boolean(autoConfirmSummary);
         if (!showThanks || typeof window === "undefined") return;
         confirmationSectionRef.current?.scrollIntoView({
             behavior: "smooth",
             block: "center",
         });
-    }, [alreadyConfirmed, editing, submitted]);
+    }, [alreadyConfirmed, autoConfirmSummary, editing, submitted]);
+
+    useEffect(() => {
+        if (previewRsvpForm || !isAnonymousPanelFlow || !panel?.panelId) {
+            return;
+        }
+        const stored = loadAutoConfirmSummary(panel.panelId);
+        if (stored) {
+            setAutoConfirmSummary(stored);
+            setSubmitted(true);
+        }
+    }, [isAnonymousPanelFlow, panel?.panelId, previewRsvpForm]);
 
     // Obtener datos del invitado cuando hay codigo
     useEffect(() => {
@@ -602,6 +730,7 @@ export default function RSVPSection({
 
     const handleGuestCountChange = (count: number) => {
         setGuestCount(count);
+        if (count <= 1) setGroupName("");
         const newGuests: GuestForm[] = [];
         for (let i = 0; i < count; i++) {
             newGuests.push(
@@ -682,6 +811,245 @@ export default function RSVPSection({
         });
     }, [guests]);
 
+    const submitAnonymousToPanel = async (
+        guestsForSubmit: GuestForm[],
+        trimmedGroupName: string,
+        songSummary: string | null,
+        panelExtraSummary: string | null,
+    ) => {
+        if (
+            !panel?.panelId ||
+            anonymousSubmitLockRef.current ||
+            !panel.allowAnonymousToPanel
+        ) {
+            return;
+        }
+        anonymousSubmitLockRef.current = true;
+        setSubmitting(true);
+        setError(null);
+        try {
+            const principalName =
+                `${guestsForSubmit[0]?.firstName || ""} ${guestsForSubmit[0]?.lastName || ""}`.trim();
+            const createPayload =
+                guestsForSubmit.length > 1
+                    ? {
+                          nombre: trimmedGroupName,
+                          tipo: "familia",
+                          integrantes: guestsForSubmit.map((g) =>
+                              `${g.firstName} ${g.lastName}`.trim(),
+                          ),
+                          registro_auto_rsvp: true,
+                      }
+                    : {
+                          nombre: principalName || "Invitado",
+                          tipo: "persona",
+                          registro_auto_rsvp: true,
+                      };
+
+            const createRes = await fetch(`/api/panel/${panel.panelId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(createPayload),
+            });
+            const createData = await createRes.json().catch(
+                () =>
+                    ({}) as {
+                        error?: string;
+                        invitado?: InvitadoData & { codigo?: string };
+                    },
+            );
+            if (!createRes.ok || !createData.invitado?.codigo) {
+                const rawMsg =
+                    createData.error ||
+                    "No se pudo crear el invitado en el panel";
+                throw new Error(
+                    friendlyPanelApiError(
+                        rawMsg,
+                        "No se pudo crear el invitado en el panel",
+                    ),
+                );
+            }
+
+            const invitadoCreado = createData.invitado;
+            const confirmRes = await fetch(
+                `/api/rsvp/${invitadoCreado.codigo}`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        integrantes: guestsForSubmit.map((g, idx) => ({
+                            id: invitadoCreado.integrantes?.[idx]?.id,
+                            nombre: `${g.firstName} ${g.lastName}`.trim(),
+                            asiste: g.attendance === "yes",
+                            restricciones:
+                                g.dietary !== "Ninguno" ? g.dietary : null,
+                            es_colado: Boolean(g.isColado),
+                        })),
+                        asiste: guestsForSubmit.some(
+                            (g) => g.attendance === "yes",
+                        ),
+                        mensaje: panelExtraSummary,
+                        cancion: songSummary,
+                    }),
+                },
+            );
+            const confirmData = await confirmRes
+                .json()
+                .catch(
+                    () => ({}) as { error?: string; invitado?: InvitadoData },
+                );
+            if (!confirmRes.ok) {
+                throw new Error(
+                    friendlyPanelApiError(
+                        confirmData.error || "",
+                        "Error al guardar la confirmacion en el panel",
+                    ),
+                );
+            }
+            const summary = buildAutoConfirmSummary(
+                guestsForSubmit,
+                trimmedGroupName,
+                guestsForSubmit.length,
+            );
+            saveAutoConfirmSummary(panel.panelId, summary);
+            setAutoConfirmSummary(summary);
+            setSubmitted(true);
+            setEditing(false);
+        } catch (err) {
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "Error al enviar confirmacion",
+            );
+        } finally {
+            setSubmitting(false);
+            anonymousSubmitLockRef.current = false;
+        }
+    };
+
+    const openAnonymousReviewModal = (
+        guestsForSubmit: GuestForm[],
+        trimmedGroupName: string,
+        songSummary: string | null,
+        panelExtraSummary: string | null,
+    ) => {
+        const modalGuestCount = guestsForSubmit.length;
+        openModal(
+            <>
+                <h3 className="mb-3 pr-8 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
+                    Revisá tu confirmación
+                </h3>
+                <p className="mb-6 text-left text-sm font-light leading-relaxed text-primary-foreground/85">
+                    Verificá que todos los datos sean correctos. Si algo no
+                    coincide, volvé a editar antes de confirmar.
+                </p>
+                <div className="space-y-4 text-left">
+                    {modalGuestCount > 1 && (
+                        <div>
+                            <h4 className="mb-1 text-xs font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
+                                Grupo / familia
+                            </h4>
+                            <p className="text-sm font-light text-primary-foreground/85">
+                                {trimmedGroupName}
+                            </p>
+                        </div>
+                    )}
+                    {guestsForSubmit.map((guest, index) => {
+                        const fullName = guestDisplayName(guest);
+                        const attendanceLabel =
+                            guest.attendance === "yes"
+                                ? "Confirmado"
+                                : "No asiste";
+                        return (
+                            <div
+                                key={`review-${index}`}
+                                className="rounded-sm border border-primary-foreground/15 px-4 py-4"
+                            >
+                                <h4 className="text-center text-base font-semibold tracking-wide text-primary-foreground">
+                                    {fullName}
+                                    {guest.isColado && (
+                                        <span className="ml-1 text-sm font-normal text-primary-foreground/65">
+                                            ({coladoWordSingular})
+                                        </span>
+                                    )}
+                                </h4>
+                                <div className="mt-3 space-y-1.5 text-left text-sm font-light text-primary-foreground/85">
+                                    <p>
+                                        <span className="font-semibold text-primary-foreground">
+                                            Estado:{" "}
+                                        </span>
+                                        {attendanceLabel}
+                                    </p>
+                                    {guest.dietary !== "Ninguno" && (
+                                        <p>
+                                            <span className="font-semibold text-primary-foreground">
+                                                {fields.dietary}:{" "}
+                                            </span>
+                                            {guest.dietary}
+                                        </p>
+                                    )}
+                                    {showSongRequest &&
+                                        guest.songRequest?.trim() && (
+                                            <p>
+                                                <span className="font-semibold text-primary-foreground">
+                                                    {fields.songRequestLabel ||
+                                                        fields.songRequest}
+                                                    :{" "}
+                                                </span>
+                                                {guest.songRequest.trim()}
+                                            </p>
+                                        )}
+                                    {extraInputs.map((input) => {
+                                        const value =
+                                            guest.extraValues?.[
+                                                input.label
+                                            ]?.trim();
+                                        if (!value) return null;
+                                        return (
+                                            <p key={input.id}>
+                                                <span className="font-semibold text-primary-foreground">
+                                                    {extraInputWhatsAppTitle(
+                                                        input,
+                                                    )}
+                                                    :{" "}
+                                                </span>
+                                                {value}
+                                            </p>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div className="mt-6 flex flex-col gap-2">
+                    <button
+                        type="button"
+                        onClick={closeModal}
+                        className="w-full rounded-sm border border-primary-foreground/30 px-5 py-3 text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground transition-all hover:bg-primary-foreground/10"
+                    >
+                        Volver a editar
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            closeModal();
+                            void submitAnonymousToPanel(
+                                guestsForSubmit,
+                                trimmedGroupName,
+                                songSummary,
+                                panelExtraSummary,
+                            );
+                        }}
+                        className="flex min-h-[52px] w-full items-center justify-center rounded-sm border border-primary-foreground/30 bg-primary-foreground/10 px-5 py-4 text-[11px] font-medium tracking-[0.15em] uppercase text-primary-foreground transition-all hover:bg-primary-foreground/20"
+                    >
+                        Confirmar
+                    </button>
+                </div>
+            </>,
+        );
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (isMuestra) {
@@ -721,6 +1089,36 @@ export default function RSVPSection({
             setError(
                 "Completa los campos obligatorios para confirmar asistencia.",
             );
+            return;
+        }
+        const needsGroupName =
+            panel?.enabled &&
+            !panel?.codigo &&
+            panel?.allowAnonymousToPanel &&
+            guestsForSubmit.length > 1;
+        const trimmedGroupName = groupName.trim();
+        if (needsGroupName) {
+            if (!trimmedGroupName) {
+                setError("Indicá el nombre del grupo o familia.");
+                return;
+            }
+            if (trimmedGroupName.length > GROUP_NAME_MAX_LENGTH) {
+                setError(
+                    `El nombre del grupo o familia no puede superar ${GROUP_NAME_MAX_LENGTH} caracteres.`,
+                );
+                return;
+            }
+        }
+        const needsSingleGuestLastName =
+            panel?.enabled &&
+            !panel?.codigo &&
+            panel?.allowAnonymousToPanel &&
+            guestsForSubmit.length === 1;
+        if (
+            needsSingleGuestLastName &&
+            guestsForSubmit.some((g) => !g.isColado && !g.lastName.trim())
+        ) {
+            setError("Indicá el apellido.");
             return;
         }
         const titularGuest =
@@ -813,99 +1211,12 @@ export default function RSVPSection({
             panel?.panelId &&
             panel?.allowAnonymousToPanel
         ) {
-            setSubmitting(true);
-            setError(null);
-            try {
-                const principalName =
-                    `${guestsForSubmit[0]?.firstName || ""} ${guestsForSubmit[0]?.lastName || ""}`.trim();
-                const createPayload =
-                    guestsForSubmit.length > 1
-                        ? {
-                              nombre: principalName || "Invitado",
-                              tipo: "familia",
-                              integrantes: guestsForSubmit.map((g) =>
-                                  `${g.firstName} ${g.lastName}`.trim(),
-                              ),
-                          }
-                        : {
-                              nombre: principalName || "Invitado",
-                              tipo: "persona",
-                          };
-
-                const createRes = await fetch(`/api/panel/${panel.panelId}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(createPayload),
-                });
-                const createData = await createRes.json().catch(
-                    () =>
-                        ({}) as {
-                            error?: string;
-                            invitado?: InvitadoData & { codigo?: string };
-                        },
-                );
-                if (!createRes.ok || !createData.invitado?.codigo) {
-                    const rawMsg =
-                        createData.error ||
-                        "No se pudo crear el invitado en el panel";
-                    const friendlyMsg = /l[ií]mite de plazas|l[ií]mite/i.test(
-                        rawMsg,
-                    )
-                        ? "Error al registrar confirmación. Contactá con el anfitrión del evento."
-                        : rawMsg;
-                    throw new Error(friendlyMsg);
-                }
-
-                const invitadoCreado = createData.invitado;
-                const confirmRes = await fetch(
-                    `/api/rsvp/${invitadoCreado.codigo}`,
-                    {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            integrantes: guestsForSubmit.map((g, idx) => ({
-                                id: invitadoCreado.integrantes?.[idx]?.id,
-                                nombre: `${g.firstName} ${g.lastName}`.trim(),
-                                asiste: g.attendance === "yes",
-                                restricciones:
-                                    g.dietary !== "Ninguno" ? g.dietary : null,
-                                es_colado: Boolean(g.isColado),
-                            })),
-                            asiste: guestsForSubmit.some(
-                                (g) => g.attendance === "yes",
-                            ),
-                            mensaje: panelExtraSummary,
-                            cancion: songSummary,
-                        }),
-                    },
-                );
-                const confirmData = await confirmRes
-                    .json()
-                    .catch(
-                        () =>
-                            ({}) as { error?: string; invitado?: InvitadoData },
-                    );
-                if (!confirmRes.ok) {
-                    throw new Error(
-                        confirmData.error ||
-                            "Error al guardar la confirmacion en el panel",
-                    );
-                }
-                if (confirmData.invitado) {
-                    setInvitado(confirmData.invitado);
-                }
-                setSubmitted(true);
-                setAlreadyConfirmed(true);
-                setEditing(false);
-            } catch (err) {
-                setError(
-                    err instanceof Error
-                        ? err.message
-                        : "Error al enviar confirmacion",
-                );
-            } finally {
-                setSubmitting(false);
-            }
+            openAnonymousReviewModal(
+                guestsForSubmit,
+                trimmedGroupName,
+                songSummary,
+                panelExtraSummary,
+            );
             return;
         }
 
@@ -949,8 +1260,13 @@ export default function RSVPSection({
         setError(null);
     };
 
+    const showConfirmationScreen =
+        (alreadyConfirmed && !editing) ||
+        submitted ||
+        (Boolean(autoConfirmSummary) && !previewRsvpForm);
+
     // Mostrar mensaje de confirmacion si ya confirmo o acaba de enviar
-    if ((alreadyConfirmed && !editing) || submitted) {
+    if (showConfirmationScreen) {
         const confirmMsg = panel?.enabled
             ? panel.confirmationMessage ||
               "Gracias por confirmar tu asistencia!"
@@ -958,67 +1274,91 @@ export default function RSVPSection({
               ? "Confirmacion simulada. En la version real, los datos se envian."
               : "Tu confirmacion ha sido enviada por WhatsApp.";
 
-        const resumen = invitado && (
-            <div className="mt-6 rounded-xl border border-current/15 bg-current/5 px-5 py-4 text-left">
-                {(invitado.integrantes?.length || 0) > 0 ? (
-                    <div className="space-y-2">
-                        {invitado.tipo === "persona" && (
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="text-inherit/80">
-                                    {invitado.nombre}
-                                </span>
-                                <span
-                                    className={`text-xs font-medium ${invitado.estado === "confirmado" ? "text-green-600" : invitado.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}
+        const estadoLabel = (estado: string) =>
+            estado === "confirmado"
+                ? "Asiste"
+                : estado === "no_asiste"
+                  ? "No asiste"
+                  : "Pendiente";
+        const estadoClass = (estado: string) =>
+            estado === "confirmado"
+                ? "text-green-600"
+                : estado === "no_asiste"
+                  ? "text-red-500"
+                  : "text-inherit/50";
+
+        const resumen =
+            autoConfirmSummary || invitado ? (
+                <div className="mt-6 rounded-xl border border-current/15 bg-current/5 px-5 py-4 text-left">
+                    {autoConfirmSummary ? (
+                        <div className="space-y-2">
+                            {autoConfirmSummary.entries.map((entry, i) => (
+                                <div
+                                    key={i}
+                                    className="flex items-center justify-between text-sm"
                                 >
-                                    {invitado.estado === "confirmado"
-                                        ? "Asiste"
-                                        : invitado.estado === "no_asiste"
-                                          ? "No asiste"
-                                          : "Pendiente"}
-                                </span>
-                            </div>
-                        )}
-                        {invitado.integrantes.map((int, i) => (
-                            <div
-                                key={i}
-                                className="flex items-center justify-between text-sm"
+                                    <span className="text-inherit/80">
+                                        {entry.nombre}
+                                        {entry.es_colado
+                                            ? ` (${coladoWordSingular})`
+                                            : ""}
+                                    </span>
+                                    <span
+                                        className={`text-xs font-medium ${estadoClass(entry.estado)}`}
+                                    >
+                                        {estadoLabel(entry.estado)}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : invitado &&
+                      (invitado.integrantes?.length || 0) > 0 ? (
+                        <div className="space-y-2">
+                            {invitado.tipo === "persona" && (
+                                <div className="flex items-center justify-between text-sm">
+                                    <span className="text-inherit/80">
+                                        {invitado.nombre}
+                                    </span>
+                                    <span
+                                        className={`text-xs font-medium ${estadoClass(invitado.estado)}`}
+                                    >
+                                        {estadoLabel(invitado.estado)}
+                                    </span>
+                                </div>
+                            )}
+                            {invitado.integrantes?.map((int, i) => (
+                                <div
+                                    key={i}
+                                    className="flex items-center justify-between text-sm"
+                                >
+                                    <span className="text-inherit/80">
+                                        {int.nombre}
+                                        {int.es_colado
+                                            ? ` (${coladoWordSingular})`
+                                            : ""}
+                                    </span>
+                                    <span
+                                        className={`text-xs font-medium ${estadoClass(int.estado)}`}
+                                    >
+                                        {estadoLabel(int.estado)}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : invitado ? (
+                        <div className="flex items-center justify-between text-sm">
+                            <span className="text-inherit/80">
+                                {invitado.nombre}
+                            </span>
+                            <span
+                                className={`text-xs font-medium ${estadoClass(invitado.estado)}`}
                             >
-                                <span className="text-inherit/80">
-                                    {int.nombre}
-                                    {int.es_colado
-                                        ? ` (${coladoWordSingular})`
-                                        : ""}
-                                </span>
-                                <span
-                                    className={`text-xs font-medium ${int.estado === "confirmado" ? "text-green-600" : int.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}
-                                >
-                                    {int.estado === "confirmado"
-                                        ? "Asiste"
-                                        : int.estado === "no_asiste"
-                                          ? "No asiste"
-                                          : "Pendiente"}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="flex items-center justify-between text-sm">
-                        <span className="text-inherit/80">
-                            {invitado.nombre}
-                        </span>
-                        <span
-                            className={`text-xs font-medium ${invitado.estado === "confirmado" ? "text-green-600" : invitado.estado === "no_asiste" ? "text-red-500" : "text-inherit/50"}`}
-                        >
-                            {invitado.estado === "confirmado"
-                                ? "Asiste"
-                                : invitado.estado === "no_asiste"
-                                  ? "No asiste"
-                                  : "Pendiente"}
-                        </span>
-                    </div>
-                )}
-            </div>
-        );
+                                {estadoLabel(invitado.estado)}
+                            </span>
+                        </div>
+                    ) : null}
+                </div>
+            ) : null;
 
         return (
             <section
@@ -1033,7 +1373,7 @@ export default function RSVPSection({
                         {confirmMsg}
                     </p>
                     {resumen}
-                    {panel?.enabled && (
+                    {panel?.enabled && panel?.codigo && (
                         <button
                             type="button"
                             onClick={handleEdit}
@@ -1121,6 +1461,13 @@ export default function RSVPSection({
                             : guests
                                   .slice(0, index + 1)
                                   .filter((g) => !g.isColado).length;
+                        const lastNameRequired = guestLastNameRequired(guest, {
+                            invitadoLoaded: Boolean(invitado),
+                            allowAnonymousToPanel: Boolean(
+                                panel?.allowAnonymousToPanel,
+                            ),
+                            guestCount,
+                        });
                         return (
                             <Fragment key={guest.id ?? `guest-${index}`}>
                                 {guests.length > 1 && (
@@ -1175,15 +1522,11 @@ export default function RSVPSection({
                                         <input
                                             type="text"
                                             placeholder={
-                                                invitado
-                                                    ? fields.lastName
-                                                    : guest.isColado
-                                                      ? fields.lastName
-                                                      : fields.lastName + " *"
+                                                lastNameRequired
+                                                    ? `${fields.lastName} *`
+                                                    : fields.lastName
                                             }
-                                            required={
-                                                !invitado && !guest.isColado
-                                            }
+                                            required={lastNameRequired}
                                             value={guest.lastName}
                                             onChange={(e) =>
                                                 updateGuest(
@@ -1364,6 +1707,32 @@ export default function RSVPSection({
                             </Fragment>
                         );
                     })}
+
+                    {showGroupNameField && (
+                        <div>
+                            <label className="mb-2 block text-[11px] font-medium tracking-[0.1em] text-inherit/65">
+                                Nombre del grupo o familia{" "}
+                                <span className="text-inherit/50">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                value={groupName}
+                                onChange={(e) =>
+                                    setGroupName(
+                                        e.target.value.slice(
+                                            0,
+                                            GROUP_NAME_MAX_LENGTH,
+                                        ),
+                                    )
+                                }
+                                placeholder="Ej: Flia Díaz"
+                                required
+                                maxLength={GROUP_NAME_MAX_LENGTH}
+                                className="w-full rounded-md border border-current/15 bg-current/10 px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 backdrop-blur-sm focus:outline-none focus:ring-1 focus:ring-current/20"
+                                style={{ fontSize: "16px" }}
+                            />
+                        </div>
+                    )}
 
                     {visibleColadosCupoMessage && (
                         <div className="rounded-md border border-current/15 bg-current/5 px-4 py-3">

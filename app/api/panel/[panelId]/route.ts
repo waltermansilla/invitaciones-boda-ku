@@ -454,6 +454,8 @@ export async function POST(
 
   const codigo = nanoid(8)
 
+  const registroAutoRsvp = Boolean(body.registro_auto_rsvp)
+
   const { data: invitado, error } = await supabase
     .from("invitados")
     .insert({
@@ -463,6 +465,7 @@ export async function POST(
       tipo: body.tipo || "persona",
       panel_variant: activeVariante,
       cupo_colados: cupoColados,
+      registro_auto_rsvp: registroAutoRsvp,
     })
     .select()
     .single()

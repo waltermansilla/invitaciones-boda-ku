@@ -16,7 +16,10 @@ import {
 type BaseLinkItem = {
     id: string;
     label: string;
+    /** Link del invitado (enviar / copiar). */
     url: string;
+    /** Link para VER en base; si no está, usa `url`. */
+    viewUrl?: string;
     allowSend: boolean;
 };
 
@@ -68,6 +71,7 @@ export function BaseLinksClient({
     invitationItems,
     panelItems,
     showPanelUpsell = false,
+    registrarSinCodigoEnPanel = false,
 }: {
     title: string;
     subtitle: string;
@@ -77,6 +81,8 @@ export function BaseLinksClient({
     invitationItems: BaseLinkItem[];
     panelItems: BaseLinkItem[];
     showPanelUpsell?: boolean;
+    /** RSVP sin ?i=: VER ignora localStorage; enviar usa el link del invitado. */
+    registrarSinCodigoEnPanel?: boolean;
 }) {
     const [panelInfoOpen, setPanelInfoOpen] = useState(false);
     const [waModalOpen, setWaModalOpen] = useState(false);
@@ -94,6 +100,8 @@ export function BaseLinksClient({
     const panelBg = "#223A5A";
     const panelBorder = "#5F84B5";
     const hasPanel = panelItems.length > 0;
+    const inviteSideActionIsSend =
+        !hasPanel || registrarSinCodigoEnPanel;
 
     const toAbsolute = (url: string) => {
         try {
@@ -212,7 +220,7 @@ export function BaseLinksClient({
                 type="button"
                 onClick={() =>
                     window.open(
-                        toAbsolute(item.url),
+                        toAbsolute(item.viewUrl ?? item.url),
                         "_blank",
                         "noopener,noreferrer",
                     )
@@ -233,7 +241,7 @@ export function BaseLinksClient({
                     <ChevronRight className="h-4 w-4" />
                 </span>
             </button>
-            {!hasPanel ? (
+            {inviteSideActionIsSend ? (
                 <button
                     type="button"
                     onClick={() => openSendModal(item)}
