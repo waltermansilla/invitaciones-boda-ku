@@ -20,6 +20,10 @@
         "token": "bj4J7s",
         "allowLegacyUntil": ""
     },
+    "base": {
+        "enabled": true,
+        "token": "7gHF35tr"
+    },
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
