@@ -67,27 +67,6 @@ export function getPublicSiteUrl(): string {
   ).replace(/\/+$/, "")
 }
 
-function resolveConfigOgImage(
-  config: EventConfig,
-  siteUrl: string,
-): string | null {
-  const meta = config.meta as Record<string, unknown> | undefined
-  const hero = config.hero as Record<string, unknown> | undefined
-  const metaImage =
-    typeof meta?.ogImage === "string"
-      ? meta.ogImage
-      : typeof meta?.image === "string"
-        ? meta.image
-        : null
-  const heroImage =
-    typeof hero?.coupleImage === "string" ? hero.coupleImage : null
-  const image = metaImage || heroImage
-  if (!image?.trim()) return null
-  const trimmed = image.trim()
-  if (/^https?:\/\//i.test(trimmed)) return trimmed
-  return `${siteUrl}${trimmed.startsWith("/") ? trimmed : `/${trimmed}`}`
-}
-
 function baseMetadataDescription(config: EventConfig): string {
   const hasPanel = Boolean(
     config.rsvpPanel?.enabled && config.rsvpPanel?.panelId?.trim(),
@@ -107,7 +86,6 @@ export function buildBaseLinksMetadata(
   const title = `Tu perfil del evento - ${eventTitle}`
   const description = baseMetadataDescription(config)
   const canonicalUrl = `${siteUrl}/base/${encodeURIComponent(token)}`
-  const ogImage = resolveConfigOgImage(config, siteUrl)
 
   return {
     title,
@@ -122,22 +100,11 @@ export function buildBaseLinksMetadata(
       type: "website",
       siteName: "Momento Único",
       locale: "es_AR",
-      images: ogImage
-        ? [
-            {
-              url: ogImage,
-              width: 1200,
-              height: 630,
-              alt: `Tu perfil del evento - ${eventTitle}`,
-            },
-          ]
-        : undefined,
     },
     twitter: {
-      card: ogImage ? "summary_large_image" : "summary",
+      card: "summary",
       title,
       description,
-      images: ogImage ? [ogImage] : undefined,
     },
   }
 }
