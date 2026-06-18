@@ -35,10 +35,17 @@
     "// title: titulo visible en la pagina de accesos (no afecta WhatsApp)       ": "",
     "// Preview /base/{token}: titulo y descripcion OG se generan automaticamente": "",
     "// Desde esa base se puede abrir invitacion, panel y variantes             ": "",
+    "// PIN (opcional, barrera si se filtra el link):                            ": "",
+    "//   pinEnabled: false por defecto. true = pide PIN en /base y /panel       ": "",
+    "//   pin: exactamente 6 digitos (ej: 482910). Solo si pinEnabled=true      ": "",
+    "//   Si faltan pinEnabled/pin en un JSON viejo = sin PIN (como hasta ahora)  ": "",
+    "//   Activar solo manualmente por evento. Ver PIN en /925837links (Base)    ": "",
     "base": {
         "enabled": false,
         "token": "",
-        "title": "Accesos del evento"
+        "title": "Accesos del evento",
+        "pinEnabled": false,
+        "pin": ""
     },
     "// ACCESS - Token de acceso para la invitacion real                          ": "",
     "// OPCION FACIL (recomendada para operar rapido):                            ": "",

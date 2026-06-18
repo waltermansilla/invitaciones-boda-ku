@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Check, X } from "lucide-react"
 import type { InternalInviteRow } from "@/lib/internal-links-admin"
 import { CopyLinkButton } from "@/components/admin/copy-link-button"
+import { BasePinLockButton } from "@/components/admin/base-pin-lock-button"
 
 const tipoBadge: Record<string, string> = {
   boda: "#E6D6C3",
@@ -370,7 +371,15 @@ export function InternalLinksList({
                       >
                         {displayBase}
                       </a>
-                      <div className="shrink-0">
+                      <div className="flex shrink-0 items-center gap-1">
+                        {row.basePinEnabled && row.basePin ? (
+                          <BasePinLockButton
+                            baseToken={row.baseToken}
+                            pin={row.basePin}
+                            pinEnabled={row.basePinEnabled}
+                            eventName={row.nombre}
+                          />
+                        ) : null}
                         <CopyLinkButton value={fullBase} />
                       </div>
                     </div>

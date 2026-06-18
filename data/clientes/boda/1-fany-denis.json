@@ -22,8 +22,37 @@
     },
     "base": {
         "enabled": true,
-        "token": "7gHF35tr"
+        "token": "7gHF35tr",
+        "pinEnabled": true,
+        "pin": "623748"
     },
+
+    "rsvpPanel": {
+        "enabled": true,
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": true,
+        "limiteInvitados": 250,
+        "panelId": "fany-denis-he73jmW9",
+        "fechaEvento": "2026-11-14",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 14 de Noviembre.",
+        "theme": {
+            "primaryColor": "#588b8b"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Tarjeta pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Ya pagó",
+            "unpaidButton": "¿Pagó tarjeta?"
+        }
+    },
+
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
@@ -331,7 +360,16 @@
                         "Celiaco",
                         "Otro"
                     ],
-                    "songRequest": "Que canción no puede faltar?",
+
+                    "extraInputs": [
+                        {
+                            "id": "mensajersvp",
+                            "label": "¿Algún mensaje para los novios?",
+                            "placeholder": "Escribí tu mensaje",
+                            "tituloPanel": "Mensaje",
+                            "a4": "bottom"
+                        }
+                    ],
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {

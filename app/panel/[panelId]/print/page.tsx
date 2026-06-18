@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import { ArrowLeft, Download } from "lucide-react";
+import { PanelPinGate } from "@/components/panel-pin-gate";
 import { eventTypeLabelFromFolderTipo } from "@/lib/client-helpers-shared";
 import type {
     ExtraInputA4BottomDef,
@@ -450,19 +451,23 @@ export default function PanelPrintPage({
 
     if (error) {
         return (
+            <PanelPinGate panelId={panelId}>
             <main className="mx-auto max-w-5xl p-6">
                 <p className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                     Error cargando la hoja de impresión: {error.message}
                 </p>
             </main>
+            </PanelPinGate>
         );
     }
 
     if (!data) {
         return (
+            <PanelPinGate panelId={panelId}>
             <main className="mx-auto max-w-5xl p-6">
                 <p className="text-sm text-neutral-500">Cargando hoja A4...</p>
             </main>
+            </PanelPinGate>
         );
     }
 
@@ -472,6 +477,7 @@ export default function PanelPrintPage({
     const extraInputsA4 = data.panelConfig?.extraInputsA4 ?? [];
 
     return (
+        <PanelPinGate panelId={panelId} primaryColor={primaryColor}>
         <main className="print-shell mx-auto max-w-5xl p-3 print:max-w-none print:p-0">
             <style jsx global>{`
                 @page {
@@ -730,5 +736,6 @@ export default function PanelPrintPage({
                 ))}
             </section>
         </main>
+        </PanelPinGate>
     );
 }

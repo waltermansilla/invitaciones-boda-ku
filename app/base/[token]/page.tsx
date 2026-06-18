@@ -1,6 +1,12 @@
 import type { Metadata } from "next"
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import type { Viewport } from "next";
+import { BasePinGate } from "@/components/base-pin-gate";
+import {
+    basePinConfigFromEvent,
+    isBasePinUnlocked,
+} from "@/lib/base-pin";
 import {
     findConfigByBaseToken,
     invitationAccessTokenFromConfig,
@@ -163,6 +169,12 @@ export default async function BaseLinksPage({ params }: PageProps) {
           })
         : [];
 
+    const pinCfg = basePinConfigFromEvent(config);
+    const cookieStore = await cookies();
+    const pinUnlocked = pinCfg
+        ? isBasePinUnlocked(cookieStore, pinCfg.baseToken)
+        : true;
+
     const panelEnabled = Boolean(config.rsvpPanel?.enabled && panelId);
     const panelItems = panelEnabled
         ? [
@@ -175,7 +187,7 @@ export default async function BaseLinksPage({ params }: PageProps) {
           ]
         : [];
 
-    return (
+    const content = (
         <BaseLinksClient
             title={title}
             subtitle={subtitle}
@@ -187,5 +199,18 @@ export default async function BaseLinksPage({ params }: PageProps) {
             showPanelUpsell={!panelEnabled}
             registrarSinCodigoEnPanel={registrarSinCodigoEnPanel}
         />
+    );
+
+    if (!pinCfg) return content;
+
+    return (
+        <BasePinGate
+            baseToken={token}
+            initialUnlocked={pinUnlocked}
+            primaryColor={primaryColor}
+            title={title}
+        >
+            {content}
+        </BasePinGate>
     );
 }

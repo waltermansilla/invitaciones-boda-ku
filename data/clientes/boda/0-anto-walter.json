@@ -16,7 +16,9 @@
     "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
     "base": {
         "enabled": true,
-        "token": "A7mP2kQ9"
+        "token": "A7mP2kQ9",
+        "pinEnabled": true,
+        "pin": "284719"
     },
     "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
     "access": {

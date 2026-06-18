@@ -11,6 +11,8 @@ type AccessBlock = {
 type BaseBlock = {
     enabled?: boolean;
     token?: string;
+    pinEnabled?: boolean;
+    pin?: string;
 };
 
 export type InternalInviteRow = {
@@ -31,6 +33,9 @@ export type InternalInviteRow = {
     panelId: string | null;
     baseEnabled: boolean;
     baseUrl: string | null;
+    baseToken: string | null;
+    basePinEnabled: boolean;
+    basePin: string | null;
 };
 
 function slugFromFileName(fileName: string): string {
@@ -132,6 +137,11 @@ export async function listInvitationsForInternalAdmin(): Promise<
                     typeof base.token === "string" ? base.token.trim() : "";
                 const baseEnabled =
                     Boolean(base.enabled) && /^[A-Za-z0-9]{8}$/.test(baseToken);
+                const basePin =
+                    typeof base.pin === "string" && /^\d{6}$/.test(base.pin.trim())
+                        ? base.pin.trim()
+                        : null;
+                const basePinEnabled = Boolean(base.pinEnabled) && Boolean(basePin);
                 const eventDateRaw =
                     (typeof hero.eventDate === "string" && hero.eventDate) ||
                     "";
@@ -173,6 +183,9 @@ export async function listInvitationsForInternalAdmin(): Promise<
                     panelId,
                     baseEnabled,
                     baseUrl: baseEnabled ? `/base/${baseToken}` : null,
+                    baseToken: baseEnabled ? baseToken : null,
+                    basePinEnabled,
+                    basePin,
                 });
             } catch {
                 // ignore invalid json

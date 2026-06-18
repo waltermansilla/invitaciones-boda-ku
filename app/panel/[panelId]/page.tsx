@@ -32,6 +32,7 @@ import {
     normalizeColadoSingular,
 } from "@/lib/colado-label";
 import { DEFAULT_LIMITE_COLADOS_PANEL } from "@/lib/panel-plazas";
+import { PanelPinGate } from "@/components/panel-pin-gate";
 import {
     formatDeudaMontoAr,
     panelDebtGateFromRsvp,
@@ -482,6 +483,7 @@ export default function PanelPage({
 
     if (error)
         return (
+            <PanelPinGate panelId={panelId}>
             <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#faf9f7] p-4">
                 <p className="text-red-500 font-medium">
                     Error al cargar el panel
@@ -497,12 +499,15 @@ export default function PanelPage({
                     Reintentar
                 </button>
             </div>
+            </PanelPinGate>
         );
     if (!panelId || !data)
         return (
+            <PanelPinGate panelId={panelId}>
             <div className="flex min-h-screen items-center justify-center bg-[#faf9f7]">
                 <p className="text-neutral-500">Cargando...</p>
             </div>
+            </PanelPinGate>
         );
 
     const { evento, invitados, stats } = data;
@@ -792,6 +797,11 @@ export default function PanelPage({
         }, 0);
 
     return (
+        <PanelPinGate
+            panelId={panelId}
+            primaryColor={primaryColor}
+            title={labels?.title || "Panel de invitados"}
+        >
         <div className="min-h-screen bg-[#faf9f7]">
             <header
                 className="relative px-5 py-8 text-center text-white"
@@ -1480,6 +1490,7 @@ export default function PanelPage({
                 />
             )}
         </div>
+        </PanelPinGate>
     );
 }
 

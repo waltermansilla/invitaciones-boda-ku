@@ -21,11 +21,16 @@ Podés crear un acceso único para cliente en el JSON usando bloque `base`:
   "enabled": true,
   "token": "A7mP2kQ9",
   "title": "Accesos del evento",
-  "subtitle": "Links rapidos para invitacion y panel."
+  "subtitle": "Links rapidos para invitacion y panel.",
+  "pinEnabled": true,
+  "pin": "123456"
 }
 ```
 
 - URL final: `/base/A7mP2kQ9`
+- `pinEnabled` + `pin` (6 dígitos): pantalla de PIN al entrar a la **base** y al **panel** (misma sesión en el dispositivo ~90 días).
+- Para desactivar: `"pinEnabled": false` o borrá `pin`.
+- Ver PIN y estado en el admin interno: `/925837links` (al expandir la fila, bloque Base).
 - Desde esa pantalla el cliente puede abrir:
   - invitación principal
   - panel
@@ -36,7 +41,7 @@ Podés crear un acceso único para cliente en el JSON usando bloque `base`:
 
 ## Tres cosas que tenés que saber antes
 
-1. **No hay usuario ni contraseña.** Solo existe el link del panel. Por eso el link es **secreto**: no lo subas a redes públicas; pasalo por WhatsApp o mail solo a quien administra la lista.
+1. **PIN opcional en la base** (`base.pinEnabled` + `base.pin`). Si está activo, la base y el panel piden un PIN de 6 dígitos; si no, solo el link (como antes). El link sigue siendo secreto: no lo subas a redes públicas.
 
 2. El **nombre técnico** del panel se llama `panelId`. Es el texto que va después de `/panel/` en el navegador.  
    Ejemplo: si `panelId` es `priscila-agustin-boditacheiw`, el link del panel es:  

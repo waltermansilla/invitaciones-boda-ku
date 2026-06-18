@@ -8,6 +8,9 @@ export interface EventConfig {
     enabled?: boolean
     token?: string
     title?: string
+    /** PIN de 6 dígitos para base y panel. */
+    pinEnabled?: boolean
+    pin?: string
   }
   meta?: {
     coupleNames?: {
