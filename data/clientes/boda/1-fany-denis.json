@@ -126,7 +126,7 @@
                     {
                         "icon": "church",
                         "name": "Ceremonia religiosa",
-                        "time": "19:00 hs",
+                        "time": "20:30 hs",
                         "date": "",
                         "button": {
                             "text": "Cómo llegar",
@@ -137,7 +137,7 @@
                     {
                         "icon": "party",
                         "name": "¡Fiesta!",
-                        "time": "21:00 hs",
+                        "time": "21:30 hs",
                         "date": "",
                         "button": {
                             "text": "Cómo llegar",
