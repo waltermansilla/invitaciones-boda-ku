@@ -18,7 +18,7 @@ import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
  */
 
 interface ClosingSectionProps {
-  image: string
+  image?: string
   aspectRatio?: string
   coupleNames: {
     groomName: string
@@ -134,6 +134,8 @@ export default function ClosingSection({
   }
   const resolvedLetterSpacing = letterSpacingMap[namesLetterSpacing] || "0.2em"
 
+  const hasClosingImage = Boolean(image?.trim())
+
   const { first: closingFirst, second: closingSecond } = coupleNamesDisplayPair(
     coupleNames.brideName,
     coupleNames.groomName,
@@ -171,19 +173,24 @@ export default function ClosingSection({
         </>
       )}
 
-      {/* Full-width closing image */}
-      {isFreeAspect ? (
-        <img src={image} alt="Foto de cierre" className="block h-auto w-full" />
-      ) : (
-        <div className="relative w-full" style={{ aspectRatio }}>
-          <Image
-            src={image}
+      {/* Full-width closing image (opcional: sin image solo se muestra el nombre) */}
+      {hasClosingImage &&
+        (isFreeAspect ? (
+          <img
+            src={image!.trim()}
             alt="Foto de cierre"
-            fill
-            className="object-cover"
+            className="block h-auto w-full"
           />
-        </div>
-      )}
+        ) : (
+          <div className="relative w-full" style={{ aspectRatio }}>
+            <Image
+              src={image!.trim()}
+              alt="Foto de cierre"
+              fill
+              className="object-cover"
+            />
+          </div>
+        ))}
 
       {/* Names or Logo as elegant close */}
       {isEnabled && (

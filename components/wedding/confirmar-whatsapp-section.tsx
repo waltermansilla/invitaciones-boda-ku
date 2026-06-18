@@ -1,7 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Check, X } from "lucide-react"
 import { useIsMuestra } from "@/lib/config-context"
+import { useModal } from "./modal-provider"
 
 /** Datos mínimos del invitado (panel + link con ?c=) para mostrar nombre en la sección. */
 interface InvitadoPanelShort {
@@ -17,17 +19,10 @@ interface InvitadoPanelShort {
 
 /**
  * Seccion simple de confirmacion por WhatsApp (Plan Base).
- * Sin formulario: solo un boton que abre WhatsApp con un mensaje predefinido.
- *
- * Configurable desde JSON:
- *   title           -> Titulo de la seccion
- *   subtitle        -> (OPCIONAL) Texto entre titulo y boton (ej: "Confirmar antes del 15 de marzo")
- *   buttonText      -> Texto del boton
- *   whatsappNumber  -> Numero sin +, sin espacios (ej: "3456023759")
- *   message         -> Mensaje que se envia (default: "Confirmo mi asistencia")
+ * Sin formulario: boton → modal de revision → WhatsApp con mensaje predefinido.
  *
  * Opcional — `rsvpPanel.confirmacion: "comun"` + `?c=` en la URL:
- *   panelSync       -> GET del invitado para mostrar nombre (como en RSVP), y POST antes de abrir WA.
+ *   panelSync -> POST en panel y luego abre WhatsApp.
  */
 interface ConfirmarWhatsappSectionProps {
   title: string
@@ -46,6 +41,100 @@ interface ConfirmarWhatsappSectionProps {
   }
 }
 
+function confirmReviewStyle(asiste: boolean) {
+  return asiste
+    ? {
+        Icon: Check,
+        accentColor: "#4ade80",
+      }
+    : {
+        Icon: X,
+        accentColor: "#f87171",
+      }
+}
+
+function WhatsappConfirmReviewModal({
+  initialAsiste,
+  buttonText,
+  noAsiste,
+  invitadoNombre,
+  onConfirm,
+}: {
+  initialAsiste: boolean
+  buttonText: string
+  noAsiste?: {
+    enabled: boolean
+    buttonText: string
+    message: string
+  }
+  invitadoNombre?: string
+  onConfirm: (asiste: boolean) => void
+}) {
+  const [asiste, setAsiste] = useState(initialAsiste)
+  const showDecline = Boolean(noAsiste?.enabled)
+
+  const renderOption = (value: boolean, label: string) => {
+    const selected = asiste === value
+    const { Icon, accentColor } = confirmReviewStyle(value)
+    return (
+      <button
+        key={value ? "si" : "no"}
+        type="button"
+        onClick={() => setAsiste(value)}
+        className={`flex min-w-0 flex-1 flex-col items-center justify-center gap-1.5 rounded-full border px-2 py-3.5 text-center text-xs font-semibold leading-snug tracking-wide transition-all sm:px-3 sm:text-sm ${
+          selected
+            ? "border-white/25 bg-white/15 text-white opacity-100"
+            : "border-white/15 bg-transparent text-white opacity-40 hover:opacity-55"
+        }`}
+        style={
+          selected ? { borderColor: `${accentColor}99` } : undefined
+        }
+        aria-pressed={selected}
+      >
+        <Icon
+          className="h-4 w-4 shrink-0"
+          style={{ color: selected ? accentColor : "rgba(255,255,255,0.7)" }}
+          strokeWidth={2.5}
+          aria-hidden
+        />
+        <span className="px-1">{label}</span>
+      </button>
+    )
+  }
+
+  return (
+    <div className="text-white">
+      <p className="mb-1 text-center text-[10px] font-medium tracking-[0.2em] uppercase text-white/60">
+        Confirmación
+      </p>
+      <h3 className="mb-6 pr-6 text-center text-lg font-semibold tracking-wide text-white">
+        ¿Está bien?
+      </h3>
+      <div className="space-y-3 text-center">
+        {invitadoNombre && (
+          <p className="text-sm font-medium tracking-wide text-white/90">
+            {invitadoNombre}
+          </p>
+        )}
+        <div className="flex gap-2">
+          {renderOption(true, buttonText)}
+          {showDecline &&
+            renderOption(false, noAsiste?.buttonText || "No podré asistir")}
+        </div>
+      </div>
+      <div className="mt-7">
+        <button
+          type="button"
+          onClick={() => onConfirm(asiste)}
+          className="flex min-h-[52px] w-full items-center justify-center rounded-sm border border-white/30 bg-white/10 px-5 py-4 text-[11px] font-medium tracking-[0.15em] uppercase text-white transition-all hover:bg-white/20"
+        >
+          Confirmar
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function ConfirmarWhatsappSection({
   title,
   subtitle,
@@ -56,6 +145,7 @@ export default function ConfirmarWhatsappSection({
   panelSync,
 }: ConfirmarWhatsappSectionProps) {
   const isMuestra = useIsMuestra()
+  const { openModal, closeModal } = useModal()
   const [submitting, setSubmitting] = useState<"si" | "no" | null>(null)
   const [invitadoPanel, setInvitadoPanel] = useState<InvitadoPanelShort | null>(
     null,
@@ -92,9 +182,11 @@ export default function ConfirmarWhatsappSection({
     window.open(url, "_blank")
   }
 
-  const handleClick = async (msg: string, asiste: boolean) => {
+  const executeConfirm = async (msg: string, asiste: boolean) => {
     if (isMuestra) {
-      alert("Modo muestra: en la version real, esto registra en el panel (si aplica) y abre WhatsApp.")
+      alert(
+        "Modo muestra: en la version real, esto registra en el panel (si aplica) y abre WhatsApp.",
+      )
       return
     }
 
@@ -114,6 +206,7 @@ export default function ConfirmarWhatsappSection({
           throw new Error(data.error || "No se pudo registrar la confirmación")
         }
         if (data.invitado) setInvitadoPanel(data.invitado)
+        openWa(msg)
         setSubmitted(true)
         setAlreadyConfirmed(true)
         setEditing(false)
@@ -127,6 +220,24 @@ export default function ConfirmarWhatsappSection({
     }
 
     openWa(msg)
+  }
+
+  const openReviewModal = (initialAsiste: boolean) => {
+    openModal(
+      <WhatsappConfirmReviewModal
+        initialAsiste={initialAsiste}
+        buttonText={buttonText}
+        noAsiste={noAsiste}
+        invitadoNombre={invitadoPanel?.nombre}
+        onConfirm={(asiste) => {
+          closeModal()
+          const msg = asiste
+            ? message
+            : noAsiste?.message || message
+          void executeConfirm(msg, asiste)
+        }}
+      />,
+    )
   }
 
   const handleEdit = () => {
@@ -217,20 +328,20 @@ export default function ConfirmarWhatsappSection({
       <div className={`flex flex-col gap-3 ${!subtitle ? "mt-3" : ""}`}>
         <button
           type="button"
-          onClick={() => handleClick(message, true)}
+          onClick={() => openReviewModal(true)}
           disabled={submitting !== null}
-          className="inline-flex min-h-[48px] items-center rounded-full border border-current/40 px-8 py-3 text-xs font-medium tracking-[0.2em] uppercase text-inherit transition-opacity hover:bg-current/10 disabled:opacity-50"
+          className="inline-flex min-h-[48px] w-full max-w-xs items-center justify-center rounded-full border border-current/40 px-8 py-3 text-center text-xs font-medium tracking-[0.2em] uppercase text-inherit transition-opacity hover:bg-current/10 disabled:opacity-50"
         >
-          {submitting === "si" ? "Registrando…" : buttonText}
+          {submitting === "si" ? "Enviando…" : buttonText}
         </button>
         {noAsiste?.enabled && (
           <button
             type="button"
-            onClick={() => handleClick(noAsiste.message, false)}
+            onClick={() => openReviewModal(false)}
             disabled={submitting !== null}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full px-6 py-2 text-[10px] font-light tracking-[0.15em] uppercase text-inherit/60 transition-opacity hover:text-inherit/80 disabled:opacity-50"
+            className="inline-flex min-h-[44px] w-full max-w-xs items-center justify-center rounded-full px-6 py-2 text-center text-[10px] font-light tracking-[0.15em] uppercase text-inherit/60 transition-opacity hover:text-inherit/80 disabled:opacity-50"
           >
-            {submitting === "no" ? "Registrando…" : noAsiste.buttonText}
+            {submitting === "no" ? "Enviando…" : noAsiste.buttonText}
           </button>
         )}
       </div>

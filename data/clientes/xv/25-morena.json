@@ -1,0 +1,337 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Mis XV - Morena",
+        "description": "Estás invitado a celebrar los XV de Morena.",
+        "lang": "es",
+        "quinceaneraName": "Morena",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Morena",
+            "separator": ""
+        }
+    },
+    "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "Hjk82nL6"
+    },
+    "access": {
+        "tokenEnabled": true,
+        "token": "ui21Nq",
+        "allowLegacyUntil": ""
+    },
+
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA / d8a5a2 globos / ea9ab2 rosa ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
+    "theme": {
+        "primaryColor": "#111",
+        "backgroundColor": "#eee",
+        "primaryImage": "/clientes/xv/21-indiana/images/bg1.jpeg",
+        "textColor": "#555",
+        "lightBgTextColor": "#555",
+        "darkBgTextColor": "#fff",
+        "accentBackground": "#000",
+        "modalTextColor": "#fff",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Una noche especial está por comenzar.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "70px",
+            "weight": "600",
+            "color": "#000",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/xv/25-morena/music/vogue.mp3",
+        "autoplay": true,
+        "startTime": 18
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta.",
+    "hero": {
+        "coupleImage": "/clientes/xv/25-morena/images/disco.jpeg",
+        "headline": "Mis 15!",
+        "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": true,
+            "position": "",
+            "positionX": 50,
+            "positionY": 50,
+            "font": "",
+            "lowercase": true,
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "#eee",
+            "decorativeLines": false,
+            "logo": "",
+            "texts": [
+                {
+                    "text": "¡Mis XV!",
+                    "font": "",
+                    "letterSpacing": "none",
+                    "weight": "200",
+                    "size": "xl",
+                    "style": "normal"
+                },
+                {
+                    "text": "Morena",
+                    "font": "Dancing Script",
+                    "letterSpacing": "none",
+                    "weight": "700",
+                    "size": "5xl",
+                    "style": "normal"
+                }
+            ]
+        },
+        "countdownPrefix": "",
+        "eventDate": "2026-10-24T20:00:00",
+        "countdownLabels": {
+            "days": "Días",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Hay momentos que se viven una sola vez… y me encantaría vivir este con vos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "24 de Octubre del 2026"
+            }
+        },
+        {
+            "// --- UBICACION: FIESTA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Complejo Jade",
+                "address": "Del Pozo 1159",
+                "showButton": true,
+                "order": ["address", "time"],
+                "datetime": {
+                    "time": "20:00 hs"
+                },
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/NfcHbWc1XPEEas8Q9?g_st=iwb",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Entre lo que fui y lo que sueño ser, hay un instante hermoso: este.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
+            "type": "dressCode",
+            "id": "dress-code",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Dress code",
+                "subtitle": "Elegante BLANCO Y NEGRO",
+                "description": "",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "square",
+                    "colors": ["#FFF", "#000"]
+                }
+            }
+        },
+
+        {
+            "_comment": "VALOR TARJETA",
+            "type": "giftCard",
+            "id": "gift-card",
+            "enabled": true,
+            "bgColor": "background",
+            "data": {
+                "icon": "heart",
+                "title": "Valor Tarjeta",
+                "description": "Agradecemos que abones la tarjeta antes del 1 de Octubre del 2026.",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "suggestedValueLabel": "Valor tarjeta",
+                    "suggestedValues": [
+                        {
+                            "label": "Adultos (mayores de 15)",
+                            "value": "$80.000"
+                        },
+                        {
+                            "label": "Menores (5 a 15 años)",
+                            "value": "$50.000"
+                        },
+                        { "label": "Menores de 5 años", "value": "Sin cargo" }
+                    ],
+                    "description": "No olvides enviarnos el comprobante.",
+                    "transferData": [{ "label": "Alias", "value": "XVMORE15" }]
+                }
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome8",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "A mi familia y a quienes siempre estuvieron: gracias por el amor, el apoyo y por ser parte de mi historia.",
+                "author": "More",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "background",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "subtitle": "Antes del 1 de Octubre",
+                "buttonText": "¡Voy!",
+                "whatsappNumber": "543364270406",
+                "message": "Hola Morena! Confirmo mi asistencia a tus XV. Quiero formar parte de este momento tan especial para vos 🫶🏼🤗",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Hola Morena! Lamentablemente no podré asistir a tus XV. Gracias por tenerme en cuenta 🫶🏼"
+                }
+            }
+        },
+
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen opcional a ancho completo + nombre debajo. Dejar image vacío u omitirlo para solo el nombre (namesDisplay.enabled debe ser true).",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "name"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/xv/25-morena/images/disco.jpeg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "700",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#000",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": "https://wa.me/3456023759"
+                    }
+                ]
+            }
+        }
+    ]
+}

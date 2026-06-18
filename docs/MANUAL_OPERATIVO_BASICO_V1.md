@@ -693,6 +693,8 @@ El hero ahora tiene control avanzado sobre como se muestran los nombres:
 
 Lo mismo para `closingImage`:
 
+- `image`: ruta a la foto. Si está vacío u omitido, **no se muestra imagen** y queda solo el nombre (`namesDisplay.enabled: true`).
+
 ```json
 {
     "type": "closingImage",
@@ -702,6 +704,22 @@ Lo mismo para `closingImage`:
         "namesDisplay": {
             "font": "Great Vibes",
             "logo": ""
+        }
+    }
+}
+```
+
+Solo nombre (sin foto de cierre):
+
+```json
+{
+    "type": "closingImage",
+    "data": {
+        "image": "",
+        "namesDisplay": {
+            "enabled": true,
+            "font": "Dancing Script",
+            "size": "3xl"
         }
     }
 }
