@@ -60,7 +60,7 @@
     "// ==========================================.....": "",
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
-        "coupleImage": "/clientes/boda/1-fany-denis/images/img-hero.jpeg",
+        "coupleImage": "/clientes/boda/1-fany-denis/images/hero.jpeg",
         "headline": "Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
@@ -282,8 +282,18 @@
                 },
                 "modal": {
                     "title": "Datos de transferencia",
-                    "suggestedValue": "$85.000",
-                    "suggestedValueLabel": "Valor tarjeta por persona",
+                    "suggestedValueLabel": "Valor tarjeta",
+                    "suggestedValues": [
+                        {
+                            "label": "Por persona",
+                            "value": "$85.000"
+                        },
+                        {
+                            "label": "Menores (5 a 12 años)",
+                            "value": "$40.000"
+                        },
+                        { "label": "Menores (2 a 4 años)", "value": "$35.000" }
+                    ],
                     "description": "No olvides enviarnos el comprobante.",
                     "transferData": [
                         { "label": "Alias", "value": "fanywalter.mp" }
@@ -331,7 +341,7 @@
             "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-welcome3",
-            "bgColor": "primary",
+            "bgColor": "background",
             "blocks": ["text", "author"],
             "data": {
                 "text": "UNA NUEVA ETAPA COMIENZA… Y QUEREMOS COMPARTIRLA CON VOS. GRACIAS POR ESTAR",
@@ -347,7 +357,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/1-fany-denis/images/img-hero.jpeg"
+                "image": "/clientes/boda/1-fany-denis/images/final.jpeg"
             }
         },
         {

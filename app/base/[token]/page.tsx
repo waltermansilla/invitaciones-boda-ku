@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { notFound } from "next/navigation";
 import type { Viewport } from "next";
 import {
@@ -8,6 +9,11 @@ import {
 } from "@/lib/config-loader";
 import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order";
 import { defaultBaseWhatsappMessageFromConfig } from "@/lib/base-invitation-whatsapp";
+import {
+    autoBaseEventTitle,
+    BASE_LINKS_SUBTITLE,
+    buildBaseLinksMetadata,
+} from "@/lib/base-links-metadata";
 import { BaseLinksClient } from "./base-links-client";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +21,6 @@ export const viewport: Viewport = {
     viewportFit: "cover",
     themeColor: "#111111",
 };
-
-const BASE_SUBTITLE =
-    "Desde acá podés abrir tu invitación, enviarla por WhatsApp y acceder al panel de invitados, sin tener que buscar links sueltos.";
 
 function joinCoupleDisplayNames(coupleNames: Record<string, unknown>): string {
     const brideName =
@@ -80,38 +83,6 @@ function autoInvitationTitle(config: ReturnType<typeof findConfigByBaseToken>) {
     return fallbackNames ? `Invitación ${fallbackNames}` : "Invitación";
 }
 
-function autoBaseTitle(config: ReturnType<typeof findConfigByBaseToken>) {
-    const tipo = (config?.tipo || "").trim().toLowerCase();
-    const meta = (config?.meta || {}) as Record<string, unknown>;
-    const coupleNames =
-        (meta.coupleNames as Record<string, unknown> | undefined) || {};
-    const xvNameFromCouple =
-        typeof coupleNames.name === "string" ? coupleNames.name.trim() : "";
-    const quinceaneraName =
-        typeof meta.quinceaneraName === "string"
-            ? meta.quinceaneraName.trim()
-            : "";
-
-    if (tipo === "boda") {
-        const names = joinCoupleDisplayNames(coupleNames);
-        return names ? `Boda - ${names}` : "Boda";
-    }
-    if (tipo === "xv") {
-        const name = xvNameFromCouple || quinceaneraName;
-        return name ? `XV - ${name}` : "XV";
-    }
-    if (tipo === "baby") {
-        const name = xvNameFromCouple || quinceaneraName;
-        return name ? `Baby Shower - ${name}` : "Baby Shower";
-    }
-    if (tipo === "cumple") {
-        const name = xvNameFromCouple || quinceaneraName;
-        return name ? `Cumple - ${name}` : "Cumple";
-    }
-    const names = joinCoupleDisplayNames(coupleNames);
-    return names ? `Evento - ${names}` : "Evento";
-}
-
 function buildUrl(
     path: string,
     query?: Record<string, string | null | undefined>,
@@ -122,6 +93,20 @@ function buildUrl(
     }
     const qs = q.toString();
     return qs ? `${path}?${qs}` : path;
+}
+
+export async function generateMetadata({
+    params,
+}: PageProps): Promise<Metadata> {
+    const { token } = await params;
+    const config = findConfigByBaseToken(token);
+    if (!config) {
+        return {
+            title: "Acceso no encontrado",
+            robots: { index: false, follow: false },
+        };
+    }
+    return buildBaseLinksMetadata(config, token);
 }
 
 export default async function BaseLinksPage({ params }: PageProps) {
@@ -141,8 +126,8 @@ export default async function BaseLinksPage({ params }: PageProps) {
             ? primaryColorRaw.trim()
             : "#7A5F45";
 
-    const title = autoBaseTitle(config);
-    const subtitle = BASE_SUBTITLE;
+    const title = autoBaseEventTitle(config);
+    const subtitle = BASE_LINKS_SUBTITLE;
     const defaultWhatsappMessage = defaultBaseWhatsappMessageFromConfig(config);
     const hasCustomVariants = variantes.length > 1;
     const singleInvitationTitle = autoInvitationTitle(config);

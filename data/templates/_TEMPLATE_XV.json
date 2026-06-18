@@ -32,7 +32,8 @@
     "// BASE - Link unico de accesos para cliente                               ": "",
     "// Si enabled=true, se habilita /base/{token}                              ": "",
     "// token: 8 caracteres alfanumericos (ej: A7mP2kQ9)                        ": "",
-    "// title/subtitle: textos visibles en la pagina de accesos                 ": "",
+    "// title: titulo visible en la pagina de accesos (no afecta WhatsApp)       ": "",
+    "// Preview /base/{token}: titulo y descripcion OG se generan automaticamente": "",
     "// Desde esa base se puede abrir invitacion, panel y variantes             ": "",
     "base": {
         "enabled": false,
