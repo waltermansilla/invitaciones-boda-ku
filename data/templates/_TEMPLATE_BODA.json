@@ -176,6 +176,8 @@
     "//   color: hex o vacio para usar theme                                      ": "",
     "//   lowercase: false=MAYUSCULAS, true=respeta como escribis                 ": "",
     "//   letterSpacing: 'none'=cursivas conectan, 'normal', 'wide'=espaciado     ": "",
+    "// contentCenterY: % desde arriba del centro del bloque (nombres/frase/boton) ": "",
+    "//   50 = centrado en pantalla, 40 = mas arriba. Sin textPositionsPx.           ": "",
     "overlay": {
         "enabled": true,
         "phrase": "Nos casamos!",
@@ -193,6 +195,7 @@
             "letterSpacing": "wide"
         },
         "buttonPosition": "center",
+        "contentCenterY": "",
         "textPositionsPx": {
             "topLineY": 130,
             "brideY": 170,

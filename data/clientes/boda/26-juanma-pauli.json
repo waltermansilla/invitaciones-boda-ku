@@ -52,6 +52,7 @@
     "theme": {
         "primaryColor": "#6B7F5A",
         "backgroundColor": "#FAF8F5",
+        "primaryImage": "/clientes/boda/26-juanma-pauli/bg/pasto.jpeg",
         "textColor": "#6B7F5A",
         "lightBgTextColor": "#6B7F5A",
         "darkBgTextColor": "#FFFFFF",
@@ -64,10 +65,20 @@
     },
     "overlay": {
         "enabled": true,
-        "phrase": "Te invitamos a celebrar nuestro amor",
+        "phrase": "Te invitamos a celebrar nuestra boda.",
         "buttonText": "Ingresar",
         "showNames": true,
-        "showPhrase": true
+        "showPhrase": true,
+        "contentCenterY": 45,
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "50px",
+            "weight": "500",
+            "color": "#6B7F5A",
+            "lowercase": true,
+            "letterSpacing": "none"
+        },
+        "bgImage": "/clientes/boda/26-juanma-pauli/bg/overlay1.jpeg"
     },
     "music": {
         "enabled": false,
@@ -104,6 +115,7 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
+
             "blocks": ["text", "author"],
             "data": {
                 "text": "3.934 días después, ¡nos casamos! Te invitamos a celebrar este momento junto a nosotros.",
@@ -115,6 +127,7 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
+            "bgImage": "/clientes/boda/26-juanma-pauli/bg/luces1.jpeg",
             "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
@@ -169,6 +182,7 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
+
             "blocks": ["title", "timeline"],
             "data": {
                 "title": "Itinerario",
@@ -228,6 +242,7 @@
             "id": "shared-photos",
             "enabled": true,
             "bgColor": "primary",
+
             "blocks": ["icon", "title", "description", "button"],
             "data": {
                 "icon": "camera",
@@ -253,9 +268,10 @@
             "type": "quote",
             "id": "quote-welcome2",
             "bgColor": "background",
+            "bgImage": "/clientes/boda/26-juanma-pauli/bg/luces3.jpeg",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Gracias por acompañarnos y ser parte de uno de los días más importantes de nuestras vidas.",
+                "text": "Somos la suma de cada día compartido. Hoy abrimos un capítulo nuevo.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -266,6 +282,7 @@
             "id": "playlist-suggestion",
             "enabled": true,
             "bgColor": "primary",
+            "bgImage": "primaryImage",
             "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Playlist de la fiesta",
@@ -282,6 +299,7 @@
             "type": "honeymoon",
             "id": "honeymoon",
             "bgColor": "background",
+            "bgImage": "/clientes/boda/26-juanma-pauli/bg/papel.jpeg",
             "blocks": ["icon", "title", "description", "modal"],
             "data": {
                 "icon": "gift",
@@ -332,10 +350,11 @@
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "background",
+            "bgImage": "/clientes/boda/26-juanma-pauli/bg/flores.jpeg",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Gracias por acompañarnos y ser parte de uno de los días más importantes de nuestras vidas.",
-                "author": "",
+                "text": "El amor es un acto de fe. Creer en el otro, en el tiempo y en lo que viene. Te invitamos a ser parte de este momento.",
+                "author": "Juan Manuel & Pauli",
                 "decorativeLines": true
             }
         },
@@ -425,7 +444,20 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/26-juanma-pauli/images/B.jpg"
+                "image": "/clientes/boda/26-juanma-pauli/images/B.jpg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "700",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#6B7F5A",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
             }
         },
         {

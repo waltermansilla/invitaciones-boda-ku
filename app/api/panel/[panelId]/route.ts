@@ -19,6 +19,7 @@ import { extraInputsA4LayoutFromMergedClient } from "@/lib/panel-a4-extras"
 import { normalizeColadoSingular } from "@/lib/colado-label"
 import { resolveEventoForPanelConfig } from "@/lib/panel-evento-resolve"
 import { panelConfirmacionFromConfig } from "@/lib/panel-confirmacion"
+import { validateInvitadoNombre, validateIntegrantesNombres } from "@/lib/invitado-nombre"
 import {
   limiteColadosMaxFromConfig,
   limiteInvitadosPanelFromConfig,
@@ -372,6 +373,13 @@ export async function POST(
   }
 
   const body = await request.json()
+
+  const nombreError = validateInvitadoNombre(body.nombre)
+  if (nombreError) {
+    return NextResponse.json({ error: nombreError }, { status: 400 })
+  }
+  body.nombre = String(body.nombre).trim()
+
   let supabase: ReturnType<typeof createApiClient>
   try {
     supabase = createApiClient()
@@ -472,6 +480,20 @@ export async function POST(
 
   if (error) {
     return NextResponse.json({ error: "Error creando invitado" }, { status: 500 })
+  }
+
+  if (
+    body.tipo === "familia" &&
+    Array.isArray(body.integrantes) &&
+    body.integrantes.length > 0
+  ) {
+    const integrantesError = validateIntegrantesNombres(body.integrantes)
+    if (integrantesError) {
+      return NextResponse.json({ error: integrantesError }, { status: 400 })
+    }
+    body.integrantes = body.integrantes.map((nombre: string) =>
+      String(nombre).trim(),
+    )
   }
 
   if (body.tipo === "familia" && body.integrantes?.length > 0) {

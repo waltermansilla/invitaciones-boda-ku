@@ -1,6 +1,12 @@
 "use client";
 
 import { useState, useEffect, Fragment, useRef, useMemo } from "react";
+import { useGuestPreview } from "@/lib/guest-preview";
+import { useGuestPreviewConfirmModal } from "./guest-preview-confirm-modal";
+import {
+    guestPreviewIsFamilia,
+    guestPreviewStateLabelFromAttendance,
+} from "@/lib/guest-preview-confirm";
 import { useIsMuestra } from "@/lib/config-context";
 import { Trash2 } from "lucide-react";
 import { useModal } from "./modal-provider";
@@ -387,6 +393,8 @@ export default function RSVPSection({
     previewRsvpForm = false,
 }: RSVPSectionProps) {
     const isMuestra = useIsMuestra();
+    const isGuestPreview = useGuestPreview();
+    const { openGuestPreviewConfirmModal } = useGuestPreviewConfirmModal();
     const { openModal, closeModal } = useModal();
     const anonymousSubmitLockRef = useRef(false);
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
@@ -464,6 +472,7 @@ export default function RSVPSection({
     }, [editing]);
 
     useEffect(() => {
+        if (isGuestPreview) return;
         const showThanks =
             (alreadyConfirmed && !editing) || submitted || Boolean(autoConfirmSummary);
         if (!showThanks || typeof window === "undefined") return;
@@ -471,7 +480,7 @@ export default function RSVPSection({
             behavior: "smooth",
             block: "center",
         });
-    }, [alreadyConfirmed, autoConfirmSummary, editing, submitted]);
+    }, [alreadyConfirmed, autoConfirmSummary, editing, isGuestPreview, submitted]);
 
     useEffect(() => {
         if (previewRsvpForm || !isAnonymousPanelFlow || !panel?.panelId) {
@@ -1130,78 +1139,96 @@ export default function RSVPSection({
         );
 
         if (panel?.enabled && panel?.codigo) {
-            setSubmitting(true);
-            setError(null);
-            try {
-                const titularIndex = guestsForSubmit.findIndex(
-                    (g) => !g.isColado,
-                );
-                const integrantesPayload = guestsForSubmit
-                    .filter((g, idx) =>
-                        invitado?.tipo === "familia"
-                            ? true
-                            : g.isColado ||
-                              (invitado?.tipo === "persona" &&
-                                  idx !== titularIndex),
-                    )
-                    .map((g) => ({
-                        id: g.id,
-                        nombre: `${g.firstName} ${g.lastName}`.trim(),
-                        asiste: g.attendance === "yes",
-                        restricciones:
-                            g.dietary !== "Ninguno" ? g.dietary : null,
-                        es_colado:
-                            invitado?.tipo === "persona"
+            const submitPanelCodigo = async () => {
+                setSubmitting(true);
+                setError(null);
+                try {
+                    const titularIndex = guestsForSubmit.findIndex(
+                        (g) => !g.isColado,
+                    );
+                    const integrantesPayload = guestsForSubmit
+                        .filter((g, idx) =>
+                            invitado?.tipo === "familia"
                                 ? true
-                                : Boolean(g.isColado),
-                    }));
-                const res = await fetch(`/api/rsvp/${panel.codigo}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        integrantes: integrantesPayload,
-                        asiste: guestsForSubmit.some(
-                            (g) => g.attendance === "yes",
-                        ),
-                        mensaje: panelExtraSummary,
-                        cancion: songSummary,
-                        ...(invitado?.tipo === "persona"
-                            ? {
-                                  restricciones:
-                                      titularGuest &&
-                                      titularGuest.dietary !== "Ninguno"
-                                          ? titularGuest.dietary
-                                          : null,
-                              }
-                            : {}),
-                    }),
+                                : g.isColado ||
+                                  (invitado?.tipo === "persona" &&
+                                      idx !== titularIndex),
+                        )
+                        .map((g) => ({
+                            id: g.id,
+                            nombre: `${g.firstName} ${g.lastName}`.trim(),
+                            asiste: g.attendance === "yes",
+                            restricciones:
+                                g.dietary !== "Ninguno" ? g.dietary : null,
+                            es_colado:
+                                invitado?.tipo === "persona"
+                                    ? true
+                                    : Boolean(g.isColado),
+                        }));
+                    const res = await fetch(`/api/rsvp/${panel.codigo}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            integrantes: integrantesPayload,
+                            asiste: guestsForSubmit.some(
+                                (g) => g.attendance === "yes",
+                            ),
+                            mensaje: panelExtraSummary,
+                            cancion: songSummary,
+                            ...(invitado?.tipo === "persona"
+                                ? {
+                                      restricciones:
+                                          titularGuest &&
+                                          titularGuest.dietary !== "Ninguno"
+                                              ? titularGuest.dietary
+                                              : null,
+                                  }
+                                : {}),
+                        }),
+                    });
+                    const responseData = await res
+                        .json()
+                        .catch(
+                            () =>
+                                ({}) as {
+                                    error?: string;
+                                    invitado?: InvitadoData;
+                                },
+                        );
+                    if (!res.ok) {
+                        throw new Error(
+                            responseData.error ||
+                                "Error al enviar confirmacion",
+                        );
+                    }
+                    if (responseData.invitado) {
+                        setInvitado(responseData.invitado);
+                    }
+                    setSubmitted(true);
+                    setAlreadyConfirmed(true);
+                    setEditing(false);
+                } catch (err) {
+                    setError(
+                        err instanceof Error
+                            ? err.message
+                            : "Error al enviar confirmacion",
+                    );
+                } finally {
+                    setSubmitting(false);
+                }
+            };
+
+            if (isGuestPreview) {
+                openGuestPreviewConfirmModal({
+                    stateLabel:
+                        guestPreviewStateLabelFromAttendance(guestsForSubmit),
+                    isFamilia: guestPreviewIsFamilia(invitado),
+                    onConfirm: submitPanelCodigo,
                 });
-                const responseData = await res
-                    .json()
-                    .catch(
-                        () =>
-                            ({}) as { error?: string; invitado?: InvitadoData },
-                    );
-                if (!res.ok) {
-                    throw new Error(
-                        responseData.error || "Error al enviar confirmacion",
-                    );
-                }
-                if (responseData.invitado) {
-                    setInvitado(responseData.invitado);
-                }
-                setSubmitted(true);
-                setAlreadyConfirmed(true);
-                setEditing(false);
-            } catch (err) {
-                setError(
-                    err instanceof Error
-                        ? err.message
-                        : "Error al enviar confirmacion",
-                );
-            } finally {
-                setSubmitting(false);
+                return;
             }
+
+            await submitPanelCodigo();
             return;
         }
 

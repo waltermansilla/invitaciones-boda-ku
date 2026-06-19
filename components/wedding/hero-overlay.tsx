@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { CoupleNamesDisplayOrder } from "@/lib/couple-names-display-order";
 import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order";
+import { parseOverlayContentCenterY } from "@/lib/overlay-content-center-y";
 
 interface NameStyle {
     font?: string;
@@ -47,6 +48,8 @@ interface HeroOverlayProps {
     };
     /** Por defecto novia primero; "groom-first" = novio arriba (ej. San & Yas). */
     nameOrder?: CoupleNamesDisplayOrder;
+    /** % desde arriba del centro vertical del bloque (nombres, frase, invitado, botón). */
+    contentCenterY?: number | string;
     onDismiss?: () => void; // callback when overlay is dismissed
     invitado?: InvitadoData | null; // datos del invitado cuando viene con código
 }
@@ -64,6 +67,7 @@ export default function HeroOverlay({
     nameStyle,
     buttonPosition = "center",
     textPositionsPx,
+    contentCenterY,
     onDismiss,
     invitado,
     nameOrder,
@@ -260,93 +264,177 @@ export default function HeroOverlay({
         bottomLinePos,
     );
 
+    const parsedContentCenterY = parseOverlayContentCenterY(contentCenterY);
+    const useAnchoredContentLayout =
+        Boolean(parsedContentCenterY) &&
+        !hasCustomTextPositions &&
+        typeof numPosition !== "number" &&
+        !buttonPos;
+
+    const usesDefaultButtonSpacing =
+        typeof numPosition !== "number" && !buttonPos && !useAnchoredContentLayout;
+    const buttonMarginClass = usesDefaultButtonSpacing
+        ? showPhrase && !invitado
+            ? "mt-14"
+            : invitado
+              ? "mt-6"
+              : "mt-8"
+        : "";
+    const invitadoOverlayGap = invitado ? "gap-6" : "gap-8";
+    const namesBottomLineClass = invitado
+        ? useAnchoredContentLayout
+            ? "mt-8 mb-0"
+            : "mt-8 mb-6"
+        : "my-8";
+
+    const namesBlock = showNames ? (
+        <div className="flex flex-col items-center justify-center">
+            <div className="my-8 h-px w-12 bg-primary/30" />
+            <h1
+                className={`text-center leading-none ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                style={{
+                    fontFamily: nameFontFamily,
+                    color: nameColor,
+                    textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                    letterSpacing: nameLetterSpacing,
+                    ...nameSizeStyle,
+                }}
+            >
+                {nameFirst}
+            </h1>
+            {separator && showSecondNameLine && (
+                <span
+                    className={`my-3 block w-full text-center text-2xl font-extralight text-primary/60 sm:text-3xl md:text-4xl ${separatorTrackingClass}`}
+                >
+                    {separator}
+                </span>
+            )}
+            {showSecondNameLine && (
+                <h1
+                    className={`text-center leading-none ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
+                    style={{
+                        fontFamily: nameFontFamily,
+                        color: nameColor,
+                        textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                        letterSpacing: nameLetterSpacing,
+                        ...nameSizeStyle,
+                    }}
+                >
+                    {nameSecond}
+                </h1>
+            )}
+            <div className={`${namesBottomLineClass} h-px w-12 bg-primary/30`} />
+        </div>
+    ) : null;
+
+    const phraseBlock =
+        showPhrase && !invitado ? (
+            <p className="mx-auto w-[88vw] max-w-md px-5 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:w-auto sm:px-8 sm:text-base">
+                {phrase}
+            </p>
+        ) : null;
+
+    const isFamiliaInvitado = Boolean(
+        invitado?.tipo === "familia" && invitado.integrantes?.length,
+    );
+    const familiaNombreCompacto =
+        isFamiliaInvitado &&
+        (invitado!.nombre.length > 20 ||
+            invitado!.nombre.trim().split(/\s+/).length >= 3);
+
+    const invitadoBlock = invitado ? (
+        <div
+            className={`rounded-2xl border border-muted/30 bg-background/90 text-center shadow-sm backdrop-blur-sm ${
+                isFamiliaInvitado
+                    ? `mx-auto w-[min(94vw,34rem)] ${
+                          familiaNombreCompacto ? "px-4 py-5 sm:px-5" : "px-8 py-6"
+                      }`
+                    : "mx-6 px-8 py-6"
+            }`}
+        >
+            <h2
+                className={`font-semibold uppercase text-foreground/80 ${
+                    familiaNombreCompacto
+                        ? "text-base leading-tight tracking-[0.08em] sm:text-lg"
+                        : "text-lg tracking-[0.12em] sm:text-xl"
+                }`}
+            >
+                {invitado.nombre}
+            </h2>
+            <p
+                className={`mt-2 text-sm font-light tracking-wide text-muted-foreground ${
+                    isFamiliaInvitado ? "whitespace-nowrap" : ""
+                }`}
+            >
+                {isFamiliaInvitado
+                    ? `Hay ${invitado.integrantes!.length} lugares reservados para ustedes`
+                    : "Tenemos un lugar reservado para ti"}
+            </p>
+        </div>
+    ) : null;
+
+    const enterButton = (
+        <button
+            onClick={handleEnter}
+            className={`${buttonMarginClass} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
+            style={buttonStyle}
+            aria-label={buttonText}
+        >
+            {buttonText}
+        </button>
+    );
+
+    const defaultFlowContent =
+        namesBlock || phraseBlock || invitadoBlock ? (
+            <>
+                {namesBlock}
+                {phraseBlock}
+                {invitadoBlock}
+            </>
+        ) : null;
+
+    const anchoredContentGroup = (
+        <div
+            className={`flex w-full flex-col items-center px-4 ${invitadoOverlayGap}`}
+        >
+            {namesBlock}
+            {phraseBlock}
+            {invitadoBlock}
+            {enterButton}
+        </div>
+    );
+
     return (
         <div
-            className={`fixed inset-0 z-50 flex flex-col items-center ${justifyClass} ${!bgImage && !bgColor ? "bg-background" : ""} ${
+            className={`fixed inset-0 z-50 flex flex-col items-center ${useAnchoredContentLayout ? "" : justifyClass} ${!bgImage && !bgColor ? "bg-background" : ""} ${
                 exiting ? "animate-overlay-exit" : ""
             }`}
             style={bgStyles}
             aria-live="polite"
         >
-            {/* Content wrapper - only show if names or phrase enabled */}
-            {(showNames || showPhrase) &&
+            {useAnchoredContentLayout && parsedContentCenterY && (
+                <div
+                    className={`absolute left-1/2 w-full ${isFamiliaInvitado ? "max-w-xl" : "max-w-lg"}`}
+                    style={{
+                        top: parsedContentCenterY,
+                        transform: "translate(-50%, -50%)",
+                    }}
+                >
+                    {anchoredContentGroup}
+                </div>
+            )}
+
+            {!useAnchoredContentLayout &&
+                (showNames || showPhrase) &&
                 typeof numPosition !== "number" &&
                 !hasCustomTextPositions && (
                     <div className="flex flex-col items-center">
-                        {showNames && (
-                            <div className="flex flex-col items-center justify-center">
-                                {/* Decorative thin line - same margin top/bottom for centering */}
-                                <div className="my-8 h-px w-12 bg-primary/30" />
-
-                                {/* Couple names */}
-                                <h1
-                                    className={`text-center leading-none ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
-                                    style={{
-                                        fontFamily: nameFontFamily,
-                                        color: nameColor,
-                                        textTransform: nameStyle?.lowercase
-                                            ? "none"
-                                            : "uppercase",
-                                        letterSpacing: nameLetterSpacing,
-                                        ...nameSizeStyle,
-                                    }}
-                                >
-                                    {nameFirst}
-                                </h1>
-                                {separator && showSecondNameLine && (
-                                    <span
-                                        className={`my-3 block w-full text-center text-2xl font-extralight text-primary/60 sm:text-3xl md:text-4xl ${separatorTrackingClass}`}
-                                    >
-                                        {separator}
-                                    </span>
-                                )}
-                                {showSecondNameLine && (
-                                    <h1
-                                        className={`text-center leading-none ${nameSizeClass} ${nameWeightClass} ${nameColor ? "" : "text-foreground"}`}
-                                        style={{
-                                            fontFamily: nameFontFamily,
-                                            color: nameColor,
-                                            textTransform: nameStyle?.lowercase
-                                                ? "none"
-                                                : "uppercase",
-                                            letterSpacing: nameLetterSpacing,
-                                            ...nameSizeStyle,
-                                        }}
-                                    >
-                                        {nameSecond}
-                                    </h1>
-                                )}
-
-                                {/* Decorative thin line - same margin top/bottom for centering */}
-                                <div className="my-8 h-px w-12 bg-primary/30" />
-                            </div>
-                        )}
-
-                        {/* Romantic phrase */}
-                        {showPhrase && !invitado && (
-                            <p className="mx-auto w-[88vw] max-w-md px-5 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:w-auto sm:px-8 sm:text-base">
-                                {phrase}
-                            </p>
-                        )}
-
-                        {/* Caja con nombre del invitado - cuando hay código */}
-                        {invitado && (
-                            <div className="mx-6 mt-6 rounded-2xl border border-muted/30 bg-background/90 px-8 py-6 text-center shadow-sm backdrop-blur-sm">
-                                <h2 className="text-lg font-semibold uppercase tracking-[0.2em] text-foreground/80 sm:text-xl">
-                                    {invitado.nombre}
-                                </h2>
-                                <p className="mt-2 text-sm font-light tracking-wide text-muted-foreground">
-                                    {invitado.tipo === "familia" &&
-                                    invitado.integrantes
-                                        ? `Hay ${invitado.integrantes.length} lugares reservados para ustedes`
-                                        : "Tenemos un lugar reservado para ti"}
-                                </p>
-                            </div>
-                        )}
+                        {defaultFlowContent}
                     </div>
                 )}
 
-            {(showNames || showPhrase) &&
+            {!useAnchoredContentLayout &&
+                (showNames || showPhrase) &&
                 typeof numPosition !== "number" &&
                 hasCustomTextPositions && (
                     <div className="pointer-events-none absolute inset-0">
@@ -448,15 +536,7 @@ export default function HeroOverlay({
                     </div>
                 )}
 
-            {/* Enter button */}
-            <button
-                onClick={handleEnter}
-                className={`${typeof numPosition === "number" || buttonPos ? "" : "mt-14"} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
-                style={buttonStyle}
-                aria-label={buttonText}
-            >
-                {buttonText}
-            </button>
+            {!useAnchoredContentLayout && enterButton}
         </div>
     );
 }

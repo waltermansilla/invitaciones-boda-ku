@@ -14,17 +14,25 @@ import {
     Utensils,
     Music,
     MessageSquare,
-    Settings,
     Send,
     ArrowLeftRight,
     Search,
     AlertTriangle,
     Copy,
+    Eye,
 } from "lucide-react";
 import {
     eventTypeLabelFromFolderTipo,
     invitationPathFromPanelIdSlug,
 } from "@/lib/client-helpers-shared";
+import { GUEST_PREVIEW_PARAM } from "@/lib/guest-preview";
+import {
+    INVITADO_NOMBRE_MAX_LENGTH,
+    trimInvitadoNombre,
+    validateIntegranteNombre,
+    validateIntegrantesNombres,
+    validateInvitadoNombre,
+} from "@/lib/invitado-nombre";
 import {
     coladoPlural,
     coladoTitlePlural,
@@ -259,8 +267,6 @@ export default function PanelPage({
     const [editingInvitado, setEditingInvitado] = useState<Invitado | null>(
         null,
     );
-    const [confirmManualInvitado, setConfirmManualInvitado] =
-        useState<Invitado | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const [panelVariant, setPanelVariant] = useState<string>("default");
@@ -399,6 +405,33 @@ export default function PanelPage({
         ],
     );
 
+    const handlePreviewGuestInvitation = useCallback(
+        (invitado: Invitado) => {
+            const path =
+                data?.invitationPath?.trim() ||
+                (panelId ? invitationPathFromPanelIdSlug(panelId) : null) ||
+                "";
+            if (!path || !invitado.codigo) return;
+            const query = new URLSearchParams();
+            if (data?.invitationToken?.trim()) {
+                query.set("t", data.invitationToken.trim());
+            }
+            query.set("i", invitado.codigo);
+            if (activeVariantConfig?.invitationVariant) {
+                query.set("v", activeVariantConfig.invitationVariant);
+            }
+            query.set(GUEST_PREVIEW_PARAM, "1");
+            const link = `${window.location.origin}${path}?${query.toString()}`;
+            window.open(link, "_blank", "noopener,noreferrer");
+        },
+        [
+            panelId,
+            data?.invitationPath,
+            data?.invitationToken,
+            activeVariantConfig?.invitationVariant,
+        ],
+    );
+
     const handleDelete = useCallback(
         async (invitadoId: string) => {
             if (!confirm("¿Eliminar este invitado?")) return;
@@ -422,18 +455,6 @@ export default function PanelPage({
         [panelId, mutate],
     );
 
-    const handleConfirmManual = useCallback(
-        async (invitado: Invitado, estado: "confirmado" | "no_asiste") => {
-            await fetch(`/api/panel/${panelId}/invitado/${invitado.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ estado, confirmado_manual: true }),
-            });
-            mutate();
-            setConfirmManualInvitado(null);
-        },
-        [panelId, mutate],
-    );
     const handleTransferInvitados = useCallback(
         async (invitadoIds: string[], nextVariant: string) => {
             if (!panelId || !invitadoIds.length) return;
@@ -1240,12 +1261,12 @@ export default function PanelPage({
                                     )
                                 }
                                 onSendInvitation={handleSendInvitation}
+                                onPreviewGuestInvitation={
+                                    handlePreviewGuestInvitation
+                                }
                                 onDelete={handleDelete}
                                 onEdit={() => setEditingInvitado(inv)}
                                 onTogglePago={handleTogglePago}
-                                onOpenConfirmManual={() =>
-                                    setConfirmManualInvitado(inv)
-                                }
                                 onOpenTransfer={() => setTransferInvitado(inv)}
                             />
                         ))}
@@ -1362,16 +1383,14 @@ export default function PanelPage({
                                                 onSendInvitation={
                                                     handleSendInvitation
                                                 }
+                                                onPreviewGuestInvitation={
+                                                    handlePreviewGuestInvitation
+                                                }
                                                 onDelete={handleDelete}
                                                 onEdit={() =>
                                                     setEditingInvitado(inv)
                                                 }
                                                 onTogglePago={handleTogglePago}
-                                                onOpenConfirmManual={() =>
-                                                    setConfirmManualInvitado(
-                                                        inv,
-                                                    )
-                                                }
                                                 onOpenTransfer={() =>
                                                     setTransferInvitado(inv)
                                                 }
@@ -1449,14 +1468,6 @@ export default function PanelPage({
                         setEditingInvitado(null);
                         mutate();
                     }}
-                />
-            )}
-            {confirmManualInvitado && (
-                <ConfirmManualModal
-                    invitado={confirmManualInvitado}
-                    primaryColor={primaryColor}
-                    onClose={() => setConfirmManualInvitado(null)}
-                    onConfirm={handleConfirmManual}
                 />
             )}
             {transferInvitado && (
@@ -1716,10 +1727,10 @@ function InvitadoRow({
     expanded,
     onToggleExpand,
     onSendInvitation,
+    onPreviewGuestInvitation,
     onDelete,
     onEdit,
     onTogglePago,
-    onOpenConfirmManual,
     onOpenTransfer,
 }: {
     invitado: Invitado;
@@ -1734,10 +1745,10 @@ function InvitadoRow({
     expanded: boolean;
     onToggleExpand: () => void;
     onSendInvitation: (inv: Invitado) => void;
+    onPreviewGuestInvitation: (inv: Invitado) => void;
     onDelete: (id: string) => void;
     onEdit: () => void;
     onTogglePago: (inv: Invitado) => void;
-    onOpenConfirmManual: () => void;
     onOpenTransfer: () => void;
 }) {
     const rowRef = useRef<HTMLDivElement | null>(null);
@@ -2026,19 +2037,6 @@ function InvitadoRow({
                                 Lista
                             </button>
                         )}
-                        {invitado.estado === "pendiente" && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onOpenConfirmManual();
-                                }}
-                                className="inline-flex items-center gap-1 rounded-md bg-neutral-200 px-2 py-1 text-[11px] font-medium text-neutral-700"
-                                title="Confirmación manual"
-                            >
-                                <Settings className="h-3 w-3" />
-                                Confirmar
-                            </button>
-                        )}
                         {giftCardEnabled && (
                             <button
                                 onClick={(e) => {
@@ -2143,6 +2141,56 @@ function InvitadoRow({
                                 {labels?.sendInvite || "Enviar invitación"}
                             </button>
                         )}
+                        {invitado.codigo && !invitado.registro_auto_rsvp && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onPreviewGuestInvitation(invitado);
+                                }}
+                                className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600 md:px-2 md:py-1 md:text-[11px]"
+                            >
+                                <Eye className="h-3 w-3" />
+                                Ver
+                            </button>
+                        )}
+                        {invitado.tipo !== "integrante" && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onEdit();
+                                }}
+                                className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600 md:px-2 md:py-1 md:text-[11px]"
+                            >
+                                <Edit2 className="h-3 w-3" />
+                                Editar
+                            </button>
+                        )}
+                        {giftCardEnabled && invitado.tipo !== "integrante" && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onTogglePago(invitado);
+                                }}
+                                className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium md:px-2 md:py-1 md:text-[11px] ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}
+                            >
+                                <Check className="h-3 w-3" />
+                                {invitado.pago_tarjeta
+                                    ? labels?.paidButton || "Ya pagó"
+                                    : labels?.unpaidButton || "¿Pagó tarjeta?"}
+                            </button>
+                        )}
+                        {invitado.tipo !== "integrante" && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete(invitado.id);
+                                }}
+                                className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600 md:px-2 md:py-1 md:text-[11px]"
+                            >
+                                <Trash2 className="h-3 w-3" />
+                                Eliminar
+                            </button>
+                        )}
                         {hasVariantLists && invitado.tipo !== "integrante" && (
                             <button
                                 onClick={(e) => {
@@ -2159,58 +2207,6 @@ function InvitadoRow({
                                     de lista
                                 </span>
                             </button>
-                        )}
-                        {invitado.estado === "pendiente" &&
-                            invitado.tipo !== "integrante" && (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onOpenConfirmManual();
-                                    }}
-                                    className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600 md:px-2 md:py-1 md:text-[11px]"
-                                >
-                                    <Settings className="h-3 w-3" />
-                                    {labels?.manualConfirm ||
-                                        "Confirmación manual"}
-                                </button>
-                            )}
-                        {giftCardEnabled && invitado.tipo !== "integrante" && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onTogglePago(invitado);
-                                }}
-                                className={`flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-medium md:px-2 md:py-1 md:text-[11px] ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}
-                            >
-                                <Check className="h-3 w-3" />
-                                {invitado.pago_tarjeta
-                                    ? labels?.paidButton || "Ya pagó"
-                                    : labels?.unpaidButton || "¿Pagó tarjeta?"}
-                            </button>
-                        )}
-                        {invitado.tipo !== "integrante" && (
-                            <>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onEdit();
-                                    }}
-                                    className="flex items-center gap-1 rounded-lg bg-neutral-200 px-3 py-2 text-xs font-medium text-neutral-600 md:px-2 md:py-1 md:text-[11px]"
-                                >
-                                    <Edit2 className="h-3 w-3" />
-                                    Editar
-                                </button>
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onDelete(invitado.id);
-                                    }}
-                                    className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600 md:px-2 md:py-1 md:text-[11px]"
-                                >
-                                    <Trash2 className="h-3 w-3" />
-                                    Eliminar
-                                </button>
-                            </>
                         )}
                     </div>
                     {(esFamiliaConInts || personaConColados) && (
@@ -2300,53 +2296,6 @@ function InvitadoRow({
     );
 }
 
-// Modal de confirmación manual
-function ConfirmManualModal({
-    invitado,
-    primaryColor,
-    onClose,
-    onConfirm,
-}: {
-    invitado: Invitado;
-    primaryColor: string;
-    onClose: () => void;
-    onConfirm: (inv: Invitado, estado: "confirmado" | "no_asiste") => void;
-}) {
-    return (
-        <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-            onClick={onClose}
-        >
-            <div
-                className="w-full max-w-sm rounded-2xl bg-white p-6"
-                onClick={(e) => e.stopPropagation()}
-            >
-                <h2 className="mb-2 text-lg font-semibold text-center">
-                    Confirmación Manual
-                </h2>
-                <p className="mb-6 text-sm text-neutral-500 text-center">
-                    ¿{invitado.nombre} asiste al evento?
-                </p>
-                <div className="flex gap-3">
-                    <button
-                        onClick={() => onConfirm(invitado, "no_asiste")}
-                        className="flex-1 rounded-lg bg-red-100 py-3 text-sm font-medium text-red-700"
-                    >
-                        No asiste
-                    </button>
-                    <button
-                        onClick={() => onConfirm(invitado, "confirmado")}
-                        className="flex-1 rounded-lg py-3 text-sm font-medium text-white"
-                        style={{ backgroundColor: primaryColor }}
-                    >
-                        Confirmar
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
 function CounterInput({
     value,
     min,
@@ -2431,17 +2380,28 @@ function AddInvitadoModal({
         });
     }, []);
     const handleAddIntegrante = () => {
-        if (!newIntegrante.trim()) {
+        const trimmed = trimInvitadoNombre(newIntegrante);
+        if (!trimmed) {
             focusIntegranteInput();
             return;
         }
-        setIntegrantes([...integrantes, newIntegrante.trim()]);
+        const integranteError = validateIntegranteNombre(trimmed);
+        if (integranteError) {
+            alert(integranteError);
+            return;
+        }
+        setIntegrantes([...integrantes, trimmed]);
         setNewIntegrante("");
         focusIntegranteInput();
     };
     const handleRemoveIntegrante = (idx: number) =>
         setIntegrantes(integrantes.filter((_, i) => i !== idx));
     const handleSave = async () => {
+        const nombreError = validateInvitadoNombre(nombre);
+        if (nombreError) {
+            alert(nombreError);
+            return;
+        }
         if (!nombre.trim()) return;
         const finalIntegrantes = [...integrantes];
         const effectiveTipo = soloPersona ? "persona" : tipo;
@@ -2449,7 +2409,17 @@ function AddInvitadoModal({
             effectiveTipo === "familia" &&
             integranteInputRef.current?.value.trim()
         )
-            finalIntegrantes.push(integranteInputRef.current.value.trim());
+            finalIntegrantes.push(
+                trimInvitadoNombre(integranteInputRef.current.value),
+            );
+        if (effectiveTipo === "familia") {
+            const integrantesError =
+                validateIntegrantesNombres(finalIntegrantes);
+            if (integrantesError) {
+                alert(integrantesError);
+                return;
+            }
+        }
         if (shouldInterceptDebt?.()) return;
         setSaving(true);
         try {
@@ -2532,9 +2502,17 @@ function AddInvitadoModal({
                             : "Nombre de la familia (Ej: 'Flia Díaz')"
                     }
                     value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="mb-4 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
+                    maxLength={INVITADO_NOMBRE_MAX_LENGTH}
+                    onChange={(e) =>
+                        setNombre(
+                            e.target.value.slice(0, INVITADO_NOMBRE_MAX_LENGTH),
+                        )
+                    }
+                    className="mb-1 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
                 />
+                <p className="mb-4 text-xs text-neutral-400">
+                    Máximo {INVITADO_NOMBRE_MAX_LENGTH} caracteres
+                </p>
                 {!soloPersona && tipo === "familia" && (
                     <div className="mb-4">
                         <p className="mb-2 text-sm font-medium text-neutral-700">
@@ -2564,8 +2542,11 @@ function AddInvitadoModal({
                                 type="text"
                                 placeholder="Nombre del integrante"
                                 value={newIntegrante}
+                                maxLength={INVITADO_NOMBRE_MAX_LENGTH}
                                 onChange={(e) =>
-                                    setNewIntegrante(e.target.value)
+                                    setNewIntegrante(
+                                        trimInvitadoNombre(e.target.value),
+                                    )
                                 }
                                 onKeyDown={(e) =>
                                     e.key === "Enter" && handleAddIntegrante()
@@ -2687,164 +2668,77 @@ function PanelUsageHelpModal({
                 </p>
                 <div className="flex-1 space-y-4 overflow-y-auto pr-1 text-sm text-neutral-700">
                     <div>
-                        <p className="font-semibold">1) Cargar invitados</p>
+                        <p className="font-semibold">1) Agregar invitados</p>
                         <p>
                             {isComun ? (
                                 <>
                                     Tocá <strong>Agregar Invitado</strong>,
-                                    completá el nombre y tocá{" "}
-                                    <strong>Guardar</strong>. En este modo se
-                                    cargan invitados individuales.
+                                    cargá el nombre y guardá.
                                 </>
                             ) : (
                                 <>
-                                    Tocá <strong>Agregar Invitado</strong>.
-                                    Elegí <strong>Persona</strong> o{" "}
-                                    <strong>Familia</strong>, completá el nombre
-                                    y tocá <strong>Guardar</strong>. Usá{" "}
-                                    <strong>Persona</strong> para enviar una
-                                    invitación individual. Usá{" "}
-                                    <strong>Familia</strong> cuando querés
-                                    enviar una sola invitación a una pareja o
-                                    grupo familiar. En <strong>Familia</strong>{" "}
-                                    cargás los integrantes con el botón{" "}
-                                    <strong>+</strong>, y después cada uno puede
-                                    confirmar por separado.
+                                    Tocá <strong>Agregar Invitado</strong>,
+                                    elegí <strong>Persona</strong> o{" "}
+                                    <strong>Familia</strong>, completá los datos
+                                    y guardá. En familia, sumá integrantes con{" "}
+                                    <strong>+</strong>.
                                 </>
                             )}
                         </p>
                     </div>
                     <div>
                         <p className="font-semibold">
-                            2) Enviar invitaciones por WhatsApp
+                            2) Enviar o ver la invitación
                         </p>
                         <p>
-                            Abrí un invitado tocando su fila. Dentro del
-                            detalle, usá <strong>Enviar invitación</strong>. Se
-                            abre WhatsApp con el mensaje y link listos: elegí el
-                            contacto y enviá.
-                            {!isComun && (
-                                <>
-                                    {" "}
-                                    Si es <strong>Familia</strong>, ese link
-                                    permite confirmar/editar a los integrantes
-                                    del grupo.
-                                </>
-                            )}
+                            Tocá un invitado para expandirlo. Con{" "}
+                            <strong>Enviar invitación</strong> abrís WhatsApp
+                            con el link. Con <strong>Ver</strong> abrís la
+                            invitación de esa persona para revisarla.
+                        </p>
+                    </div>
+                    <div>
+                        <p className="font-semibold">3) Ver quién respondió</p>
+                        <p>
+                            Usá los filtros arriba: confirmados, pendientes, no
+                            asisten y pago pendiente.
                         </p>
                     </div>
                     <div>
                         <p className="font-semibold">
-                            3) Qué hace el invitado cuando recibe el link
+                            4) Corregir o borrar
                         </p>
                         <p>
-                            La persona entra a su invitación{" "}
-                            {isComun
-                                ? "y confirma desde el bloque de Confirmar asistencia."
-                                : "y completa el formulario RSVP (asiste/no asiste y datos opcionales)."}{" "}
-                            El estado se sincroniza en este panel.
+                            <strong>Editar</strong> cambia nombres y estados.{" "}
+                            <strong>Eliminar</strong> saca al invitado del
+                            panel.
                         </p>
                     </div>
                     <div>
-                        <p className="font-semibold">
-                            4) Ver respuestas y organizarte
-                        </p>
+                        <p className="font-semibold">5) Pagos de tarjeta</p>
                         <p>
-                            Usá filtros: <strong>Todos</strong>,{" "}
-                            <strong>Confirmados</strong>,{" "}
-                            <strong>Pendientes</strong>,{" "}
-                            <strong>No asisten</strong> y{" "}
-                            <strong>Pago pendiente</strong>. Además, aparecen
-                            filtros por ícono para <strong>Alimentación</strong>
-                            , <strong>Música</strong> y <strong>Extras</strong>{" "}
-                            (solo si hay datos).
-                            {isComun && (
-                                <>
-                                    {" "}
-                                    Esos íconos/filtros aplican cuando el evento
-                                    usa <strong>RSVP formulario</strong> con
-                                    esos campos.
-                                </>
-                            )}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="font-semibold">
-                            5) Corregir datos o estados
-                        </p>
-                        <p>
-                            En un pendiente podés usar{" "}
-                            <strong>Confirmación manual</strong>. Si necesitás
-                            ajustar algo fino, tocá <strong>Editar</strong>.
-                            {!isComun && (
-                                <>
-                                    {" "}
-                                    En familias, cada integrante se puede
-                                    modificar por separado.
-                                </>
-                            )}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="font-semibold">
-                            6) Marcar pagos (si lo usás)
-                        </p>
-                        <p>
-                            Dentro del invitado usá{" "}
-                            <strong>¿Pagó tarjeta?</strong> /{" "}
-                            <strong>Ya pagó</strong>. Después filtrá por{" "}
-                            <strong>Pago pendiente</strong> para ver quién
-                            falta.
+                            Marcá <strong>¿Pagó tarjeta?</strong> si querés
+                            llevar registro de quién va pagando y quién no. Con
+                            el filtro <strong>Pago pendiente</strong> ves quién
+                            todavía no pagó.
                         </p>
                     </div>
                     {!isComun && (
                         <div>
-                            <p className="font-semibold">
-                                7) Entender íconos en cada fila
-                            </p>
+                            <p className="font-semibold">6) Íconos en la fila</p>
                             <p>
-                                Si ves íconos junto al estado, ese invitado dejó
-                                información: alimentación (
-                                <strong>cubiertos</strong>), canción (
-                                <strong>nota musical</strong>) o extra (
-                                <strong>mensaje</strong>, por ejemplo patente).
-                            </p>
-                        </div>
-                    )}
-                    {!isComun && (
-                        <div>
-                            <p className="font-semibold">
-                                8) RSVP sin invitado específico (solo
-                                formulario)
-                            </p>
-                            <p>
-                                Si en tu configuración está habilitado, una
-                                persona que entra sin código también puede
-                                registrar su confirmación en panel desde la
-                                invitación.
+                                Si ves íconos junto al nombre, el invitado dejó
+                                alimentación, canción u otro dato extra.
                             </p>
                         </div>
                     )}
                     <div>
                         <p className="font-semibold">
-                            {isComun ? "7" : "9"}) Límite de cupo (caso
-                            específico)
+                            {isComun ? "6" : "7"}) Sin cupo
                         </p>
                         <p>
-                            Si aparece “<strong>Límite alcanzado</strong>”, no
-                            se pueden crear más invitados. Tocá{" "}
-                            <strong>Ver más</strong> para abrir el modal y usar{" "}
-                            <strong>Pedir más cupo</strong> por WhatsApp.
-                        </p>
-                    </div>
-                    <div>
-                        <p className="font-semibold">
-                            {isComun ? "8" : "10"}) Si algo no coincide
-                        </p>
-                        <p>
-                            Verificá que estés en el panel correcto, usá el
-                            buscador y recargá si hace falta. El panel se
-                            actualiza automáticamente cada pocos segundos.
+                            Si aparece límite alcanzado, usá{" "}
+                            <strong>Pedir más cupo</strong> para contactarnos.
                         </p>
                     </div>
                 </div>
@@ -3188,15 +3082,21 @@ function EditInvitadoModal({
         });
     }, []);
     const handleAddIntegrante = () => {
-        if (!newIntegrante.trim()) {
+        const trimmed = trimInvitadoNombre(newIntegrante);
+        if (!trimmed) {
             focusIntegranteInput();
+            return;
+        }
+        const integranteError = validateIntegranteNombre(trimmed);
+        if (integranteError) {
+            alert(integranteError);
             return;
         }
         setIntegrantes([
             ...integrantes,
             {
                 id: `new-${Date.now()}`,
-                nombre: newIntegrante.trim(),
+                nombre: trimmed,
                 estado: "pendiente",
                 es_colado: false,
             },
@@ -3208,7 +3108,10 @@ function EditInvitadoModal({
         setIntegrantes(integrantes.filter((_, i) => i !== idx));
     const handleUpdateIntegrante = (idx: number, newNombre: string) => {
         const u = [...integrantes];
-        u[idx] = { ...u[idx], nombre: newNombre };
+        u[idx] = {
+            ...u[idx],
+            nombre: trimInvitadoNombre(newNombre),
+        };
         setIntegrantes(u);
     };
     const handleUpdateIntegranteEstado = (
@@ -3235,6 +3138,11 @@ function EditInvitadoModal({
         setEstado(newEstado);
     };
     const handleSave = async () => {
+        const nombreError = validateInvitadoNombre(nombre);
+        if (nombreError) {
+            alert(nombreError);
+            return;
+        }
         if (!nombre.trim()) return;
         const finalIntegrantes = [...integrantes];
         if (
@@ -3243,10 +3151,18 @@ function EditInvitadoModal({
         )
             finalIntegrantes.push({
                 id: `new-${Date.now()}`,
-                nombre: integranteInputRef.current.value.trim(),
+                nombre: trimInvitadoNombre(integranteInputRef.current.value),
                 estado: "pendiente",
                 es_colado: false,
             });
+        if (invitado.tipo === "familia") {
+            const integrantesError =
+                validateIntegrantesNombres(finalIntegrantes);
+            if (integrantesError) {
+                alert(integrantesError);
+                return;
+            }
+        }
         setSaving(true);
         try {
             const res = await fetch(
@@ -3301,9 +3217,17 @@ function EditInvitadoModal({
                     type="text"
                     placeholder="Nombre"
                     value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="mb-4 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
+                    maxLength={INVITADO_NOMBRE_MAX_LENGTH}
+                    onChange={(e) =>
+                        setNombre(
+                            e.target.value.slice(0, INVITADO_NOMBRE_MAX_LENGTH),
+                        )
+                    }
+                    className="mb-1 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
                 />
+                <p className="mb-4 text-xs text-neutral-400">
+                    Máximo {INVITADO_NOMBRE_MAX_LENGTH} caracteres
+                </p>
                 {invitado.tipo === "persona" && (
                     <div className="mb-4">
                         <p className="mb-2 text-sm font-medium text-neutral-700">
@@ -3388,6 +3312,7 @@ function EditInvitadoModal({
                                         <input
                                             type="text"
                                             value={i.nombre}
+                                            maxLength={INVITADO_NOMBRE_MAX_LENGTH}
                                             onChange={(e) =>
                                                 handleUpdateIntegrante(
                                                     idx,
@@ -3447,8 +3372,11 @@ function EditInvitadoModal({
                                 type="text"
                                 placeholder="Agregar integrante"
                                 value={newIntegrante}
+                                maxLength={INVITADO_NOMBRE_MAX_LENGTH}
                                 onChange={(e) =>
-                                    setNewIntegrante(e.target.value)
+                                    setNewIntegrante(
+                                        trimInvitadoNombre(e.target.value),
+                                    )
                                 }
                                 onKeyDown={(e) =>
                                     e.key === "Enter" && handleAddIntegrante()

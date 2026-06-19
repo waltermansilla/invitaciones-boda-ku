@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react"
 import { Check, X } from "lucide-react"
 import { useIsMuestra } from "@/lib/config-context"
+import { useGuestPreview } from "@/lib/guest-preview"
+import { useGuestPreviewConfirmModal } from "./guest-preview-confirm-modal"
+import { guestPreviewIsFamilia } from "@/lib/guest-preview-confirm"
 import { useModal } from "./modal-provider"
 
 /** Datos mínimos del invitado (panel + link con ?c=) para mostrar nombre en la sección. */
@@ -63,6 +66,8 @@ export default function ConfirmarWhatsappSection({
   panelSync,
 }: ConfirmarWhatsappSectionProps) {
   const isMuestra = useIsMuestra()
+  const isGuestPreview = useGuestPreview()
+  const { openGuestPreviewConfirmModal } = useGuestPreviewConfirmModal()
   const { openModal, closeModal } = useModal()
   const [submitting, setSubmitting] = useState<"si" | "no" | null>(null)
   const [invitadoPanel, setInvitadoPanel] = useState<InvitadoPanelShort | null>(
@@ -124,7 +129,7 @@ export default function ConfirmarWhatsappSection({
           throw new Error(data.error || "No se pudo registrar la confirmación")
         }
         if (data.invitado) setInvitadoPanel(data.invitado)
-        openWa(msg)
+        if (!isGuestPreview) openWa(msg)
         setSubmitted(true)
         setAlreadyConfirmed(true)
         setEditing(false)
@@ -177,7 +182,16 @@ export default function ConfirmarWhatsappSection({
             type="button"
             onClick={() => {
               closeModal()
-              void executeConfirm(msg, asiste)
+              const runConfirm = () => void executeConfirm(msg, asiste)
+              if (isGuestPreview) {
+                openGuestPreviewConfirmModal({
+                  stateLabel: asiste ? "Asiste" : "No asiste",
+                  isFamilia: guestPreviewIsFamilia(invitadoPanel),
+                  onConfirm: runConfirm,
+                })
+              } else {
+                runConfirm()
+              }
             }}
             className="flex min-h-[52px] w-full items-center justify-center rounded-sm border border-white/30 bg-white/10 px-5 py-4 text-[11px] font-medium tracking-[0.15em] uppercase text-white transition-all hover:bg-white/20"
           >

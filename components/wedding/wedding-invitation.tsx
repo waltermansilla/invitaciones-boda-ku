@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useConfig, useIsMuestra } from "@/lib/config-context";
+import { useGuestPreview } from "@/lib/guest-preview";
 import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
 import type { CoupleNamesDisplayOrder } from "@/lib/couple-names-display-order";
@@ -22,6 +23,7 @@ interface InvitadoData {
 function WeddingInvitationContent() {
     const config = useConfig();
     const isMuestra = useIsMuestra();
+    const isGuestPreview = useGuestPreview();
     const searchParams = useSearchParams();
     const codigoInvitado = searchParams.get("i") || searchParams.get("c") || "";
     const skipOverlay =
@@ -97,7 +99,7 @@ function WeddingInvitationContent() {
     // Si el overlay está activo, al recargar siempre arrancamos desde arriba.
     // Si overlay.enabled !== true, no forzamos scroll aquí (trabajo operativo / sin pantalla de ingreso).
     useEffect(() => {
-        if (!overlayWantsFullBleedEntry) return;
+        if (!overlayWantsFullBleedEntry && !isGuestPreview) return;
         if (typeof window === "undefined") return;
 
         const previousScrollRestoration = window.history.scrollRestoration;
@@ -107,7 +109,7 @@ function WeddingInvitationContent() {
         return () => {
             window.history.scrollRestoration = previousScrollRestoration;
         };
-    }, [overlayWantsFullBleedEntry]);
+    }, [overlayWantsFullBleedEntry, isGuestPreview]);
 
     // Sin overlay de ingreso: el navegador a veces no restaura bien el scroll al recargar
     // (p. ej. smooth scroll en html + hidratación). Guardamos en pagehide y reaplicamos en reload.
@@ -116,7 +118,7 @@ function WeddingInvitationContent() {
         const path = window.location.pathname + window.location.search;
         const key = `mu:inv-scroll:${path}`;
 
-        if (overlayWantsFullBleedEntry) {
+        if (overlayWantsFullBleedEntry || isGuestPreview) {
             try {
                 sessionStorage.removeItem(key);
             } catch {
@@ -186,7 +188,7 @@ function WeddingInvitationContent() {
             window.removeEventListener("pagehide", persist);
             window.removeEventListener("beforeunload", persist);
         };
-    }, [overlayWantsFullBleedEntry]);
+    }, [overlayWantsFullBleedEntry, isGuestPreview]);
 
     // Deep link (#section-id): el scroll nativo del navegador corre antes de que existan
     // los nodos client-side; en producción suele fallar. Reintentamos tras hidratar y cuando
@@ -238,6 +240,19 @@ function WeddingInvitationContent() {
             document.body.style.touchAction = previousBodyTouchAction;
         };
     }, [showOverlay]);
+
+    // Vista previa desde el panel: siempre arrancar arriba (sin saltar a confirmación).
+    useEffect(() => {
+        if (!isGuestPreview || typeof window === "undefined") return;
+        window.scrollTo(0, 0);
+    }, [isGuestPreview]);
+
+    useEffect(() => {
+        if (!isGuestPreview || showOverlay || typeof window === "undefined") {
+            return;
+        }
+        window.scrollTo(0, 0);
+    }, [isGuestPreview, showOverlay]);
 
     // Handle overlay dismiss - start music if autoplay is enabled (not in muestra mode)
     const handleOverlayDismiss = () => {
@@ -308,6 +323,12 @@ function WeddingInvitationContent() {
                                   buttonY?: number | string;
                                   paddingPhrase?: number | string;
                               }
+                            | undefined
+                    }
+                    contentCenterY={
+                        (overlay as Record<string, unknown>).contentCenterY as
+                            | number
+                            | string
                             | undefined
                     }
                     invitado={invitado}

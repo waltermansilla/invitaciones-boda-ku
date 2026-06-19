@@ -137,6 +137,9 @@ export function BasePinGate({
                         {error}
                     </p>
                 ) : null}
+                <p className="mt-4 text-center text-xs text-[#9A8B7C]">
+                    Al ingresar, te guardaremos la sesión por 90 días.
+                </p>
             </div>
         </div>
     );

@@ -10,6 +10,7 @@ import {
   limiteInvitadosPanelFromConfig,
   plazasOcupadasPorInvitados,
 } from "@/lib/panel-plazas"
+import { validateInvitadoNombre, validateIntegrantesNombres } from "@/lib/invitado-nombre"
 
 function panelIdParamInvalid(panelId: string): boolean {
   return (
@@ -104,6 +105,14 @@ export async function PUT(
   }
 
   const body = await request.json()
+
+  if (body.nombre !== undefined) {
+    const nombreError = validateInvitadoNombre(body.nombre)
+    if (nombreError) {
+      return NextResponse.json({ error: nombreError }, { status: 400 })
+    }
+    body.nombre = String(body.nombre).trim()
+  }
 
   if (body.panel_variant !== undefined) {
     const { data: invForTransfer, error: invTransferErr } = await supabase
@@ -204,6 +213,11 @@ export async function PUT(
 
   // Si vienen integrantes, actualizar/crear/eliminar
   if (body.integrantes !== undefined) {
+    const integrantesError = validateIntegrantesNombres(body.integrantes)
+    if (integrantesError) {
+      return NextResponse.json({ error: integrantesError }, { status: 400 })
+    }
+
     const { data: currentIntegrantes } = await supabase
       .from("integrantes")
       .select("id")

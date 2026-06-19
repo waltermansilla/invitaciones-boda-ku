@@ -172,6 +172,7 @@
     "//   Si NO pones topLineY/bottomLineY, las lineas no se muestran en modo px  ": "",
     "//   IMPORTANTE: si usas textPositionsPx, ajusta cada valor para tu imagen    ": "",
     "// nameStyle: ver documentacion en template BODA                             ": "",
+    "// contentCenterY: % centro vertical del bloque. Ver template BODA           ": "",
     "overlay": {
         "enabled": true,
         "phrase": "Mis 15!",
@@ -189,6 +190,7 @@
             "letterSpacing": "wide"
         },
         "buttonPosition": "center",
+        "contentCenterY": "",
         "textPositionsPx": {
             "topLineY": 130,
             "brideY": 170,
