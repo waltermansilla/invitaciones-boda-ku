@@ -1,0 +1,450 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja.",
+    "meta": {
+        "title": "Nuestra Boda - Pauli & Juan Manuel",
+        "description": "Te invitamos a celebrar nuestra boda.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Juan Manuel",
+            "brideName": "Pauli",
+            "separator": "&"
+        }
+    },
+    "access": {
+        "tokenEnabled": true,
+        "token": "h9aaLn",
+        "allowLegacyUntil": ""
+    },
+    "base": {
+        "enabled": true,
+        "token": "zj38D0Pw",
+        "pinEnabled": true,
+        "pin": "828993"
+    },
+    "rsvpPanel": {
+        "enabled": true,
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": false,
+        "limiteInvitados": 150,
+        "panelId": "juanma-pauli-mqk4rbo1",
+        "fechaEvento": "2026-10-24",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 24 de Octubre.",
+        "theme": {
+            "primaryColor": "#6B7F5A"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Tarjeta pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Ya pagó",
+            "unpaidButton": "¿Pagó tarjeta?"
+        }
+    },
+    "theme": {
+        "primaryColor": "#6B7F5A",
+        "backgroundColor": "#FAF8F5",
+        "textColor": "#6B7F5A",
+        "lightBgTextColor": "#6B7F5A",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#EDF2E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "overlay": {
+        "enabled": true,
+        "phrase": "Te invitamos a celebrar nuestro amor",
+        "buttonText": "Ingresar",
+        "showNames": true,
+        "showPhrase": true
+    },
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": false
+    },
+    "hero": {
+        "coupleImage": "/clientes/boda/26-juanma-pauli/images/D.JPG",
+        "headline": "¡Nos casamos!",
+        "showNamesOnPhoto": false,
+        "namesDisplay": {
+            "enabled": false,
+            "position": "bottom",
+            "font": "",
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-10-24T19:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        }
+    },
+    "sections": [
+        {
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "3.934 días después, ¡nos casamos! Te invitamos a celebrar este momento junto a nosotros.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "24 de Octubre de 2026"
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/boda/26-juanma-pauli/images/C.jpg"]
+            }
+        },
+        {
+            "type": "locationInfo",
+            "id": "location-ceremonia",
+            "enabled": false,
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Ceremonia religiosa",
+                "address": "Iglesia San José de Piedra Blanca, dpto. Fray Mamerto Esquiú",
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/rLbEcdfXuoVfTd6XA",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "enabled": false,
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "Recepción y civil",
+                "address": "Calígula, Club de Vinos, RP1 km10, La Carrera, Catamarca",
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/ng9kVxkuWorwr5QF6",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "// --- ITINERARIO / LINEA DE TIEMPO ---": "",
+            "_comment": "Cada evento tiene icon, name, time. Opcionales: date (subtitulo de dia, aparece como separador visual), button (con text, url y variant). ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia religiosa",
+                        "address": "Iglesia San José de Piedra Blanca, dpto. Fray Mamerto Esquiú",
+                        "time": "19:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/rLbEcdfXuoVfTd6XA",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "car",
+                        "name": "Nos vamos a Calígula, Club de Vinos",
+                        "address": "RP1 km10, La Carrera, Catamarca",
+                        "time": "20:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/ng9kVxkuWorwr5QF6",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "heart",
+                        "name": "Recepción",
+                        "time": "20:30 hs"
+                    },
+                    {
+                        "icon": "civil",
+                        "name": "Ceremonia civil",
+                        "time": "22:00 hs"
+                    },
+                    {
+                        "icon": "utensils",
+                        "name": "Cena",
+                        "time": "22:30 hs"
+                    },
+                    {
+                        "icon": "party",
+                        "name": "Empieza el baile",
+                        "time": "00:00 hs"
+                    },
+                    {
+                        "icon": "fin",
+                        "name": "Cierre del evento",
+                        "time": "04:00 hs"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
+                "button": {
+                    "text": "Ir al álbum",
+                    "url": "https://drive.google.com/drive/folders/1fQ0ELBdNoTo_PFDEe9jrP_HRjEsbNAF7?usp=sharing",
+                    "variant": "background"
+                }
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/boda/26-juanma-pauli/images/E.jpg"]
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por acompañarnos y ser parte de uno de los días más importantes de nuestras vidas.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["title", "description", "button"],
+            "data": {
+                "title": "Playlist de la fiesta",
+                "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist de Spotify!",
+                "button": {
+                    "text": "Agregar canciones",
+                    "url": "https://open.spotify.com/playlist/78pR2oUpXMKxNZwh1AEZsT?si=8653fcd23e9f4e33&pt=d6801d3701bce99277ad8ebeede2a3b3",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Lo más importante para nosotros es que nos acompañen y se diviertan. Pero si desean hacernos un presente, les dejamos nuestro alias.",
+                "showButton": true,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "description": "¡Muchas gracias!",
+                    "bankData": [
+                        {
+                            "label": "Alias",
+                            "value": "Pauli.Juan.Boda"
+                        },
+                        {
+                            "label": "Titular",
+                            "value": "Juan Manuel Yadón"
+                        },
+                        {
+                            "label": "Banco",
+                            "value": "Personal Pay"
+                        },
+                        {
+                            "label": "CBU",
+                            "value": "0000076500000052827019"
+                        }
+                    ],
+                    "thankYouText": ""
+                }
+            }
+        },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos3",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/26-juanma-pauli/images/A.jpg"]
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por acompañarnos y ser parte de uno de los días más importantes de nuestras vidas.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "giftCard",
+            "id": "gift-card",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "heart",
+                "title": "Valor tarjeta",
+                "description": "Agradecemos que confirmes tu asistencia antes del 10 de septiembre.",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de pago",
+                    "suggestedValue": "$135.000",
+                    "description": "Fecha límite de pago: 10 de septiembre de 2026.",
+                    "transferData": [
+                        {
+                            "label": "Alias",
+                            "value": "Pauli.Juan.Boda"
+                        },
+                        {
+                            "label": "Titular",
+                            "value": "Juan Manuel Yadón"
+                        },
+                        {
+                            "label": "Banco",
+                            "value": "Personal Pay"
+                        },
+                        {
+                            "label": "CBU",
+                            "value": "0000076500000052827019"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "primary",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 10 de septiembre",
+                "guestCountLabel": "Número de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "¿Confirmás tu asistencia?",
+                    "attendanceYes": "¡Confirmo!",
+                    "attendanceNo": "No podré asistir",
+                    "dietary": "¿Alguna limitación en la alimentación?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celíaco",
+                        "Otro"
+                    ],
+                    "extraInputs": [
+                        {
+                            "id": "mensajersvp",
+                            "label": "¿Algún mensaje para los novios?",
+                            "placeholder": "Escribí tu mensaje",
+                            "tituloPanel": "Mensaje",
+                            "a4": "bottom"
+                        }
+                    ],
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "543834246033",
+                    "messageTemplate": "Hola Pauli y Juan Manuel! Confirmo la asistencia a su boda.\n\n{resumen}\n\n¡Gracias! 🫶🏼"
+                }
+            }
+        },
+        {
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/boda/26-juanma-pauli/images/B.jpg"
+            }
+        },
+        {
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}
