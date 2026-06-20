@@ -69,7 +69,7 @@
         "buttonText": "Ingresar",
         "showNames": true,
         "showPhrase": true,
-        "contentCenterY": 43,
+        "contentCenterY": 46,
         "nameStyle": {
             "font": "Dancing Script",
             "size": "50px",
@@ -78,7 +78,7 @@
             "lowercase": true,
             "letterSpacing": "none"
         },
-        "bgImage": "/clientes/boda/26-juanma-pauli/bg/overlay2.jpeg"
+        "bgImage": "/clientes/boda/26-juanma-pauli/bg/overlay3.jpeg"
     },
     "music": {
         "enabled": false,
