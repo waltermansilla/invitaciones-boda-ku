@@ -15,21 +15,21 @@
     },
     "access": {
         "tokenEnabled": true,
-        "token": "h9aaLn",
+        "token": "nxiuw6",
         "allowLegacyUntil": ""
     },
     "base": {
         "enabled": true,
-        "token": "zj38D0Pw",
+        "token": "bwex68J4",
         "pinEnabled": true,
-        "pin": "828993"
+        "pin": "878787"
     },
     "rsvpPanel": {
         "enabled": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
-        "panelId": "juanma-pauli-mqk4rbo1",
+        "panelId": "pauli-juanma-rbjwo1",
         "fechaEvento": "2026-10-24",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 24 de Octubre.",
         "theme": {
@@ -69,7 +69,7 @@
         "buttonText": "Ingresar",
         "showNames": true,
         "showPhrase": true,
-        "contentCenterY": 43,
+        "contentCenterY": 45,
         "nameStyle": {
             "font": "Dancing Script",
             "size": "50px",
@@ -78,7 +78,7 @@
             "lowercase": true,
             "letterSpacing": "none"
         },
-        "bgImage": "/clientes/boda/26-juanma-pauli/bg/overlay2.jpeg"
+        "bgImage": "/clientes/boda/26-juanma-pauli/bg/overlay1.jpeg"
     },
     "music": {
         "enabled": false,
@@ -231,7 +231,7 @@
                     },
                     {
                         "icon": "fin",
-                        "name": "Fin de la fiesta",
+                        "name": "Cierre del evento",
                         "time": "04:00 hs"
                     }
                 ]
@@ -271,7 +271,7 @@
             "bgImage": "/clientes/boda/26-juanma-pauli/bg/luces3.jpeg",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Somos la suma de cada día compartido. Hoy abrimos un nuevo capítulo.",
+                "text": "Somos la suma de cada día compartido. Hoy abrimos un capítulo nuevo.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -282,7 +282,7 @@
             "id": "playlist-suggestion",
             "enabled": true,
             "bgColor": "primary",
-
+            "bgImage": "primaryImage",
             "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Playlist de la fiesta",
@@ -350,13 +350,11 @@
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "background",
-            "bgImage": "/clientes/boda/26-juanma-pauli/bg/flores2.jpeg",
+            "bgImage": "/clientes/boda/26-juanma-pauli/bg/flores.jpeg",
             "blocks": ["text", "author"],
             "data": {
-                "text": "El amor es un acto de fe.",
-                "author": "Pauli & Juan Manuel",
-                "pxFrase": 23,
-                "pxAuthor": 20,
+                "text": "El amor es un acto de fe. Creer en el otro, en el tiempo y en lo que viene. Te invitamos a ser parte de este momento.",
+                "author": "Juan Manuel & Pauli",
                 "decorativeLines": true
             }
         },

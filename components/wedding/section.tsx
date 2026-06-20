@@ -149,6 +149,12 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
             text={data.text as string}
             author={data.author as string}
             decorativeLines={data.decorativeLines as boolean | undefined}
+            pxFrase={
+              typeof data.pxFrase === "number" ? data.pxFrase : undefined
+            }
+            pxAuthor={
+              typeof data.pxAuthor === "number" ? data.pxAuthor : undefined
+            }
           />
         )
 

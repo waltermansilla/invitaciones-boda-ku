@@ -280,12 +280,15 @@ export default function HeroOverlay({
               ? "mt-6"
               : "mt-8"
         : "";
-    const invitadoOverlayGap = invitado ? "gap-6" : "gap-8";
+    const invitadoOverlayGap =
+        invitado ? "gap-6" : showPhrase ? "gap-5" : "gap-8";
     const namesBottomLineClass = invitado
         ? useAnchoredContentLayout
             ? "mt-8 mb-0"
             : "mt-8 mb-6"
-        : "my-8";
+        : showPhrase
+          ? "mt-8 mb-4"
+          : "my-8";
 
     const namesBlock = showNames ? (
         <div className="flex flex-col items-center justify-center">
@@ -342,15 +345,29 @@ export default function HeroOverlay({
         (invitado!.nombre.length > 20 ||
             invitado!.nombre.trim().split(/\s+/).length >= 3);
 
+    const invitadoUsesGlass = Boolean(bgImage?.trim());
+
+    const invitadoGlassStyle: React.CSSProperties = {
+        backgroundColor: "rgba(255, 255, 255, 0.58)",
+        backdropFilter: "blur(16px) saturate(160%)",
+        WebkitBackdropFilter: "blur(16px) saturate(160%)",
+        boxShadow: "0 8px 32px rgba(255, 255, 255, 0.25)",
+    };
+
+    const invitadoSizeClass = isFamiliaInvitado
+        ? `mx-auto w-[min(82vw,32rem)] ${
+              familiaNombreCompacto ? "px-4 py-5 sm:px-5" : "px-8 py-6"
+          }`
+        : "mx-auto w-[min(80vw,26rem)] px-8 py-6";
+
     const invitadoBlock = invitado ? (
         <div
-            className={`rounded-2xl border border-muted/30 bg-background/90 text-center shadow-sm backdrop-blur-sm ${
-                isFamiliaInvitado
-                    ? `mx-auto w-[min(94vw,34rem)] ${
-                          familiaNombreCompacto ? "px-4 py-5 sm:px-5" : "px-8 py-6"
-                      }`
-                    : "mx-6 px-8 py-6"
-            }`}
+            className={
+                invitadoUsesGlass
+                    ? `rounded-2xl text-center ${invitadoSizeClass}`
+                    : `rounded-2xl border border-muted/30 bg-background/90 text-center shadow-sm backdrop-blur-sm ${invitadoSizeClass}`
+            }
+            style={invitadoUsesGlass ? invitadoGlassStyle : undefined}
         >
             <h2
                 className={`font-semibold uppercase text-foreground/80 ${
@@ -395,7 +412,7 @@ export default function HeroOverlay({
 
     const anchoredContentGroup = (
         <div
-            className={`flex w-full flex-col items-center px-4 ${invitadoOverlayGap}`}
+            className={`flex w-full flex-col items-center px-8 sm:px-10 ${invitadoOverlayGap}`}
         >
             {namesBlock}
             {phraseBlock}

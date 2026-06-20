@@ -318,6 +318,8 @@
         {
             "// ----------------------------------------------------------------------": "",
             "// QUOTE - Frase de bienvenida                                           ": "",
+            "// pxFrase (opcional): tamano de la frase en px (default ~18)            ": "",
+            "// pxAuthor (opcional): tamano del autor en px (default ~20)             ": "",
             "// textColor (opcional): hex o nombre ('foreground'/'primary-foreground')": "",
             "//   util cuando usas bgImage y queres forzar contraste del texto         ": "",
             "type": "quote",
