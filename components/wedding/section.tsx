@@ -55,6 +55,7 @@ interface SectionProps {
   }
   prevBgColor?: string
   prevBgImage?: string
+  revealImmediately?: boolean
 }
 
 function useCodigoInvitado() {
@@ -68,7 +69,7 @@ function usePreviewRsvpForm() {
   return searchParams.get("rsvpForm") === "1"
 }
 
-function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: SectionProps) {
+function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, revealImmediately = false }: SectionProps) {
   const config = useConfig()
   const { type, id, data, bgColor, bgImage, textColor, enabled = true } = section
   const theme = config.theme as Record<string, unknown>
@@ -510,7 +511,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage }: Sect
   }
 
   return (
-    <AnimatedSection id={id}>
+    <AnimatedSection id={id} initialVisible={revealImmediately}>
       {/* Subtle divider between consecutive sections with same background color */}
       {showDivider && (
         <div className={colors.bg} style={bgImageStyle}>

@@ -2,11 +2,13 @@
 
 import { useEffect, useRef, useState } from "react"
 
-export function useFadeIn(threshold = 0.15) {
+export function useFadeIn(threshold = 0.15, initialVisible = false) {
   const ref = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(initialVisible)
 
   useEffect(() => {
+    if (initialVisible) return
+
     const element = ref.current
     if (!element) return
 
@@ -22,7 +24,7 @@ export function useFadeIn(threshold = 0.15) {
 
     observer.observe(element)
     return () => observer.disconnect()
-  }, [threshold])
+  }, [threshold, initialVisible])
 
   return { ref, isVisible }
 }

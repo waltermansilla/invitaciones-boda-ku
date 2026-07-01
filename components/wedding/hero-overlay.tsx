@@ -12,6 +12,8 @@ interface NameStyle {
     color?: string;
     lowercase?: boolean; // true = respeta mayusculas/minusculas del JSON, false/undefined = todo mayusculas
     letterSpacing?: string; // "none" = sin espaciado (cursivas conectan), "normal" = 0.1em, "wide" = 0.2em (default)
+    /** true = frase y botón usan nameStyle.color (si está definido). */
+    matchPhraseAndButtonColor?: boolean;
 }
 
 interface InvitadoData {
@@ -123,6 +125,16 @@ export default function HeroOverlay({
     };
     const nameLetterSpacing =
         letterSpacingMap[nameStyle?.letterSpacing || "wide"] || "0.2em";
+
+    const matchPhraseAndButtonColor = Boolean(
+        nameStyle?.matchPhraseAndButtonColor && nameColor,
+    );
+
+    const phraseClassName = `mx-auto w-[88vw] max-w-md px-5 text-center text-sm font-light leading-relaxed tracking-wider sm:w-auto sm:px-8 sm:text-base${
+        matchPhraseAndButtonColor ? "" : " text-muted-foreground"
+    }`;
+    const phraseColorStyle: React.CSSProperties | undefined =
+        matchPhraseAndButtonColor && nameColor ? { color: nameColor } : undefined;
 
     /** Separador muy corto: sin tracking (caja más simétrica vs nombres). */
     const separatorTrackingClass =
@@ -332,7 +344,10 @@ export default function HeroOverlay({
 
     const phraseBlock =
         showPhrase && !invitado ? (
-            <p className="mx-auto w-[88vw] max-w-md px-5 text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:w-auto sm:px-8 sm:text-base">
+            <p
+                className={phraseClassName}
+                style={phraseColorStyle}
+            >
                 {phrase}
             </p>
         ) : null;
@@ -390,11 +405,19 @@ export default function HeroOverlay({
         </div>
     ) : null;
 
+    const enterButtonClassName = matchPhraseAndButtonColor
+        ? `${buttonMarginClass} border px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase transition-all duration-500 hover:opacity-90 active:scale-95`
+        : `${buttonMarginClass} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`;
+    const enterButtonColorStyle: React.CSSProperties | undefined =
+        matchPhraseAndButtonColor && nameColor
+            ? { borderColor: nameColor, color: nameColor }
+            : undefined;
+
     const enterButton = (
         <button
             onClick={handleEnter}
-            className={`${buttonMarginClass} border border-primary/40 px-10 py-3 text-xs font-medium tracking-[0.3em] uppercase text-primary transition-all duration-500 hover:border-primary hover:bg-primary hover:text-primary-foreground active:scale-95`}
-            style={buttonStyle}
+            className={enterButtonClassName}
+            style={{ ...enterButtonColorStyle, ...buttonStyle }}
             aria-label={buttonText}
         >
             {buttonText}
@@ -532,13 +555,14 @@ export default function HeroOverlay({
 
                         {showPhrase && !invitado && phrasePos && (
                             <p
-                                className={`absolute mx-auto w-[88vw] max-w-md text-center text-sm font-light leading-relaxed tracking-wider text-muted-foreground sm:w-auto sm:text-base ${
+                                className={`absolute mx-auto w-[88vw] max-w-md text-center text-sm font-light leading-relaxed tracking-wider sm:w-auto sm:text-base ${
                                     paddingPhrasePx ? "" : "px-5 sm:px-8"
-                                }`}
+                                }${matchPhraseAndButtonColor ? "" : " text-muted-foreground"}`}
                                 style={{
                                     top: phrasePos.top,
                                     left: phrasePos.left,
                                     transform: phrasePos.transform,
+                                    ...phraseColorStyle,
                                     ...(paddingPhrasePx
                                         ? {
                                               paddingLeft: paddingPhrasePx,

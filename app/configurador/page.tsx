@@ -33,9 +33,12 @@ import landingHomeDataEn from "@/data/landing/landing-2.en.json";
 import configuradorEs from "@/data/landing/configurador-es.json";
 import pricingData from "@/data/landing/pricing.json";
 import {
-    computePanelExtraGuestsCost,
     configuradorCurrencyFromSearch,
     formatLandingMoney,
+    isPanelGuestTier,
+    panelCostForGuestTier,
+    pickPanelTierPrice,
+    PANEL_GUEST_TIERS,
     pairToConfiguratorPrice,
     type ConfiguratorPrice,
 } from "@/lib/landing/landing-pricing";
@@ -184,10 +187,8 @@ const DEFAULT_SELECTED_SECTION_IDS = [
 ] as const;
 const NON_REMOVABLE_SECTION_IDS = new Set<string>(DEFAULT_SELECTED_SECTION_IDS);
 const PANEL_INCLUDED_GUESTS = 150;
-const PANEL_STEP_GUESTS = 100;
-const PANEL_STEP_PAIR = pricingData.configurator.extras.panelPer100;
 const PANEL_MAX_GUESTS = 1000;
-const PANEL_GUEST_PRESETS = [150, 250, 350, 500] as const;
+const PANEL_GUEST_PRESETS = PANEL_GUEST_TIERS;
 
 /** Same padding both sides: max of 1rem and both safe-area insets (avoids L/R mismatch). */
 const PAGE_GUTTER =
@@ -547,22 +548,16 @@ function ConfiguradorPageContent() {
             Math.round(panelGuests || PANEL_INCLUDED_GUESTS),
         ),
     );
-    const panelExtraGuests = Math.max(
-        0,
-        clampedPanelGuests - PANEL_INCLUDED_GUESTS,
-    );
-    const panelExtraGuestsCost = computePanelExtraGuestsCost(
-        panelExtraGuests,
-        PANEL_STEP_GUESTS,
-        PANEL_STEP_PAIR,
-        currency,
-    );
-    const panelBasePrice =
-        extrasList.find((e) => e.id === "panel")?.price[currency] ?? 0;
+    const panelGuestTier = isPanelGuestTier(clampedPanelGuests)
+        ? clampedPanelGuests
+        : PANEL_INCLUDED_GUESTS;
+    const panelTierPrice = pickPanelTierPrice(panelGuestTier, currency);
     const panelSelected = extras.includes("panel");
     const panelIncludedByPlan = includedExtraIds.includes("panel");
     const panelCost = panelSelected
-        ? (panelIncludedByPlan ? 0 : panelBasePrice) + panelExtraGuestsCost
+        ? panelCostForGuestTier(panelGuestTier, currency, {
+              planIncludesPanelBase: panelIncludedByPlan,
+          })
         : 0;
     const extrasCost =
         panelCost +
@@ -601,12 +596,12 @@ function ConfiguradorPageContent() {
         if (e.id !== "panel") return label;
         const panelLine = waEx.panelLine
             .replace(/\{\{label\}\}/g, label)
-            .replace(/\{\{guests\}\}/g, String(clampedPanelGuests));
-        if (panelExtraGuestsCost <= 0) return panelLine;
-        return `${panelLine}${waEx.panelCapacitySuffix.replace(
-            /\{\{price\}\}/g,
-            formatLandingMoney(panelExtraGuestsCost, currency),
-        )}`;
+            .replace(/\{\{guests\}\}/g, String(panelGuestTier))
+            .replace(
+                /\{\{price\}\}/g,
+                formatLandingMoney(panelTierPrice, currency),
+            );
+        return panelLine;
     });
     const detailsToken = useMemo(() => {
         const selectedSet = new Set(sections);
@@ -1630,31 +1625,9 @@ function ConfiguradorPageContent() {
                                                 </span>
                                                 <p className="mb-2 text-[11px] leading-relaxed text-[#6A5C52]">
                                                     {uiLang === "en"
-                                                        ? `Includes up to ${PANEL_INCLUDED_GUESTS} guests. Then +${formatLandingMoney(pairToConfiguratorPrice(PANEL_STEP_PAIR)[currency], currency)} every ${PANEL_STEP_GUESTS} extra guests.`
-                                                        : configuradorEs.panelUi.includesLine
-                                                              .replace(
-                                                                  /\{\{included\}\}/g,
-                                                                  String(
-                                                                      PANEL_INCLUDED_GUESTS,
-                                                                  ),
-                                                              )
-                                                              .replace(
-                                                                  /\{\{stepPrice\}\}/g,
-                                                                  formatLandingMoney(
-                                                                      pairToConfiguratorPrice(
-                                                                          PANEL_STEP_PAIR,
-                                                                      )[
-                                                                          currency
-                                                                      ],
-                                                                      currency,
-                                                                  ),
-                                                              )
-                                                              .replace(
-                                                                  /\{\{stepGuests\}\}/g,
-                                                                  String(
-                                                                      PANEL_STEP_GUESTS,
-                                                                  ),
-                                                              )}
+                                                        ? "Fixed price by capacity: up to 150, 250, 350, or 500 guests."
+                                                        : configuradorEs.panelUi
+                                                              .tierPricingLine}
                                                 </p>
                                                 <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                                                     {PANEL_GUEST_PRESETS.map(
@@ -1701,37 +1674,13 @@ function ConfiguradorPageContent() {
                                                     )}
                                                 </div>
                                                 <div className="mt-2 rounded-lg border border-[#E4DCD1] bg-white p-2 text-[11px] leading-relaxed text-[#6A5C52]">
-                                                    <p className="mt-1 font-medium text-[#4A3A2F]">
-                                                        {uiLang === "en"
-                                                            ? `Capacity surcharge (${clampedPanelGuests}): ${formatLandingMoney(panelExtraGuestsCost, currency)}`
-                                                            : configuradorEs.panelUi.capacitySurcharge
-                                                                  .replace(
-                                                                      /\{\{guests\}\}/g,
-                                                                      String(
-                                                                          clampedPanelGuests,
-                                                                      ),
-                                                                  )
-                                                                  .replace(
-                                                                      /\{\{price\}\}/g,
-                                                                      formatLandingMoney(
-                                                                          panelExtraGuestsCost,
-                                                                          currency,
-                                                                      ),
-                                                                  )}
-                                                    </p>
                                                     <p className="mt-1 rounded-md bg-[#F3EBDD] px-2 py-1 text-sm font-bold text-[#4A3A2F]">
                                                         {uiLang === "en"
-                                                            ? `Panel total: ${formatLandingMoney((locked ? 0 : ex.price[currency]) + panelExtraGuestsCost, currency)}`
+                                                            ? `Panel total: ${formatLandingMoney(panelCost, currency)}`
                                                             : configuradorEs.panelUi.panelTotal.replace(
                                                                   /\{\{total\}\}/g,
                                                                   formatLandingMoney(
-                                                                      (locked
-                                                                          ? 0
-                                                                          : ex
-                                                                                .price[
-                                                                                currency
-                                                                            ]) +
-                                                                          panelExtraGuestsCost,
+                                                                      panelCost,
                                                                       currency,
                                                                   ),
                                                               )}

@@ -1,0 +1,495 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Mis 15 - Mia",
+        "description": "Estás invitado a celebrar los 15 de Mia.",
+        "lang": "es",
+        "quinceaneraName": "Mia",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Mia",
+            "separator": ""
+        }
+    },
+
+    "access": {
+        "tokenEnabled": true,
+        "token": "yeY8m2",
+        "allowLegacyUntil": ""
+    },
+    "base": {
+        "enabled": true,
+        "token": "zjm981Pw",
+        "pinEnabled": true,
+        "pin": "232355"
+    },
+
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+
+    "_comment_theme": "primaryColor = rosa principal de secciones con fondo. backgroundColor = fondo claro general. textColor = color del texto. modalTextColor = color del texto en modales (blanco por defecto). font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Dorado oscuro bf930d",
+    "theme": {
+        "primaryColor": "#d8a5a2",
+        "backgroundColor": "#eee",
+
+        "textColor": "#cf817e",
+        "lightBgTextColor": "#cf817e",
+        "darkBgTextColor": "#fff",
+        "accentBackground": "#FDF0EE",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+
+    "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Mis XV están por empezar. ¿Venís?",
+        "buttonText": "Ingresar",
+        "showNames": true,
+        "showPhrase": true,
+        "contentCenterY": 42,
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "55px",
+            "weight": "600",
+            "color": "#be645a",
+            "lowercase": true,
+            "letterSpacing": "none",
+            "matchPhraseAndButtonColor": true
+        },
+        "bgImage": "/clientes/xv/27-mia/images/overlay.jpeg"
+    },
+
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/xv/27-mia/music/abba.mp3",
+        "autoplay": true
+    },
+
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+
+    "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/images/. showNameOnPhoto = true muestra el nombre sobre la foto, false lo oculta. aspectRatio: 'libre' = altura natural de la foto; sin valor = 3/4 (sm: 4/5) por defecto.",
+    "hero": {
+        "coupleImage": "/clientes/xv/27-mia/images/1.jpeg",
+        "aspectRatio": "libre",
+        "headline": "Mis 15!",
+        "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": true,
+            "lowercase": true,
+            "position": "bottom",
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "#fff",
+            "decorativeLines": false,
+            "logo": "",
+            "texts": [
+                {
+                    "text": "MIS XV",
+                    "font": "",
+                    "weight": "300",
+                    "size": "sm",
+                    "style": "normal"
+                },
+                {
+                    "text": "Mia",
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "letterSpacing": "none",
+                    "size": "4xl",
+                    "style": "normal"
+                }
+            ]
+        },
+        "countdownPrefix": "",
+        "eventDate": "2026-07-25T20:00:00",
+        "countdownLabels": {
+            "days": "Días",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        }
+    },
+
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Quiero compartir con vos este momento tan especial. Tu presencia lo hace aún más lindo.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "Sábado 25 de Julio"
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos-2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": ["/clientes/xv/27-mia/images/2.jpeg"]
+            }
+        },
+
+        {
+            "// --- UBICACION: FIESTA ---": "",
+            "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "¿Dónde?",
+                "address": "Av. Pedro Dreyer 1425, El Jagüel",
+                "showButton": true,
+                "order": ["address", "time"],
+                "datetime": {
+                    "time": "20:00 hs"
+                },
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://www.google.com/maps/search/?api=1&query=Av.+Pedro+Dreyer+1425",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal. ICONOS: dress, suit, gem, crown, sparkles, star, heart. showButton: true/false. colorSwatches: enabled, shape ('circle'/'square'), colors (array hex).",
+            "type": "dressCode",
+            "id": "dress-code",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Dress code",
+                "subtitle": "Elegante sport",
+                "description": "Evitar el color rosa y sus tonalidades",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "circle",
+                    "colors": ["#ffdae3", "#ffd1dc", "#f5b8c8"]
+                }
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Mirar atrás me llena de ternura. Mirar adelante, de ilusión.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos-3",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/xv/27-mia/images/bebe.jpeg",
+                    "/clientes/xv/27-mia/images/nena.jpeg"
+                ]
+            }
+        },
+
+        {
+            "_comment": "PHOTOS: Invitar a subir fotos.",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Si sacás fotos o videos durante la fiesta, podés subirlos acá para que juntos guardemos los mejores momentos.",
+                "button": {
+                    "text": "Subir fotos",
+                    "url": "https://drive.google.com/drive/folders/1x3XMeQgD84h9KI4_U0p1DYBZkrqG11L_",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "// --- TRIVIA / JUEGO (con modal) ---": "",
+            "_comment": "Al presionar el boton se abre modal con preguntas. Cada pregunta: question, options (2-4), correctIndex (0=primera), explanation. finishTitle y finishText = pantalla final.",
+            "type": "trivia",
+            "id": "trivia-game",
+            "bgColor": "primary",
+            "blocks": ["title", "subtitle", "button", "modal"],
+            "data": {
+                "title": "\u00bfCu\u00e1nto me conoc\u00e9s?",
+                "subtitle": "\u00bfJugamos un poco?",
+                "button": {
+                    "text": "Iniciar Trivia",
+                    "variant": "primary"
+                },
+                "modal": {
+                    "finishTitle": "Respuestas correctas",
+                    "finishText": "¡Gracias por acompañarme en este pequeño juego! Espero que te haya gustado conocer un poquito más de mi historia. Nos vemos muy pronto para celebrar juntos mis XV",
+                    "questions": [
+                        {
+                            "question": "¿Cuáles son mis colores favoritos?",
+                            "options": [
+                                "Rosa y blanco",
+                                "Rosa y azul",
+                                "Rosa y violeta",
+                                "Rosa y amarillo"
+                            ],
+                            "correctIndex": 0,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué sabor prefiero?",
+                            "options": ["Agrio", "Salado", "Dulce", "Amargo"],
+                            "correctIndex": 2,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué es lo que más me gusta hacer?",
+                            "options": [
+                                "Dormir",
+                                "Comer",
+                                "Mirar series",
+                                "Escuchar música"
+                            ],
+                            "correctIndex": 3,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué es más probable que haga toda la fiesta?",
+                            "options": [
+                                "Bailar toda la noche",
+                                "Comer todo el Candy Bar",
+                                "Sacarme fotos",
+                                "Todo lo anterior"
+                            ],
+                            "correctIndex": 3,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Cuál es mi torta favorita?",
+                            "options": [
+                                "Lemon pie",
+                                "Red velvet",
+                                "Chocotorta",
+                                "Brownies"
+                            ],
+                            "correctIndex": 2,
+                            "explanation": ""
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/images/. aspectRatio = proporcion de las fotos. Agregar o quitar fotos del array.",
+            "type": "gallery",
+            "id": "gallery-photos-6",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/xv/27-mia/images/3.jpeg"]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome4",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Quince años me enseñaron que lo más lindo no son las cosas grandes, sino las personas que están cerca.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "_comment": "HONEYMOON: Alcancia para un viaje/sueno especial. Misma estructura que giftCard. Adaptado como 'Mi viaje sonado'.",
+            "type": "honeymoon",
+            "id": "dream-trip",
+            "bgColor": "primary",
+
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Nada es más importante que tu presencia. Si deseas hacerme un regalo, podrás hacerlo a través de este alias:",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Mis datos",
+                    "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para mí.",
+                    "bankData": [
+                        { "label": "Alias", "value": "miaa.promax.11" },
+                        {
+                            "label": "Titular",
+                            "value": "Mia Luisana Amarilla"
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "background",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "subtitle": "Antes del 18 de Julio",
+                "buttonText": "¡Voy!",
+                "whatsappNumber": "541167968114",
+                "message": "Hola Mia! Confirmo mi asistencia a tus XV. Quiero formar parte de este momento tan especial para vos 🫶🏼🤗",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Hola Mia! Lamentablemente no podré asistir a tus XV. Gracias por tenerme en cuenta 🫶🏼"
+                }
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo rosa. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por estar, por el cariño y por hacer de mis XV algo inolvidable. Los quiero mucho.",
+                "author": "Mia",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombre debajo. Cierre emocional antes del footer. Imagen en /public/images/.",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "name"],
+            "data": {
+                "aspectRatio": "libre",
+                "image": "/clientes/xv/27-mia/images/1.jpeg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#000",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": "https://wa.me/3456023759"
+                    }
+                ]
+            }
+        }
+    ]
+}

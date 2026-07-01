@@ -99,7 +99,7 @@ export function getExtraDetailById(
             panel: {
                 title: "Guest dashboard",
                 summary: "Automatic, end-to-end RSVP management",
-                body: "With WhatsApp (included), messages arrive but you track everything manually. With the dashboard, each guest confirms and your board updates automatically: who’s in, who’s pending, filters by status, and clear totals. You can also see dietary requirements (vegetarian, celiac, etc.) and guest song requests. Includes up to 150 guests; for each additional block of 100 guests, a capacity surcharge applies (shown in your quote when you adjust the guest count).",
+                body: "With WhatsApp (included), messages arrive but you track everything manually. With the dashboard, each guest confirms and your board updates automatically: who’s in, who’s pending, filters by status, and clear totals. You can also see dietary requirements (vegetarian, celiac, etc.) and guest song requests. Fixed pricing by capacity: up to 150, 250, 350, or 500 guests.",
             },
             dominio: {
                 title: "Custom domain",

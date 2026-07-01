@@ -80,6 +80,7 @@
   },
   "hero": {
     "coupleImage": "/clientes/v/[slug]/hero.jpg",
+    "// aspectRatio (opcional): 'libre' = altura natural; sin valor = 3/4/4/5.": "",
     "headline": "",
     "showNamesOnPhoto": true,
     "namesDisplay": {

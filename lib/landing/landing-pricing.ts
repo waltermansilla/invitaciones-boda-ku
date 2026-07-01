@@ -68,6 +68,39 @@ export function computePanelExtraGuestsCost(
     return Math.round((extraGuests * stepAmount) / stepGuests);
 }
 
+export const PANEL_GUEST_TIERS = [150, 250, 350, 500] as const;
+export type PanelGuestTier = (typeof PANEL_GUEST_TIERS)[number];
+
+export function isPanelGuestTier(value: number): value is PanelGuestTier {
+    return (PANEL_GUEST_TIERS as readonly number[]).includes(value);
+}
+
+export function pickPanelTierPrice(
+    guests: PanelGuestTier,
+    currency: LandingCurrency,
+    book: LandingPriceBook = LANDING_PRICE_BOOK,
+): number {
+    const tiers = book.configurator.extras.panelTiers as
+        | Record<string, LandingPricePair>
+        | undefined;
+    const pair = tiers?.[String(guests)];
+    if (pair) return pickLandingAmount(pair, currency, book);
+    return pickLandingAmount(book.configurator.extras.panel, currency, book);
+}
+
+/** Coste del panel según cupo; si el plan ya incluye el tier 150, solo cobra el upgrade. */
+export function panelCostForGuestTier(
+    guests: PanelGuestTier,
+    currency: LandingCurrency,
+    options?: { planIncludesPanelBase?: boolean },
+    book: LandingPriceBook = LANDING_PRICE_BOOK,
+): number {
+    const tierPrice = pickPanelTierPrice(guests, currency, book);
+    if (!options?.planIncludesPanelBase) return tierPrice;
+    const baseTierPrice = pickPanelTierPrice(150, currency, book);
+    return Math.max(0, tierPrice - baseTierPrice);
+}
+
 export function formatLandingMoney(amount: number, currency: LandingCurrency): string {
     if (currency === "ARS") return `$${amount.toLocaleString("es-AR")}`;
     if (currency === "MXN") return `MXN ${amount.toLocaleString("es-MX")}`;

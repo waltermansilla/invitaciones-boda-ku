@@ -233,14 +233,13 @@
     },
     "panelUi": {
         "estimatedGuestsTitle": "Invitados estimados para panel",
-        "includesLine": "Incluye hasta {{included}} invitados. Luego suma +{{stepPrice}} cada {{stepGuests}} invitados extra.",
+        "tierPricingLine": "Precio fijo según capacidad: hasta 150, 250, 350 o 500 invitados.",
         "hastaPreset": "Hasta {{n}}",
-        "capacitySurcharge": "Recargo por capacidad ({{guests}}): {{price}}",
         "panelTotal": "Total panel: {{total}}"
     },
     "waExtras": {
-        "panelLine": "{{label}} ({{guests}} invitados)",
-        "panelCapacitySuffix": " + {{price}} por capacidad"
+        "panelLine": "{{label}} — hasta {{guests}} invitados ({{price}})",
+        "panelCapacitySuffix": ""
     },
     "misc": {
         "otroSection": "Otro",

@@ -60,6 +60,8 @@ interface HeroSectionProps {
     enabled?: boolean
     opacity?: number
   }
+  /** "libre" = altura natural de la foto; sin valor = 3/4 (sm: 4/5) por defecto. También acepta ratios como "3/4", "4/3", etc. */
+  aspectRatio?: string
 }
 
 function getTimeRemaining(targetDate: string) {
@@ -115,6 +117,7 @@ export default function HeroSection({
   showCountdown = true,
   vignette,
   nameOrder,
+  aspectRatio,
 }: HeroSectionProps) {
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
@@ -228,6 +231,16 @@ export default function HeroSection({
     typeof vignette?.opacity === "number"
       ? Math.min(0.65, Math.max(0, vignette.opacity))
       : 0.18
+  const isFreeAspect = aspectRatio === "libre"
+  const hasCustomAspect = Boolean(aspectRatio && aspectRatio !== "libre")
+  const imageContainerClass = [
+    "relative w-full",
+    isOverlayLayout ? "mb-0" : "",
+    !isFreeAspect && !hasCustomAspect ? "aspect-[3/4] sm:aspect-[4/5]" : "",
+  ]
+    .filter(Boolean)
+    .join(" ")
+  const imageContainerStyle = hasCustomAspect ? { aspectRatio } : undefined
 
   // Render a single name text with its own styling
   const renderNameText = (textConfig: NamesText, fallbackFont?: string, fallbackWeight?: string, fallbackSize?: string, fallbackStyle?: string) => {
@@ -424,14 +437,22 @@ export default function HeroSection({
       )}
 
       {/* Hero image with names */}
-      <div className={`relative aspect-[3/4] w-full sm:aspect-[4/5] ${isOverlayLayout ? "mb-0" : ""}`}>
-        <Image
-          src={coupleImage}
-          alt="Foto de la pareja"
-          fill
-          className="object-cover"
-          priority
-        />
+      <div className={imageContainerClass} style={imageContainerStyle}>
+        {isFreeAspect ? (
+          <img
+            src={coupleImage}
+            alt="Foto de la pareja"
+            className="block h-auto w-full"
+          />
+        ) : (
+          <Image
+            src={coupleImage}
+            alt="Foto de la pareja"
+            fill
+            className="object-cover"
+            priority
+          />
+        )}
         {vignetteEnabled && (
           <div
             className="absolute inset-0"

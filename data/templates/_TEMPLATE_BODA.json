@@ -176,6 +176,8 @@
     "//   color: hex o vacio para usar theme                                      ": "",
     "//   lowercase: false=MAYUSCULAS, true=respeta como escribis                 ": "",
     "//   letterSpacing: 'none'=cursivas conectan, 'normal', 'wide'=espaciado     ": "",
+    "//   matchPhraseAndButtonColor: true = frase y boton Ingresar usan color     ": "",
+    "//     (solo si color tiene valor; false o ausente = estilo por defecto)    ": "",
     "// contentCenterY: % desde arriba del centro del bloque (nombres/frase/boton) ": "",
     "//   50 = centrado en pantalla, 40 = mas arriba. Sin textPositionsPx.           ": "",
     "overlay": {
@@ -192,7 +194,8 @@
             "weight": "200",
             "color": "",
             "lowercase": false,
-            "letterSpacing": "wide"
+            "letterSpacing": "wide",
+            "matchPhraseAndButtonColor": false
         },
         "buttonPosition": "center",
         "contentCenterY": "",
@@ -261,6 +264,10 @@
     },
     "// HERO - Seccion principal con foto y countdown                             ": "",
     "// coupleImage: ruta a la foto principal                                     ": "",
+    "// aspectRatio (opcional): 'libre' = altura natural de la foto;              ": "",
+    "//   sin valor = 3/4 en movil y 4/5 en pantallas sm+ (defecto).             ": "",
+    "//   Con 'libre', la 1ª seccion tras el hero se muestra sin esperar scroll.  ": "",
+    "//   Tambien acepta ratios fijos: '3/4', '4/3', '1/1', '16/9', etc.        ": "",
     "// headline: texto sobre el countdown                                        ": "",
     "// eventDate: fecha ISO (2027-01-01T21:00:00)                                ": "",
     "// countdownPrefix: texto antes del countdown ('Faltan')                     ": "",

@@ -172,6 +172,7 @@
     "//   Si NO pones topLineY/bottomLineY, las lineas no se muestran en modo px  ": "",
     "//   IMPORTANTE: si usas textPositionsPx, ajusta cada valor para tu imagen    ": "",
     "// nameStyle: ver documentacion en template BODA                             ": "",
+    "//   matchPhraseAndButtonColor: true = frase y boton usan nameStyle.color   ": "",
     "// contentCenterY: % centro vertical del bloque. Ver template BODA           ": "",
     "overlay": {
         "enabled": true,
@@ -187,7 +188,8 @@
             "weight": "200",
             "color": "",
             "lowercase": false,
-            "letterSpacing": "wide"
+            "letterSpacing": "wide",
+            "matchPhraseAndButtonColor": false
         },
         "buttonPosition": "center",
         "contentCenterY": "",
@@ -251,6 +253,8 @@
         }
     },
     "// HERO - Seccion principal con foto y countdown                             ": "",
+    "// aspectRatio (opcional): 'libre' = altura natural; sin valor = 3/4/4/5.   ": "",
+    "// Con 'libre', la 1ª seccion tras el hero aparece sin fade-in al scroll.    ": "",
     "// Ver documentacion completa en template BODA                               ": "",
     "// La estructura es identica                                                 ": "",
     "hero": {

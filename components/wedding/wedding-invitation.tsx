@@ -30,6 +30,8 @@ function WeddingInvitationContent() {
         searchParams.get("enter") === "1" ||
         searchParams.get("noOverlay") === "1";
     const hero = config.hero;
+    const heroFreeAspect =
+        (hero as Record<string, unknown>).aspectRatio === "libre";
     const sections = config.sections ?? [];
     // El pie de marca es global (landing); si el JSON aún trae type "footer", no lo duplicamos.
     const sectionsForLayout = sections.filter(
@@ -424,6 +426,11 @@ function WeddingInvitationContent() {
                             | { enabled?: boolean; opacity?: number }
                             | undefined
                     }
+                    aspectRatio={
+                        (hero as Record<string, unknown>).aspectRatio as
+                            | string
+                            | undefined
+                    }
                 />
 
                 {/* Dynamic sections: order controlled by array position in JSON */}
@@ -476,6 +483,8 @@ function WeddingInvitationContent() {
                                     }}
                                 >
                                     {group.sections.map((section, index) => {
+                                        const globalIndex =
+                                            sectionsForLayout.indexOf(section);
                                         const prev = group.sections[index - 1];
                                         const selfStyledTypes = [
                                             "gallery",
@@ -509,6 +518,10 @@ function WeddingInvitationContent() {
                                                 coupleNames={meta.coupleNames}
                                                 prevBgColor={prevBg}
                                                 prevBgImage={undefined}
+                                                revealImmediately={
+                                                    heroFreeAspect &&
+                                                    globalIndex === 0
+                                                }
                                             />
                                         );
                                     })}
@@ -541,6 +554,9 @@ function WeddingInvitationContent() {
                                         coupleNames={meta.coupleNames}
                                         prevBgColor={prevBg}
                                         prevBgImage={prevBgImg}
+                                        revealImmediately={
+                                            heroFreeAspect && globalIndex === 0
+                                        }
                                     />
                                 );
                             });

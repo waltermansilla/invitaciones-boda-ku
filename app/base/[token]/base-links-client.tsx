@@ -1,8 +1,15 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { Check, ChevronRight, Copy, Send, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Copy, Send, X } from "lucide-react";
+import configuradorEs from "@/data/landing/configurador-es.json";
 import FooterSection from "@/components/wedding/footer-section";
+import {
+    formatLandingMoney,
+    PANEL_GUEST_TIERS,
+    pickPanelTierPrice,
+    type PanelGuestTier,
+} from "@/lib/landing/landing-pricing";
 import {
     Dialog,
     DialogClose,
@@ -27,7 +34,10 @@ const PANEL_UPSELL_IMAGE = "/landing/media/images/panel.PNG";
 const PANEL_UPSELL_IMAGE_ALT =
     "Captura del panel de administración de invitados";
 const DESIGNER_WA_NUMBER = "543456023759";
-const PANEL_UPSELL_PRICE_LABEL = "por sólo $19.900";
+const PANEL_INCLUDED_GUESTS = 150;
+const PANEL_CURRENCY = "ARS" as const;
+type PanelModalStep = "info" | "activate";
+type PanelCapacityAnswer = "yes" | "more";
 const PANEL_UPSELL_INTRO =
     "Con WhatsApp recibís las confirmaciones, pero tenés que anotar y ordenar todo a mano. Con el panel, cada invitado confirma y el tablero se actualiza solo.";
 const BASE_WA_MESSAGE_STORAGE_PREFIX = "base-wa-last-message:";
@@ -57,7 +67,7 @@ function saveWaMessage(baseToken: string, message: string) {
 
 const PANEL_UPSELL_POINTS = [
     "Tablero con confirmaciones en tiempo real: quién viene, pendientes y quienes no asisten.",
-    "Filtros y totales claros para el día del evento.",
+    "Invitaciones con nombres propios y exclusivos.",
     "Podés ver requerimientos alimentarios (vegetariano, celíaco, etc.) y las canciones que sugieren los invitados, todo ordenado.",
     "Lista de invitados en vista A4 para guardar o imprimir en PDF.",
 ];
@@ -85,6 +95,12 @@ export function BaseLinksClient({
     registrarSinCodigoEnPanel?: boolean;
 }) {
     const [panelInfoOpen, setPanelInfoOpen] = useState(false);
+    const [panelModalStep, setPanelModalStep] =
+        useState<PanelModalStep>("info");
+    const [panelGuestCapacity, setPanelGuestCapacity] =
+        useState<PanelGuestTier>(PANEL_INCLUDED_GUESTS);
+    const [panelCapacityAnswer, setPanelCapacityAnswer] =
+        useState<PanelCapacityAnswer | null>(null);
     const [waModalOpen, setWaModalOpen] = useState(false);
     const [waDraft, setWaDraft] = useState("");
     const [pendingSendItem, setPendingSendItem] = useState<BaseLinkItem | null>(
@@ -127,11 +143,59 @@ export function BaseLinksClient({
         );
     };
 
-    const handleActivatePanel = () => {
-        openDesignerWhatsApp(
-            `Hola! Quiero activar el Panel de invitados para mi invitación (${title}).`,
-        );
+    const panel150Price = pickPanelTierPrice(PANEL_INCLUDED_GUESTS, PANEL_CURRENCY);
+
+    const closePanelModal = () => {
         setPanelInfoOpen(false);
+        setPanelModalStep("info");
+        setPanelGuestCapacity(PANEL_INCLUDED_GUESTS);
+        setPanelCapacityAnswer(null);
+    };
+
+    const handleActivatePanel = () => {
+        setPanelModalStep("activate");
+        setPanelGuestCapacity(PANEL_INCLUDED_GUESTS);
+        setPanelCapacityAnswer(null);
+    };
+
+    const panelTierPriceLabel = (guestCount: PanelGuestTier) => {
+        if (guestCount === PANEL_INCLUDED_GUESTS) {
+            return formatLandingMoney(panel150Price, PANEL_CURRENCY);
+        }
+        const tierPrice = pickPanelTierPrice(guestCount, PANEL_CURRENCY);
+        const diff = tierPrice - panel150Price;
+        return `+ ${formatLandingMoney(diff, PANEL_CURRENCY)}`;
+    };
+
+    const isPanelTierEnabled = (guestCount: PanelGuestTier) => {
+        if (guestCount === PANEL_INCLUDED_GUESTS) {
+            return true;
+        }
+        return panelCapacityAnswer === "more";
+    };
+
+    const isPanelTierSelected = (guestCount: PanelGuestTier) =>
+        panelGuestCapacity === guestCount;
+
+    const canConfirmPanel =
+        panelCapacityAnswer === "yes" || panelCapacityAnswer === "more";
+
+    const confirmPanelCapacity = panelGuestCapacity;
+
+    const handleConfirmPanel = (guests: PanelGuestTier) => {
+        const total = pickPanelTierPrice(guests, PANEL_CURRENCY);
+        openDesignerWhatsApp(
+            `Hola! Quiero activar el Panel de invitados para mi invitación (${title}).\n\nCapacidad: hasta ${guests} invitados\nTotal panel: ${formatLandingMoney(total, PANEL_CURRENCY)}`,
+        );
+        closePanelModal();
+    };
+
+    const handlePanelModalBack = () => {
+        if (panelModalStep === "activate") {
+            setPanelModalStep("info");
+            setPanelGuestCapacity(PANEL_INCLUDED_GUESTS);
+            setPanelCapacityAnswer(null);
+        }
     };
 
     const buildWaText = (link: string, message?: string) => {
@@ -463,8 +527,9 @@ export function BaseLinksClient({
                                         </button>
                                     </div>
                                     <p className="mt-2.5 text-sm leading-relaxed text-white/80">
-                                        ¿Querés ver quién confirmó sin revisar
-                                        chats? Sumá panel de invitados.
+                                        Más que evitar revisar chats:
+                                        invitaciones con nombre, lista ordenada
+                                        y confirmaciones al instante.
                                     </p>
                                 </div>
                             )}
@@ -522,19 +587,42 @@ export function BaseLinksClient({
                 </DialogContent>
             </Dialog>
 
-            <Dialog open={panelInfoOpen} onOpenChange={setPanelInfoOpen}>
+            <Dialog
+                open={panelInfoOpen}
+                onOpenChange={(open) => {
+                    if (open) {
+                        setPanelInfoOpen(true);
+                        return;
+                    }
+                    closePanelModal();
+                }}
+            >
                 <DialogContent
                     showCloseButton={false}
                     className="base-panel-modal !fixed !top-[max(0.375rem,env(safe-area-inset-top))] !bottom-[max(0.375rem,env(safe-area-inset-bottom))] !left-[1rem] !right-[1rem] !mx-auto !flex !h-auto !max-h-none !w-auto !max-w-none !translate-none flex-col gap-0 overflow-hidden border-white/20 !p-3.5 shadow-2xl"
                     onOpenAutoFocus={(e) => e.preventDefault()}
                 >
                     <div className="flex min-h-8 shrink-0 items-center pb-4">
-                        <div className="w-8 shrink-0" aria-hidden />
+                        {panelModalStep !== "info" ? (
+                            <button
+                                type="button"
+                                onClick={handlePanelModalBack}
+                                aria-label="Volver"
+                                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xs text-white opacity-80 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                            >
+                                <ChevronLeft className="h-5 w-5" />
+                            </button>
+                        ) : (
+                            <div className="w-8 shrink-0" aria-hidden />
+                        )}
                         <DialogTitle className="m-0 flex-1 text-center text-lg font-semibold leading-snug text-white">
-                            Panel de invitados
+                            {panelModalStep === "info"
+                                ? "Panel de invitados"
+                                : "Activar panel"}
                         </DialogTitle>
                         <DialogClose
                             aria-label="Cerrar"
+                            onClick={closePanelModal}
                             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xs text-white opacity-80 transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
                         >
                             <X className="h-4 w-4" />
@@ -545,41 +633,186 @@ export function BaseLinksClient({
                         data-slot="base-panel-modal-scroll"
                         className="base-panel-modal-scroll min-h-0 flex-1 px-3 pb-1"
                     >
-                        <div className="space-y-3">
-                            <p className="text-sm leading-relaxed text-white/80">
-                                {PANEL_UPSELL_INTRO}
-                            </p>
+                        {panelModalStep === "info" ? (
+                            <div className="space-y-3">
+                                <p className="text-sm leading-relaxed text-white/80">
+                                    {PANEL_UPSELL_INTRO}
+                                </p>
 
-                            <div className="base-panel-modal-thumb-wrap flex w-full justify-center">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                    src={PANEL_UPSELL_IMAGE}
-                                    alt={PANEL_UPSELL_IMAGE_ALT}
-                                    width={640}
-                                    height={400}
-                                    className="base-panel-modal-thumb block object-contain"
-                                />
+                                <div className="base-panel-modal-thumb-wrap flex w-full justify-center">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={PANEL_UPSELL_IMAGE}
+                                        alt={PANEL_UPSELL_IMAGE_ALT}
+                                        width={640}
+                                        height={400}
+                                        className="base-panel-modal-thumb block object-contain"
+                                    />
+                                </div>
+
+                                <ul className="list-disc space-y-2 pl-4 pb-2 text-[13px] leading-snug text-white/75">
+                                    {PANEL_UPSELL_POINTS.map((line) => (
+                                        <li key={line}>{line}</li>
+                                    ))}
+                                </ul>
                             </div>
-
-                            <ul className="list-disc space-y-2 pl-4 pb-2 text-[13px] leading-snug text-white/75">
-                                {PANEL_UPSELL_POINTS.map((line) => (
-                                    <li key={line}>{line}</li>
-                                ))}
-                            </ul>
-                        </div>
+                        ) : (
+                            <div className="space-y-3 pb-2">
+                                <p className="text-sm leading-relaxed text-white/80">
+                                    El panel incluye{" "}
+                                    <strong className="font-semibold text-white/95">
+                                        hasta {PANEL_INCLUDED_GUESTS} invitados
+                                    </strong>{" "}
+                                    para cargar tu lista, enviar invitaciones
+                                    con nombre propio y ver las confirmaciones.
+                                </p>
+                                <p className="text-sm leading-relaxed text-white/90">
+                                    ¿Te alcanza esa cantidad para tu evento?
+                                </p>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setPanelCapacityAnswer("yes");
+                                            setPanelGuestCapacity(
+                                                PANEL_INCLUDED_GUESTS,
+                                            );
+                                        }}
+                                        className="rounded-xl border px-3 py-2 text-[13px] font-semibold transition-opacity hover:opacity-95"
+                                        style={{
+                                            borderColor:
+                                                panelCapacityAnswer === "yes"
+                                                    ? "#5F84B5"
+                                                    : "rgba(255,255,255,0.2)",
+                                            backgroundColor:
+                                                panelCapacityAnswer === "yes"
+                                                    ? "rgba(95, 132, 181, 0.35)"
+                                                    : "rgba(0,0,0,0.15)",
+                                            color: "#fff",
+                                        }}
+                                    >
+                                        Sí
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setPanelCapacityAnswer("more");
+                                            setPanelGuestCapacity(
+                                                PANEL_INCLUDED_GUESTS,
+                                            );
+                                        }}
+                                        className="rounded-xl border px-3 py-2 text-[13px] font-semibold transition-opacity hover:opacity-95"
+                                        style={{
+                                            borderColor:
+                                                panelCapacityAnswer === "more"
+                                                    ? "#5F84B5"
+                                                    : "rgba(255,255,255,0.2)",
+                                            backgroundColor:
+                                                panelCapacityAnswer === "more"
+                                                    ? "rgba(95, 132, 181, 0.35)"
+                                                    : "rgba(0,0,0,0.15)",
+                                            color: "#fff",
+                                        }}
+                                    >
+                                        Necesito más cupo
+                                    </button>
+                                </div>
+                                <div className="mt-2 grid grid-cols-1 gap-2">
+                                    {PANEL_GUEST_TIERS.map((guestCount) => {
+                                        const enabled =
+                                            isPanelTierEnabled(guestCount);
+                                        const selected =
+                                            isPanelTierSelected(guestCount);
+                                        return (
+                                            <button
+                                                key={guestCount}
+                                                type="button"
+                                                disabled={!enabled}
+                                                onClick={() => {
+                                                    if (!enabled) return;
+                                                    setPanelGuestCapacity(
+                                                        guestCount,
+                                                    );
+                                                }}
+                                                className="flex items-center justify-between rounded-xl border px-3 py-2.5 text-left transition-opacity disabled:cursor-not-allowed"
+                                                style={{
+                                                    borderColor: selected
+                                                        ? "#5F84B5"
+                                                        : "rgba(255,255,255,0.2)",
+                                                    backgroundColor: selected
+                                                        ? "rgba(95, 132, 181, 0.35)"
+                                                        : "rgba(0,0,0,0.15)",
+                                                    color: "#fff",
+                                                    opacity: enabled ? 1 : 0.4,
+                                                }}
+                                            >
+                                                <span className="text-sm font-semibold">
+                                                    {configuradorEs.panelUi.hastaPreset.replace(
+                                                        /\{\{n\}\}/g,
+                                                        String(guestCount),
+                                                    )}
+                                                </span>
+                                                <span className="text-sm font-semibold tabular-nums">
+                                                    {panelTierPriceLabel(
+                                                        guestCount,
+                                                    )}
+                                                </span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="base-panel-modal-footer shrink-0 border-t border-white/15 pt-3 text-center">
-                        <button
-                            type="button"
-                            onClick={handleActivatePanel}
-                            className="base-modal-primary-btn w-full rounded-xl px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
-                        >
-                            Activar Panel
-                        </button>
-                        <p className="mt-1.5 text-xs text-white/60">
-                            {PANEL_UPSELL_PRICE_LABEL}
-                        </p>
+                        {panelModalStep === "info" ? (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={handleActivatePanel}
+                                    className="base-modal-primary-btn w-full rounded-xl px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90"
+                                >
+                                    Activar Panel
+                                </button>
+                                <p className="mt-1.5 text-xs text-white/60">
+                                    Por{" "}
+                                    {formatLandingMoney(
+                                        panel150Price,
+                                        PANEL_CURRENCY,
+                                    )}
+                                </p>
+                            </>
+                        ) : (
+                            <div className="space-y-2">
+                                {canConfirmPanel ? (
+                                    <div className="rounded-xl border border-white/15 bg-black/20 px-3 py-2.5">
+                                        <p className="text-sm font-bold leading-tight text-white">
+                                            {configuradorEs.panelUi.panelTotal.replace(
+                                                /\{\{total\}\}/g,
+                                                formatLandingMoney(
+                                                    pickPanelTierPrice(
+                                                        confirmPanelCapacity,
+                                                        PANEL_CURRENCY,
+                                                    ),
+                                                    PANEL_CURRENCY,
+                                                ),
+                                            )}
+                                        </p>
+                                    </div>
+                                ) : null}
+                                <button
+                                    type="button"
+                                    disabled={!canConfirmPanel}
+                                    onClick={() =>
+                                        handleConfirmPanel(confirmPanelCapacity)
+                                    }
+                                    className="base-modal-primary-btn w-full rounded-xl px-4 py-4 text-base font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                                >
+                                    Confirmar
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </DialogContent>
             </Dialog>
