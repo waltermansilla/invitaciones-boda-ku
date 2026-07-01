@@ -141,7 +141,11 @@ export default function CronogramaLimpiezaPage() {
       const resultado = [...base]
       const hoy = new Date()
       const inicio = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())
-      const pares = generarParesJuevesSabado(inicio, 7)
+      const filasConGrupo = resultado.filter(
+        (fila) => fila.grupo.toUpperCase() !== 'ASAMBLEA',
+      ).length
+      const cantidadPares = Math.min(15, Math.max(filasConGrupo, 1))
+      const pares = generarParesJuevesDomingo(inicio, cantidadPares)
 
       let cursorPar = 0
       for (let i = 0; i < resultado.length; i += 1) {
@@ -153,7 +157,7 @@ export default function CronogramaLimpiezaPage() {
         if (!par) {
           break
         }
-        resultado[i] = { ...fila, semana: formatearPar(par.jueves, par.sabado) }
+        resultado[i] = { ...fila, semana: formatearPar(par.jueves, par.domingo) }
         cursorPar += 1
       }
 
@@ -267,7 +271,7 @@ export default function CronogramaLimpiezaPage() {
         >
           <thead>
             <tr>
-              <th className={styles.thCronogram}>Semanas (Jue y Sab)</th>
+              <th className={styles.thCronogram}>Semanas (Jue y Dom)</th>
               <th className={styles.thCronogram}>Grupo</th>
               {modoEdicion ? <th className={styles.thCronogram}>Accion</th> : null}
             </tr>
@@ -383,21 +387,21 @@ const colorGrupo = (grupo: string): string => {
   return ''
 }
 
-function generarParesJuevesSabado(
+function generarParesJuevesDomingo(
   desde: Date,
   cantidad: number,
-): Array<{ jueves: Date; sabado: Date }> {
-  const pares: Array<{ jueves: Date; sabado: Date }> = []
+): Array<{ jueves: Date; domingo: Date }> {
+  const pares: Array<{ jueves: Date; domingo: Date }> = []
   const primerJueves = juevesDeSemanaActual(desde)
 
   for (let i = 0; i < cantidad; i += 1) {
     const jueves = new Date(primerJueves)
     jueves.setDate(primerJueves.getDate() + i * 7)
 
-    const sabado = new Date(jueves)
-    sabado.setDate(jueves.getDate() + 2)
+    const domingo = new Date(jueves)
+    domingo.setDate(jueves.getDate() + 3)
 
-    pares.push({ jueves, sabado })
+    pares.push({ jueves, domingo })
   }
 
   return pares
@@ -413,15 +417,15 @@ function juevesDeSemanaActual(base: Date): Date {
   return fecha
 }
 
-function formatearPar(jueves: Date, sabado: Date): string {
+function formatearPar(jueves: Date, domingo: Date): string {
   const mesJueves = nombreMes(jueves)
-  const mesSabado = nombreMes(sabado)
+  const mesDomingo = nombreMes(domingo)
 
-  if (mesJueves === mesSabado) {
-    return `${jueves.getDate()} y ${sabado.getDate()} de ${mesJueves}`
+  if (mesJueves === mesDomingo) {
+    return `${jueves.getDate()} y ${domingo.getDate()} de ${mesJueves}`
   }
 
-  return `${jueves.getDate()} de ${mesJueves} y ${sabado.getDate()} de ${mesSabado}`
+  return `${jueves.getDate()} de ${mesJueves} y ${domingo.getDate()} de ${mesDomingo}`
 }
 
 function nombreMes(fecha: Date): string {
