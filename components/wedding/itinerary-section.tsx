@@ -64,9 +64,11 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
   const config = useConfig()
   const isMuestra = useIsMuestra()
   const theme = config.theme as Record<string, unknown>
-  const iconBg = sectionBgColor === "primary"
+  const isPrimaryBg = sectionBgColor === "primary"
+  const iconBg = isPrimaryBg
     ? (theme.primaryColor as string) || "#6B7F5E"
     : (theme.backgroundColor as string) || "#FAF8F5"
+  const timelineFillClass = isPrimaryBg ? "bg-current" : "bg-primary"
 
   const containerRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
@@ -105,6 +107,13 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
       const clamped = Math.min(Math.max(progress, 0), 1)
       fill.style.height = `${clamped * 100}%`
 
+      const activeClasses = isPrimaryBg
+        ? ["border-current", "text-inherit"]
+        : ["border-primary", "text-primary"]
+      const inactiveClasses = isPrimaryBg
+        ? ["border-current/15", "text-inherit/30"]
+        : ["border-foreground/15", "text-foreground/30"]
+
       iconRefs.current.forEach((el, i) => {
         if (!el) return
         const iconRect = el.getBoundingClientRect()
@@ -112,8 +121,8 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
         const isActive = iconMid <= viewportMid
 
         if (isActive) {
-          el.classList.add("border-primary", "text-primary")
-          el.classList.remove("border-foreground/15", "text-foreground/30")
+          el.classList.add(...activeClasses)
+          el.classList.remove(...inactiveClasses)
 
           if (!activatedRef.current.has(i)) {
             activatedRef.current.add(i)
@@ -123,13 +132,13 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
             }, { once: true })
           }
         } else {
-          el.classList.remove("border-primary", "text-primary")
-          el.classList.add("border-foreground/15", "text-foreground/30")
+          el.classList.remove(...activeClasses)
+          el.classList.add(...inactiveClasses)
           activatedRef.current.delete(i)
         }
       })
     })
-  }, [])
+  }, [isPrimaryBg])
 
   useEffect(() => {
     positionTrack()
@@ -163,7 +172,7 @@ export default function ItinerarySection({ title, events, sectionBgColor }: Itin
           >
             <div
               ref={fillRef}
-              className="absolute top-0 bg-primary"
+              className={`absolute top-0 ${timelineFillClass}`}
               style={{ left: "0px", height: "0%", width: "2px", willChange: "height" }}
             />
           </div>

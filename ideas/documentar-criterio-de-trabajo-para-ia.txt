@@ -1,0 +1,166 @@
+IDEA: Documentar mi forma de trabajar para la IA
+================================================
+Fecha de nota: julio 2026
+Contexto: al armar clientes (ej. Mia, Carla-Juan) hay muchos criterios que hoy están solo en mi cabeza.
+La IA a veces acierta y a veces no (tokens reutilizados, panel que no corresponde, colores distintos, etc.).
+Esta nota NO son instrucciones activas — son ideas para implementar cuando quiera.
+
+
+¿POR QUÉ HACERLO?
+-----------------
+- No depender de recordar todo en cada chat nuevo.
+- Que la IA siga MI criterio, no el criterio genérico.
+- Menos errores repetidos (copiar datos de otro cliente, olvidar pin, panel de más).
+- Escalar: si algún día alguien más toca el proyecto, tiene el mapa.
+
+
+¿ES COMÚN? ¿CÓMO SE LLAMA?
+---------------------------
+Sí, es muy común y es una de las formas más efectivas de trabajar con IA en proyectos propios.
+
+Nombres que se usan:
+  - Cursor Rules / Project Rules
+  - AGENTS.md (convención: archivo raíz que explica al agente cómo trabajar en el repo)
+  - Agent Skills (manuales de tarea que la IA lee cuando corresponde)
+  - Playbook / Runbook / SOP (procedimiento operativo)
+  - Context engineering (diseñar qué contexto le doy a la IA y cuándo)
+  - Golden examples (JSON de referencia: "así debe quedar un Premium XV estilo Camila")
+
+
+OPCIONES CONCRETAS (de más liviana a más robusta)
+--------------------------------------------------
+
+1) CURSOR RULES — .cursor/rules/*.mdc
+   Archivos chicos, cada uno UN tema. Cursor los inyecta según contexto.
+   Ejemplos de archivos separados:
+     - cliente-desde-resumen.mdc
+     - tokens-y-accesos.mdc
+     - panel-rsvp.mdc
+     - secciones-boda-xv.mdc
+     - estilos-referencia.mdc
+   Buena práctica: reglas cortas (ideal < 50 líneas c/u). Si hay muchos criterios, PARTIR, no un megarchivo.
+
+2) AGENT SKILL — .cursor/skills/completar-cliente-desde-resumen/
+   Para workflows completos y repetitivos ("armá el cliente desde el resumen").
+   Puede incluir: checklist, decisiones si/entonces, links a templates, script de validación.
+   Skill personal (~/.cursor/skills/) = para todos mis proyectos.
+   Skill del proyecto (.cursor/skills/) = solo Invitaciones BODA, compartible con el repo.
+
+3) AGENTS.md en la raíz del repo
+   Índice corto (1–2 páginas): qué hace el proyecto, por dónde empezar, qué rules/skills leer, qué nunca hacer.
+
+4) TEMPLATES + EJEMPLOS DORADOS (ya tengo parte)
+   data/templates/_TEMPLATE_*.json + clientes referencia por estilo.
+   La IA copia estructura; las rules dicen cómo adaptar.
+
+5) VALIDADOR AUTOMÁTICO (script o checklist)
+   Verifica cosas que no deberían fallar nunca:
+     - tokens únicos en todo el repo
+     - rsvpPanel.theme.primaryColor === theme.primaryColor
+     - panel solo si el plan lo incluye
+     - secciones del brief cubiertas
+     - JSON válido, rutas de imágenes coherentes
+   Idea: pre-commit o comando npm tipo `npm run validate-cliente 28-carla-juan`
+
+
+CRITERIOS MÍOS QUE YA SÉ QUE HAY QUE DOCUMENTAR (borrador)
+-----------------------------------------------------------
+(Seguir agregando acá antes de pasarlos a rules definitivas)
+
+TOKENS Y ACCESOS
+  - Cliente nuevo → generar access.token (6 chars) y base.token (8 chars) ALEATORIOS.
+  - Verificar que NO existan ya en ningún otro JSON del repo.
+  - Si hay pin en base → generar pin numérico, también único.
+  - No copiar tokens de otro cliente (ej. Romina → Carla).
+
+PANEL / RSVP PANEL
+  - Si el resumen del configurador NO incluye panel → no incluir rsvpPanel, o si ya está en el template, borrarlo / enabled: false.
+  - Si SÍ hay panel → rsvpPanel.theme.primaryColor = theme.primaryColor de la invitación.
+  - panelId único, formato sugerido: {slug}-{id-corto-del-formulario}.
+
+DESDE RESUMEN + DETALLES
+  - Partir del JSON de referencia del ESTILO pedido (ej. Meliza & Iván → 3-meliza-ivan.json).
+  - No sacar secciones que ya vienen en el template si el cliente no las pidió explícitamente sacar; solo agregar/cambiar lo que falta.
+  - Mapear las secciones del plan a los types del JSON (ubicación, dress code, regalos, etc.).
+  - No inventar datos que no vinieron: WhatsApp, Drive, fotos, tokens → vacío o placeholder marcado, NO copiar de otro cliente.
+
+TEMA / ESTILO
+  - "Estilo X" = copiar theme/estructura del cliente X de referencia.
+  - Colores del brief → aplicar en theme; panel siempre alineado.
+
+FOTOS / ASSETS
+  - Rutas: /clientes/{tipo}/{slug}/images/...
+  - Si el brief dice "álbum por chat" → no poner link de Drive inventado; desactivar photos o dejar pendiente.
+
+FORMATO DE REGLAS (buena práctica)
+  - Escribir en formato SI → ENTONCES, no párrafos largos:
+      SI resumen NO menciona panel → eliminar rsvpPanel
+      SI hay panel → primary del panel = primary de invitación
+      SI cliente nuevo → tokens únicos verificados en repo
+
+
+MATRIZ ESTILO → ARCHIVO REFERENCIA (idea)
+-----------------------------------------
+Armar tabla fija para no re-explicar cada vez:
+  - Camila (XV)        → data/clientes/xv/10-camila.json
+  - Meliza & Iván      → data/clientes/boda/3-meliza-ivan.json
+  - (ir sumando según estilos que ofrezco en landing/configurador)
+
+Cuando el configurador dice "Estilo: X", la rule apunta directo al archivo.
+
+
+OTRAS IDEAS COPADAS
+-------------------
+
+- Plantilla de brief vacía (.md): campos que espero del configurador + detalles.
+  Cuando llega un cliente, pego ahí y queda ordenado para pasárselo a la IA.
+
+- Regla explícita "no inventar": si falta un dato, dejarlo vacío o comentar pendiente.
+
+- Changelog / pendientes por cliente: en commit o nota al lado del JSON
+  (ej. "pendiente: WA, fotos hero, overlay").
+
+- Reglas distintas por tipo de evento: Boda Premium vs XV Premium
+  (confirmarWhatsapp vs rsvp form, secciones típicas, etc.).
+
+- Un skill "Completar cliente desde resumen" + rules chicas de soporte
+  (mejor que un solo archivo de memoria gigante).
+
+- Script que liste todos los tokens/pins del repo para chequear duplicados antes de guardar.
+
+- Golden client per plan: un ejemplo "perfecto" de Premium Boda y uno de Premium XV
+  además del template genérico (el template tiene muchos comentarios; el golden es más limpio).
+
+- Cuando implemente rules: probar con un cliente ficticio y ver qué se salta la IA → ajustar.
+
+
+QUÉ EVITAR
+----------
+- Un solo archivo enorme de "memoria": la IA lo lee parcial, se mezclan prioridades, cuesta mantener.
+- Mezclar IDEAS (esta carpeta) con INSTRUCCIONES ACTIVAS (rules/skills): son cosas distintas.
+- Rules demasiado vagas ("hacelo bien") — siempre con ejemplos concretos y casos borde.
+
+
+ORDEN SUGERIDO PARA IMPLEMENTAR (cuando decida)
+-----------------------------------------------
+1. Listar todos mis criterios en bruto (aunque sea desordenado) — puede ser más archivos en ideas/.
+2. Armar matriz estilo → referencia.
+3. Crear 3–6 Cursor Rules cortas (tokens, panel, brief→JSON, estilos).
+4. Crear 1 Skill "Completar cliente desde resumen".
+5. AGENTS.md corto en la raíz.
+6. Validador chico cuando tenga 10+ reglas críticas.
+
+
+NOTAS DE LA CONVERSACIÓN (ejemplos reales donde falló o faltó criterio)
+-----------------------------------------------------------------------
+- Carla-Juan: quedó con tokens de Romina-Franco porque el archivo se copió del template equivocado.
+- Carla-Juan: WhatsApp del RSVP vacío porque no venía en el brief (bien), pero antes tenía el de Romina (mal).
+- Mia: se partió de Camila y se mantuvo estructura completa — ese criterio funcionó bien.
+- Panel: primary del panel debería haber coincidido con theme.primaryColor desde el inicio.
+
+
+PRÓXIMOS PASOS (para mí)
+------------------------
+[ ] Ir volcando criterios sueltos a más archivos en ideas/ cuando se me ocurran.
+[ ] Cuando tenga la lista más completa, convertir a .cursor/rules/ + un skill.
+[ ] Opcional: comando validate-cliente.

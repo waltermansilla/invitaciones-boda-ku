@@ -1,0 +1,440 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Nuestra Boda - Carla & Juan",
+        "description": "Estamos felices de invitarte a celebrar nuestra boda.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Juan",
+            "brideName": "Carla",
+            "separator": "&"
+        }
+    },
+    "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "nxu28Je0",
+        "pinEnabled": true,
+        "pin": "323255"
+    },
+    "access": {
+        "tokenEnabled": true,
+        "token": "8Jkp62",
+        "allowLegacyUntil": ""
+    },
+
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = color de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general. lightBgTextColor = textos en fondo claro. darkBgTextColor = textos en fondo oscuro. modalTextColor = texto en modales. font.family = Google Fonts.",
+    "theme": {
+        "primaryColor": "#222",
+        "backgroundColor": "#FAF8F5",
+        "textColor": "#777",
+        "lightBgTextColor": "#777",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#E8EDF2",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Nos haría muy felices que seas parte de este momento.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "60px",
+            "weight": "600",
+            "color": "#000",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": false
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "hero": {
+        "coupleImage": "/clientes/boda/28-carla-juan/images/hero.jpeg",
+        "headline": "¡Nos casamos!",
+        "showNamesOnPhoto": false,
+        "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
+        "namesDisplay": {
+            "enabled": false,
+            "position": "top",
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.9)",
+            "decorativeLines": false,
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-10-31T19:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' o 'background'.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Nos haría muy felices que seas parte de este momento.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "31 de Octubre de 2026"
+            }
+        },
+        {
+            "// --- GALERIA DE FOTOS (slider) ---": "",
+            "_comment": "Slider automatico. Imagenes en /public/clientes/boda/28-carla-juan/images/.",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/28-carla-juan/images/1.jpeg"]
+            }
+        },
+
+        {
+            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional.",
+            "type": "dressCode",
+            "id": "dress-code",
+            "bgColor": "background",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Dress code",
+                "subtitle": "Formal / Smart casual",
+                "description": "Te pedimos amablemente evitar el color BLANCO, ya que quedará reservado para la novia.",
+                "showButton": true,
+                "colorSwatches": {
+                    "enabled": false,
+                    "shape": "square",
+                    "colors": [
+                        "#ffffff",
+                        "#d9d9de",
+                        "#8a9aab",
+                        "#5c4d44",
+                        "#3d4f5c"
+                    ]
+                },
+                "button": {
+                    "text": "Ver consejo",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "¡Importante!",
+                    "sections": [
+                        {
+                            "heading": "Traer abrigo",
+                            "text": "La celebración contará con espacios al aire libre; sugerimos traer abrigo."
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "_comment": "ITINERARY: Linea de tiempo del evento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia religiosa",
+                        "address": "Iglesia Lunlunta, Franklin Villanueva y Masa Sur, Mendoza",
+                        "time": "19:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://www.google.com/maps/place/Iglesia+Lunlunta/@-33.0484937,-68.8255989,15.5z/data=!4m6!3m5!1s0x967e754411a3eeab:0x71c5767b0213cdea!8m2!3d-33.0521316!4d-68.8230778!16s%2Fg%2F11h9y4bgbh?entry=ttu",
+                            "variant": "background"
+                        }
+                    },
+                    {
+                        "icon": "civil",
+                        "name": "Ceremonia civil",
+                        "address": "Salón La Guadalupe, La Florida, M5517 Lunlunta, Mendoza",
+                        "time": "19:45 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://www.google.com/maps/place/La+Guadalupe/@-33.0484937,-68.8255989,15.5z/data=!4m6!3m5!1s0x967e0b1a81309d4b:0x588836c1de0b0390!8m2!3d-33.0470046!4d-68.8083862!16s%2Fg%2F11fj9c41ph?entry=ttu",
+                            "variant": "background"
+                        }
+                    },
+                    {
+                        "icon": "heart",
+                        "name": "Recepción",
+                        "address": "Salón La Guadalupe, La Florida",
+                        "time": "20:15 hs"
+                    },
+                    {
+                        "icon": "utensils",
+                        "name": "Cena",
+                        "time": "21:30 hs"
+                    },
+                    {
+                        "icon": "party",
+                        "name": "¡Todos a bailar!",
+                        "time": "23:00 a 05:00 hs"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/28-carla-juan/images/2.jpeg",
+                    "/clientes/boda/28-carla-juan/images/3.jpeg"
+                ]
+            }
+        },
+        {
+            "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
+            "type": "honeymoon",
+            "id": "honeymoon",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modals"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Tu presencia es nuestro mejor regalo; aun así, si deseas hacernos un presente, te compartimos nuestros datos:",
+                "showButton": true,
+                "button": {
+                    "text": "Ver datos",
+                    "url": "#",
+                    "variant": "secondary",
+                    "action": "modal"
+                },
+                "_comment_action": "action: 'modal' abre modal, 'url' abre el link directo en button.url",
+                "modalMode": "combined",
+                "_comment_modalMode": "combined = ambos modales juntos. sequential = primero uno, boton para ir al otro.",
+                "modals": [
+                    {
+                        "type": "bank",
+                        "title": "Datos de transferencia",
+                        "description": "Podés realizar tu aporte en pesos o en dólares en las siguientes cuentas:",
+                        "bankData": [
+                            {
+                                "label": "Alias Pesos",
+                                "value": "Bodacarlayjuan.ars"
+                            },
+
+                            {
+                                "label": "Alias Dólares",
+                                "value": "Bodacarlayjuan.usd"
+                            },
+                            {
+                                "label": "Titular",
+                                "value": "Castro Guijarro Ana"
+                            },
+                            { "label": "Banco", "value": "Patagonia" }
+                        ],
+                        "thankYouText": "¡Muchas gracias!"
+                    }
+                ]
+            }
+        },
+        {
+            "_comment": "PLAYLIST: Link a playlist colaborativa de Spotify.",
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["title", "description", "button"],
+            "data": {
+                "title": "Playlist de la fiesta",
+                "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
+                "button": {
+                    "text": "Agregar canciones",
+                    "url": "https://open.spotify.com/playlist/5xfJfLPXar0WY6KVIasfbn?si=3Lke4_pgTLaI4bKfcdMjoA&pt=0e565699e473260602d443e40a1d3ffa&pi=5eu-qiCYRGeQF",
+                    "variant": "background"
+                }
+            }
+        },
+        {
+            "_comment": "ADULTS ONLY: Evento solo para adultos.",
+            "type": "adultsOnly",
+            "id": "adults-only",
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description"],
+            "data": {
+                "icon": "baby",
+                "title": "Una noche sólo para adultos",
+                "description": "Por esta vez, dejamos a los más pequeños en casa y nos regalamos una noche para disfrutar entre nosotros."
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-final",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
+                "author": "Carla & Juan",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FORMULARIO RSVP ---": "",
+            "_comment": "Formulario de confirmacion con dietas y mensaje.",
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "background",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 15 de Septiembre",
+                "guestCountLabel": "Número de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "¿Confirmás tu asistencia?",
+                    "attendanceYes": "¡Confirmo!",
+                    "attendanceNo": "No podré asistir",
+                    "dietary": "¿Algún requerimiento en la alimentación?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celíaco",
+                        "Otro"
+                    ],
+                    "extraInputs": [
+                        {
+                            "id": "mensajersvp",
+                            "label": "¿Algún mensaje para los novios?",
+                            "placeholder": "Escribí tu mensaje",
+                            "tituloPanel": "Mensaje",
+                            "a4": "bottom"
+                        }
+                    ],
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "542664295203",
+                    "messageTemplate": "Hola Carla & Juan! Confirmo la asistencia a su boda.\n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
+                }
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-final2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por ser parte de nuestra historia y por acompañarnos en el comienzo de esta nueva etapa.",
+                "author": "Carla & Juan",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/boda/28-carla-juan/images/final.jpeg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#000",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+        {
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": "https://wa.me/543456023759"
+                    }
+                ]
+            }
+        }
+    ]
+}
