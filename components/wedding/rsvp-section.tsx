@@ -880,26 +880,32 @@ export default function RSVPSection({
             }
 
             const invitadoCreado = createData.invitado;
+            const isFamilia = guestsForSubmit.length > 1;
+            const confirmPayload: Record<string, unknown> = {
+                asiste: guestsForSubmit.some((g) => g.attendance === "yes"),
+                mensaje: panelExtraSummary,
+                cancion: songSummary,
+            };
+            if (isFamilia) {
+                confirmPayload.integrantes = guestsForSubmit.map((g, idx) => ({
+                    id: invitadoCreado.integrantes?.[idx]?.id,
+                    nombre: `${g.firstName} ${g.lastName}`.trim(),
+                    asiste: g.attendance === "yes",
+                    restricciones:
+                        g.dietary !== "Ninguno" ? g.dietary : null,
+                    es_colado: false,
+                }));
+            } else {
+                const solo = guestsForSubmit[0];
+                confirmPayload.restricciones =
+                    solo && solo.dietary !== "Ninguno" ? solo.dietary : null;
+            }
             const confirmRes = await fetch(
                 `/api/rsvp/${invitadoCreado.codigo}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        integrantes: guestsForSubmit.map((g, idx) => ({
-                            id: invitadoCreado.integrantes?.[idx]?.id,
-                            nombre: `${g.firstName} ${g.lastName}`.trim(),
-                            asiste: g.attendance === "yes",
-                            restricciones:
-                                g.dietary !== "Ninguno" ? g.dietary : null,
-                            es_colado: Boolean(g.isColado),
-                        })),
-                        asiste: guestsForSubmit.some(
-                            (g) => g.attendance === "yes",
-                        ),
-                        mensaje: panelExtraSummary,
-                        cancion: songSummary,
-                    }),
+                    body: JSON.stringify(confirmPayload),
                 },
             );
             const confirmData = await confirmRes

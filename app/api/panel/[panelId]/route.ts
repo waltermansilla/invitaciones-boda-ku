@@ -19,7 +19,7 @@ import { extraInputsA4LayoutFromMergedClient } from "@/lib/panel-a4-extras"
 import { normalizeColadoSingular } from "@/lib/colado-label"
 import { resolveEventoForPanelConfig } from "@/lib/panel-evento-resolve"
 import { panelConfirmacionFromConfig } from "@/lib/panel-confirmacion"
-import { validateInvitadoNombre, validateIntegrantesNombres } from "@/lib/invitado-nombre"
+import { validateInvitadoNombre, validateIntegrantesNombres, validateFamiliaIntegrantesCount } from "@/lib/invitado-nombre"
 import {
   limiteColadosMaxFromConfig,
   limiteInvitadosPanelFromConfig,
@@ -487,6 +487,10 @@ export async function POST(
     Array.isArray(body.integrantes) &&
     body.integrantes.length > 0
   ) {
+    const countError = validateFamiliaIntegrantesCount(body.integrantes)
+    if (countError) {
+      return NextResponse.json({ error: countError }, { status: 400 })
+    }
     const integrantesError = validateIntegrantesNombres(body.integrantes)
     if (integrantesError) {
       return NextResponse.json({ error: integrantesError }, { status: 400 })

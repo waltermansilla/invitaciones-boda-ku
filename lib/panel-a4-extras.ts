@@ -163,3 +163,38 @@ export function resolveExtraValueFromStoredMensaje(
 
   return "-"
 }
+
+export function normalizePanelMemberKey(s: string): string {
+  return s.trim().toLowerCase().replace(/\s+/g, " ")
+}
+
+/** Líneas de extras (`mensaje` en DB) visibles para una persona en el panel. */
+export function panelExtraLinesForMember(
+  raw: string | undefined,
+  memberName: string,
+  otherMemberNames: string[] = [],
+): string[] {
+  if (!raw?.trim()) return []
+  const entries = parsePerMemberEntriesStored(raw)
+  const targetKey = normalizePanelMemberKey(memberName)
+  const otherKeys = new Set(otherMemberNames.map(normalizePanelMemberKey))
+
+  const direct = entries.filter(
+    (e) => normalizePanelMemberKey(e.memberName) === targetKey,
+  )
+  if (direct.length) {
+    return direct
+      .map((e) =>
+        e.label ? `${e.label}: ${e.value}`.trim() : e.value.trim(),
+      )
+      .filter(Boolean)
+  }
+
+  const orphan = entries.filter(
+    (e) =>
+      !e.label &&
+      normalizePanelMemberKey(e.memberName) !== targetKey &&
+      !otherKeys.has(normalizePanelMemberKey(e.memberName)),
+  )
+  return orphan.map((e) => e.value.trim()).filter(Boolean)
+}

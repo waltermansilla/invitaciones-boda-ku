@@ -27,8 +27,10 @@ import {
 } from "@/lib/client-helpers-shared";
 import { GUEST_PREVIEW_PARAM } from "@/lib/guest-preview";
 import {
+    FAMILIA_INTEGRANTES_MAX,
     INVITADO_NOMBRE_MAX_LENGTH,
     trimInvitadoNombre,
+    validateFamiliaIntegrantesCount,
     validateIntegranteNombre,
     validateIntegrantesNombres,
     validateInvitadoNombre,
@@ -47,6 +49,7 @@ import {
     panelDebtShouldIntercept,
     type PanelDebtGatePayload,
 } from "@/lib/panel-deuda";
+import { panelExtraLinesForMember } from "@/lib/panel-a4-extras";
 
 interface Integrante {
     id: string;
@@ -56,6 +59,28 @@ interface Integrante {
     fecha_confirmacion?: string;
     es_colado?: boolean;
 }
+
+function integrantesColadoDe(inv: Invitado): Integrante[] {
+    return (inv.integrantes ?? []).filter((i) => i.es_colado);
+}
+
+function integranteNombresDe(inv: Invitado): string[] {
+    return (inv.integrantes ?? []).map((i) => i.nombre);
+}
+
+function hasPanelExtraInfo(inv: Invitado): boolean {
+    const names = integranteNombresDe(inv);
+    if (panelExtraLinesForMember(inv.mensaje, inv.nombre, names).length) {
+        return true;
+    }
+    return names.some((n) =>
+        panelExtraLinesForMember(inv.mensaje, n, [
+            inv.nombre,
+            ...names.filter((x) => x !== n),
+        ]).length,
+    );
+}
+
 interface Invitado {
     id: string;
     nombre: string;
@@ -570,8 +595,7 @@ export default function PanelPage({
             inv.integrantes?.some((i) => Boolean(i.restricciones)),
         );
     const hasMusic = (inv: Invitado) => Boolean(inv.cancion?.trim());
-    const hasExtra = (inv: Invitado) =>
-        Boolean(inv.mensaje?.trim() && inv.mensaje !== inv.cancion);
+    const hasExtra = (inv: Invitado) => hasPanelExtraInfo(inv);
     /** Integrantes marcados como colado (agregados desde el RSVP). */
     const hasColadosRegistrados = (inv: Invitado) =>
         Boolean(inv.integrantes?.some((i) => i.es_colado));
@@ -584,15 +608,14 @@ export default function PanelPage({
             if (estados.includes("pendiente")) return "pendiente";
             return "confirmado";
         }
-        if (
-            inv.tipo === "persona" &&
-            inv.integrantes &&
-            inv.integrantes.length > 0
-        ) {
-            const estados = [
-                inv.estado,
-                ...inv.integrantes.map((int) => int.estado),
-            ];
+        if (inv.tipo === "persona") {
+            const colados = integrantesColadoDe(inv);
+            if (!colados.length) {
+                if (inv.estado === "no_asiste") return "no_asiste";
+                if (inv.estado === "pendiente") return "pendiente";
+                return "confirmado";
+            }
+            const estados = [inv.estado, ...colados.map((int) => int.estado)];
             if (estados.includes("no_asiste")) return "no_asiste";
             if (estados.includes("pendiente")) return "pendiente";
             return "confirmado";
@@ -614,8 +637,8 @@ export default function PanelPage({
                 if (!Number.isNaN(t)) times.push(t);
             });
         }
-        if (inv.tipo === "persona" && inv.integrantes?.length) {
-            inv.integrantes.forEach((int) => {
+        if (inv.tipo === "persona") {
+            integrantesColadoDe(inv).forEach((int) => {
                 if (!int.fecha_confirmacion) return;
                 const t = new Date(int.fecha_confirmacion).getTime();
                 if (!Number.isNaN(t)) times.push(t);
@@ -730,11 +753,10 @@ export default function PanelPage({
                 }
             } else if (
                 inv.tipo === "persona" &&
-                inv.integrantes &&
-                inv.integrantes.length > 0
+                integrantesColadoDe(inv).length > 0
             ) {
                 const titularEstado = inv.estado;
-                const ints = inv.integrantes;
+                const ints = integrantesColadoDe(inv);
                 const uniq = new Set([
                     titularEstado,
                     ...ints.map((x) => x.estado),
@@ -1769,8 +1791,9 @@ function InvitadoRow({
     const colPlur = coladoPlural(colSing);
 
     const integrantesRow = invitado.integrantes ?? [];
+    const coladosRow = integrantesRow.filter((i) => i.es_colado);
     const personaConColados =
-        invitado.tipo === "persona" && integrantesRow.length > 0;
+        invitado.tipo === "persona" && coladosRow.length > 0;
     const esFamiliaConInts =
         invitado.tipo === "familia" && integrantesRow.length > 0;
 
@@ -1778,7 +1801,7 @@ function InvitadoRow({
     const estadosGrupo: string[] | null = esFamiliaConInts
         ? integrantesRow.map((i) => i.estado)
         : personaConColados
-          ? [invitado.estado, ...integrantesRow.map((i) => i.estado)]
+          ? [invitado.estado, ...coladosRow.map((i) => i.estado)]
           : null;
 
     let familiaEstadoUnico: string | null = null;
@@ -1892,10 +1915,13 @@ function InvitadoRow({
     };
 
     const songsByMember = parsePerMemberValues(invitado.cancion);
-    const extraByMember = parsePerMemberValues(
+    const integranteNombres = integrantesRow.map((i) => i.nombre);
+    const titularExtraLines = panelExtraLinesForMember(
         invitado.mensaje && invitado.mensaje !== invitado.cancion
             ? invitado.mensaje
             : undefined,
+        invitado.nombre,
+        integranteNombres,
     );
     const hasDietaryInfo = Boolean(
         invitado.restricciones ||
@@ -1907,9 +1933,16 @@ function InvitadoRow({
             invitado.integrantes.some((i) => songsByMember[i.nombre]?.length)),
     );
     const hasExtraInfo = Boolean(
-        (invitado.mensaje && invitado.mensaje !== invitado.cancion) ||
-        (invitado.integrantes?.length &&
-            invitado.integrantes.some((i) => extraByMember[i.nombre]?.length)),
+        titularExtraLines.length ||
+        integrantesRow.some((i) =>
+            panelExtraLinesForMember(
+                invitado.mensaje && invitado.mensaje !== invitado.cancion
+                    ? invitado.mensaje
+                    : undefined,
+                i.nombre,
+                [invitado.nombre, ...integranteNombres.filter((n) => n !== i.nombre)],
+            ).length,
+        ),
     );
 
     useEffect(() => {
@@ -1977,8 +2010,8 @@ function InvitadoRow({
                         )}
                     {personaConColados && (
                         <p className="text-xs text-neutral-500">
-                            {integrantesRow.length}{" "}
-                            {integrantesRow.length === 1 ? colSing : colPlur}
+                            {coladosRow.length}{" "}
+                            {coladosRow.length === 1 ? colSing : colPlur}
                         </p>
                     )}
                     {invitado.tipo === "integrante" &&
@@ -2108,22 +2141,11 @@ function InvitadoRow({
                         </div>
                     ) : null}
                     {invitado.tipo !== "familia" &&
-                    personaConColados &&
-                    extraByMember[invitado.nombre]?.length ? (
+                    titularExtraLines.length ? (
                         <div className="mb-3 flex items-start gap-2 text-xs text-neutral-600">
                             <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
                             <span className="whitespace-pre-wrap break-words">
-                                {extraByMember[invitado.nombre]!.join(" | ")}
-                            </span>
-                        </div>
-                    ) : invitado.tipo !== "familia" &&
-                      !personaConColados &&
-                      invitado.mensaje &&
-                      invitado.mensaje !== invitado.cancion ? (
-                        <div className="mb-3 flex items-start gap-2 text-xs text-neutral-600">
-                            <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
-                            <span className="whitespace-pre-wrap break-words">
-                                {invitado.mensaje}
+                                {titularExtraLines.join(" | ")}
                             </span>
                         </div>
                     ) : null}
@@ -2217,7 +2239,23 @@ function InvitadoRow({
                                     : "Integrantes:"}
                             </p>
                             <div className="space-y-1">
-                                {integrantesRow.map((i) => (
+                                {(personaConColados ? coladosRow : integrantesRow).map((i) => {
+                                    const integranteExtraLines =
+                                        panelExtraLinesForMember(
+                                            invitado.mensaje &&
+                                                invitado.mensaje !==
+                                                    invitado.cancion
+                                                ? invitado.mensaje
+                                                : undefined,
+                                            i.nombre,
+                                            [
+                                                invitado.nombre,
+                                                ...integranteNombres.filter(
+                                                    (n) => n !== i.nombre,
+                                                ),
+                                            ],
+                                        );
+                                    return (
                                     <div
                                         key={i.id}
                                         className="flex items-start justify-between gap-2 rounded bg-white px-2 py-1"
@@ -2243,13 +2281,13 @@ function InvitadoRow({
                                                     </span>
                                                 </div>
                                             ) : null}
-                                            {extraByMember[i.nombre]?.length ? (
+                                            {integranteExtraLines.length ? (
                                                 <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
                                                     <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
                                                     <span className="whitespace-pre-wrap break-words">
-                                                        {extraByMember[
-                                                            i.nombre
-                                                        ].join(" | ")}
+                                                        {integranteExtraLines.join(
+                                                            " | ",
+                                                        )}
                                                     </span>
                                                 </div>
                                             ) : null}
@@ -2278,7 +2316,8 @@ function InvitadoRow({
                                             </span>
                                         </div>
                                     </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                             {esFamiliaConInts && invitado.restricciones && (
                                 <div className="mt-2 rounded bg-white px-2 py-2">
@@ -2380,6 +2419,7 @@ function AddInvitadoModal({
         });
     }, []);
     const handleAddIntegrante = () => {
+        if (integrantes.length >= FAMILIA_INTEGRANTES_MAX) return;
         const trimmed = trimInvitadoNombre(newIntegrante);
         if (!trimmed) {
             focusIntegranteInput();
@@ -2407,12 +2447,18 @@ function AddInvitadoModal({
         const effectiveTipo = soloPersona ? "persona" : tipo;
         if (
             effectiveTipo === "familia" &&
-            integranteInputRef.current?.value.trim()
+            integranteInputRef.current?.value.trim() &&
+            finalIntegrantes.length < FAMILIA_INTEGRANTES_MAX
         )
             finalIntegrantes.push(
                 trimInvitadoNombre(integranteInputRef.current.value),
             );
         if (effectiveTipo === "familia") {
+            const countError = validateFamiliaIntegrantesCount(finalIntegrantes);
+            if (countError) {
+                alert(countError);
+                return;
+            }
             const integrantesError =
                 validateIntegrantesNombres(finalIntegrantes);
             if (integrantesError) {
@@ -2466,6 +2512,7 @@ function AddInvitadoModal({
             setSaving(false);
         }
     };
+    const atMaxIntegrantes = integrantes.length >= FAMILIA_INTEGRANTES_MAX;
     return (
         <div
             className="fixed inset-0 z-50 flex items-end justify-center bg-black/50"
@@ -2508,11 +2555,8 @@ function AddInvitadoModal({
                             e.target.value.slice(0, INVITADO_NOMBRE_MAX_LENGTH),
                         )
                     }
-                    className="mb-1 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
+                    className="mb-4 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
                 />
-                <p className="mb-4 text-xs text-neutral-400">
-                    Máximo {INVITADO_NOMBRE_MAX_LENGTH} caracteres
-                </p>
                 {!soloPersona && tipo === "familia" && (
                     <div className="mb-4">
                         <p className="mb-2 text-sm font-medium text-neutral-700">
@@ -2542,6 +2586,7 @@ function AddInvitadoModal({
                                 type="text"
                                 placeholder="Nombre del integrante"
                                 value={newIntegrante}
+                                disabled={atMaxIntegrantes}
                                 maxLength={INVITADO_NOMBRE_MAX_LENGTH}
                                 onChange={(e) =>
                                     setNewIntegrante(
@@ -2549,14 +2594,18 @@ function AddInvitadoModal({
                                     )
                                 }
                                 onKeyDown={(e) =>
-                                    e.key === "Enter" && handleAddIntegrante()
+                                    e.key === "Enter" &&
+                                    !atMaxIntegrantes &&
+                                    handleAddIntegrante()
                                 }
-                                className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+                                className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                             />
                             <button
+                                type="button"
+                                disabled={atMaxIntegrantes}
                                 onMouseDown={(e) => e.preventDefault()}
                                 onClick={handleAddIntegrante}
-                                className="rounded-lg bg-neutral-100 px-3 py-2"
+                                className="rounded-lg bg-neutral-100 px-3 py-2 disabled:cursor-not-allowed disabled:opacity-40"
                             >
                                 <Plus className="h-4 w-4" />
                             </button>
@@ -3082,6 +3131,7 @@ function EditInvitadoModal({
         });
     }, []);
     const handleAddIntegrante = () => {
+        if (integrantes.length >= FAMILIA_INTEGRANTES_MAX) return;
         const trimmed = trimInvitadoNombre(newIntegrante);
         if (!trimmed) {
             focusIntegranteInput();
@@ -3147,7 +3197,8 @@ function EditInvitadoModal({
         const finalIntegrantes = [...integrantes];
         if (
             invitado.tipo === "familia" &&
-            integranteInputRef.current?.value.trim()
+            integranteInputRef.current?.value.trim() &&
+            finalIntegrantes.length < FAMILIA_INTEGRANTES_MAX
         )
             finalIntegrantes.push({
                 id: `new-${Date.now()}`,
@@ -3156,6 +3207,11 @@ function EditInvitadoModal({
                 es_colado: false,
             });
         if (invitado.tipo === "familia") {
+            const countError = validateFamiliaIntegrantesCount(finalIntegrantes);
+            if (countError) {
+                alert(countError);
+                return;
+            }
             const integrantesError =
                 validateIntegrantesNombres(finalIntegrantes);
             if (integrantesError) {
@@ -3203,6 +3259,7 @@ function EditInvitadoModal({
             setSaving(false);
         }
     };
+    const atMaxIntegrantes = integrantes.length >= FAMILIA_INTEGRANTES_MAX;
     return (
         <div
             className="fixed inset-0 z-50 flex items-end justify-center bg-black/50"
@@ -3223,11 +3280,8 @@ function EditInvitadoModal({
                             e.target.value.slice(0, INVITADO_NOMBRE_MAX_LENGTH),
                         )
                     }
-                    className="mb-1 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
+                    className="mb-4 w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm focus:border-neutral-400 focus:outline-none"
                 />
-                <p className="mb-4 text-xs text-neutral-400">
-                    Máximo {INVITADO_NOMBRE_MAX_LENGTH} caracteres
-                </p>
                 {invitado.tipo === "persona" && (
                     <div className="mb-4">
                         <p className="mb-2 text-sm font-medium text-neutral-700">
@@ -3372,6 +3426,7 @@ function EditInvitadoModal({
                                 type="text"
                                 placeholder="Agregar integrante"
                                 value={newIntegrante}
+                                disabled={atMaxIntegrantes}
                                 maxLength={INVITADO_NOMBRE_MAX_LENGTH}
                                 onChange={(e) =>
                                     setNewIntegrante(
@@ -3379,14 +3434,18 @@ function EditInvitadoModal({
                                     )
                                 }
                                 onKeyDown={(e) =>
-                                    e.key === "Enter" && handleAddIntegrante()
+                                    e.key === "Enter" &&
+                                    !atMaxIntegrantes &&
+                                    handleAddIntegrante()
                                 }
-                                className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none"
+                                className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-neutral-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                             />
                             <button
+                                type="button"
+                                disabled={atMaxIntegrantes}
                                 onMouseDown={(e) => e.preventDefault()}
                                 onClick={handleAddIntegrante}
-                                className="rounded-lg bg-neutral-100 px-3 py-2"
+                                className="rounded-lg bg-neutral-100 px-3 py-2 disabled:cursor-not-allowed disabled:opacity-40"
                             >
                                 <Plus className="h-4 w-4" />
                             </button>

@@ -155,8 +155,13 @@ function invitadosLineasExtrasMensaje(invitados: Invitado[]) {
             continue;
         }
         if (inv.tipo === "integrante") continue;
+        const integrantesParaFilas =
+            inv.tipo === "familia"
+                ? inv.integrantes
+                : (inv.integrantes ?? []).filter((i) => i.es_colado);
         const tieneIntegrantes =
-            Array.isArray(inv.integrantes) && inv.integrantes.length > 0;
+            Array.isArray(integrantesParaFilas) &&
+            integrantesParaFilas.length > 0;
 
         out.push({
             nombre: inv.nombre,
@@ -168,7 +173,7 @@ function invitadosLineasExtrasMensaje(invitados: Invitado[]) {
         });
 
         if (tieneIntegrantes) {
-            for (const integrante of inv.integrantes!) {
+            for (const integrante of integrantesParaFilas) {
                 const sufijo = integrante.es_colado
                     ? ` (Colado de ${inv.nombre})`
                     : ` (Integrante de ${inv.nombre})`;
@@ -335,8 +340,13 @@ export default function PanelPrintPage({
             const perMemberRestricciones = parsePerMemberValues(
                 inv.restricciones,
             );
+            const integrantesParaFilas =
+                inv.tipo === "familia"
+                    ? inv.integrantes
+                    : (inv.integrantes ?? []).filter((i) => i.es_colado);
             const tieneIntegrantes =
-                Array.isArray(inv.integrantes) && inv.integrantes.length > 0;
+                Array.isArray(integrantesParaFilas) &&
+                integrantesParaFilas.length > 0;
 
             out.push({
                 nombre: inv.nombre,
@@ -357,8 +367,11 @@ export default function PanelPrintPage({
                 sortOrder: order++,
             });
 
-            if (Array.isArray(inv.integrantes) && inv.integrantes.length > 0) {
-                for (const integrante of inv.integrantes) {
+            if (
+                Array.isArray(integrantesParaFilas) &&
+                integrantesParaFilas.length > 0
+            ) {
+                for (const integrante of integrantesParaFilas) {
                     const alimentos = alimentosCelda(
                         integrante.restricciones?.trim() ||
                             perMemberRestricciones[integrante.nombre]?.join(

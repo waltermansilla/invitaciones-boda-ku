@@ -89,13 +89,30 @@ export async function POST(
     return NextResponse.json({ error: "Error guardando confirmación" }, { status: 500 })
   }
 
-  // Integrantes (familia + colados de persona/familia)
-  if (body.integrantes && Array.isArray(body.integrantes)) {
+  // Persona solo admite integrantes con es_colado; limpiar filas fantasma heredadas
+  if (invitado.tipo === "persona") {
+    await supabase
+      .from("integrantes")
+      .delete()
+      .eq("invitado_id", invitado.id)
+      .eq("es_colado", false)
+  }
+
+  const integrantesBody = Array.isArray(body.integrantes) ? body.integrantes : []
+  const integrantesToSave =
+    invitado.tipo === "persona"
+      ? integrantesBody.filter((int: { es_colado?: boolean }) =>
+          Boolean(int.es_colado),
+        )
+      : integrantesBody
+
+  // Integrantes (familia + colados de persona)
+  if (integrantesToSave.length > 0 || (invitado.tipo === "familia" && integrantesBody.length > 0)) {
     const cupoColados =
       typeof invitado.cupo_colados === "number" && Number.isFinite(invitado.cupo_colados)
         ? Math.max(0, Math.floor(invitado.cupo_colados))
         : 0
-    const coladosEnPayload = body.integrantes.filter((int: { es_colado?: boolean }) =>
+    const coladosEnPayload = integrantesToSave.filter((int: { es_colado?: boolean }) =>
       Boolean(int.es_colado),
     ).length
     if (coladosEnPayload > cupoColados) {
@@ -111,7 +128,7 @@ export async function POST(
       .eq("invitado_id", invitado.id)
 
     const currentIds = currentIntegrantes?.map((i) => i.id) || []
-    const newIds = body.integrantes
+    const newIds = integrantesToSave
       .filter((i: { id?: string }) => i.id && !String(i.id).startsWith("new"))
       .map((i: { id: string }) => i.id)
 
@@ -120,7 +137,7 @@ export async function POST(
       await supabase.from("integrantes").delete().in("id", toDelete)
     }
 
-    for (const int of body.integrantes) {
+    for (const int of integrantesToSave) {
       const payload: Record<string, unknown> = {
         nombre: String(int.nombre || "").trim(),
         estado: int.asiste ? "confirmado" : "no_asiste",

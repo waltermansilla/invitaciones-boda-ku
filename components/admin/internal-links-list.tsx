@@ -282,6 +282,8 @@ export function InternalLinksList({
           row.panelEnabled && row.panelId ? `/panel/${row.panelId}` : null
         const fullBase = row.baseEnabled && row.baseUrl ? `${baseUrl}${row.baseUrl}` : null
         const displayBase = row.baseEnabled && row.baseUrl ? row.baseUrl : null
+        const fullQr = row.qrEnabled && row.qrUrl ? `${baseUrl}${row.qrUrl}` : null
+        const displayQr = row.qrEnabled && row.qrUrl ? row.qrUrl : null
 
         return (
           <div
@@ -471,6 +473,27 @@ export function InternalLinksList({
                       </a>
                       <div className="shrink-0">
                         <CopyLinkButton value={fullPanel} />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
+                {fullQr && displayQr ? (
+                  <div className="rounded-xl border border-[#E0E0E0] bg-[#F4F4F4] px-3 py-2">
+                    <div className="flex w-full flex-nowrap items-center gap-2">
+                      <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#6B6B6B]">
+                        QR:
+                      </span>
+                      <a
+                        className="block min-w-0 flex-1 truncate whitespace-nowrap pr-1 text-[13px] leading-tight text-[#5C5C5C] underline underline-offset-2"
+                        href={fullQr}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {displayQr}
+                      </a>
+                      <div className="shrink-0">
+                        <CopyLinkButton value={fullQr} />
                       </div>
                     </div>
                   </div>

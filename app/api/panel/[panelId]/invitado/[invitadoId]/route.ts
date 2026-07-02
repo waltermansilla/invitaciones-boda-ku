@@ -10,7 +10,7 @@ import {
   limiteInvitadosPanelFromConfig,
   plazasOcupadasPorInvitados,
 } from "@/lib/panel-plazas"
-import { validateInvitadoNombre, validateIntegrantesNombres } from "@/lib/invitado-nombre"
+import { validateInvitadoNombre, validateIntegrantesNombres, validateFamiliaIntegrantesCount } from "@/lib/invitado-nombre"
 
 function panelIdParamInvalid(panelId: string): boolean {
   return (
@@ -216,6 +216,19 @@ export async function PUT(
     const integrantesError = validateIntegrantesNombres(body.integrantes)
     if (integrantesError) {
       return NextResponse.json({ error: integrantesError }, { status: 400 })
+    }
+
+    const { data: invTipoRow } = await supabase
+      .from("invitados")
+      .select("tipo")
+      .eq("id", invitadoId)
+      .single()
+
+    if (invTipoRow?.tipo === "familia") {
+      const countError = validateFamiliaIntegrantesCount(body.integrantes)
+      if (countError) {
+        return NextResponse.json({ error: countError }, { status: 400 })
+      }
     }
 
     const { data: currentIntegrantes } = await supabase

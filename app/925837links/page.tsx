@@ -1,5 +1,6 @@
 import { listInvitationsForInternalAdmin } from "@/lib/internal-links-admin"
 import { InternalLinksList } from "@/components/admin/internal-links-list"
+import { InternalLinksAdminChrome } from "@/components/admin/internal-links-admin-chrome"
 import { headers } from "next/headers"
 
 export const dynamic = "force-dynamic"
@@ -23,8 +24,10 @@ export default async function InternalLinksAdminPage() {
   const baseUrl = absoluteUrl(requestBaseUrl, "")
 
   return (
-    <main className="min-h-screen bg-[#F5EFE6] text-[#3F332B]">
-      <div className="mx-auto max-w-5xl px-4 py-8">
+    <>
+      <InternalLinksAdminChrome productionOrigin={baseUrl} />
+      <main className="min-h-screen bg-[#F5EFE6] text-[#3F332B]">
+        <div className="mx-auto max-w-5xl px-4 py-8">
         <header className="mb-6 rounded-2xl border border-[#CFB79A] bg-white p-5 shadow-[0_8px_24px_rgba(71,45,22,0.08)]">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#7A5F45]">
             Admin interno
@@ -36,8 +39,9 @@ export default async function InternalLinksAdminPage() {
         </header>
 
         <InternalLinksList rows={rows} baseUrl={baseUrl} />
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   )
 }
 

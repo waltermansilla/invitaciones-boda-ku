@@ -36,6 +36,8 @@ export type InternalInviteRow = {
     baseToken: string | null;
     basePinEnabled: boolean;
     basePin: string | null;
+    qrEnabled: boolean;
+    qrUrl: string | null;
 };
 
 function slugFromFileName(fileName: string): string {
@@ -142,6 +144,14 @@ export async function listInvitationsForInternalAdmin(): Promise<
                         ? base.pin.trim()
                         : null;
                 const basePinEnabled = Boolean(base.pinEnabled) && Boolean(basePin);
+                const qrCard = json.qrCard as { enabled?: boolean } | undefined;
+                const qrEnabled =
+                    qrCard != null && qrCard.enabled !== false;
+                const qrUrl = qrEnabled
+                    ? token && /^[A-Za-z0-9]{6}$/.test(token) && Boolean(access.tokenEnabled)
+                        ? `${realBaseUrl}/qr?t=${token}`
+                        : `${realBaseUrl}/qr`
+                    : null;
                 const eventDateRaw =
                     (typeof hero.eventDate === "string" && hero.eventDate) ||
                     "";
@@ -186,6 +196,8 @@ export async function listInvitationsForInternalAdmin(): Promise<
                     baseToken: baseEnabled ? baseToken : null,
                     basePinEnabled,
                     basePin,
+                    qrEnabled,
+                    qrUrl,
                 });
             } catch {
                 // ignore invalid json

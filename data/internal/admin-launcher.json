@@ -1,0 +1,44 @@
+{
+    "environments": [
+        {
+            "id": "prod",
+            "label": "Producción",
+            "origin": "https://momentounico.com.ar",
+            "icon": "cloud"
+        },
+        {
+            "id": "wifi",
+            "label": "Wifi",
+            "origin": "http://192.168.1.49:3000",
+            "icon": "wifi"
+        },
+        {
+            "id": "iphone",
+            "label": "iPhone",
+            "origin": "http://172.20.10.6:3000",
+            "icon": "smartphone"
+        }
+    ],
+    "destinations": [
+        {
+            "id": "links",
+            "label": "Links",
+            "path": "/925837links"
+        },
+        {
+            "id": "landing",
+            "label": "Landing",
+            "path": "/"
+        },
+        {
+            "id": "configurador",
+            "label": "Configurador",
+            "path": "/configurador?currency=ARS"
+        },
+        {
+            "id": "cronograma",
+            "label": "Cronograma limpieza",
+            "path": "/0760cronograma"
+        }
+    ]
+}

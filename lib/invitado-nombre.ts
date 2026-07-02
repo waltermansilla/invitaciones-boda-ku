@@ -1,4 +1,5 @@
 export const INVITADO_NOMBRE_MAX_LENGTH = 30;
+export const FAMILIA_INTEGRANTES_MAX = 25;
 
 export function validateInvitadoNombre(nombre: unknown): string | null {
     if (typeof nombre !== "string") return "Nombre inválido";
@@ -31,6 +32,16 @@ export function validateIntegrantesNombres(integrantes: unknown): string | null 
                 : (item as { nombre?: unknown } | null)?.nombre;
         const err = validateIntegranteNombre(nombre);
         if (err) return err;
+    }
+    return null;
+}
+
+export function validateFamiliaIntegrantesCount(
+    integrantes: unknown,
+): string | null {
+    if (!Array.isArray(integrantes)) return null;
+    if (integrantes.length > FAMILIA_INTEGRANTES_MAX) {
+        return `Una familia no puede tener más de ${FAMILIA_INTEGRANTES_MAX} integrantes.`;
     }
     return null;
 }

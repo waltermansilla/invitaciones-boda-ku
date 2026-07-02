@@ -1,0 +1,246 @@
+/* Menú hamburguesa + overlay (patrón opr72). Carrusel vía Tailwind en el componente. */
+
+#internal-links-admin-header.ilam-header-menu-open {
+    z-index: 10002;
+    overflow: visible;
+}
+
+.ilam-menu-toggle {
+    position: relative;
+    z-index: 10001;
+}
+
+.ilam-menu-line {
+    position: absolute;
+    left: 50%;
+    width: 1.35rem;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transition:
+        top 0.38s cubic-bezier(0.32, 0.72, 0, 1),
+        bottom 0.38s cubic-bezier(0.32, 0.72, 0, 1),
+        transform 0.38s cubic-bezier(0.32, 0.72, 0, 1),
+        opacity 0.22s ease,
+        width 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.ilam-menu-line-top {
+    top: 0.8125rem;
+    transform: translateX(-50%);
+}
+
+.ilam-menu-line-mid {
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ilam-menu-line-bot {
+    bottom: 0.8125rem;
+    transform: translateX(-50%);
+}
+
+.ilam-menu-line-top.is-open {
+    top: 50%;
+    width: 1.15rem;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.ilam-menu-line-mid.is-open {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(0.4);
+}
+
+.ilam-menu-line-bot.is-open {
+    bottom: auto;
+    top: 50%;
+    width: 1.15rem;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.ilam-mobile-menu {
+    visibility: hidden;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    background: rgb(255 253 249 / 0.98);
+    -webkit-backdrop-filter: blur(12px) saturate(1.15);
+    backdrop-filter: blur(12px) saturate(1.15);
+    opacity: 0;
+    transition:
+        opacity 0.28s ease,
+        visibility 0s linear 0.28s;
+}
+
+.ilam-mobile-menu.is-open {
+    visibility: visible;
+    pointer-events: auto;
+    opacity: 1;
+    transition:
+        opacity 0.28s ease,
+        visibility 0s linear 0s;
+}
+
+.ilam-mobile-menu-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border: 0;
+    background: transparent;
+}
+
+.ilam-mobile-menu-panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    background: transparent;
+    padding: 1.25rem 1.5rem max(1.5rem, env(safe-area-inset-bottom));
+    transform: scale(1.03);
+    transition: transform 0.52s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.ilam-mobile-menu.is-open .ilam-mobile-menu-panel {
+    transform: scale(1);
+}
+
+.ilam-mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 1.25rem 0.25rem 0;
+}
+
+.ilam-mobile-menu-links-env {
+    padding-top: 0.35rem;
+}
+
+.ilam-mobile-menu-link {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 1rem;
+    border: 0;
+    background: transparent;
+    padding: 0.72rem 0;
+    text-align: left;
+    font-size: clamp(1.45rem, 5.2vw, 1.8rem);
+    font-weight: 600;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    color: rgb(63 51 43 / 0.78);
+    opacity: 0;
+    transform: translateY(1.1rem);
+    transition:
+        color 0.2s ease,
+        opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ilam-mobile-menu-link.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ilam-dest-link {
+    justify-content: space-between;
+}
+
+.ilam-mobile-menu-link:hover,
+.ilam-mobile-menu-link:active {
+    color: #3f332b;
+}
+
+.ilam-mobile-menu-link-chevron {
+    flex-shrink: 0;
+    width: 1.15rem;
+    height: 1.15rem;
+    color: rgb(122 95 69 / 0.65);
+}
+
+.ilam-env-back {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.2rem;
+    border: 0;
+    background: transparent;
+    padding: 0.2rem 0 0.5rem;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(0.5rem);
+    transition:
+        opacity 0.35s ease,
+        transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ilam-env-back.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ilam-env-back-chevron {
+    flex-shrink: 0;
+    width: 1.35rem;
+    height: 1.35rem;
+    color: #7a5f45;
+}
+
+.ilam-env-back-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: clamp(1.55rem, 5vw, 1.95rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: rgb(63 51 43 / 0.78);
+}
+
+.ilam-env-link {
+    justify-content: flex-start;
+    font-size: clamp(1.1rem, 3.6vw, 1.3rem);
+    line-height: 1.25;
+}
+
+.ilam-env-link-icon {
+    display: flex;
+    height: 2.5rem;
+    width: 2.5rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.85rem;
+    background: rgb(242 235 224 / 0.85);
+    color: #5c4a3d;
+}
+
+.ilam-env-link-body {
+    min-width: 0;
+    flex: 1;
+}
+
+.ilam-env-link-host {
+    display: block;
+    margin-top: 0.15rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: rgb(106 92 82 / 0.88);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ilam-mobile-menu-link,
+    .ilam-env-back,
+    .ilam-mobile-menu-panel,
+    .ilam-mobile-menu {
+        transition-duration: 0.01ms !important;
+    }
+}
