@@ -32,6 +32,23 @@ export const metadata: Metadata = {
     title: "Momento Único | Invitaciones digitales",
     description:
         "Invitaciones digitales elegantes para bodas, XV y eventos. Elegí tu estilo y compartí tu link.",
+    // Intencional: la landing no expone imagen de preview (og:image / twitter:image)
+    // para que al compartir el link (WhatsApp, Instagram, etc.) no aparezca ninguna
+    // imagen de invitación como miniatura.
+    openGraph: {
+        title: "Momento Único | Invitaciones digitales",
+        description:
+            "Invitaciones digitales elegantes para bodas, XV y eventos. Elegí tu estilo y compartí tu link.",
+        type: "website",
+        images: [],
+    },
+    twitter: {
+        card: "summary",
+        title: "Momento Único | Invitaciones digitales",
+        description:
+            "Invitaciones digitales elegantes para bodas, XV y eventos. Elegí tu estilo y compartí tu link.",
+        images: [],
+    },
 };
 
 export default async function HomePage({
