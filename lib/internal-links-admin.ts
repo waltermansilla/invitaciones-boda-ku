@@ -144,6 +144,9 @@ export async function listInvitationsForInternalAdmin(): Promise<
                         ? base.pin.trim()
                         : null;
                 const basePinEnabled = Boolean(base.pinEnabled) && Boolean(basePin);
+                const realBaseUrl = `/${tipo}/${slug}`;
+                const token =
+                    typeof access.token === "string" ? access.token : "";
                 const qrCard = json.qrCard as { enabled?: boolean } | undefined;
                 const qrEnabled =
                     qrCard != null && qrCard.enabled !== false;
@@ -158,9 +161,6 @@ export async function listInvitationsForInternalAdmin(): Promise<
                 const eventDate = eventDateRaw
                     ? String(eventDateRaw).slice(0, 10)
                     : null;
-                const realBaseUrl = `/${tipo}/${slug}`;
-                const token =
-                    typeof access.token === "string" ? access.token : "";
                 const realVariantUrls = variantUrlsFromJson(
                     json,
                     realBaseUrl,
