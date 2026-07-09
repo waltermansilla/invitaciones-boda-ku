@@ -401,7 +401,7 @@
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 15 de Septiembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [1],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",

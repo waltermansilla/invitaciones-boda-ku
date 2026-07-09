@@ -1448,8 +1448,8 @@ export default function RSVPSection({
                 </p>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                    {/* Guest count - solo si no hay panel (invitado sin codigo) */}
-                    {!invitado && (
+                    {/* Guest count - solo si no hay panel (invitado sin codigo) y hay mas de una opcion */}
+                    {!invitado && guestCountOptions.length > 1 && (
                         <div>
                             <label className="mb-2 block text-[11px] font-medium tracking-[0.1em] text-inherit/65">
                                 {guestCountLabel}
