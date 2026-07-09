@@ -32,7 +32,7 @@
     "// ==========================================..": "",
     "_comment_theme": "primaryColor = color de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general. lightBgTextColor = textos en fondo claro. darkBgTextColor = textos en fondo oscuro. modalTextColor = texto en modales. font.family = Google Fonts.",
     "theme": {
-        "primaryColor": "#222",
+        "primaryColor": "#567c8d",
         "backgroundColor": "#FAF8F5",
         "textColor": "#777",
         "lightBgTextColor": "#777",
@@ -49,7 +49,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": true,
+        "enabled": false,
         "phrase": "Nos haría muy felices que seas parte de este momento.",
         "buttonText": "Ingresar",
         "nameStyle": {

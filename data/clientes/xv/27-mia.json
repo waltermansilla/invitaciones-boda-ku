@@ -123,7 +123,7 @@
             ]
         },
         "countdownPrefix": "",
-        "eventDate": "2026-07-25T20:00:00",
+        "eventDate": "2026-07-25T22:00:00",
         "countdownLabels": {
             "days": "Días",
             "hours": "Horas",
@@ -195,7 +195,7 @@
                 "showButton": true,
                 "order": ["address", "time"],
                 "datetime": {
-                    "time": "20:00 hs"
+                    "time": "22:00 hs"
                 },
                 "button": {
                     "text": "Cómo llegar",
@@ -391,7 +391,7 @@
             "data": {
                 "icon": "gift",
                 "title": "Regalos",
-                "description": "Nada es más importante que tu presencia. Si deseas hacerme un regalo, podrás hacerlo a través de este alias:",
+                "description": "Tu presencia es mi mayor regalo. Si querés hacerme un regalito para que me quede de recuerdo, ¡bienvenido sea! O si lo preferís, también te dejo mi alias.",
                 "button": {
                     "text": "Ver",
                     "url": "#",
