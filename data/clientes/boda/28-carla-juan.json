@@ -50,7 +50,7 @@
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
-        "phrase": "Nuestra historia continúa... y queremos compartirla con vos.",
+        "phrase": "Nos haría muy felices que seas parte de este momento.",
         "buttonText": "Ingresar"
     },
     "// ==========================================:": "",
@@ -182,7 +182,7 @@
                     },
                     {
                         "icon": "utensils",
-                        "name": "Cena",
+                        "name": "Cena (Lunch)",
                         "time": "21:30 hs"
                     },
                     {
