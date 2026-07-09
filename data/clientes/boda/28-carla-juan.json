@@ -49,7 +49,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "Nuestra historia continúa... y queremos compartirla con vos.",
         "buttonText": "Ingresar"
     },
