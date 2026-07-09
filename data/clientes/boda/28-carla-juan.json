@@ -49,7 +49,7 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": true,
+        "enabled": false,
         "phrase": "Nuestra historia continúa... y queremos compartirla con vos.",
         "buttonText": "Ingresar"
     },
@@ -195,34 +195,10 @@
         },
 
         {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-welcome2",
-            "bgColor": "primary",
-            "blocks": ["text", "author"],
-            "data": {
-                "text": "Lo que empezó con una amistad fue encontrando, paso a paso, su verdadero destino.",
-                "author": "",
-                "decorativeLines": true
-            }
-        },
-
-        {
-            "type": "gallery",
-            "id": "gallery-photos2",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "3/4",
-                "images": ["/clientes/boda/28-carla-juan/images/2.jpeg"]
-            }
-        },
-
-        {
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional.",
             "type": "dressCode",
             "id": "dress-code",
-            "bgColor": "background",
+            "bgColor": "primary",
             "blocks": [
                 "title",
                 "subtitle",
@@ -267,26 +243,26 @@
         },
 
         {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-welcome3",
-            "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
             "data": {
-                "text": "Con este 'sí' reafirmamos todo lo que el tiempo fue construyendo.",
-                "author": "",
-                "decorativeLines": true
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/28-carla-juan/images/2.jpeg"]
             }
         },
 
         {
-            "type": "gallery",
-            "id": "gallery-photos3",
-            "blocks": ["slider"],
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
             "data": {
-                "aspectRatio": "libre",
-                "images": ["/clientes/boda/28-carla-juan/images/3.jpeg"]
+                "text": "Lo que empezó con una amistad fue encontrando, paso a paso, su verdadero destino.",
+                "author": "",
+                "decorativeLines": true
             }
         },
 
@@ -295,7 +271,7 @@
             "type": "honeymoon",
             "id": "honeymoon",
             "enabled": true,
-            "bgColor": "background",
+            "bgColor": "primary",
             "blocks": ["icon", "title", "description", "button", "modals"],
             "data": {
                 "icon": "gift",
@@ -337,6 +313,31 @@
                 ]
             }
         },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos3",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": ["/clientes/boda/28-carla-juan/images/3.jpeg"]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Con este 'sí' reafirmamos todo lo que el tiempo fue construyendo.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
         {
             "_comment": "PLAYLIST: Link a playlist colaborativa de Spotify.",
             "type": "playlist",
