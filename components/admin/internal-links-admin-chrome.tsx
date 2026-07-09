@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  type MouseEvent as ReactMouseEvent,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -9,9 +10,11 @@ import {
 } from "react"
 import { createPortal } from "react-dom"
 import {
+  Check,
   ChevronLeft,
   ChevronRight,
   Cloud,
+  Copy,
   Laptop,
   Smartphone,
   User,
@@ -56,6 +59,72 @@ function buildAbsoluteUrl(origin: string, path: string): string {
   const base = origin.replace(/\/+$/, "")
   const p = path.startsWith("/") ? path : `/${path}`
   return `${base}${p}`
+}
+
+function EnvCopyButton({
+  value,
+  visible,
+  delayMs,
+}: {
+  value: string
+  visible: boolean
+  delayMs: number
+}) {
+  const [copied, setCopied] = useState(false)
+  const timerRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current)
+    }
+  }, [])
+
+  const fallbackCopy = (text: string) => {
+    const ta = document.createElement("textarea")
+    ta.value = text
+    ta.setAttribute("readonly", "")
+    ta.style.position = "absolute"
+    ta.style.left = "-9999px"
+    document.body.appendChild(ta)
+    ta.select()
+    const ok = document.execCommand("copy")
+    document.body.removeChild(ta)
+    return ok
+  }
+
+  const handleCopy = async (e: ReactMouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    try {
+      if (navigator.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(value)
+      } else {
+        const ok = fallbackCopy(value)
+        if (!ok) throw new Error("copy-failed")
+      }
+      setCopied(true)
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current)
+      timerRef.current = window.setTimeout(() => setCopied(false), 4000)
+    } catch {
+      setCopied(false)
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      aria-label="Copiar link"
+      title={copied ? "Copiado" : "Copiar link"}
+      className={`ilam-env-copy ${visible ? "is-visible" : ""}`}
+      style={{ transitionDelay: visible ? `${delayMs}ms` : "0ms" }}
+    >
+      {copied ? (
+        <Check className="h-[1.15rem] w-[1.15rem]" strokeWidth={2} aria-hidden />
+      ) : (
+        <Copy className="h-[1.15rem] w-[1.15rem]" strokeWidth={1.75} aria-hidden />
+      )}
+    </button>
+  )
 }
 
 export function InternalLinksAdminChrome({
@@ -325,34 +394,49 @@ export function InternalLinksAdminChrome({
                       {environments.map((env, index) => {
                         const Icon = envIconMap[env.icon] ?? Cloud
                         const origins = originsById()
-                        const host = (origins.get(env.id) || "")
+                        const origin = (origins.get(env.id) || "").replace(
+                          /\/+$/,
+                          "",
+                        )
+                        const host = origin
                           .replace(/^https?:\/\//, "")
                           .replace(/\/$/, "")
+                        const fullUrl = pendingDestination
+                          ? buildAbsoluteUrl(origin, pendingDestination.path)
+                          : origin
 
                         return (
-                          <button
-                            key={env.id}
-                            type="button"
-                            onClick={() => openWithEnvironment(env.id)}
-                            className={`ilam-mobile-menu-link ilam-env-link ${showEnvItems ? "is-visible" : ""}`}
-                            style={{
-                              transitionDelay: showEnvItems
-                                ? `${80 + index * 40}ms`
-                                : "0ms",
-                            }}
-                          >
-                            <span className="ilam-env-link-icon">
-                              <Icon
-                                className="h-[1.15rem] w-[1.15rem]"
-                                strokeWidth={1.75}
-                                aria-hidden
-                              />
-                            </span>
-                            <span className="ilam-env-link-body">
-                              <span className="block">{env.label}</span>
-                              <span className="ilam-env-link-host">{host}</span>
-                            </span>
-                          </button>
+                          <div key={env.id} className="ilam-env-row">
+                            <button
+                              type="button"
+                              onClick={() => openWithEnvironment(env.id)}
+                              className={`ilam-mobile-menu-link ilam-env-link ${showEnvItems ? "is-visible" : ""}`}
+                              style={{
+                                transitionDelay: showEnvItems
+                                  ? `${80 + index * 40}ms`
+                                  : "0ms",
+                              }}
+                            >
+                              <span className="ilam-env-link-icon">
+                                <Icon
+                                  className="h-[1.15rem] w-[1.15rem]"
+                                  strokeWidth={1.75}
+                                  aria-hidden
+                                />
+                              </span>
+                              <span className="ilam-env-link-body">
+                                <span className="block">{env.label}</span>
+                                <span className="ilam-env-link-host">
+                                  {host}
+                                </span>
+                              </span>
+                            </button>
+                            <EnvCopyButton
+                              value={fullUrl}
+                              visible={showEnvItems}
+                              delayMs={80 + index * 40}
+                            />
+                          </div>
                         )
                       })}
                     </nav>

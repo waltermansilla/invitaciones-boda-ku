@@ -552,6 +552,8 @@ function ConfiguradorPageContent() {
         ? clampedPanelGuests
         : PANEL_INCLUDED_GUESTS;
     const panelTierPrice = pickPanelTierPrice(panelGuestTier, currency);
+    const panelBaseTierPrice = pickPanelTierPrice(PANEL_INCLUDED_GUESTS, currency);
+    const panelExtraGuestsCost = Math.max(0, panelTierPrice - panelBaseTierPrice);
     const panelSelected = extras.includes("panel");
     const panelIncludedByPlan = includedExtraIds.includes("panel");
     const panelCost = panelSelected

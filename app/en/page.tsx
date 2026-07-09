@@ -32,6 +32,22 @@ export const metadata: Metadata = {
     title: "Momento Único | Digital wedding invitations",
     description:
         "Elegant digital invitations for weddings and events. Choose your style and share your link.",
+    // Intentional: the landing exposes no preview image (og:image / twitter:image)
+    // so sharing the link (WhatsApp, Instagram, etc.) shows no invitation thumbnail.
+    openGraph: {
+        title: "Momento Único | Digital wedding invitations",
+        description:
+            "Elegant digital invitations for weddings and events. Choose your style and share your link.",
+        type: "website",
+        images: [],
+    },
+    twitter: {
+        card: "summary",
+        title: "Momento Único | Digital wedding invitations",
+        description:
+            "Elegant digital invitations for weddings and events. Choose your style and share your link.",
+        images: [],
+    },
 };
 
 export default async function LandingEnPage({
