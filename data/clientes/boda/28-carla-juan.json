@@ -33,9 +33,9 @@
     "_comment_theme": "primaryColor = color de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general. lightBgTextColor = textos en fondo claro. darkBgTextColor = textos en fondo oscuro. modalTextColor = texto en modales. font.family = Google Fonts.",
     "theme": {
         "primaryColor": "#567c8d",
-        "backgroundColor": "#FAF8F5",
-        "textColor": "#777",
-        "lightBgTextColor": "#777",
+        "backgroundColor": "#f5efeb",
+        "textColor": "#567c8d",
+        "lightBgTextColor": "#567c8d",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#E8EDF2",
         "modalTextColor": "#FFFFFF",
@@ -49,17 +49,9 @@
     "// ==========================================...": "",
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
-        "enabled": false,
-        "phrase": "Nos haría muy felices que seas parte de este momento.",
-        "buttonText": "Ingresar",
-        "nameStyle": {
-            "font": "Dancing Script",
-            "size": "60px",
-            "weight": "600",
-            "color": "#000",
-            "lowercase": true,
-            "letterSpacing": "none"
-        }
+        "enabled": true,
+        "phrase": "Nuestra historia continúa... y queremos compartirla con vos.",
+        "buttonText": "Ingresar"
     },
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
@@ -76,6 +68,7 @@
     "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
     "hero": {
         "coupleImage": "/clientes/boda/28-carla-juan/images/hero.jpeg",
+        "aspectRatio": "3/4",
         "headline": "¡Nos casamos!",
         "showNamesOnPhoto": false,
         "_comment_namesDisplay": "Controla los nombres en la foto. enabled: true/false. position: 'top'/'bottom'. font: Google Font. weight: '100'-'900'. size: 'sm'-'4xl'. style: 'normal'/'italic'. color: hex. decorativeLines: true/false. logo: ruta a imagen.",
@@ -99,8 +92,10 @@
             "seconds": "Segundos"
         },
         "countdownStyle": {
-            "background": "none",
-            "shape": "rounded"
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
         }
     },
     "// ==========================================+": "",
@@ -116,11 +111,12 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Nos haría muy felices que seas parte de este momento.",
+                "text": "Todo comenzó hace algunos años. El tiempo pasó, crecimos juntos y hoy celebramos un nuevo capítulo en nuestra historia.",
                 "author": "",
                 "decorativeLines": true
             }
         },
+
         {
             "// --- FECHA DEL EVENTO ---": "",
             "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
@@ -133,6 +129,7 @@
                 "value": "31 de Octubre de 2026"
             }
         },
+
         {
             "// --- GALERIA DE FOTOS (slider) ---": "",
             "_comment": "Slider automatico. Imagenes en /public/clientes/boda/28-carla-juan/images/.",
@@ -140,8 +137,84 @@
             "id": "gallery-photos",
             "blocks": ["slider"],
             "data": {
-                "aspectRatio": "3/4",
+                "aspectRatio": "libre",
                 "images": ["/clientes/boda/28-carla-juan/images/1.jpeg"]
+            }
+        },
+
+        {
+            "_comment": "ITINERARY: Linea de tiempo del evento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "church",
+                        "name": "Ceremonia religiosa",
+                        "address": "Iglesia Lunlunta, Franklin Villanueva y Masa Sur, Mendoza",
+                        "time": "19:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://www.google.com/maps/place/Iglesia+Lunlunta/@-33.0484937,-68.8255989,15.5z/data=!4m6!3m5!1s0x967e754411a3eeab:0x71c5767b0213cdea!8m2!3d-33.0521316!4d-68.8230778!16s%2Fg%2F11h9y4bgbh?entry=ttu",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "civil",
+                        "name": "Ceremonia civil",
+                        "address": "Salón La Guadalupe, La Florida, M5517 Lunlunta, Mendoza",
+                        "time": "19:45 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://www.google.com/maps/place/La+Guadalupe/@-33.0484937,-68.8255989,15.5z/data=!4m6!3m5!1s0x967e0b1a81309d4b:0x588836c1de0b0390!8m2!3d-33.0470046!4d-68.8083862!16s%2Fg%2F11fj9c41ph?entry=ttu",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "heart",
+                        "name": "Recepción",
+                        "address": "Salón La Guadalupe, La Florida",
+                        "time": "20:15 hs"
+                    },
+                    {
+                        "icon": "utensils",
+                        "name": "Cena",
+                        "time": "21:30 hs"
+                    },
+                    {
+                        "icon": "party",
+                        "name": "¡Todos a bailar!",
+                        "time": "23:00 a 05:00 hs"
+                    }
+                ]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Lo que empezó con una amistad fue encontrando, paso a paso, su verdadero destino.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/28-carla-juan/images/2.jpeg"]
             }
         },
 
@@ -192,75 +265,37 @@
                 }
             }
         },
+
         {
-            "_comment": "ITINERARY: Linea de tiempo del evento.",
-            "type": "itinerary",
-            "id": "itinerary-timeline",
-            "enabled": true,
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome3",
             "bgColor": "primary",
-            "blocks": ["title", "timeline"],
+            "blocks": ["text", "author"],
             "data": {
-                "title": "Itinerario",
-                "events": [
-                    {
-                        "icon": "church",
-                        "name": "Ceremonia religiosa",
-                        "address": "Iglesia Lunlunta, Franklin Villanueva y Masa Sur, Mendoza",
-                        "time": "19:00 hs",
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://www.google.com/maps/place/Iglesia+Lunlunta/@-33.0484937,-68.8255989,15.5z/data=!4m6!3m5!1s0x967e754411a3eeab:0x71c5767b0213cdea!8m2!3d-33.0521316!4d-68.8230778!16s%2Fg%2F11h9y4bgbh?entry=ttu",
-                            "variant": "background"
-                        }
-                    },
-                    {
-                        "icon": "civil",
-                        "name": "Ceremonia civil",
-                        "address": "Salón La Guadalupe, La Florida, M5517 Lunlunta, Mendoza",
-                        "time": "19:45 hs",
-                        "button": {
-                            "text": "Cómo llegar",
-                            "url": "https://www.google.com/maps/place/La+Guadalupe/@-33.0484937,-68.8255989,15.5z/data=!4m6!3m5!1s0x967e0b1a81309d4b:0x588836c1de0b0390!8m2!3d-33.0470046!4d-68.8083862!16s%2Fg%2F11fj9c41ph?entry=ttu",
-                            "variant": "background"
-                        }
-                    },
-                    {
-                        "icon": "heart",
-                        "name": "Recepción",
-                        "address": "Salón La Guadalupe, La Florida",
-                        "time": "20:15 hs"
-                    },
-                    {
-                        "icon": "utensils",
-                        "name": "Cena",
-                        "time": "21:30 hs"
-                    },
-                    {
-                        "icon": "party",
-                        "name": "¡Todos a bailar!",
-                        "time": "23:00 a 05:00 hs"
-                    }
-                ]
+                "text": "Con este 'sí' reafirmamos todo lo que el tiempo fue construyendo.",
+                "author": "",
+                "decorativeLines": true
             }
         },
+
         {
             "type": "gallery",
-            "id": "gallery-photos2",
+            "id": "gallery-photos3",
             "blocks": ["slider"],
             "data": {
-                "aspectRatio": "3/4",
-                "images": [
-                    "/clientes/boda/28-carla-juan/images/2.jpeg",
-                    "/clientes/boda/28-carla-juan/images/3.jpeg"
-                ]
+                "aspectRatio": "libre",
+                "images": ["/clientes/boda/28-carla-juan/images/3.jpeg"]
             }
         },
+
         {
             "_comment": "HONEYMOON: Luna de miel. OPCIONES DE BOTON: button.action = 'modal' (default, abre modal) o 'url' (abre link externo). MODALES MULTIPLES: usar 'modals' (array) en vez de 'modal'. Cada item tiene type: 'bank' o 'address'. modalMode: 'combined' (ambos juntos) o 'sequential' (primero uno, boton al otro). El orden en el array define el orden visual.ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
             "type": "honeymoon",
             "id": "honeymoon",
             "enabled": true,
-            "bgColor": "primary",
+            "bgColor": "background",
             "blocks": ["icon", "title", "description", "button", "modals"],
             "data": {
                 "icon": "gift",
@@ -319,6 +354,7 @@
                 }
             }
         },
+
         {
             "_comment": "ADULTS ONLY: Evento solo para adultos.",
             "type": "adultsOnly",
@@ -331,13 +367,24 @@
                 "description": "Por esta vez, dejamos a los más pequeños en casa y nos regalamos una noche para disfrutar entre nosotros."
             }
         },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos4",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/28-carla-juan/images/4.jpeg"]
+            }
+        },
+
         {
             "type": "quote",
             "id": "quote-final",
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Como toda gran historia, cada persona tiene su lugar especial. Por eso, te pedimos respetar el número de asistentes y confirmar tu presencia.",
+                "text": "Nuestra felicidad es aún más grande porque podemos compartir este momento con ustedes. Gracias por acompañarnos.",
                 "author": "Carla & Juan",
                 "decorativeLines": true
             }
@@ -385,37 +432,14 @@
                 }
             }
         },
-        {
-            "type": "quote",
-            "id": "quote-final2",
-            "bgColor": "primary",
-            "blocks": ["text", "author"],
-            "data": {
-                "text": "Gracias por ser parte de nuestra historia y por acompañarnos en el comienzo de esta nueva etapa.",
-                "author": "Carla & Juan",
-                "decorativeLines": true
-            }
-        },
+
         {
             "type": "closingImage",
             "id": "closing-image",
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": "/clientes/boda/28-carla-juan/images/final.jpeg",
-                "namesDisplay": {
-                    "enabled": true,
-                    "font": "Dancing Script",
-                    "weight": "600",
-                    "size": "3xl",
-                    "style": "normal",
-                    "color": "#000",
-                    "decorativeLines": true,
-                    "logo": "",
-                    "copyFromHero": false,
-                    "lowercase": true,
-                    "letterSpacing": "none"
-                }
+                "image": "/clientes/boda/28-carla-juan/images/final.jpeg"
             }
         },
         {
