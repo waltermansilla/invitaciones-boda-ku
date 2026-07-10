@@ -17,13 +17,13 @@
     "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
     "base": {
         "enabled": true,
-        "token": "nxu28Je0",
+        "token": "nxu28Je1",
         "pinEnabled": true,
         "pin": "323255"
     },
     "access": {
         "tokenEnabled": true,
-        "token": "8Jkp62",
+        "token": "8Jkp63",
         "allowLegacyUntil": ""
     },
 
@@ -111,7 +111,7 @@
             "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
-                "text": "Todo comenzó hace \"algunos\" años. El tiempo pasó, crecimos juntos y hoy celebramos un nuevo capítulo en nuestra historia.",
+                "text": "Todo comenzó hace algunos años. El tiempo pasó, crecimos juntos y hoy celebramos un nuevo capítulo en nuestra historia.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -198,7 +198,7 @@
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional.",
             "type": "dressCode",
             "id": "dress-code",
-            "bgColor": "background",
+            "bgColor": "primary",
             "blocks": [
                 "title",
                 "subtitle",
@@ -239,6 +239,30 @@
                         }
                     ]
                 }
+            }
+        },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/28-carla-juan/images/2.jpeg"]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Lo que empezó con una amistad fue encontrando, paso a paso, su verdadero destino.",
+                "author": "",
+                "decorativeLines": true
             }
         },
 
@@ -291,19 +315,43 @@
         },
 
         {
+            "type": "gallery",
+            "id": "gallery-photos3",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": ["/clientes/boda/28-carla-juan/images/3.jpeg"]
+            }
+        },
+
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo oscuro. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Con este 'sí' reafirmamos todo lo que el tiempo fue construyendo.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
             "_comment": "PLAYLIST: Link a playlist colaborativa de Spotify.",
             "type": "playlist",
             "id": "playlist-suggestion",
             "enabled": true,
-            "bgColor": "background",
+            "bgColor": "primary",
             "blocks": ["title", "description", "button"],
             "data": {
                 "title": "Playlist de la fiesta",
                 "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
                 "button": {
                     "text": "Agregar canciones",
-                    "url": "https://open.spotify.com/playlist/5xfJfLPXar0WY6KVIasfbn?si=BtEpEK42TDyUtIrk8ql27g&utm_source=copy-link&pt=684bfe9250fb81d0545e27c584423b3b&pi=xdrSYypiThaCk",
-                    "variant": "primary"
+                    "url": "https://open.spotify.com/playlist/5xfJfLPXar0WY6KVIasfbn?si=3Lke4_pgTLaI4bKfcdMjoA&pt=0e565699e473260602d443e40a1d3ffa&pi=5eu-qiCYRGeQF",
+                    "variant": "background"
                 }
             }
         },
@@ -312,7 +360,7 @@
             "_comment": "ADULTS ONLY: Evento solo para adultos.",
             "type": "adultsOnly",
             "id": "adults-only",
-            "bgColor": "primary",
+            "bgColor": "background",
             "blocks": ["icon", "title", "description"],
             "data": {
                 "icon": "baby",
@@ -334,11 +382,11 @@
         {
             "type": "quote",
             "id": "quote-final",
-            "bgColor": "background",
+            "bgColor": "primary",
             "blocks": ["text", "author"],
             "data": {
                 "text": "Nuestra felicidad es aún más grande porque podemos compartir este momento con ustedes. Gracias por acompañarnos.",
-                "author": "Carla & Juan -",
+                "author": "Carla & Juan",
                 "decorativeLines": true
             }
         },
@@ -347,7 +395,7 @@
             "_comment": "Formulario de confirmacion con dietas y mensaje.",
             "type": "rsvp",
             "id": "rsvp-form",
-            "bgColor": "primary",
+            "bgColor": "background",
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
@@ -392,7 +440,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "3/4",
-                "image": ""
+                "image": "/clientes/boda/28-carla-juan/images/final.jpeg"
             }
         },
         {
@@ -413,59 +461,5 @@
                 ]
             }
         }
-    ],
-
-    "variants": {
-        "pay-card": {
-            "baseLabel": "Sin tarjeta",
-            "label": "Con tarjeta",
-            "sections": [
-                {
-                    "type": "giftCard",
-                    "id": "honeymoon",
-                    "bgColor": "primary",
-                    "blocks": [
-                        "icon",
-                        "title",
-                        "description",
-                        "button",
-                        "modal"
-                    ],
-                    "data": {
-                        "icon": "heart",
-                        "title": "Valor tarjeta",
-                        "description": "Agradecemos que confirmes tu asistencia antes del 15 de septiembre.",
-                        "button": {
-                            "text": "Ver",
-                            "url": "#",
-                            "variant": "secondary"
-                        },
-                        "modal": {
-                            "title": "Datos de pago",
-                            "suggestedValue": "$120.000",
-                            "description": "",
-                            "transferData": [
-                                {
-                                    "label": "Alias",
-                                    "value": "Bodacarlayjuan.ars"
-                                },
-                                {
-                                    "label": "CBU",
-                                    "value": "0340060908600055573007"
-                                },
-                                {
-                                    "label": "Titular",
-                                    "value": "Castro Guijarro Ana"
-                                },
-                                {
-                                    "label": "Banco",
-                                    "value": "Patagonia"
-                                }
-                            ]
-                        }
-                    }
-                }
-            ]
-        }
-    }
+    ]
 }
