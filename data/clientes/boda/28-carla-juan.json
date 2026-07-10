@@ -211,7 +211,7 @@
             "data": {
                 "icons": ["gem"],
                 "title": "Dress code",
-                "subtitle": "Formal / Smart casual",
+                "subtitle": "Formal Elegante / Cocktail",
                 "description": "Te pedimos amablemente evitar el color BLANCO, ya que quedará reservado para la novia.",
                 "showButton": true,
                 "colorSwatches": {
@@ -366,6 +366,7 @@
                         "Vegetariano",
                         "Vegano",
                         "Celíaco",
+                        "Diabético",
                         "Otro"
                     ],
                     "extraInputs": [
@@ -380,7 +381,7 @@
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "542664295203",
+                    "number": "542604320906",
                     "messageTemplate": "Hola Carla & Juan! Confirmo la asistencia a su boda.\n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
                 }
             }
