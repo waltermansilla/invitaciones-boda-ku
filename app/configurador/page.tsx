@@ -59,6 +59,14 @@ import {
     MU_LANDING_RETURN_SCROLL_KEY,
 } from "@/lib/configurador-return-nav";
 import { trackMetaEvent, updateMetaPixelAdvancedMatching } from "@/lib/meta-pixel";
+import { applyCouponDiscount } from "@/lib/coupons/logic";
+import { getOrCreateCouponClaimToken } from "@/lib/coupons/claim-token";
+import {
+    clearCouponAttemptFailures,
+    getCouponAttemptGate,
+    recordCouponAttemptFailure,
+} from "@/lib/coupons/attempt-limit";
+import type { AppliedCouponInfo } from "@/lib/coupons/types";
 
 type PlanKey = "premium" | "diseno-unico";
 type EventTypeSelection = EventType | "";
@@ -371,6 +379,14 @@ function ConfiguradorPageContent() {
     const [name2, setName2] = useState("");
     const [email, setEmail] = useState("");
     const [eventDate, setEventDate] = useState("");
+    const [couponInput, setCouponInput] = useState("");
+    const [appliedCoupon, setAppliedCoupon] =
+        useState<AppliedCouponInfo | null>(null);
+    const [couponError, setCouponError] = useState<string | null>(null);
+    const [couponBusy, setCouponBusy] = useState(false);
+    const [couponLocked, setCouponLocked] = useState(false);
+    const [redeemBusy, setRedeemBusy] = useState(false);
+    const [couponsEnabled, setCouponsEnabled] = useState(false);
     const [seccionesInfoOpen, setSeccionesInfoOpen] = useState(false);
     const [seccionesMinErrorShown, setSeccionesMinErrorShown] = useState(false);
     const [panelSkipModalOpen, setPanelSkipModalOpen] = useState(false);
@@ -419,6 +435,34 @@ function ConfiguradorPageContent() {
     }, [uiLang]);
 
     useEffect(() => {
+        let cancelled = false;
+        void (async () => {
+            try {
+                const res = await fetch("/api/coupons/enabled", {
+                    cache: "no-store",
+                });
+                const data = (await res.json()) as {
+                    ok?: boolean;
+                    enabled?: boolean;
+                };
+                if (cancelled) return;
+                const on = Boolean(data.ok && data.enabled);
+                setCouponsEnabled(on);
+                if (!on) {
+                    setAppliedCoupon(null);
+                    setCouponError(null);
+                    setCouponLocked(false);
+                }
+            } catch {
+                if (!cancelled) setCouponsEnabled(false);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    useEffect(() => {
         if (typeof window === "undefined") return;
         window.scrollTo({ top: 0, behavior: "auto" });
     }, [stepIdx]);
@@ -433,6 +477,25 @@ function ConfiguradorPageContent() {
     }, [panelSkipModalOpen]);
 
     const t = useMemo(() => getUiStrings(uiLang), [uiLang]);
+
+    useEffect(() => {
+        if (params.get("resetCouponLock") === "1") {
+            clearCouponAttemptFailures();
+            setCouponLocked(false);
+            setCouponError(null);
+            const next = new URLSearchParams(params.toString());
+            next.delete("resetCouponLock");
+            const qs = next.toString();
+            router.replace(qs ? `/configurador?${qs}` : "/configurador");
+            return;
+        }
+        const gate = getCouponAttemptGate();
+        setCouponLocked(gate.locked);
+        if (gate.locked) {
+            setCouponError(t.couponLocked);
+        }
+    }, [t.couponLocked, params, router]);
+
     const tWa = useMemo(() => getUiStrings("es"), []);
     const styleNoneOptionLabel =
         uiLang === "en"
@@ -569,7 +632,10 @@ function ConfiguradorPageContent() {
             .reduce((acc, e) => acc + e.price[currency], 0);
     const base = PLAN_BASE[plan][currency];
     const total = base + sectionsCost + secondLanguageCost + extrasCost;
-    const downPayment = Math.round(total * 0.5);
+    const discountedTotal = appliedCoupon
+        ? applyCouponDiscount(total, appliedCoupon.discountPercent)
+        : total;
+    const downPayment = Math.round(discountedTotal * 0.5);
 
     const planLabel = plan === "premium" ? t.planPremium : t.planUnique;
     const planLabelWa = plan === "premium" ? tWa.planPremium : tWa.planUnique;
@@ -684,7 +750,13 @@ function ConfiguradorPageContent() {
         "",
         wah.headingBudget,
         `- ${tWa.currency}: ${currency}`,
-        `- *${tWa.total}: ${formatLandingMoney(total, currency)}*`,
+        ...(appliedCoupon
+            ? [
+                  `- ${tWa.couponWaLine}: ${appliedCoupon.code} (−${appliedCoupon.discountPercent}%)`,
+                  `- ${tWa.totalBeforeDiscount}: ${formatLandingMoney(total, currency)}`,
+              ]
+            : []),
+        `- *${tWa.total}: ${formatLandingMoney(discountedTotal, currency)}*`,
         `- *${tWa.deposit50}: ${formatLandingMoney(downPayment, currency)}*`,
         "",
         wah.headingComplete,
@@ -741,6 +813,126 @@ function ConfiguradorPageContent() {
     ]);
 
     const isLastStep = stepIdx === steps.length - 1;
+
+    const handleApplyCoupon = async () => {
+        const code = couponInput.trim();
+        if (!code || couponBusy) return;
+
+        const gate = getCouponAttemptGate();
+        if (gate.locked) {
+            setCouponLocked(true);
+            setCouponError(t.couponLocked);
+            return;
+        }
+
+        setCouponBusy(true);
+        setCouponError(null);
+        try {
+            const claimToken = getOrCreateCouponClaimToken();
+            const res = await fetch("/api/coupons/validate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    code,
+                    claimToken,
+                    lang: uiLang,
+                }),
+            });
+            const data = (await res.json()) as {
+                ok: boolean;
+                error?: string;
+                coupon?: AppliedCouponInfo;
+            };
+            if (!data.ok || !data.coupon) {
+                setAppliedCoupon(null);
+                const after = recordCouponAttemptFailure();
+                if (after.locked) {
+                    setCouponLocked(true);
+                    setCouponError(t.couponLocked);
+                } else {
+                    setCouponError(data.error || t.couponRedeemError);
+                }
+                return;
+            }
+            clearCouponAttemptFailures();
+            setCouponLocked(false);
+            setAppliedCoupon(data.coupon);
+            setCouponInput(data.coupon.code);
+            setCouponError(null);
+        } catch {
+            setAppliedCoupon(null);
+            setCouponError(t.couponRedeemError);
+        } finally {
+            setCouponBusy(false);
+        }
+    };
+
+    const handleSenar = async () => {
+        if (!canContinue || redeemBusy) return;
+        setRedeemBusy(true);
+        setCouponError(null);
+        try {
+            if (appliedCoupon) {
+                const claimToken = getOrCreateCouponClaimToken();
+                const reservedName = isBoda
+                    ? `${name1.trim()} & ${name2.trim()}`
+                    : name1.trim();
+                const res = await fetch("/api/coupons/redeem", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        code: appliedCoupon.code,
+                        claimToken,
+                        reservedName,
+                        invitationType: eventType || "",
+                        lang: uiLang,
+                    }),
+                });
+                const data = (await res.json()) as {
+                    ok: boolean;
+                    error?: string;
+                };
+                if (!data.ok) {
+                    setCouponError(data.error || t.couponRedeemError);
+                    setAppliedCoupon(null);
+                    return;
+                }
+            }
+
+            trackMetaEvent("Purchase", {
+                source: "configurador",
+                step: "senar_50",
+                plan,
+                currency,
+                value: discountedTotal,
+                ...(appliedCoupon
+                    ? { coupon: appliedCoupon.code }
+                    : {}),
+            });
+            trackGaEvent("purchase", {
+                source: "configurador",
+                button_name: "SEÑAR",
+                step: "senar_50",
+                plan,
+                currency,
+                value: discountedTotal,
+                ...(appliedCoupon
+                    ? { coupon: appliedCoupon.code }
+                    : {}),
+            });
+            window.open(
+                WhatsAppHref(waNumber, summary),
+                "_blank",
+                "noopener,noreferrer",
+            );
+        } catch {
+            if (appliedCoupon) {
+                setCouponError(t.couponRedeemError);
+            }
+        } finally {
+            setRedeemBusy(false);
+        }
+    };
 
     const step = steps[stepIdx];
 
@@ -1961,6 +2153,128 @@ function ConfiguradorPageContent() {
                                     {t.dateHelp}
                                 </span>
                             </label>
+                            {couponsEnabled ? (
+                            <div className="mt-4 border-t border-[#E8DFD4] pt-4">
+                                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
+                                    {t.couponLabel}
+                                </span>
+                                <p className="mb-2 text-[11px] leading-snug text-[#7A6A5D]">
+                                    {t.couponHint}
+                                </p>
+                                {appliedCoupon ? (
+                                    <>
+                                        <div className="flex gap-2">
+                                            <input
+                                                value={appliedCoupon.code}
+                                                readOnly
+                                                tabIndex={-1}
+                                                className="min-w-0 flex-1 cursor-default rounded-xl border px-3 py-3 text-sm outline-none"
+                                                style={{
+                                                    borderColor: "#B7D9C0",
+                                                    background: "#F1F8F2",
+                                                    color: "#6A8A72",
+                                                    opacity: 0.85,
+                                                }}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setAppliedCoupon(null);
+                                                    setCouponError(null);
+                                                    setCouponInput("");
+                                                }}
+                                                className="shrink-0 rounded-xl border border-[#B7D9C0] bg-[#F1F8F2] px-3.5 py-3 text-sm font-semibold text-[#3F7A4F]"
+                                            >
+                                                {t.couponRemove}
+                                            </button>
+                                        </div>
+                                        <p className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-[#2F6B3A]">
+                                            <Check
+                                                size={16}
+                                                strokeWidth={2.5}
+                                                className="shrink-0 text-[#2F6B3A]"
+                                                aria-hidden
+                                            />
+                                            {t.couponApplied.replace(
+                                                /\{\{pct\}\}/g,
+                                                String(
+                                                    appliedCoupon.discountPercent,
+                                                ),
+                                            )}
+                                        </p>
+                                    </>
+                                ) : (
+                                    <div className="flex gap-2">
+                                        <input
+                                            value={couponInput}
+                                            onChange={(e) => {
+                                                setCouponInput(e.target.value);
+                                                if (couponError && !couponLocked)
+                                                    setCouponError(null);
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    e.preventDefault();
+                                                    void handleApplyCoupon();
+                                                }
+                                            }}
+                                            placeholder=""
+                                            autoCapitalize="characters"
+                                            autoCorrect="off"
+                                            spellCheck={false}
+                                            disabled={couponLocked}
+                                            className="min-w-0 flex-1 rounded-xl border px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45] disabled:opacity-55"
+                                            style={{
+                                                borderColor: couponError
+                                                    ? "#C86C6C"
+                                                    : "#DCCFC0",
+                                                background: "#FFF",
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                void handleApplyCoupon()
+                                            }
+                                            disabled={
+                                                couponBusy ||
+                                                couponLocked ||
+                                                !couponInput.trim()
+                                            }
+                                            className="shrink-0 rounded-xl bg-[#7A5F45] px-3.5 py-3 text-sm font-semibold text-white disabled:opacity-45"
+                                        >
+                                            {couponBusy
+                                                ? t.couponApplying
+                                                : t.couponApply}
+                                        </button>
+                                    </div>
+                                )}
+                                {couponError ? (
+                                    couponLocked ? (
+                                        <p className="mt-1.5 text-[11px] leading-snug text-[#B85C5C]">
+                                            {t.couponLocked}{" "}
+                                            <a
+                                                href={WhatsAppHref(
+                                                    waNumber,
+                                                    uiLang === "en"
+                                                        ? "Hi! I have a problem with a coupon in the configurator."
+                                                        : "Hola! Tengo un problema con un cupón en el configurador.",
+                                                )}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="font-bold text-[#B85C5C] no-underline"
+                                            >
+                                                {t.couponLockedContact}
+                                            </a>
+                                        </p>
+                                    ) : (
+                                        <span className="mt-1.5 block text-[11px] text-[#B85C5C]">
+                                            {couponError}
+                                        </span>
+                                    )
+                                ) : null}
+                            </div>
+                            ) : null}
                         </div>
                     </>
                 ) : null}
@@ -1981,8 +2295,39 @@ function ConfiguradorPageContent() {
                         >
                             {t.currency}: {currency}
                         </p>
-                        <p className="text-base font-bold text-[#4A3729] sm:text-[17px]">
-                            {t.total}: {formatLandingMoney(total, currency)}
+                        <p
+                            className={`text-right text-base font-bold sm:text-[17px] ${
+                                appliedCoupon
+                                    ? "inline-flex items-baseline justify-end gap-1.5"
+                                    : ""
+                            }`}
+                        >
+                            {appliedCoupon ? (
+                                <>
+                                    <span className="text-sm font-medium text-[#9A8A7A] line-through">
+                                        {formatLandingMoney(total, currency)}
+                                    </span>
+                                    <span>
+                                        <span className="text-[#4A3729]">
+                                            {t.total}:{" "}
+                                        </span>
+                                        <span
+                                            className="font-bold"
+                                            style={{ color: "#5B9A6A" }}
+                                        >
+                                            {formatLandingMoney(
+                                                discountedTotal,
+                                                currency,
+                                            )}
+                                        </span>
+                                    </span>
+                                </>
+                            ) : (
+                                <span className="text-[#4A3729]">
+                                    {t.total}:{" "}
+                                    {formatLandingMoney(total, currency)}
+                                </span>
+                            )}
                         </p>
                     </div>
                     <div className="flex items-center justify-between">
@@ -2010,30 +2355,8 @@ function ConfiguradorPageContent() {
                         ) : (
                             <button
                                 type="button"
-                                onClick={() => {
-                                    if (!canContinue) return;
-                                    trackMetaEvent("Purchase", {
-                                        source: "configurador",
-                                        step: "senar_50",
-                                        plan,
-                                        currency,
-                                        value: total,
-                                    });
-                                    trackGaEvent("purchase", {
-                                        source: "configurador",
-                                        button_name: "SEÑAR",
-                                        step: "senar_50",
-                                        plan,
-                                        currency,
-                                        value: total,
-                                    });
-                                    window.open(
-                                        WhatsAppHref(waNumber, summary),
-                                        "_blank",
-                                        "noopener,noreferrer",
-                                    );
-                                }}
-                                disabled={!canContinue}
+                                onClick={() => void handleSenar()}
+                                disabled={!canContinue || redeemBusy}
                                 className="inline-flex items-center gap-1 rounded-full bg-[#7A5F45] px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-45"
                             >
                                 {t.goWhatsapp} <ChevronRight size={16} />

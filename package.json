@@ -14,6 +14,7 @@
     "validate:clientes": "node scripts/validate-client-invitations.mjs",
     "panel:gen-id": "node scripts/generate-panel-id.mjs",
     "panel:audit-orphans": "node scripts/audit-orphan-panel-eventos.mjs",
+    "coupons:seed": "node scripts/seed-coupons.mjs",
     "landing:marquee-lite": "node scripts/generate-landing-marquee-lite.mjs"
   },
   "dependencies": {

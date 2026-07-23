@@ -39,6 +39,11 @@
             "id": "cronograma",
             "label": "Cronograma limpieza",
             "path": "/0760cronograma"
+        },
+        {
+            "id": "cupones",
+            "label": "Cupones",
+            "path": "/925837links/cupones"
         }
     ]
 }
