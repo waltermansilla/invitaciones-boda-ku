@@ -146,10 +146,10 @@ export async function markCouponUsedById(
 
 export async function markCouponSentById(
   id: string,
-  email?: string | null,
+  destinatario?: string | null,
 ) {
   const supabase = createServiceClient()
-  const trimmed = email?.trim().toLowerCase() || null
+  const trimmed = destinatario?.trim() || null
   const { data, error } = await supabase
     .from("cupones")
     .update({

@@ -218,6 +218,12 @@ export function CouponsAdminPanel() {
   const [editMessage, setEditMessage] = useState("")
   const [sendCoupon, setSendCoupon] = useState<CuponRow | null>(null)
   const [sendEmail, setSendEmail] = useState("")
+  const [manualSendCoupon, setManualSendCoupon] = useState<CuponRow | null>(
+    null,
+  )
+  const [manualSendName, setManualSendName] = useState("")
+  const sendPressTimer = useRef<number | null>(null)
+  const sendLongPressDone = useRef(false)
   const [createMode, setCreateMode] = useState<CreateMode>("unique")
   const [rowMenuId, setRowMenuId] = useState<string | null>(null)
 
@@ -583,6 +589,31 @@ export function CouponsAdminPanel() {
     setSendEmail("")
     setSendEmailBaseline(null)
     setSendDirty(false)
+  }
+
+  const closeManualSend = () => {
+    setManualSendCoupon(null)
+    setManualSendName("")
+  }
+
+  const clearSendPressTimer = () => {
+    if (sendPressTimer.current != null) {
+      window.clearTimeout(sendPressTimer.current)
+      sendPressTimer.current = null
+    }
+  }
+
+  const openEmailSend = (c: CuponRow) => {
+    const initial = c.enviado_email?.trim() || ""
+    setSendEmail(initial)
+    setSendEmailBaseline(initial)
+    setSendDirty(false)
+    setSendCoupon(c)
+  }
+
+  const openManualSend = (c: CuponRow) => {
+    setManualSendName(c.enviado_email?.trim() || "")
+    setManualSendCoupon(c)
   }
 
   const closeCreate = () => {
@@ -1224,18 +1255,38 @@ export function CouponsAdminPanel() {
                   type="button"
                   aria-label={
                     sent
-                      ? `Reenviar ${c.codigo} por mail`
-                      : `Enviar ${c.codigo} por mail`
+                      ? `Reenviar ${c.codigo} por mail. Mantener para marcar enviado`
+                      : `Enviar ${c.codigo} por mail. Mantener para marcar enviado`
                   }
+                  onContextMenu={(e) => e.preventDefault()}
+                  onPointerDown={(e) => {
+                    e.stopPropagation()
+                    sendLongPressDone.current = false
+                    clearSendPressTimer()
+                    sendPressTimer.current = window.setTimeout(() => {
+                      sendLongPressDone.current = true
+                      openManualSend(c)
+                      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+                        try {
+                          navigator.vibrate(12)
+                        } catch {
+                          // ignore
+                        }
+                      }
+                    }, 1000)
+                  }}
+                  onPointerUp={() => clearSendPressTimer()}
+                  onPointerLeave={() => clearSendPressTimer()}
+                  onPointerCancel={() => clearSendPressTimer()}
                   onClick={(e) => {
                     e.stopPropagation()
-                    const initial = c.enviado_email?.trim() || ""
-                    setSendEmail(initial)
-                    setSendEmailBaseline(initial)
-                    setSendDirty(false)
-                    setSendCoupon(c)
+                    if (sendLongPressDone.current) {
+                      sendLongPressDone.current = false
+                      return
+                    }
+                    openEmailSend(c)
                   }}
-                  className={`flex w-12 shrink-0 items-center justify-center border-l active:opacity-80 ${
+                  className={`flex w-12 shrink-0 touch-manipulation items-center justify-center border-l select-none active:opacity-80 ${
                     sent
                       ? "border-[#C5DBF0] bg-[#DCEAF8] text-[#1E5A8A]"
                       : "border-[#EFE7DB] bg-transparent text-[#5A4638] active:bg-[#F7F1E8]"
@@ -1385,11 +1436,15 @@ export function CouponsAdminPanel() {
           <div className="space-y-2 pb-4 pt-2">
             {menuCoupon.enviado && menuCoupon.enviado_email ? (
               <div className="flex items-center justify-center gap-2.5 rounded-xl bg-[#F0E8DC] px-3 py-2.5">
-                <Mail
-                  className="h-3.5 w-3.5 shrink-0 text-[#7A6654]"
-                  strokeWidth={2.25}
-                  aria-hidden
-                />
+                {/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+                  menuCoupon.enviado_email.trim(),
+                ) ? (
+                  <Mail
+                    className="h-3.5 w-3.5 shrink-0 text-[#7A6654]"
+                    strokeWidth={2.25}
+                    aria-hidden
+                  />
+                ) : null}
                 <p className="min-w-0 truncate text-[13px] text-[#5A4638]">
                   {menuCoupon.enviado_email}
                 </p>
@@ -1926,7 +1981,7 @@ export function CouponsAdminPanel() {
                     {
                       action: "mark_sent",
                       id: sendCoupon.id,
-                      email: to,
+                      email: to.toLowerCase(),
                     },
                     `${sendCoupon.codigo} marcado como enviado.`,
                   )
@@ -1937,6 +1992,68 @@ export function CouponsAdminPanel() {
             >
               <Send className="h-4 w-4" strokeWidth={2.5} />
               Enviar
+            </button>
+          </div>
+        ) : null}
+      </Sheet>
+
+      {/* Marcar enviado manual (WhatsApp, etc.) */}
+      <Sheet
+        open={Boolean(manualSendCoupon)}
+        onClose={() => !busy && closeManualSend()}
+        title={
+          manualSendCoupon
+            ? `Marcar ${manualSendCoupon.codigo}`
+            : "Marcar enviado"
+        }
+      >
+        {manualSendCoupon ? (
+          <div className="space-y-3 pb-6 pt-1">
+            <p className="text-sm leading-relaxed text-[#7A6654]">
+              Para cuando lo mandás por WhatsApp u otro medio. Queda como
+              enviado con el nombre que indiques.
+            </p>
+            <div>
+              <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9A8168]">
+                Nombre / a quién
+              </p>
+              <input
+                type="text"
+                value={manualSendName}
+                onChange={(e) => setManualSendName(e.target.value)}
+                placeholder="Ej. María · WhatsApp"
+                className={field}
+                autoFocus
+              />
+            </div>
+            <button
+              type="button"
+              disabled={busy || !manualSendName.trim()}
+              onClick={() =>
+                void (async () => {
+                  const name = manualSendName.trim()
+                  if (!name) {
+                    setFlash({
+                      type: "err",
+                      text: "Ingresá un nombre.",
+                    })
+                    return
+                  }
+                  const ok = await runAction(
+                    {
+                      action: "mark_sent",
+                      id: manualSendCoupon.id,
+                      email: name,
+                    },
+                    `${manualSendCoupon.codigo} marcado como enviado.`,
+                  )
+                  if (ok) closeManualSend()
+                })()
+              }
+              className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#2F261F] text-base font-semibold text-[#FAF7F2] disabled:opacity-50"
+            >
+              <Check className="h-4 w-4" strokeWidth={2.5} />
+              Marcar como enviado
             </button>
           </div>
         ) : null}
