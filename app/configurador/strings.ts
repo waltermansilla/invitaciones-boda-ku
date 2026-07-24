@@ -130,6 +130,87 @@ export function getExtraDetailById(
     return details;
 }
 
+export function getSectionDetailById(
+    lang: ConfiguratorLang,
+): Record<string, { title: string; body: string }> {
+    if (lang === "en") {
+        return {
+            mapa: {
+                title: "Map & directions",
+                body: "Show the venue with an embedded map and clear details: address, time, and a button to open Google Maps or Waze. Ideal when there is more than one stop (ceremony and party).",
+            },
+            countdown: {
+                title: "Countdown",
+                body: "A live countdown to the event date (days, hours, minutes). Builds anticipation and keeps the date front and center.",
+            },
+            dress: {
+                title: "Dress code",
+                body: "Tell guests how to dress: formal, elegant, themed, suggested colors, or what to avoid. Fewer last-minute questions.",
+            },
+            itinerario: {
+                title: "Itinerary",
+                body: "The day’s flow with times: ceremony, cocktail, dinner, dancing, and more. Guests know what to expect and when to arrive.",
+            },
+            regalos: {
+                title: "Gifts / payment info",
+                body: "Space for aliases, bank details, or other gift options. You can add a short note (honeymoon fund, joint account, etc.) without a traditional registry list.",
+            },
+            tarjeta: {
+                title: "Gift amount",
+                body: "If you use an entry fee or advance gift amount, list the amount and how to pay. Pairs well with the guest dashboard to track who already paid.",
+            },
+            album: {
+                title: "Drive album (photos)",
+                body: "A shared album link (Drive or similar) so guests can upload event photos. Everything lands in one place.",
+            },
+            musica: {
+                title: "Music on the invite",
+                body: "A background track that plays when the invitation opens (with a pause control). Sets the mood from the first second.",
+            },
+            playlist: {
+                title: "Collaborative Spotify playlist",
+                body: "Guests can suggest songs for the party. You get organized ideas and the playlist is built together.",
+            },
+            historia: {
+                title: "Our story",
+                body: "A block to share how you met, relationship milestones, or the guest of honor’s story. Text + photos, in a personal tone.",
+            },
+            trivia: {
+                title: "Interactive trivia",
+                body: "Fun questions about you or the guest of honor. Guests answer right in the invitation—a great icebreaker before the day.",
+            },
+            fotos10: {
+                title: "Up to 10 photos",
+                body: "Your invitation already includes up to 5 photos. This block lets you add more (up to 10 total) for gallery, story, or key moments.",
+            },
+            faq: {
+                title: "FAQ",
+                body: "Answers to common questions: parking, arrival time, dress code, kids, weather, and more. Fewer one-off WhatsApp messages.",
+            },
+            alojamiento: {
+                title: "Accommodations",
+                body: "Hotel or lodging suggestions near the venue, with links or contact details. Especially useful for out-of-town guests.",
+            },
+            adultos: {
+                title: "Kids & childcare notes",
+                body: "Clarify if the event is adults-only, kid-friendly, or if childcare is available. Avoids confusion when confirming.",
+            },
+            dietas: {
+                title: "RSVP, dietary preferences, messages",
+                body: "A fuller RSVP: attending / not attending, dietary needs (vegetarian, celiac, etc.), and messages for you, the DJ, or others. Ideal when you want structured replies (even better with the dashboard).",
+            },
+            otro: {
+                title: "Other section",
+                body: "If you need something not on the list (special gift table, padrinos, QR code, etc.), describe it here and we’ll see how to include it.",
+            },
+        };
+    }
+    return structuredClone(configuradorEs.sectionDetails) as Record<
+        string,
+        { title: string; body: string }
+    >;
+}
+
 /** Section id → English label (Spanish defaults stay in page for es). */
 export const SECTION_LABEL_EN: Record<string, string> = {
     mapa: "Map & directions",
@@ -228,6 +309,42 @@ export function getUiStrings(lang: ConfiguratorLang) {
                 "You selected {{count}} blocks. Minimum 5 to continue — on this plan every section is included, with no extra per-block fee.",
             seccionOtroPh: "Describe the section you want to add…",
             seccionOtroAria: "Describe the section you want to add",
+            seccionInfoHint:
+                "*Press and hold* any section to see what it’s about.",
+            seccionInfoClose: "Got it",
+            panelTitle: "Guest dashboard",
+            panelLead:
+                "Organize your guests and send them exclusive invitations with their names:",
+            panelImg1Summary: "Live RSVPs",
+            panelImg1Body:
+                "Who’s in, who’s pending, diets and songs—organized, no copying WhatsApp by hand.",
+            panelImg2Summary: "Invite with their name",
+            panelImg2Body:
+                "Each guest gets an exclusive link with their name on the welcome screen.",
+            panelImg3Summary: "Families and members",
+            panelImg3Body:
+                "Open each family, see who’s confirmed, diets and messages, and send the invite from there.",
+            panelImg4Summary: "Downloadable PDF summary",
+            panelImg4Body:
+                "Download a PDF of your list: names, RSVPs, dietary needs, and more—ready to print or share.",
+            panelCapacityIntro:
+                "The dashboard includes up to *{{n}} guests* to load your list, send named invitations, and see confirmations.",
+            panelCapacityYes: "Yes, that’s enough",
+            panelCapacityMore: "I need more capacity",
+            panelIncludedInPlan: "Included in your plan",
+            panelWithoutTitle: "What if I don’t add the guest dashboard?",
+            panelWithoutLead:
+                "You’ll still get a beautiful invitation with RSVP confirmation, with these differences:",
+            panelWithoutPoints: [
+                "Confirmations arrive in your WhatsApp.",
+                "Everyone gets the same invitation—no personal names.",
+                "You’ll need to track who’s confirming on WhatsApp yourself, including dietary needs and other details.",
+            ],
+            panelWithoutReassure:
+                "Your digital invitation is still beautiful, personalized, and ready to share—the dashboard adds organization comfort, but it isn’t required for a polished result.",
+            rsvpWithoutTitle: "What if I don’t include RSVP?",
+            rsvpWithoutLead:
+                "Confirmation stays simpler: just one button to confirm and another if they can’t make it—no forms or dietary questions.",
             idiomaTitle: "Language",
             idiomaLead:
                 "Spanish is included by default, and you can add a second language. On the finished invitation, recipients can switch languages with a single tap.",

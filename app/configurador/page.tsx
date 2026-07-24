@@ -2,7 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+    Suspense,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+    type ReactNode,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     Baby,
@@ -20,6 +28,7 @@ import {
     Mail,
     MapPin,
     Music,
+    Pointer,
     Shirt,
     Sparkles,
     Star,
@@ -51,6 +60,7 @@ import {
     getEventLabels,
     getExtraDetailById,
     getExtrasForLang,
+    getSectionDetailById,
     getUiStrings,
 } from "./strings";
 import { trackGaEvent } from "@/lib/google-analytics";
@@ -58,7 +68,10 @@ import {
     MU_CONFIG_FROM_LANDING_KEY,
     MU_LANDING_RETURN_SCROLL_KEY,
 } from "@/lib/configurador-return-nav";
-import { trackMetaEvent, updateMetaPixelAdvancedMatching } from "@/lib/meta-pixel";
+import {
+    trackMetaEvent,
+    updateMetaPixelAdvancedMatching,
+} from "@/lib/meta-pixel";
 import { applyCouponDiscount } from "@/lib/coupons/logic";
 import { getOrCreateCouponClaimToken } from "@/lib/coupons/claim-token";
 import {
@@ -92,6 +105,7 @@ const PLAN_BASE: Record<PlanKey, ConfiguratorPrice> = {
 };
 
 const FREE_SECTIONS = 5;
+const SECTION_LONG_PRESS_MS = 600;
 
 const INCLUDED_EXTRAS_BY_PLAN: Record<PlanKey, string[]> = {
     premium: [],
@@ -198,6 +212,125 @@ const PANEL_INCLUDED_GUESTS = 150;
 const PANEL_MAX_GUESTS = 1000;
 const PANEL_GUEST_PRESETS = PANEL_GUEST_TIERS;
 
+type SectionInfoMedia =
+    | {
+          kind: "image";
+          src: string;
+          altEs: string;
+          altEn: string;
+      }
+    | {
+          kind: "video";
+          src: string;
+          altEs: string;
+          altEn: string;
+      };
+
+const SECTION_INFO_MEDIA: Record<string, SectionInfoMedia[]> = {
+    mapa: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/ubicacion.jpeg",
+            altEs: "Ejemplo de ubicación y mapa",
+            altEn: "Location and map example",
+        },
+    ],
+    countdown: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/cuenta-regr.jpeg",
+            altEs: "Ejemplo de cuenta regresiva",
+            altEn: "Countdown example",
+        },
+    ],
+    itinerario: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/itinerario.jpeg",
+            altEs: "Ejemplo de itinerario",
+            altEn: "Itinerary example",
+        },
+    ],
+    regalos: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/regalos.jpeg",
+            altEs: "Ejemplo de sección de regalos",
+            altEn: "Gifts section example",
+        },
+    ],
+    tarjeta: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/tarjeta.jpeg",
+            altEs: "Ejemplo de valor de tarjeta",
+            altEn: "Entrance fee section example",
+        },
+    ],
+    album: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/drive-fotos.jpeg",
+            altEs: "Ejemplo de álbum de fotos",
+            altEn: "Photo album example",
+        },
+    ],
+    playlist: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/playlist.jpeg",
+            altEs: "Ejemplo de playlist colaborativa",
+            altEn: "Collaborative playlist example",
+        },
+    ],
+    trivia: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/trivia.jpeg",
+            altEs: "Ejemplo de trivia interactiva",
+            altEn: "Interactive trivia example",
+        },
+    ],
+    adultos: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/ninos.jpeg",
+            altEs: "Ejemplo de sección niños y cuidados",
+            altEn: "Kids and care section example",
+        },
+    ],
+    dress: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/dress-code.jpeg",
+            altEs: "Ejemplo de dress code",
+            altEn: "Dress code example",
+        },
+    ],
+    historia: [
+        {
+            kind: "video",
+            src: "/landing/media/images/configurador/secciones/historia.mp4",
+            altEs: "Ejemplo de nuestra historia",
+            altEn: "Our story section example",
+        },
+    ],
+    dietas: [
+        {
+            kind: "image",
+            src: "/landing/media/images/configurador/secciones/rsvp.jpeg",
+            altEs: "Ejemplo de RSVP, dietas y mensajes",
+            altEn: "RSVP, dietary needs and messages example",
+        },
+    ],
+};
+
+const RSVP_WITHOUT_IMAGE = {
+    src: "/landing/media/images/configurador/secciones/asistencia-sin-rsvp.jpeg",
+    altEs: "Confirmación de asistencia sencilla, sin RSVP completo",
+    altEn: "Simple attendance confirmation without full RSVP",
+};
+
 /** Same padding both sides: max of 1rem and both safe-area insets (avoids L/R mismatch). */
 const PAGE_GUTTER =
     "px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))]";
@@ -221,11 +354,12 @@ const BTN_SELECTED = {
 function renderTextWithBoldMarkers(
     text: string,
     plainClassName?: string,
+    strongClassName = "font-semibold text-[#5A4A3F]",
 ): ReactNode {
     const parts = text.split("*");
     return parts.map((part, i) =>
         i % 2 === 1 ? (
-            <strong key={i} className="font-medium text-[#5A4A3F]">
+            <strong key={i} className={strongClassName}>
                 {part}
             </strong>
         ) : (
@@ -250,9 +384,9 @@ const EXTRA_VER_DETALLE_IMAGE: Record<
     }
 > = {
     bienvenida: {
-        src: "/landing/media/images/overlay-diseño.jpg",
-        width: 1179,
-        height: 1902,
+        src: "/landing/media/images/overlay-bienvenida.png",
+        width: 575,
+        height: 1024,
         altEs: "Ejemplo de diseño de pantalla de bienvenida (overlay)",
         altEn: "Example of a custom welcome overlay layout",
     },
@@ -265,6 +399,59 @@ const EXTRA_VER_DETALLE_IMAGE: Record<
         crop916Top: true,
     },
 };
+
+/** Segunda imagen del paso Panel: invitación con nombre del invitado. */
+const PANEL_NAMED_INVITE_IMAGE = {
+    src: "/landing/media/images/panel-invitacion-nombre.jpg",
+    width: 600,
+    height: 1024,
+    altEs: "Invitación personalizada con el nombre del invitado",
+    altEn: "Personalized invitation with the guest’s name",
+} as const;
+
+/** Tercera imagen del paso Panel: detalle de familia / integrantes. */
+const PANEL_FAMILY_DETAIL_IMAGE = {
+    src: "/landing/media/images/panel-familia-detalle.jpg",
+    width: 824,
+    height: 1024,
+    altEs: "Detalle de familia e integrantes en el panel",
+    altEn: "Family and members detail in the guest dashboard",
+} as const;
+
+/** Cuarta: descarga de resumen PDF (header + tabla, apiladas). */
+const PANEL_PDF_HEADER_IMAGE = {
+    src: "/landing/media/images/panel-pdf-header.jpg",
+    width: 868,
+    height: 501,
+    altEs: "Botón para descargar el resumen PDF del panel",
+    altEn: "Button to download the guest panel PDF summary",
+} as const;
+
+const PANEL_PDF_TABLE_IMAGE = {
+    src: "/landing/media/images/panel-pdf-tabla.jpg",
+    width: 1024,
+    height: 499,
+    altEs: "Ejemplo de resumen PDF con lista de invitados",
+    altEn: "Example PDF summary with the guest list",
+} as const;
+
+const PANEL_STEP_IMG_FRAME = {
+    width: 162,
+    height: 270,
+    border: "1px solid #E1D7C9",
+    boxShadow: "0 1px 2px rgba(63, 51, 43, 0.06)",
+} as const;
+
+/** Padding mínimo entre cada texto y la imagen del otro. */
+const PANEL_TEXT_TO_IMG_GAP = 42;
+
+const PANEL_WITHOUT_WHATSAPP_IMAGE = {
+    src: "/landing/media/images/panel-sin-panel-whatsapp.jpg",
+    width: 1024,
+    height: 889,
+    altEs: "Ejemplo de confirmación de asistencia por WhatsApp",
+    altEn: "Example of an RSVP confirmation via WhatsApp",
+} as const;
 
 function WhatsAppHref(number: string, message: string) {
     return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
@@ -375,6 +562,12 @@ function ConfiguradorPageContent() {
     const [panelGuests, setPanelGuests] = useState<number>(
         PANEL_INCLUDED_GUESTS,
     );
+    const [panelChoice, setPanelChoice] = useState<"include" | "skip" | null>(
+        plan === "diseno-unico" ? "include" : null,
+    );
+    const [panelCapacityAnswer, setPanelCapacityAnswer] = useState<
+        "yes" | "more" | null
+    >(plan === "diseno-unico" ? "yes" : null);
     const [name1, setName1] = useState("");
     const [name2, setName2] = useState("");
     const [email, setEmail] = useState("");
@@ -389,7 +582,20 @@ function ConfiguradorPageContent() {
     const [couponsEnabled, setCouponsEnabled] = useState(false);
     const [seccionesInfoOpen, setSeccionesInfoOpen] = useState(false);
     const [seccionesMinErrorShown, setSeccionesMinErrorShown] = useState(false);
+    const [sectionInfoId, setSectionInfoId] = useState<string | null>(null);
+    const [rsvpWithoutInfoOpen, setRsvpWithoutInfoOpen] = useState(false);
+    const [sectionPressingId, setSectionPressingId] = useState<string | null>(
+        null,
+    );
     const [panelSkipModalOpen, setPanelSkipModalOpen] = useState(false);
+    const [panelWithoutInfoOpen, setPanelWithoutInfoOpen] = useState(false);
+    const sectionInfoVideoRef = useRef<HTMLVideoElement | null>(null);
+    const sectionPressTimer = useRef<number | null>(null);
+    const sectionLongPressDone = useRef(false);
+    const panelImg1TextRef = useRef<HTMLDivElement>(null);
+    const panelImg2TextRef = useRef<HTMLDivElement>(null);
+    /** Margen de la fila 2: negativo = solape; positivo = aire extra bajo el texto 1. */
+    const [panelImg2RowMargin, setPanelImg2RowMargin] = useState(0);
     const [designBrief, setDesignBrief] = useState("");
     const [detailsId] = useState(
         () =>
@@ -410,6 +616,7 @@ function ConfiguradorPageContent() {
                   "evento",
                   "estilo",
                   "secciones",
+                  "panel",
                   "idioma",
                   "extras",
                   "extras2",
@@ -420,6 +627,7 @@ function ConfiguradorPageContent() {
                   "evento",
                   "estilo",
                   "secciones",
+                  "panel",
                   "idioma",
                   "extras",
                   "datos",
@@ -476,6 +684,23 @@ function ConfiguradorPageContent() {
         };
     }, [panelSkipModalOpen]);
 
+    useEffect(() => {
+        if (!sectionInfoId) {
+            setRsvpWithoutInfoOpen(false);
+            return;
+        }
+        const video = sectionInfoVideoRef.current;
+        if (!video) return;
+        video.muted = true;
+        video.defaultMuted = true;
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === "function") {
+            playPromise.catch(() => {
+                /* Autoplay may be blocked; muted+playsInline usually works. */
+            });
+        }
+    }, [sectionInfoId]);
+
     const t = useMemo(() => getUiStrings(uiLang), [uiLang]);
 
     useEffect(() => {
@@ -504,6 +729,29 @@ function ConfiguradorPageContent() {
     const extrasList = useMemo(() => getExtrasForLang(uiLang), [uiLang]);
     const extrasListWa = useMemo(() => getExtrasForLang("es"), []);
     const extraDetails = useMemo(() => getExtraDetailById(uiLang), [uiLang]);
+    const sectionDetails = useMemo(
+        () => getSectionDetailById(uiLang),
+        [uiLang],
+    );
+    const sectionInfoDetail = sectionInfoId
+        ? sectionDetails[sectionInfoId]
+        : null;
+
+    const clearSectionPressTimer = () => {
+        if (sectionPressTimer.current != null) {
+            window.clearTimeout(sectionPressTimer.current);
+            sectionPressTimer.current = null;
+        }
+    };
+
+    const clearSectionPress = () => {
+        clearSectionPressTimer();
+        setSectionPressingId(null);
+    };
+
+    useEffect(() => {
+        return () => clearSectionPressTimer();
+    }, []);
     const panelSkipModalCopy =
         configuradorEs.panelSkipModal[uiLang === "en" ? "en" : "es"];
     const eventLabelMap = useMemo(() => getEventLabels(uiLang), [uiLang]);
@@ -601,8 +849,9 @@ function ConfiguradorPageContent() {
         plan === "diseno-unico"
             ? 0
             : paidSectionsCount * EXTRA_SECTION_PRICE[currency];
-    const secondLanguageCost =
-        secondLanguage ? SECOND_LANGUAGE_PRICE[currency] : 0;
+    const secondLanguageCost = secondLanguage
+        ? SECOND_LANGUAGE_PRICE[currency]
+        : 0;
     const includedExtraIds = INCLUDED_EXTRAS_BY_PLAN[plan];
     const clampedPanelGuests = Math.max(
         PANEL_INCLUDED_GUESTS,
@@ -615,8 +864,10 @@ function ConfiguradorPageContent() {
         ? clampedPanelGuests
         : PANEL_INCLUDED_GUESTS;
     const panelTierPrice = pickPanelTierPrice(panelGuestTier, currency);
-    const panelBaseTierPrice = pickPanelTierPrice(PANEL_INCLUDED_GUESTS, currency);
-    const panelExtraGuestsCost = Math.max(0, panelTierPrice - panelBaseTierPrice);
+    const panelBaseTierPrice = pickPanelTierPrice(
+        PANEL_INCLUDED_GUESTS,
+        currency,
+    );
     const panelSelected = extras.includes("panel");
     const panelIncludedByPlan = includedExtraIds.includes("panel");
     const panelCost = panelSelected
@@ -786,6 +1037,15 @@ function ConfiguradorPageContent() {
             );
         if (step === "estilo") return Boolean(styleSelected);
         if (step === "secciones") return true;
+        if (step === "panel") {
+            if (panelIncludedByPlan || panelChoice === "include") {
+                return (
+                    panelCapacityAnswer === "yes" ||
+                    panelCapacityAnswer === "more"
+                );
+            }
+            return panelChoice === "skip";
+        }
         if (step === "briefing")
             return plan === "diseno-unico"
                 ? designBrief.trim().length >= 10
@@ -804,7 +1064,11 @@ function ConfiguradorPageContent() {
         eventType,
         eventOther,
         styleSelected,
+        panelChoice,
+        panelCapacityAnswer,
+        panelIncludedByPlan,
         designBrief,
+        plan,
         name1,
         name2,
         isBoda,
@@ -905,9 +1169,7 @@ function ConfiguradorPageContent() {
                 plan,
                 currency,
                 value: discountedTotal,
-                ...(appliedCoupon
-                    ? { coupon: appliedCoupon.code }
-                    : {}),
+                ...(appliedCoupon ? { coupon: appliedCoupon.code } : {}),
             });
             trackGaEvent("purchase", {
                 source: "configurador",
@@ -916,9 +1178,7 @@ function ConfiguradorPageContent() {
                 plan,
                 currency,
                 value: discountedTotal,
-                ...(appliedCoupon
-                    ? { coupon: appliedCoupon.code }
-                    : {}),
+                ...(appliedCoupon ? { coupon: appliedCoupon.code } : {}),
             });
             window.open(
                 WhatsAppHref(waNumber, summary),
@@ -936,16 +1196,61 @@ function ConfiguradorPageContent() {
 
     const step = steps[stepIdx];
 
+    useLayoutEffect(() => {
+        if (step !== "panel") return;
+        const t1 = panelImg1TextRef.current;
+        const t2 = panelImg2TextRef.current;
+        if (!t1 || !t2) return;
+
+        const measure = () => {
+            const gap = PANEL_TEXT_TO_IMG_GAP;
+            const imgH = PANEL_STEP_IMG_FRAME.height;
+            const h1 = Math.ceil(t1.getBoundingClientRect().height);
+            const h2 = Math.ceil(t2.getBoundingClientRect().height);
+            if (h1 <= 0 || h2 <= 0) return;
+            const row1Height = Math.max(imgH, h1);
+            // 1) img2 ≥ 42px bajo el texto 1
+            // 2) texto 2 ≥ 42px bajo el final de img1 (items-end → img2Top ≥ h2 + 42)
+            const desiredImg2Top = Math.max(h1 + gap, h2 + gap);
+            setPanelImg2RowMargin(desiredImg2Top - row1Height);
+        };
+
+        measure();
+        const raf1 = requestAnimationFrame(() => {
+            measure();
+            requestAnimationFrame(measure);
+        });
+        const ro = new ResizeObserver(() => measure());
+        ro.observe(t1);
+        ro.observe(t2);
+        return () => {
+            cancelAnimationFrame(raf1);
+            ro.disconnect();
+        };
+    }, [
+        step,
+        uiLang,
+        t.panelImg1Summary,
+        t.panelImg1Body,
+        t.panelImg2Summary,
+        t.panelImg2Body,
+    ]);
+
+    const extrasWithoutPanel = useMemo(
+        () => extrasList.filter((e) => e.id !== "panel"),
+        [extrasList],
+    );
+
     const extrasToRender = useMemo(() => {
         if (step !== "extras" && step !== "extras2") return [];
-        if (plan !== "diseno-unico") return extrasList;
+        if (plan !== "diseno-unico") return extrasWithoutPanel;
         return step === "extras"
-            ? extrasList.slice(0, DESIGN_UNIQUE_EXTRAS_STEP_COUNT)
-            : extrasList.slice(
+            ? extrasWithoutPanel.slice(0, DESIGN_UNIQUE_EXTRAS_STEP_COUNT)
+            : extrasWithoutPanel.slice(
                   DESIGN_UNIQUE_EXTRAS_STEP_COUNT,
                   DESIGN_UNIQUE_EXTRAS_STEP_COUNT * 2,
               );
-    }, [plan, step, extrasList]);
+    }, [plan, step, extrasWithoutPanel]);
 
     const extrasStepTitle =
         plan === "diseno-unico" && step === "extras2"
@@ -954,15 +1259,15 @@ function ConfiguradorPageContent() {
               ? t.extrasTitlePart1
               : t.extrasTitle;
 
+    /** Barra de progreso: no incluye briefing ni datos (se completa en extras). */
     const progressSegmentFills = useMemo(() => {
-        if (plan !== "diseno-unico") {
-            return steps.map((_, i) => (stepIdx >= i ? 1 : 0));
-        }
         const fills: number[] = [];
         for (let i = 0; i < steps.length; i++) {
             const id = steps[i];
-            if (id === "extras2") continue;
-            if (id === "extras") {
+            if (id === "extras2" || id === "briefing" || id === "datos") {
+                continue;
+            }
+            if (id === "extras" && plan === "diseno-unico") {
                 if (stepIdx < i) fills.push(0);
                 else if (stepIdx === i) fills.push(0.5);
                 else fills.push(1);
@@ -972,6 +1277,17 @@ function ConfiguradorPageContent() {
         }
         return fills;
     }, [plan, stepIdx, steps]);
+
+    const includePanelExtra = () => {
+        setExtras((prev) =>
+            prev.includes("panel") ? prev : [...prev, "panel"],
+        );
+    };
+
+    const excludePanelExtra = () => {
+        if (INCLUDED_EXTRAS_BY_PLAN[plan].includes("panel")) return;
+        setExtras((prev) => prev.filter((x) => x !== "panel"));
+    };
 
     const advanceOneStep = () => {
         setStepIdx((s) => Math.min(steps.length - 1, s + 1));
@@ -984,9 +1300,10 @@ function ConfiguradorPageContent() {
             return;
         }
         if (
-            cur === "extras" &&
+            cur === "panel" &&
             plan === "premium" &&
-            !extras.includes("panel")
+            !extras.includes("panel") &&
+            panelChoice !== "skip"
         ) {
             setPanelSkipModalOpen(true);
             return;
@@ -1370,7 +1687,7 @@ function ConfiguradorPageContent() {
                                             : t.sinExtras}
                                     </span>
                                 </p>
-                                <p className="mt-3 text-xs leading-snug text-[#6A5C52]">
+                                <p className="mt-1.5 text-xs leading-snug text-[#6A5C52]">
                                     {t.seccionesTopNote}
                                 </p>
                             </>
@@ -1391,6 +1708,29 @@ function ConfiguradorPageContent() {
                                 {t.seccionesMinThree}
                             </p>
                         ) : null}
+                        <p className="mt-5 text-center text-[13px] leading-snug text-[#8A735C]">
+                            {t.seccionInfoHint.split("*").map((part, i) =>
+                                i % 2 === 1 ? (
+                                    <strong
+                                        key={i}
+                                        className="font-semibold text-[#5A4A3F]"
+                                    >
+                                        <Pointer
+                                            size={14}
+                                            strokeWidth={2.25}
+                                            aria-hidden
+                                            className="mr-1 inline size-3.5"
+                                            style={{
+                                                verticalAlign: "-0.125em",
+                                            }}
+                                        />
+                                        {part}
+                                    </strong>
+                                ) : (
+                                    <span key={i}>{part}</span>
+                                ),
+                            )}
+                        </p>
                         <div className="mt-2.5 grid w-full min-w-0 grid-cols-4 gap-x-4 gap-y-5 pt-3 sm:gap-x-3 sm:gap-y-4 sm:pt-2">
                             {sectionOptions.map((s) => {
                                 const on = sections.includes(s.id);
@@ -1418,10 +1758,58 @@ function ConfiguradorPageContent() {
                                     </span>
                                 ) : null;
 
+                                const isPressing = sectionPressingId === s.id;
                                 const tileButton = (
                                     <button
                                         type="button"
+                                        onContextMenu={(e) =>
+                                            e.preventDefault()
+                                        }
+                                        onPointerDown={() => {
+                                            sectionLongPressDone.current = false;
+                                            clearSectionPressTimer();
+                                            setSectionPressingId(s.id);
+                                            sectionPressTimer.current =
+                                                window.setTimeout(() => {
+                                                    const infoKey =
+                                                        sectionDetails[s.id]
+                                                            ? s.id
+                                                            : s.id.startsWith(
+                                                                    "otro",
+                                                                )
+                                                              ? "otro"
+                                                              : null;
+                                                    setSectionPressingId(null);
+                                                    if (!infoKey) return;
+                                                    sectionLongPressDone.current = true;
+                                                    setSectionInfoId(infoKey);
+                                                    if (
+                                                        typeof navigator !==
+                                                            "undefined" &&
+                                                        "vibrate" in navigator
+                                                    ) {
+                                                        try {
+                                                            navigator.vibrate(
+                                                                12,
+                                                            );
+                                                        } catch {
+                                                            // ignore
+                                                        }
+                                                    }
+                                                }, SECTION_LONG_PRESS_MS);
+                                        }}
+                                        onPointerUp={() => clearSectionPress()}
+                                        onPointerLeave={() =>
+                                            clearSectionPress()
+                                        }
+                                        onPointerCancel={() =>
+                                            clearSectionPress()
+                                        }
                                         onClick={() => {
+                                            if (sectionLongPressDone.current) {
+                                                sectionLongPressDone.current = false;
+                                                return;
+                                            }
                                             if (s.isAdder) {
                                                 setIsAddingOther(
                                                     (prev) => !prev,
@@ -1437,11 +1825,11 @@ function ConfiguradorPageContent() {
                                                     : [...prev, s.id],
                                             );
                                         }}
-                                        className={`relative flex aspect-square w-full min-w-0 flex-col items-center justify-center gap-1.5 rounded-2xl px-1.5 py-2 text-center transition-[border-color,background-color] duration-150 ${
+                                        className={`relative flex aspect-square w-full min-w-0 touch-manipulation select-none flex-col items-center justify-center gap-1.5 rounded-2xl px-1.5 py-2 text-center transition-[border-color,background-color] duration-150 ${
                                             on || isOtroOpen
                                                 ? "border-[1.5px]"
                                                 : "border border-[#D9CFC3]"
-                                        }`}
+                                        } ${isPressing ? "animate-section-long-press" : ""}`}
                                         style={{
                                             borderColor:
                                                 on || isOtroOpen
@@ -1454,6 +1842,11 @@ function ConfiguradorPageContent() {
                                             cursor: isRequiredSection
                                                 ? "default"
                                                 : "pointer",
+                                            ...(isPressing
+                                                ? {
+                                                      animationDuration: `${SECTION_LONG_PRESS_MS}ms`,
+                                                  }
+                                                : {}),
                                         }}
                                     >
                                         {on || isOtroOpen ? (
@@ -1562,6 +1955,497 @@ function ConfiguradorPageContent() {
                     </>
                 ) : null}
 
+                {step === "panel" ? (
+                    <>
+                        <h2
+                            className="text-3xl font-normal"
+                            style={{
+                                fontFamily:
+                                    "var(--font-landing-hero), Georgia, serif",
+                            }}
+                        >
+                            {t.panelTitle}
+                        </h2>
+                        <p className="mt-3 text-sm leading-relaxed text-[#6A5C52]">
+                            {t.panelLead}
+                        </p>
+
+                        <div className="relative mt-5">
+                            <div className="relative z-[1] flex flex-row items-start gap-3">
+                                <div
+                                    className="shrink-0 overflow-hidden rounded-lg"
+                                    style={PANEL_STEP_IMG_FRAME}
+                                >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={EXTRA_VER_DETALLE_IMAGE.panel.src}
+                                        alt={
+                                            uiLang === "en"
+                                                ? EXTRA_VER_DETALLE_IMAGE.panel
+                                                      .altEn
+                                                : EXTRA_VER_DETALLE_IMAGE.panel
+                                                      .altEs
+                                        }
+                                        style={{
+                                            display: "block",
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
+                                            objectPosition: "top",
+                                        }}
+                                        decoding="async"
+                                    />
+                                </div>
+                                <div
+                                    ref={panelImg1TextRef}
+                                    className="relative z-[3] min-w-0 flex-1 break-words pt-1"
+                                >
+                                    <p className="text-[13px] font-semibold leading-snug text-[#5A4A3F]">
+                                        {t.panelImg1Summary}
+                                    </p>
+                                    {t.panelImg1Body ? (
+                                        <p className="mt-1 text-[11px] leading-relaxed text-[#6A5C52] sm:text-xs">
+                                            {t.panelImg1Body}
+                                        </p>
+                                    ) : null}
+                                </div>
+                            </div>
+
+                            <div
+                                className="relative z-[2] flex flex-row items-end gap-3"
+                                style={{
+                                    marginTop: panelImg2RowMargin,
+                                    minHeight: PANEL_STEP_IMG_FRAME.height,
+                                }}
+                            >
+                                <div
+                                    ref={panelImg2TextRef}
+                                    className="min-w-0 flex-1 break-words text-right"
+                                >
+                                    <p className="text-[13px] font-semibold leading-snug text-[#5A4A3F]">
+                                        {t.panelImg2Summary}
+                                    </p>
+                                    <p className="mt-1 text-[11px] leading-relaxed text-[#6A5C52] sm:text-xs">
+                                        {t.panelImg2Body}
+                                    </p>
+                                </div>
+                                <div
+                                    className="shrink-0 overflow-hidden rounded-lg"
+                                    style={PANEL_STEP_IMG_FRAME}
+                                >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={PANEL_NAMED_INVITE_IMAGE.src}
+                                        alt={
+                                            uiLang === "en"
+                                                ? PANEL_NAMED_INVITE_IMAGE.altEn
+                                                : PANEL_NAMED_INVITE_IMAGE.altEs
+                                        }
+                                        style={{
+                                            display: "block",
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
+                                            objectPosition: "top",
+                                        }}
+                                        decoding="async"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="relative z-[3] mt-8 flex flex-row items-start gap-3">
+                                <div
+                                    className="shrink-0 overflow-hidden rounded-lg"
+                                    style={{
+                                        width: 220,
+                                        height: Math.round(
+                                            (220 *
+                                                PANEL_FAMILY_DETAIL_IMAGE.height) /
+                                                PANEL_FAMILY_DETAIL_IMAGE.width,
+                                        ),
+                                        border: PANEL_STEP_IMG_FRAME.border,
+                                        boxShadow:
+                                            PANEL_STEP_IMG_FRAME.boxShadow,
+                                    }}
+                                >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={PANEL_FAMILY_DETAIL_IMAGE.src}
+                                        alt={
+                                            uiLang === "en"
+                                                ? PANEL_FAMILY_DETAIL_IMAGE.altEn
+                                                : PANEL_FAMILY_DETAIL_IMAGE.altEs
+                                        }
+                                        style={{
+                                            display: "block",
+                                            width: "100%",
+                                            height: "100%",
+                                            objectFit: "cover",
+                                            objectPosition: "center",
+                                            transform: "scale(1.1)",
+                                        }}
+                                        decoding="async"
+                                    />
+                                </div>
+                                <div className="min-w-0 flex-1 pt-1">
+                                    <p className="text-[13px] font-semibold leading-snug text-[#5A4A3F]">
+                                        {t.panelImg3Summary}
+                                    </p>
+                                    <p className="mt-1 text-[11px] leading-relaxed text-[#6A5C52] sm:text-xs">
+                                        {t.panelImg3Body}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="relative z-[3] mt-8 flex flex-col items-center gap-3">
+                                <p className="max-w-md text-center text-[13px] font-semibold leading-snug text-[#5A4A3F]">
+                                    {t.panelImg4Summary}
+                                </p>
+                                <div className="flex w-full max-w-[360px] flex-col items-center gap-2">
+                                    <div
+                                        className="w-[78%] overflow-hidden rounded-lg"
+                                        style={{
+                                            border: PANEL_STEP_IMG_FRAME.border,
+                                            boxShadow:
+                                                PANEL_STEP_IMG_FRAME.boxShadow,
+                                            // Mismo ancho; menos alto → recorte arriba/abajo
+                                            aspectRatio: "868 / 370",
+                                        }}
+                                    >
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src={PANEL_PDF_HEADER_IMAGE.src}
+                                            alt={
+                                                uiLang === "en"
+                                                    ? PANEL_PDF_HEADER_IMAGE.altEn
+                                                    : PANEL_PDF_HEADER_IMAGE.altEs
+                                            }
+                                            width={PANEL_PDF_HEADER_IMAGE.width}
+                                            height={
+                                                PANEL_PDF_HEADER_IMAGE.height
+                                            }
+                                            className="block h-full w-full object-cover object-center"
+                                            decoding="async"
+                                        />
+                                    </div>
+                                    <div
+                                        className="w-full overflow-hidden rounded-lg"
+                                        style={{
+                                            border: PANEL_STEP_IMG_FRAME.border,
+                                            boxShadow:
+                                                PANEL_STEP_IMG_FRAME.boxShadow,
+                                        }}
+                                    >
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src={PANEL_PDF_TABLE_IMAGE.src}
+                                            alt={
+                                                uiLang === "en"
+                                                    ? PANEL_PDF_TABLE_IMAGE.altEn
+                                                    : PANEL_PDF_TABLE_IMAGE.altEs
+                                            }
+                                            width={PANEL_PDF_TABLE_IMAGE.width}
+                                            height={
+                                                PANEL_PDF_TABLE_IMAGE.height
+                                            }
+                                            className="block h-auto w-full"
+                                            decoding="async"
+                                        />
+                                    </div>
+                                </div>
+                                <p className="max-w-md text-center text-[11px] leading-relaxed text-[#6A5C52] sm:text-xs">
+                                    {t.panelImg4Body}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 rounded-2xl border border-[#E7DFD4] bg-[#FCF8F2] p-4">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setPanelWithoutInfoOpen((prev) => !prev)
+                                }
+                                className="inline-flex w-full max-w-full items-center gap-1.5 text-left text-sm font-medium text-[#7A5F45]"
+                                aria-expanded={panelWithoutInfoOpen}
+                            >
+                                <span className="min-w-0 flex-1">
+                                    {t.panelWithoutTitle}
+                                </span>
+                                <ChevronDown
+                                    size={18}
+                                    className={`shrink-0 transition-transform duration-200 ${
+                                        panelWithoutInfoOpen ? "rotate-180" : ""
+                                    }`}
+                                    aria-hidden
+                                />
+                            </button>
+                            {panelWithoutInfoOpen ? (
+                                <div className="mt-3 space-y-3">
+                                    <p className="text-sm leading-relaxed text-[#6A5C52]">
+                                        {t.panelWithoutLead}
+                                    </p>
+                                    <ul className="list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-[#6A5C52]">
+                                        {t.panelWithoutPoints.map((line, i) => (
+                                            <li key={i}>{line}</li>
+                                        ))}
+                                    </ul>
+                                    <div
+                                        className="mx-auto overflow-hidden rounded-lg"
+                                        style={{
+                                            width: "min(100%, 280px)",
+                                            border: "1px solid #E1D7C9",
+                                            boxShadow:
+                                                "0 1px 2px rgba(63, 51, 43, 0.06)",
+                                        }}
+                                    >
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src={
+                                                PANEL_WITHOUT_WHATSAPP_IMAGE.src
+                                            }
+                                            alt={
+                                                uiLang === "en"
+                                                    ? PANEL_WITHOUT_WHATSAPP_IMAGE.altEn
+                                                    : PANEL_WITHOUT_WHATSAPP_IMAGE.altEs
+                                            }
+                                            width={
+                                                PANEL_WITHOUT_WHATSAPP_IMAGE.width
+                                            }
+                                            height={
+                                                PANEL_WITHOUT_WHATSAPP_IMAGE.height
+                                            }
+                                            className="block h-auto w-full"
+                                            decoding="async"
+                                        />
+                                    </div>
+                                    <p className="text-sm leading-relaxed text-[#6A5C52]">
+                                        {t.panelWithoutReassure}
+                                    </p>
+                                </div>
+                            ) : null}
+                        </div>
+
+                        <div className="mt-5 rounded-2xl border border-[#E7DFD4] bg-[#FCF8F2] p-4">
+                            {panelIncludedByPlan ? (
+                                <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
+                                    {t.panelIncludedInPlan}
+                                </p>
+                            ) : (
+                                <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-stretch sm:gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setPanelChoice("skip");
+                                            setPanelCapacityAnswer(null);
+                                            setPanelGuests(
+                                                PANEL_INCLUDED_GUESTS,
+                                            );
+                                            excludePanelExtra();
+                                        }}
+                                        className={`inline-flex items-center justify-center rounded-full border px-4 py-2.5 text-sm font-semibold transition-colors sm:flex-1 ${
+                                            panelChoice === "skip"
+                                                ? "border-[#7A5F45] bg-[#F3EBDD] text-[#4A3A2F]"
+                                                : "border-[#DCCFC0] bg-white text-[#5A4A3F] hover:bg-[#FCF8F2]"
+                                        }`}
+                                    >
+                                        {panelSkipModalCopy.btnContinue}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setPanelChoice("include");
+                                            setPanelGuests(
+                                                PANEL_INCLUDED_GUESTS,
+                                            );
+                                            setPanelCapacityAnswer(null);
+                                            includePanelExtra();
+                                        }}
+                                        className={`inline-flex flex-col items-center justify-center rounded-full px-4 py-2 text-sm font-semibold text-white transition-opacity sm:flex-1 ${
+                                            panelChoice === "include"
+                                                ? "bg-[#5C4633] opacity-100"
+                                                : "bg-[#7A5F45] hover:opacity-95"
+                                        }`}
+                                    >
+                                        <span>{panelSkipModalCopy.btnAdd}</span>
+                                        <span className="text-[10px] font-medium leading-tight opacity-90">
+                                            {uiLang === "en" ? "for " : "por "}
+                                            {formatLandingMoney(
+                                                extrasList.find(
+                                                    (e) => e.id === "panel",
+                                                )?.price[currency] ?? 0,
+                                                currency,
+                                            )}
+                                        </span>
+                                    </button>
+                                </div>
+                            )}
+
+                            {panelChoice === "include" ||
+                            panelIncludedByPlan ? (
+                                <div
+                                    className={
+                                        panelIncludedByPlan ? "" : "mt-4"
+                                    }
+                                >
+                                    <p className="text-sm leading-relaxed text-[#6A5C52]">
+                                        {renderTextWithBoldMarkers(
+                                            t.panelCapacityIntro.replace(
+                                                /\{\{n\}\}/g,
+                                                String(PANEL_INCLUDED_GUESTS),
+                                            ),
+                                        )}
+                                    </p>
+                                    <div className="mt-3 grid grid-cols-2 gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setPanelCapacityAnswer("yes");
+                                                setPanelGuests(
+                                                    PANEL_INCLUDED_GUESTS,
+                                                );
+                                                includePanelExtra();
+                                            }}
+                                            className="rounded-xl border px-3 py-2.5 text-[13px] font-semibold transition-colors"
+                                            style={{
+                                                borderColor:
+                                                    panelCapacityAnswer ===
+                                                    "yes"
+                                                        ? "#7A5F45"
+                                                        : "#DCCFC0",
+                                                background:
+                                                    panelCapacityAnswer ===
+                                                    "yes"
+                                                        ? "#F3EBDD"
+                                                        : "#FFF",
+                                                color: "#4A3A2F",
+                                            }}
+                                        >
+                                            {t.panelCapacityYes}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setPanelCapacityAnswer("more");
+                                                setPanelGuests(
+                                                    PANEL_INCLUDED_GUESTS,
+                                                );
+                                                includePanelExtra();
+                                            }}
+                                            className="rounded-xl border px-3 py-2.5 text-[13px] font-semibold transition-colors"
+                                            style={{
+                                                borderColor:
+                                                    panelCapacityAnswer ===
+                                                    "more"
+                                                        ? "#7A5F45"
+                                                        : "#DCCFC0",
+                                                background:
+                                                    panelCapacityAnswer ===
+                                                    "more"
+                                                        ? "#F3EBDD"
+                                                        : "#FFF",
+                                                color: "#4A3A2F",
+                                            }}
+                                        >
+                                            {t.panelCapacityMore}
+                                        </button>
+                                    </div>
+
+                                    {panelCapacityAnswer === "more" ? (
+                                        <div className="mt-3 grid grid-cols-1 gap-2">
+                                            {PANEL_GUEST_PRESETS.map(
+                                                (guestCount) => {
+                                                    const selected =
+                                                        panelSelected &&
+                                                        clampedPanelGuests ===
+                                                            guestCount;
+                                                    const tierPrice =
+                                                        pickPanelTierPrice(
+                                                            guestCount,
+                                                            currency,
+                                                        );
+                                                    const priceLabel =
+                                                        guestCount ===
+                                                        PANEL_INCLUDED_GUESTS
+                                                            ? panelIncludedByPlan
+                                                                ? t.included
+                                                                : formatLandingMoney(
+                                                                      tierPrice,
+                                                                      currency,
+                                                                  )
+                                                            : `+ ${formatLandingMoney(
+                                                                  Math.max(
+                                                                      0,
+                                                                      tierPrice -
+                                                                          panelBaseTierPrice,
+                                                                  ),
+                                                                  currency,
+                                                              )}`;
+                                                    return (
+                                                        <button
+                                                            key={guestCount}
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setPanelGuests(
+                                                                    guestCount,
+                                                                );
+                                                                includePanelExtra();
+                                                            }}
+                                                            className="flex items-center justify-between rounded-xl border px-3 py-2.5 text-left transition-colors"
+                                                            style={{
+                                                                borderColor:
+                                                                    selected
+                                                                        ? "#7A5F45"
+                                                                        : "#DCCFC0",
+                                                                background:
+                                                                    selected
+                                                                        ? "#F3EBDD"
+                                                                        : "#FFF",
+                                                                color: "#4A3A2F",
+                                                            }}
+                                                        >
+                                                            <span className="text-sm font-semibold">
+                                                                {uiLang === "en"
+                                                                    ? `Up to ${guestCount}`
+                                                                    : configuradorEs.panelUi.hastaPreset.replace(
+                                                                          /\{\{n\}\}/g,
+                                                                          String(
+                                                                              guestCount,
+                                                                          ),
+                                                                      )}
+                                                            </span>
+                                                            <span className="text-sm font-semibold tabular-nums text-[#7A5F45]">
+                                                                {priceLabel}
+                                                            </span>
+                                                        </button>
+                                                    );
+                                                },
+                                            )}
+                                        </div>
+                                    ) : null}
+
+                                    {panelSelected &&
+                                    (panelCapacityAnswer === "yes" ||
+                                        panelCapacityAnswer === "more") ? (
+                                        <p className="mt-3 rounded-lg bg-[#F3EBDD] px-3 py-2 text-sm font-bold text-[#4A3A2F]">
+                                            {panelCost <= 0
+                                                ? t.panelIncludedInPlan
+                                                : uiLang === "en"
+                                                  ? `Panel total: ${formatLandingMoney(panelCost, currency)}`
+                                                  : configuradorEs.panelUi.panelTotal.replace(
+                                                        /\{\{total\}\}/g,
+                                                        formatLandingMoney(
+                                                            panelCost,
+                                                            currency,
+                                                        ),
+                                                    )}
+                                        </p>
+                                    ) : null}
+                                </div>
+                            ) : null}
+                        </div>
+                    </>
+                ) : null}
+
                 {step === "idioma" ? (
                     <>
                         <h2
@@ -1592,8 +2476,7 @@ function ConfiguradorPageContent() {
                             {languageOptions.map((lang) => {
                                 const on = secondLanguage === lang;
                                 const showSecondLangPricePill =
-                                    on &&
-                                    SECOND_LANGUAGE_PRICE[currency] > 0;
+                                    on && SECOND_LANGUAGE_PRICE[currency] > 0;
                                 return (
                                     <div
                                         key={lang}
@@ -1717,7 +2600,6 @@ function ConfiguradorPageContent() {
                         <div className="mt-4 space-y-4 pt-1">
                             {extrasToRender.map((ex) => {
                                 const on = extras.includes(ex.id);
-                                const isPanel = ex.id === "panel";
                                 const locked = INCLUDED_EXTRAS_BY_PLAN[
                                     plan
                                 ].includes(ex.id);
@@ -1737,10 +2619,7 @@ function ConfiguradorPageContent() {
                                             >
                                                 +
                                                 {formatLandingMoney(
-                                                    isPanel
-                                                        ? ex.price[currency] +
-                                                              panelExtraGuestsCost
-                                                        : ex.price[currency],
+                                                    ex.price[currency],
                                                     currency,
                                                 )}
                                             </span>
@@ -1750,10 +2629,7 @@ function ConfiguradorPageContent() {
                                                 className={LINE_BADGE_CLASS}
                                                 style={LINE_BADGE_BORDER}
                                             >
-                                                {isPanel &&
-                                                panelExtraGuestsCost > 0
-                                                    ? `+${formatLandingMoney(panelExtraGuestsCost, currency)}`
-                                                    : t.included}
+                                                {t.included}
                                             </span>
                                         ) : null}
                                         <button
@@ -1809,79 +2685,6 @@ function ConfiguradorPageContent() {
                                                 ) : null}
                                             </div>
                                         </button>
-                                        {isPanel && on ? (
-                                            <div className="mt-2 rounded-xl border border-[#E7DFD4] bg-[#FCF8F2] p-3">
-                                                <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
-                                                    {uiLang === "en"
-                                                        ? "Estimated guests for dashboard"
-                                                        : configuradorEs.panelUi
-                                                              .estimatedGuestsTitle}
-                                                </span>
-                                                <p className="mb-2 text-[11px] leading-relaxed text-[#6A5C52]">
-                                                    {uiLang === "en"
-                                                        ? "Fixed price by capacity: up to 150, 250, 350, or 500 guests."
-                                                        : configuradorEs.panelUi
-                                                              .tierPricingLine}
-                                                </p>
-                                                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                                                    {PANEL_GUEST_PRESETS.map(
-                                                        (guestCount) => {
-                                                            const selected =
-                                                                clampedPanelGuests ===
-                                                                guestCount;
-                                                            return (
-                                                                <button
-                                                                    key={
-                                                                        guestCount
-                                                                    }
-                                                                    type="button"
-                                                                    onClick={() =>
-                                                                        setPanelGuests(
-                                                                            guestCount,
-                                                                        )
-                                                                    }
-                                                                    className="rounded-lg border px-2 py-2 text-sm font-semibold transition-colors"
-                                                                    style={{
-                                                                        borderColor:
-                                                                            selected
-                                                                                ? "#7A5F45"
-                                                                                : "#DCCFC0",
-                                                                        background:
-                                                                            selected
-                                                                                ? "#F3EBDD"
-                                                                                : "#FFF",
-                                                                        color: "#4A3A2F",
-                                                                    }}
-                                                                >
-                                                                    {uiLang ===
-                                                                    "en"
-                                                                        ? `Up to ${guestCount}`
-                                                                        : configuradorEs.panelUi.hastaPreset.replace(
-                                                                              /\{\{n\}\}/g,
-                                                                              String(
-                                                                                  guestCount,
-                                                                              ),
-                                                                          )}
-                                                                </button>
-                                                            );
-                                                        },
-                                                    )}
-                                                </div>
-                                                <div className="mt-2 rounded-lg border border-[#E4DCD1] bg-white p-2 text-[11px] leading-relaxed text-[#6A5C52]">
-                                                    <p className="mt-1 rounded-md bg-[#F3EBDD] px-2 py-1 text-sm font-bold text-[#4A3A2F]">
-                                                        {uiLang === "en"
-                                                            ? `Panel total: ${formatLandingMoney(panelCost, currency)}`
-                                                            : configuradorEs.panelUi.panelTotal.replace(
-                                                                  /\{\{total\}\}/g,
-                                                                  formatLandingMoney(
-                                                                      panelCost,
-                                                                      currency,
-                                                                  ),
-                                                              )}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        ) : null}
                                         {info ? (
                                             <div className="mt-1 px-1">
                                                 <button
@@ -2006,9 +2809,7 @@ function ConfiguradorPageContent() {
                         <label className="mt-4 block">
                             <textarea
                                 value={designBrief}
-                                onChange={(e) =>
-                                    setDesignBrief(e.target.value)
-                                }
+                                onChange={(e) => setDesignBrief(e.target.value)}
                                 placeholder={t.briefingPlaceholder}
                                 rows={7}
                                 className="w-full rounded-2xl border px-3 py-3 text-sm leading-relaxed outline-none transition-colors focus:border-[#7A5F45]"
@@ -2154,126 +2955,131 @@ function ConfiguradorPageContent() {
                                 </span>
                             </label>
                             {couponsEnabled ? (
-                            <div className="mt-4 border-t border-[#E8DFD4] pt-4">
-                                <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
-                                    {t.couponLabel}
-                                </span>
-                                <p className="mb-2 text-[11px] leading-snug text-[#7A6A5D]">
-                                    {t.couponHint}
-                                </p>
-                                {appliedCoupon ? (
-                                    <>
+                                <div className="mt-4 border-t border-[#E8DFD4] pt-4">
+                                    <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.12em] text-[#7A5F45]">
+                                        {t.couponLabel}
+                                    </span>
+                                    <p className="mb-2 text-[11px] leading-snug text-[#7A6A5D]">
+                                        {t.couponHint}
+                                    </p>
+                                    {appliedCoupon ? (
+                                        <>
+                                            <div className="flex gap-2">
+                                                <input
+                                                    value={appliedCoupon.code}
+                                                    readOnly
+                                                    tabIndex={-1}
+                                                    className="min-w-0 flex-1 cursor-default rounded-xl border px-3 py-3 text-sm outline-none"
+                                                    style={{
+                                                        borderColor: "#B7D9C0",
+                                                        background: "#F1F8F2",
+                                                        color: "#6A8A72",
+                                                        opacity: 0.85,
+                                                    }}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setAppliedCoupon(null);
+                                                        setCouponError(null);
+                                                        setCouponInput("");
+                                                    }}
+                                                    className="shrink-0 rounded-xl border border-[#B7D9C0] bg-[#F1F8F2] px-3.5 py-3 text-sm font-semibold text-[#3F7A4F]"
+                                                >
+                                                    {t.couponRemove}
+                                                </button>
+                                            </div>
+                                            <p className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-[#2F6B3A]">
+                                                <Check
+                                                    size={16}
+                                                    strokeWidth={2.5}
+                                                    className="shrink-0 text-[#2F6B3A]"
+                                                    aria-hidden
+                                                />
+                                                {t.couponApplied.replace(
+                                                    /\{\{pct\}\}/g,
+                                                    String(
+                                                        appliedCoupon.discountPercent,
+                                                    ),
+                                                )}
+                                            </p>
+                                        </>
+                                    ) : (
                                         <div className="flex gap-2">
                                             <input
-                                                value={appliedCoupon.code}
-                                                readOnly
-                                                tabIndex={-1}
-                                                className="min-w-0 flex-1 cursor-default rounded-xl border px-3 py-3 text-sm outline-none"
+                                                value={couponInput}
+                                                onChange={(e) => {
+                                                    setCouponInput(
+                                                        e.target.value,
+                                                    );
+                                                    if (
+                                                        couponError &&
+                                                        !couponLocked
+                                                    )
+                                                        setCouponError(null);
+                                                }}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter") {
+                                                        e.preventDefault();
+                                                        void handleApplyCoupon();
+                                                    }
+                                                }}
+                                                placeholder=""
+                                                autoCapitalize="characters"
+                                                autoCorrect="off"
+                                                spellCheck={false}
+                                                disabled={couponLocked}
+                                                className="min-w-0 flex-1 rounded-xl border px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45] disabled:opacity-55"
                                                 style={{
-                                                    borderColor: "#B7D9C0",
-                                                    background: "#F1F8F2",
-                                                    color: "#6A8A72",
-                                                    opacity: 0.85,
+                                                    borderColor: couponError
+                                                        ? "#C86C6C"
+                                                        : "#DCCFC0",
+                                                    background: "#FFF",
                                                 }}
                                             />
                                             <button
                                                 type="button"
-                                                onClick={() => {
-                                                    setAppliedCoupon(null);
-                                                    setCouponError(null);
-                                                    setCouponInput("");
-                                                }}
-                                                className="shrink-0 rounded-xl border border-[#B7D9C0] bg-[#F1F8F2] px-3.5 py-3 text-sm font-semibold text-[#3F7A4F]"
+                                                onClick={() =>
+                                                    void handleApplyCoupon()
+                                                }
+                                                disabled={
+                                                    couponBusy ||
+                                                    couponLocked ||
+                                                    !couponInput.trim()
+                                                }
+                                                className="shrink-0 rounded-xl bg-[#7A5F45] px-3.5 py-3 text-sm font-semibold text-white disabled:opacity-45"
                                             >
-                                                {t.couponRemove}
+                                                {couponBusy
+                                                    ? t.couponApplying
+                                                    : t.couponApply}
                                             </button>
                                         </div>
-                                        <p className="mt-2 flex items-center gap-1.5 text-[13px] font-medium text-[#2F6B3A]">
-                                            <Check
-                                                size={16}
-                                                strokeWidth={2.5}
-                                                className="shrink-0 text-[#2F6B3A]"
-                                                aria-hidden
-                                            />
-                                            {t.couponApplied.replace(
-                                                /\{\{pct\}\}/g,
-                                                String(
-                                                    appliedCoupon.discountPercent,
-                                                ),
-                                            )}
-                                        </p>
-                                    </>
-                                ) : (
-                                    <div className="flex gap-2">
-                                        <input
-                                            value={couponInput}
-                                            onChange={(e) => {
-                                                setCouponInput(e.target.value);
-                                                if (couponError && !couponLocked)
-                                                    setCouponError(null);
-                                            }}
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter") {
-                                                    e.preventDefault();
-                                                    void handleApplyCoupon();
-                                                }
-                                            }}
-                                            placeholder=""
-                                            autoCapitalize="characters"
-                                            autoCorrect="off"
-                                            spellCheck={false}
-                                            disabled={couponLocked}
-                                            className="min-w-0 flex-1 rounded-xl border px-3 py-3 text-sm outline-none transition-colors focus:border-[#7A5F45] disabled:opacity-55"
-                                            style={{
-                                                borderColor: couponError
-                                                    ? "#C86C6C"
-                                                    : "#DCCFC0",
-                                                background: "#FFF",
-                                            }}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                void handleApplyCoupon()
-                                            }
-                                            disabled={
-                                                couponBusy ||
-                                                couponLocked ||
-                                                !couponInput.trim()
-                                            }
-                                            className="shrink-0 rounded-xl bg-[#7A5F45] px-3.5 py-3 text-sm font-semibold text-white disabled:opacity-45"
-                                        >
-                                            {couponBusy
-                                                ? t.couponApplying
-                                                : t.couponApply}
-                                        </button>
-                                    </div>
-                                )}
-                                {couponError ? (
-                                    couponLocked ? (
-                                        <p className="mt-1.5 text-[11px] leading-snug text-[#B85C5C]">
-                                            {t.couponLocked}{" "}
-                                            <a
-                                                href={WhatsAppHref(
-                                                    waNumber,
-                                                    uiLang === "en"
-                                                        ? "Hi! I have a problem with a coupon in the configurator."
-                                                        : "Hola! Tengo un problema con un cupón en el configurador.",
-                                                )}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="font-bold text-[#B85C5C] no-underline"
-                                            >
-                                                {t.couponLockedContact}
-                                            </a>
-                                        </p>
-                                    ) : (
-                                        <span className="mt-1.5 block text-[11px] text-[#B85C5C]">
-                                            {couponError}
-                                        </span>
-                                    )
-                                ) : null}
-                            </div>
+                                    )}
+                                    {couponError ? (
+                                        couponLocked ? (
+                                            <p className="mt-1.5 text-[11px] leading-snug text-[#B85C5C]">
+                                                {t.couponLocked}{" "}
+                                                <a
+                                                    href={WhatsAppHref(
+                                                        waNumber,
+                                                        uiLang === "en"
+                                                            ? "Hi! I have a problem with a coupon in the configurator."
+                                                            : "Hola! Tengo un problema con un cupón en el configurador.",
+                                                    )}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="font-bold text-[#B85C5C] no-underline"
+                                                >
+                                                    {t.couponLockedContact}
+                                                </a>
+                                            </p>
+                                        ) : (
+                                            <span className="mt-1.5 block text-[11px] text-[#B85C5C]">
+                                                {couponError}
+                                            </span>
+                                        )
+                                    ) : null}
+                                </div>
                             ) : null}
                         </div>
                     </>
@@ -2452,6 +3258,9 @@ function ConfiguradorPageContent() {
                                             ? prev
                                             : [...prev, "panel"],
                                     );
+                                    setPanelChoice("include");
+                                    setPanelCapacityAnswer("yes");
+                                    setPanelGuests(PANEL_INCLUDED_GUESTS);
                                     setPanelSkipModalOpen(false);
                                 }}
                                 className="rounded-full bg-[#7A5F45] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-95"
@@ -2459,6 +3268,175 @@ function ConfiguradorPageContent() {
                                 {panelSkipModalCopy.btnAdd}
                             </button>
                         </div>
+                    </div>
+                </div>
+            ) : null}
+
+            {sectionInfoDetail ? (
+                <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="section-info-modal-title"
+                    className="animate-modal-backdrop-in fixed inset-0 z-[200] flex items-center justify-center bg-black/45 p-4"
+                    onClick={() => {
+                        setSectionInfoId(null);
+                        setRsvpWithoutInfoOpen(false);
+                    }}
+                >
+                    <div
+                        className="animate-modal-content-in max-h-[min(92dvh,880px)] w-full max-w-md overflow-y-auto rounded-2xl border border-[#E7DFD4] bg-[#FDFBF7] p-5 shadow-xl sm:p-6"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h2
+                            id="section-info-modal-title"
+                            className="text-center text-xl font-normal leading-snug text-[#4A3A2F]"
+                            style={{
+                                fontFamily:
+                                    "var(--font-landing-hero), Georgia, serif",
+                            }}
+                        >
+                            {sectionInfoId === "historia"
+                                ? getBaseSectionLabel(
+                                      "historia",
+                                      uiLang === "en",
+                                  )
+                                : sectionInfoDetail.title}
+                        </h2>
+                        {sectionInfoId &&
+                        SECTION_INFO_MEDIA[sectionInfoId]?.length ? (
+                            <div className="mt-4 space-y-3">
+                                {SECTION_INFO_MEDIA[sectionInfoId].map(
+                                    (media, idx) => (
+                                        <div
+                                            key={`${media.kind}-${media.src}-${idx}`}
+                                            className="mx-auto max-w-[20rem] select-none overflow-hidden rounded-xl border border-[#E1D7C9] [-webkit-touch-callout:none]"
+                                            onContextMenu={(e) =>
+                                                e.preventDefault()
+                                            }
+                                        >
+                                            {media.kind === "video" ? (
+                                                <video
+                                                    ref={
+                                                        idx === 0
+                                                            ? sectionInfoVideoRef
+                                                            : undefined
+                                                    }
+                                                    src={media.src}
+                                                    className="pointer-events-none block h-auto w-full select-none [-webkit-touch-callout:none]"
+                                                    autoPlay
+                                                    muted
+                                                    loop
+                                                    playsInline
+                                                    disablePictureInPicture
+                                                    controls={false}
+                                                    controlsList="nodownload nofullscreen noremoteplayback"
+                                                    disableRemotePlayback
+                                                    preload="metadata"
+                                                    draggable={false}
+                                                    onContextMenu={(e) =>
+                                                        e.preventDefault()
+                                                    }
+                                                    aria-label={
+                                                        uiLang === "en"
+                                                            ? media.altEn
+                                                            : media.altEs
+                                                    }
+                                                />
+                                            ) : (
+                                                // eslint-disable-next-line @next/next/no-img-element
+                                                <img
+                                                    src={media.src}
+                                                    alt={
+                                                        uiLang === "en"
+                                                            ? media.altEn
+                                                            : media.altEs
+                                                    }
+                                                    className="pointer-events-none block h-auto w-full select-none [-webkit-touch-callout:none]"
+                                                    decoding="async"
+                                                    draggable={false}
+                                                    onContextMenu={(e) =>
+                                                        e.preventDefault()
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+                                    ),
+                                )}
+                            </div>
+                        ) : null}
+                        <p className="mt-3 text-sm leading-relaxed text-[#6A5C52]">
+                            {renderTextWithBoldMarkers(sectionInfoDetail.body)}
+                        </p>
+                        {sectionInfoId === "dietas" ? (
+                            <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-[#FCF8F2] p-4">
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        setRsvpWithoutInfoOpen((prev) => !prev)
+                                    }
+                                    className="inline-flex w-full max-w-full items-center gap-1.5 text-left text-sm font-medium text-[#7A5F45]"
+                                    aria-expanded={rsvpWithoutInfoOpen}
+                                >
+                                    <span className="min-w-0 flex-1">
+                                        {t.rsvpWithoutTitle}
+                                    </span>
+                                    <ChevronDown
+                                        size={18}
+                                        className={`shrink-0 transition-transform duration-200 ${
+                                            rsvpWithoutInfoOpen
+                                                ? "rotate-180"
+                                                : ""
+                                        }`}
+                                        aria-hidden
+                                    />
+                                </button>
+                                {rsvpWithoutInfoOpen ? (
+                                    <div className="mt-3 space-y-3">
+                                        <p className="text-sm leading-relaxed text-[#6A5C52]">
+                                            {t.rsvpWithoutLead}
+                                        </p>
+                                        <div
+                                            className="mx-auto select-none overflow-hidden rounded-lg [-webkit-touch-callout:none]"
+                                            style={{
+                                                width: "min(100%, 280px)",
+                                                border: "1px solid #E1D7C9",
+                                                boxShadow:
+                                                    "0 1px 2px rgba(63, 51, 43, 0.06)",
+                                            }}
+                                            onContextMenu={(e) =>
+                                                e.preventDefault()
+                                            }
+                                        >
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img
+                                                src={RSVP_WITHOUT_IMAGE.src}
+                                                alt={
+                                                    uiLang === "en"
+                                                        ? RSVP_WITHOUT_IMAGE.altEn
+                                                        : RSVP_WITHOUT_IMAGE.altEs
+                                                }
+                                                className="pointer-events-none block h-auto w-full select-none [-webkit-touch-callout:none]"
+                                                decoding="async"
+                                                draggable={false}
+                                                onContextMenu={(e) =>
+                                                    e.preventDefault()
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </div>
+                        ) : null}
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSectionInfoId(null);
+                                setRsvpWithoutInfoOpen(false);
+                            }}
+                            className="mt-5 w-full rounded-full bg-[#7A5F45] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-95"
+                        >
+                            {t.seccionInfoClose}
+                        </button>
                     </div>
                 </div>
             ) : null}

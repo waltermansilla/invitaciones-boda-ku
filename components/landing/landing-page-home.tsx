@@ -3260,8 +3260,6 @@ function EstilosCarousel({
     language = "es",
     endHeroPrimaryCta,
     premiumLeadButton,
-    panelPreviewImageSrc,
-    panelPreviewImageAlt,
 }: {
     data: LandingData["sections"]["estilos"];
     theme: LandingTheme;
@@ -3273,8 +3271,6 @@ function EstilosCarousel({
         primary?: CtaButton;
     };
     premiumLeadButton?: CtaButton;
-    panelPreviewImageSrc?: string;
-    panelPreviewImageAlt?: string;
 }) {
     const { revealRef, revealed } = useSectionReveal();
     const tx = theme.text;
@@ -3324,14 +3320,6 @@ function EstilosCarousel({
                   "Confirmación por WhatsApp incluida de base.",
               ];
     }, [activeModel?.href, data.highlightsByHref, language]);
-    const panelAvailableTitle =
-        language === "en"
-            ? "Guest dashboard available as an add-on"
-            : "Panel de invitados disponible como extra";
-    const panelAvailableCopy =
-        language === "en"
-            ? "You can add the guest dashboard to track confirmations, dietary needs, and song requests in one place."
-            : "También podés sumar el panel privado para ordenar confirmaciones, restricciones alimentarias y canciones sugeridas.";
     const modalPitch =
         language === "en"
             ? "Want to start your invitation inspired by this style?"
@@ -3702,37 +3690,6 @@ function EstilosCarousel({
                                         <li key={line}>{line}</li>
                                     ))}
                                 </ul>
-                            </div>
-                            <div className="mt-4 rounded-2xl border border-[#E7DFD4] bg-white/95 p-3 shadow-[0_8px_22px_rgba(50,33,22,0.08)]">
-                                <div className="flex flex-col gap-3 md:grid md:grid-cols-[minmax(240px,1fr)_180px] md:items-start">
-                                    <div className="min-w-0">
-                                        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#7A5F45]">
-                                            {panelAvailableTitle}
-                                        </p>
-                                        <p className="mt-1 text-xs leading-snug text-[#6A5C52]">
-                                            {panelAvailableCopy}
-                                        </p>
-                                    </div>
-                                    <div className="relative mx-auto w-full max-w-[180px] shrink-0 overflow-hidden rounded-lg md:mx-0">
-                                        <div className="relative aspect-[9/16] w-full">
-                                            <Image
-                                                src={
-                                                    panelPreviewImageSrc ||
-                                                    "/landing/media/images/panel.PNG"
-                                                }
-                                                alt={
-                                                    panelPreviewImageAlt ||
-                                                    (language === "en"
-                                                        ? "Guest dashboard preview"
-                                                        : "Vista previa del panel de invitados")
-                                                }
-                                                fill
-                                                className="object-contain"
-                                                sizes="(max-width: 768px) 46vw, 180px"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                             <p
                                 className="mx-auto my-8 max-w-2xl text-center text-[1.45rem] font-normal leading-tight text-[#3D2A1F] sm:my-10 sm:text-[1.75rem]"
@@ -5063,8 +5020,6 @@ export default function LandingPageHome({
                 waNumber={wa}
                 language={language}
                 premiumLeadButton={ctaButtons.planPremium}
-                panelPreviewImageSrc={sections.panel.imageSrc}
-                panelPreviewImageAlt={sections.panel.imageAlt}
                 endHeroPrimaryCta={
                     compactHeroLayout
                         ? {

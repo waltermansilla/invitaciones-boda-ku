@@ -26,6 +26,8 @@
         ],
         "configuradorFromQuery": "home",
         "heroMarqueeLiteSrcs": [
+            "/landing/media/images-marquee-lite/carla-juan-boda.webp",
+            "/landing/media/images-marquee-lite/sofia-mateo-boda.webp",
             "/landing/media/images-marquee-lite/indiana-xv.webp",
 
             "/landing/media/images-marquee-lite/meliza-ivan-boda.webp",
@@ -333,6 +335,18 @@
             "noStyleConfirmMessage": "Serás redirigido al WhatsApp del diseñador. ¿Querés continuar?",
             "items": [
                 {
+                    "image": "/landing/media/images/carla-juan-boda.jpg",
+                    "titulo": "Carla & Juan",
+                    "descripcion": "Cuenta regresiva, tipografía cuidada y paleta suave.",
+                    "href": "/m/boda/carla-juan"
+                },
+                {
+                    "image": "/landing/media/images/sofia-mateo-boda.jpg",
+                    "titulo": "Sofía & Mateo",
+                    "descripcion": "Invitación con nombre del invitado e ilustración acuarela.",
+                    "href": "/m/boda/sofia-mateo"
+                },
+                {
                     "image": "/landing/media/images/romina-franco-boda.jpeg",
                     "titulo": "Romina & Franco",
                     "descripcion": "Elegante, galerías e itinerario completo.",
@@ -400,6 +414,16 @@
                 }
             ],
             "highlightsByHref": {
+                "/m/boda/carla-juan": [
+                    "Cuenta regresiva protagonista con tipografía elegante.",
+                    "Paleta azul suave y composición limpia para móvil.",
+                    "Confirmación e itinerario claros para el gran día."
+                ],
+                "/m/boda/sofia-mateo": [
+                    "Cada invitado recibe la invitación con su nombre.",
+                    "Ilustración acuarela y entrada personalizada.",
+                    "Confirmación e itinerario claros para el gran día."
+                ],
                 "/m/boda/romina-franco": [
                     "Elegante y completo: historia, galerías e itinerario.",
                     "Diseño con buena jerarquía para leer rápido en móvil.",

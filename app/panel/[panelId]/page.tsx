@@ -2258,63 +2258,67 @@ function InvitadoRow({
                                     return (
                                     <div
                                         key={i.id}
-                                        className="flex items-start justify-between gap-2 rounded bg-white px-2 py-1"
+                                        className="rounded bg-white px-2 py-1"
                                     >
-                                        <div className="min-w-0 flex-1">
-                                            <span className="text-xs text-neutral-700">
-                                                {i.nombre}
-                                            </span>
-                                            {i.es_colado && (
-                                                <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
-                                                    {coladoTitleSingular(
-                                                        colSing,
-                                                    )}
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div className="min-w-0 flex-1">
+                                                <span className="text-xs text-neutral-700">
+                                                    {i.nombre}
                                                 </span>
-                                            )}
-                                            {songsByMember[i.nombre]?.length ? (
-                                                <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
-                                                    <Music className="mt-0.5 h-3 w-3 shrink-0" />
-                                                    <span className="whitespace-pre-wrap break-words">
-                                                        {songsByMember[
-                                                            i.nombre
-                                                        ].join(" | ")}
-                                                    </span>
-                                                </div>
-                                            ) : null}
-                                            {integranteExtraLines.length ? (
-                                                <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
-                                                    <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
-                                                    <span className="whitespace-pre-wrap break-words">
-                                                        {integranteExtraLines.join(
-                                                            " | ",
+                                                {i.es_colado && (
+                                                    <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
+                                                        {coladoTitleSingular(
+                                                            colSing,
                                                         )}
                                                     </span>
-                                                </div>
-                                            ) : null}
-                                        </div>
-                                        <div className="flex shrink-0 items-start gap-2">
-                                            {i.restricciones && (
-                                                <span className="flex items-start gap-1 text-[10px] text-neutral-500">
-                                                    <Utensils className="mt-0.5 h-3 w-3 shrink-0" />
-                                                    <span className="whitespace-pre-wrap break-words">
-                                                        {i.restricciones}
-                                                    </span>
-                                                </span>
-                                            )}
-                                            <span
-                                                className="rounded px-2 py-0.5 text-[10px] font-medium"
-                                                style={{
-                                                    backgroundColor:
-                                                        estadoBg[i.estado],
-                                                    color: estadoText[i.estado],
-                                                }}
-                                            >
-                                                {getEstadoTexto(
-                                                    i.estado,
-                                                    false,
                                                 )}
-                                            </span>
+                                            </div>
+                                            <div className="flex shrink-0 items-start gap-2">
+                                                {i.restricciones && (
+                                                    <span className="flex items-start gap-1 text-[10px] text-neutral-500">
+                                                        <Utensils className="mt-0.5 h-3 w-3 shrink-0" />
+                                                        <span className="whitespace-pre-wrap break-words">
+                                                            {i.restricciones}
+                                                        </span>
+                                                    </span>
+                                                )}
+                                                <span
+                                                    className="rounded px-2 py-0.5 text-[10px] font-medium"
+                                                    style={{
+                                                        backgroundColor:
+                                                            estadoBg[i.estado],
+                                                        color: estadoText[
+                                                            i.estado
+                                                        ],
+                                                    }}
+                                                >
+                                                    {getEstadoTexto(
+                                                        i.estado,
+                                                        false,
+                                                    )}
+                                                </span>
+                                            </div>
                                         </div>
+                                        {songsByMember[i.nombre]?.length ? (
+                                            <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
+                                                <Music className="mt-0.5 h-3 w-3 shrink-0" />
+                                                <span className="whitespace-pre-wrap break-words">
+                                                    {songsByMember[
+                                                        i.nombre
+                                                    ].join(" | ")}
+                                                </span>
+                                            </div>
+                                        ) : null}
+                                        {integranteExtraLines.length ? (
+                                            <div className="mt-0.5 flex items-start gap-1 text-[10px] text-neutral-600">
+                                                <MessageSquare className="mt-0.5 h-3 w-3 shrink-0" />
+                                                <span className="whitespace-pre-wrap break-words">
+                                                    {integranteExtraLines.join(
+                                                        " | ",
+                                                    )}
+                                                </span>
+                                            </div>
+                                        ) : null}
                                     </div>
                                     );
                                 })}

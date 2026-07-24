@@ -24,6 +24,8 @@
         ],
         "configuradorFromQuery": "home",
         "heroMarqueeLiteSrcs": [
+            "/landing/media/images-marquee-lite/carla-juan-boda.webp",
+            "/landing/media/images-marquee-lite/sofia-mateo-boda.webp",
             "/landing/media/images-marquee-lite/romina-franco-boda.webp",
             "/landing/media/images-marquee-lite/meliza-ivan-boda.webp",
             "/landing/media/images-marquee-lite/carolina-jose-boda.webp",
@@ -327,6 +329,18 @@
             "noStyleConfirmMessage": "You’ll be redirected to the designer’s WhatsApp. Do you want to continue?",
             "items": [
                 {
+                    "image": "/landing/media/images/carla-juan-boda.jpg",
+                    "titulo": "Carla & Juan",
+                    "descripcion": "Countdown, refined type, soft palette.",
+                    "href": "/m/boda/carla-juan"
+                },
+                {
+                    "image": "/landing/media/images/sofia-mateo-boda.jpg",
+                    "titulo": "Sofía & Mateo",
+                    "descripcion": "Named guest invite with watercolor illustration.",
+                    "href": "/m/boda/sofia-mateo"
+                },
+                {
                     "image": "/landing/media/images/romina-franco-boda.jpeg",
                     "titulo": "Romina & Franco",
                     "descripcion": "Elegant, with galleries and full timeline.",
@@ -394,6 +408,16 @@
                 }
             ],
             "highlightsByHref": {
+                "/m/boda/carla-juan": [
+                    "Countdown front and center with elegant typography.",
+                    "Soft blue palette and a clean mobile layout.",
+                    "Clear confirmation and timeline for the big day."
+                ],
+                "/m/boda/sofia-mateo": [
+                    "Each guest gets the invitation with their name.",
+                    "Watercolor illustration and a personalized entrance.",
+                    "Clear confirmation and timeline for the big day."
+                ],
                 "/m/boda/romina-franco": [
                     "Elegant and complete: story, galleries, and timeline.",
                     "Clear visual hierarchy for fast mobile reading.",

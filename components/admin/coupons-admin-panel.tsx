@@ -1251,53 +1251,58 @@ export function CouponsAdminPanel() {
                     </p>
                   )}
                 </button>
-                <button
-                  type="button"
-                  aria-label={
-                    sent
-                      ? `Reenviar ${c.codigo} por mail. Mantener para marcar enviado`
-                      : `Enviar ${c.codigo} por mail. Mantener para marcar enviado`
-                  }
-                  onContextMenu={(e) => e.preventDefault()}
-                  onPointerDown={(e) => {
-                    e.stopPropagation()
-                    sendLongPressDone.current = false
-                    clearSendPressTimer()
-                    sendPressTimer.current = window.setTimeout(() => {
-                      sendLongPressDone.current = true
-                      openManualSend(c)
-                      if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-                        try {
-                          navigator.vibrate(12)
-                        } catch {
-                          // ignore
-                        }
-                      }
-                    }, 1000)
-                  }}
-                  onPointerUp={() => clearSendPressTimer()}
-                  onPointerLeave={() => clearSendPressTimer()}
-                  onPointerCancel={() => clearSendPressTimer()}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (sendLongPressDone.current) {
-                      sendLongPressDone.current = false
-                      return
+                {!used ? (
+                  <button
+                    type="button"
+                    aria-label={
+                      sent
+                        ? `Reenviar ${c.codigo} por mail. Mantener para marcar enviado`
+                        : `Enviar ${c.codigo} por mail. Mantener para marcar enviado`
                     }
-                    openEmailSend(c)
-                  }}
-                  className={`flex w-12 shrink-0 touch-manipulation items-center justify-center border-l select-none active:opacity-80 ${
-                    sent
-                      ? "border-[#C5DBF0] bg-[#DCEAF8] text-[#1E5A8A]"
-                      : "border-[#EFE7DB] bg-transparent text-[#5A4638] active:bg-[#F7F1E8]"
-                  }`}
-                >
-                  {sent ? (
-                    <Check className="h-4 w-4" strokeWidth={2.5} />
-                  ) : (
-                    <Send className="h-4 w-4" strokeWidth={2} />
-                  )}
-                </button>
+                    onContextMenu={(e) => e.preventDefault()}
+                    onPointerDown={(e) => {
+                      e.stopPropagation()
+                      sendLongPressDone.current = false
+                      clearSendPressTimer()
+                      sendPressTimer.current = window.setTimeout(() => {
+                        sendLongPressDone.current = true
+                        openManualSend(c)
+                        if (
+                          typeof navigator !== "undefined" &&
+                          "vibrate" in navigator
+                        ) {
+                          try {
+                            navigator.vibrate(12)
+                          } catch {
+                            // ignore
+                          }
+                        }
+                      }, 1000)
+                    }}
+                    onPointerUp={() => clearSendPressTimer()}
+                    onPointerLeave={() => clearSendPressTimer()}
+                    onPointerCancel={() => clearSendPressTimer()}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (sendLongPressDone.current) {
+                        sendLongPressDone.current = false
+                        return
+                      }
+                      openEmailSend(c)
+                    }}
+                    className={`flex w-12 shrink-0 touch-manipulation items-center justify-center border-l select-none active:opacity-80 ${
+                      sent
+                        ? "border-[#C5DBF0] bg-[#DCEAF8] text-[#1E5A8A]"
+                        : "border-[#EFE7DB] bg-transparent text-[#5A4638] active:bg-[#F7F1E8]"
+                    }`}
+                  >
+                    {sent ? (
+                      <Check className="h-4 w-4" strokeWidth={2.5} />
+                    ) : (
+                      <Send className="h-4 w-4" strokeWidth={2} />
+                    )}
+                  </button>
+                ) : null}
               </li>
             )
           })

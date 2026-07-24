@@ -4,24 +4,24 @@
     "// ==========================================.": "",
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja.",
     "meta": {
-        "title": "Nuestra Boda - Pauli & Juan Manuel",
+        "title": "Nuestra Boda - Sofía & Mateo",
         "description": "Te invitamos a celebrar nuestra boda.",
         "lang": "es",
         "ogImage": "/clientes/boda/26-juanma-pauli/images/hero-meta.jpg",
         "coupleNames": {
-            "groomName": "Juan Manuel",
-            "brideName": "Pauli",
+            "groomName": "Mateo",
+            "brideName": "Sofía",
             "separator": "&"
         }
     },
     "access": {
         "tokenEnabled": true,
-        "token": "nxiuw6",
+        "token": "nxiuw5",
         "allowLegacyUntil": ""
     },
     "base": {
         "enabled": true,
-        "token": "bwex68J4",
+        "token": "hsiK849o",
         "pinEnabled": true,
         "pin": "878787"
     },
@@ -30,7 +30,8 @@
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
-        "panelId": "pauli-juanma-rbjwo1",
+        "panelId": "sofia-mateo-rbkwo1",
+        "legacyPanelIds": ["pauli-juanma-rbjwo1"],
         "fechaEvento": "2026-10-24",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 24 de Octubre.",
         "theme": {
@@ -318,11 +319,11 @@
                     "bankData": [
                         {
                             "label": "Alias",
-                            "value": "Pauli.Juan.Boda"
+                            "value": "Sofia.Mateo.Boda"
                         },
                         {
                             "label": "Titular",
-                            "value": "Juan Manuel Yadón"
+                            "value": "Sofia Yadón"
                         },
                         {
                             "label": "Banco",
@@ -330,7 +331,7 @@
                         },
                         {
                             "label": "CBU",
-                            "value": "0000076500000052827019"
+                            "value": "00000765000000528123456"
                         }
                     ],
                     "thankYouText": ""
@@ -355,7 +356,7 @@
             "blocks": ["text", "author"],
             "data": {
                 "text": "El amor es un acto de fe. Creer en el otro, en el tiempo y en lo que viene. Te invitamos a ser parte de este momento.",
-                "author": "Juan Manuel & Pauli",
+                "author": "Sofia & Mateo",
                 "decorativeLines": true
             }
         },
@@ -375,24 +376,16 @@
                 },
                 "modal": {
                     "title": "Datos de pago",
-                    "suggestedValue": "$135.000",
+                    "suggestedValue": "$85.000",
                     "description": "Fecha límite de pago: 10 de septiembre de 2026.",
                     "transferData": [
                         {
                             "label": "Alias",
-                            "value": "Pauli.Juan.Boda"
+                            "value": "Sofia.Mateo.Boda"
                         },
                         {
                             "label": "Titular",
-                            "value": "Juan Manuel Yadón"
-                        },
-                        {
-                            "label": "Banco",
-                            "value": "Personal Pay"
-                        },
-                        {
-                            "label": "CBU",
-                            "value": "0000076500000052827019"
+                            "value": "Sofia Ramírez"
                         }
                     ]
                 }
@@ -434,8 +427,8 @@
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "543834246033",
-                    "messageTemplate": "Hola Pauli y Juan Manuel! Confirmo la asistencia a su boda.\n\n{resumen}\n\n¡Gracias! 🫶🏼"
+                    "number": "543456023759",
+                    "messageTemplate": "Hola Sofía y Mateo! Confirmo la asistencia a su boda.\n\n{resumen}\n\n¡Gracias! 🫶🏼"
                 }
             }
         },

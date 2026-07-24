@@ -21,13 +21,13 @@
         "incluyeOpen": "Tocá para cerrar",
         "incluyeClosed": "Te explicamos lo que ya está incluido y cómo funcionan los bloques.",
         "incluyeP1Before": "Tu invitación ya incluye:",
-        "incluyeP1Bold": "Confirmación sencilla por WhatsApp (asiste/no asiste), hasta 5 fotos, colores personalizados y frases personalizadas",
+        "incluyeP1Bold": "Confirmación de asistencia por WhatsApp (asiste/no asiste), hasta 5 fotos, colores personalizados y frases personalizadas",
         "incluyeP1After": ". Todo eso ya viene incluido.",
-        "incluyeP2Before": "En esta grilla podés sumar",
-        "incluyeP2Free": "5 secciones gratis",
-        "incluyeP2Mid": "(dress code, más fotos, historia, etc.). Para el bloque RSVP, dietas y mensajes (novios, DJ, etc.), sumá la sección ",
-        "incluyeP2From5": "\"RSVP, dietas, mensajes\".",
-        "incluyeP2After": "Podés sumar más secciones con costo extra.",
+        "incluyeP2Before": "Además, en esta grilla podés elegir",
+        "incluyeP2Free": "5 secciones gratis,",
+        "incluyeP2Mid": "",
+        "incluyeP2From5": "",
+        "incluyeP2After": "aunque, si lo deseás, podés sumar más secciones con costo extra.",
         "incluyeP2Each": "",
         "seccionesCountFoot": "bloques incluidos (gratis) · Extra",
         "seccionesMinThree": "Elegí al menos 5 bloques para continuar.",
@@ -39,6 +39,32 @@
         "seccionesSummaryUnique": "Elegiste {{count}} bloques. Mínimo 5 para seguir · en este plan todas las secciones van incluidas, sin cargo extra por cantidad.",
         "seccionOtroPh": "Contanos qué sección querés agregar...",
         "seccionOtroAria": "Contanos qué sección querés agregar",
+        "seccionInfoHint": "*Mantené presionada* una sección para ver de qué se trata.",
+        "seccionInfoClose": "Entendido",
+        "panelTitle": "Panel de invitados",
+        "panelLead": "Organizá a tus invitados y entregales invitaciones exclusivas con sus nombres.",
+        "panelImg1Summary": "Confirmaciones en tiempo real",
+        "panelImg1Body": "Podés armar tu lista de invitados y ver quién confirmó, ver totales y estar al tanto de quiénes faltan pagar tarjeta (si lo usás).",
+        "panelImg2Summary": "Invitaciones con nombre",
+        "panelImg2Body": "Cada invitado recibe un link exclusivo con su nombre en la pantalla de entrada, lo que convierte la invitación en más personal y única.",
+        "panelImg3Summary": "Infinidad de opciones",
+        "panelImg3Body": "Podrás agrupar familias, ver sus requerimientos de alimentación, recibir mensajitos de tus invitados, y más.",
+        "panelImg4Summary": "Lista PDF descargable",
+        "panelImg4Body": "Descargás un A4 listo para imprimir con los datos de todos tus invitados. Además, como plus: todos los mensajes de tus invitados agrupados en un solo lugar, que podrás guardar como recuerdo 🫶🏼",
+        "panelCapacityIntro": "El panel incluye hasta *{{n}} invitados* para cargar tu lista, enviar invitaciones con nombre propio y ver las confirmaciones.",
+        "panelCapacityYes": "Sí, me alcanza",
+        "panelCapacityMore": "Necesito más cupo",
+        "panelIncludedInPlan": "Incluido en tu plan",
+        "panelWithoutTitle": "¿Y si no agrego Panel de invitados?",
+        "panelWithoutLead": "Aún así, tendrás una invitación hermosa y confirmación de asistencia, con estas diferencias:",
+        "panelWithoutPoints": [
+            "Las confirmaciones llegarán a tu WhatsApp.",
+            "La invitación será la misma para todos, sin sus nombres personales.",
+            "Requerirá que recopiles por tu cuenta quiénes van confirmando por WhatsApp, así como su alimentación y toda su info."
+        ],
+        "panelWithoutReassure": "Tu invitación digital sigue siendo hermosa, personalizada y lista para compartir: el panel suma comodidad al organizar, pero no es un requisito para que quede impecable.",
+        "rsvpWithoutTitle": "¿Y si no incluyo RSVP?",
+        "rsvpWithoutLead": "La confirmación queda más sencilla:",
         "idiomaTitle": "Idioma",
         "idiomaLead": "Español viene por defecto y podés sumar un segundo idioma. En la invitación lista, quien reciba el link podrá cambiar el idioma con un solo toque.",
         "idiomaDefault": "Español (incluido por defecto)",
@@ -218,6 +244,76 @@
         "alojamiento": { "label": "Alojamientos" },
         "adultos": { "label": "Niños y cuidados" },
         "dietas": { "label": "RSVP, dietas, mensajes" }
+    },
+    "sectionDetails": {
+        "mapa": {
+            "title": "Ubicación y cómo llegar",
+            "body": "Mostrá la ubicación del evento y un botón para mostrar cómo llegar al lugaren Google Maps."
+        },
+        "countdown": {
+            "title": "Cuenta regresiva",
+            "body": "Contador en vivo hasta la fecha del evento (días, horas, minutos). Genera expectativa y deja la fecha bien visible en todo momento."
+        },
+        "dress": {
+            "title": "Dress code",
+            "body": "Indicá cómo vestirse: formal, elegante, temática o colores sugeridos. Podrás agregar consejos sobre vestimenta así nadie tiene dudas."
+        },
+        "itinerario": {
+            "title": "Itinerario",
+            "body": "El orden del evento con horarios: ceremonia, cóctel, cena, baile, etc. Los invitados saben qué esperar y cómo organizarse."
+        },
+        "regalos": {
+            "title": "Regalos / Alias",
+            "body": "Espacio para alias, CBU u otras formas de regalo. También podrás llevarlos a una lista de regalos sugeridos si lo deseás."
+        },
+        "tarjeta": {
+            "title": "Valor de tarjeta",
+            "body": "Podrás indicar el valor de la tarjeta de ingreso o cobro anticipado, con los datos de pago."
+        },
+        "album": {
+            "title": "Álbum Drive (fotos)",
+            "body": "Botón hacia un álbum compartido (Google Drive) para que los invitados suban fotos del evento. Todo queda reunido en un solo lugar."
+        },
+        "musica": {
+            "title": "Música en la invitación",
+            "body": "Una canción de fondo que suena al abrir la invitación (con control para pausar). Le da más emoción a la invitación."
+        },
+        "playlist": {
+            "title": "Playlist colaborativa Spotify",
+            "body": "Los invitados podrán ayudarte a armar una lista de canciones para la fiesta mediante Spotify."
+        },
+        "historia": {
+            "title": "Nuestra historia",
+            "body": "Un bloque para contar con fotos la historia de amor de los novios o la historia del homenajeado."
+        },
+        "trivia": {
+            "title": "Trivia interactiva",
+            "body": "Preguntas divertidas sobre ustedes o la cumpleañera. Descontractura y forma conexión con los invitados."
+        },
+        "fotos10": {
+            "title": "De 6 a 10 fotos",
+            "body": "La invitación ya incluye hasta 5 fotos. Con este bloque podés sumar más de 5 (hasta 10 en total)."
+        },
+        "faq": {
+            "title": "Preguntas frecuentes",
+            "body": "Respuestas a lo que más preguntan: estacionamiento, horario de llegada, niños, clima, etc. Aclara dudas y evita malentendidos o consultas constantes."
+        },
+        "alojamiento": {
+            "title": "Alojamientos",
+            "body": "Sugerencias de hoteles o hospedajes cerca del lugar, con links o datos de contacto. Muy útil si vienen invitados de otras ciudades."
+        },
+        "adultos": {
+            "title": "Niños y cuidados",
+            "body": "Aclará si el evento es solo adultos, si hay espacio para niños o si hay servicio de cuidado. Evita malentendidos al confirmar."
+        },
+        "dietas": {
+            "title": "RSVP, dietas, mensajes",
+            "body": "Confirmación más detallada de tus invitados: requerimientos alimentarios, mensajitos de tus invitados, etc. Si incluís Panel de invitados hacen un combo perfecto ya que todo se organiza automáticamente."
+        },
+        "otro": {
+            "title": "Otra sección",
+            "body": "Si necesitás algo que no está en la lista, describilo acá y lo evaluamos para sumarlo a tu invitación."
+        }
     },
     "story": {
         "our": "Nuestra historia",
