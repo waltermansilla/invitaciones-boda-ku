@@ -16,7 +16,7 @@
     "access": {
         "tokenEnabled": true,
         "token": "Kuy49M",
-        "allowLegacyUntil": ""
+        "allowLegacyUntil": "2026-11-08"
     },
     "base": {
         "enabled": true,
