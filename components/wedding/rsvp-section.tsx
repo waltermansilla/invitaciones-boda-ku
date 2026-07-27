@@ -147,6 +147,21 @@ interface RSVPSectionProps {
     };
     /** Con `?rsvpForm=1`: siempre muestra el formulario (ignora localStorage). */
     previewRsvpForm?: boolean;
+    /**
+     * Cupón promocional discreto en la pantalla de gracias (post-confirmación
+     * y al volver a entrar). Por ahora es solo visual/config desde el JSON:
+     * no incluye el disparador por cantidad de envíos ni exclusión de preview.
+     */
+    promo?: {
+        enabled?: boolean;
+        title?: string;
+        subtitle?: string;
+        code?: string;
+        buttonText?: string;
+        whatsappNumber?: string;
+        whatsappMessage?: string;
+        validityText?: string;
+    };
 }
 
 interface GuestForm {
@@ -391,6 +406,7 @@ export default function RSVPSection({
     whatsapp,
     panel,
     previewRsvpForm = false,
+    promo,
 }: RSVPSectionProps) {
     const isMuestra = useIsMuestra();
     const isGuestPreview = useGuestPreview();
@@ -1414,6 +1430,50 @@ export default function RSVPSection({
                         >
                             Editar mi confirmacion
                         </button>
+                    )}
+                    {promo?.enabled && (
+                        <div className="mt-10 border-t border-current/10 pt-8">
+                            {promo.title && (
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-inherit/70">
+                                    {promo.title}
+                                </p>
+                            )}
+                            {promo.subtitle && (
+                                <p className="mx-auto mt-2 max-w-xs text-sm font-light leading-relaxed text-inherit/60">
+                                    {promo.subtitle}
+                                </p>
+                            )}
+                            {promo.code && (
+                                <div className="mt-4 flex justify-center">
+                                    <span className="inline-block rounded-md border border-dashed border-current/40 bg-current/5 px-6 py-2.5 text-base font-semibold tracking-[0.25em] text-inherit/90">
+                                        {promo.code}
+                                    </span>
+                                </div>
+                            )}
+                            {promo.whatsappNumber && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const msg = encodeURIComponent(
+                                            promo.whatsappMessage || "",
+                                        );
+                                        window.open(
+                                            `https://wa.me/${promo.whatsappNumber}?text=${msg}`,
+                                            "_blank",
+                                            "noopener,noreferrer",
+                                        );
+                                    }}
+                                    className="mt-5 inline-flex min-h-[46px] items-center justify-center rounded-md border border-current/25 bg-current/10 px-8 py-3 text-[11px] font-medium uppercase tracking-[0.2em] text-inherit/90 transition-colors hover:bg-current/20"
+                                >
+                                    {promo.buttonText || "Quiero la mía"}
+                                </button>
+                            )}
+                            {promo.validityText && (
+                                <p className="mt-3 text-[10px] font-light tracking-wide text-inherit/40">
+                                    {promo.validityText}
+                                </p>
+                            )}
+                        </div>
                     )}
                 </div>
             </section>

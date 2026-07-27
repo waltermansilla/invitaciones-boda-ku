@@ -429,6 +429,16 @@
                 "whatsapp": {
                     "number": "543456023759",
                     "messageTemplate": "Hola Sofía y Mateo! Confirmo la asistencia a su boda.\n\n{resumen}\n\n¡Gracias! 🫶🏼"
+                },
+                "promo": {
+                    "enabled": true,
+                    "title": "¿Organizás tu propio evento?",
+                    "subtitle": "Nos encargamos de tu invitación digital. Te regalamos un 10% con este código.",
+                    "code": "SOFIMATEO10",
+                    "buttonText": "Quiero la mía",
+                    "whatsappNumber": "543456023759",
+                    "whatsappMessage": "¡Hola! Vi la invitación de Sofía & Mateo hecha con Momento Único y quiero la mía 🤍 Código: SOFIMATEO10",
+                    "validityText": "Válido por 7 días"
                 }
             }
         },
