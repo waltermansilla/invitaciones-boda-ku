@@ -154,12 +154,16 @@ interface RSVPSectionProps {
      */
     promo?: {
         enabled?: boolean;
+        /** Referencia interna (ej. "0"); va en `from=inv-{clientRef}` del enlace al configurador. */
+        clientRef?: string;
         title?: string;
         subtitle?: string;
         code?: string;
         buttonText?: string;
-        whatsappNumber?: string;
-        whatsappMessage?: string;
+        /** Enlace al configurador (ej. /configurador?coupon=XXX&from=inv-0). */
+        linkUrl?: string;
+        /** Texto chico bajo el botón (ej. dónde ingresar el cupón). */
+        hint?: string;
         validityText?: string;
     };
 }
@@ -412,6 +416,7 @@ export default function RSVPSection({
     const isGuestPreview = useGuestPreview();
     const { openGuestPreviewConfirmModal } = useGuestPreviewConfirmModal();
     const { openModal, closeModal } = useModal();
+    const [promoCopied, setPromoCopied] = useState(false);
     const anonymousSubmitLockRef = useRef(false);
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     const [guestCount, setGuestCount] = useState(1);
@@ -1432,44 +1437,66 @@ export default function RSVPSection({
                         </button>
                     )}
                     {promo?.enabled && (
-                        <div className="mt-10 border-t border-current/10 pt-8">
+                        <div className="mt-10 rounded-2xl border border-current/12 bg-current/[0.04] px-5 py-6 text-center">
                             {promo.title && (
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-inherit/70">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-inherit/75">
                                     {promo.title}
                                 </p>
                             )}
                             {promo.subtitle && (
-                                <p className="mx-auto mt-2 max-w-xs text-sm font-light leading-relaxed text-inherit/60">
+                                <p className="mx-auto mt-2.5 max-w-[17rem] text-sm font-light leading-relaxed text-inherit/55">
                                     {promo.subtitle}
                                 </p>
                             )}
                             {promo.code && (
-                                <div className="mt-4 flex justify-center">
-                                    <span className="inline-block rounded-md border border-dashed border-current/40 bg-current/5 px-6 py-2.5 text-base font-semibold tracking-[0.25em] text-inherit/90">
+                                <div className="mt-5">
+                                    <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.18em] text-inherit/45">
+                                        Tu código
+                                    </p>
+                                    <button
+                                        type="button"
+                                        onClick={async () => {
+                                            try {
+                                                await navigator.clipboard.writeText(
+                                                    promo.code || "",
+                                                );
+                                                setPromoCopied(true);
+                                                window.setTimeout(
+                                                    () =>
+                                                        setPromoCopied(false),
+                                                    2000,
+                                                );
+                                            } catch {
+                                                /* clipboard blocked */
+                                            }
+                                        }}
+                                        className="inline-block rounded-lg border border-dashed border-current/35 bg-current/[0.06] px-7 py-3 text-base font-semibold tracking-[0.2em] text-inherit/90 transition-colors hover:bg-current/10 active:scale-[0.98]"
+                                        title="Copiar código"
+                                    >
                                         {promo.code}
-                                    </span>
+                                    </button>
+                                    <p className="mt-1.5 text-[10px] text-inherit/40">
+                                        {promoCopied
+                                            ? "¡Copiado!"
+                                            : "Tocá para copiar"}
+                                    </p>
                                 </div>
                             )}
-                            {promo.whatsappNumber && (
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        const msg = encodeURIComponent(
-                                            promo.whatsappMessage || "",
-                                        );
-                                        window.open(
-                                            `https://wa.me/${promo.whatsappNumber}?text=${msg}`,
-                                            "_blank",
-                                            "noopener,noreferrer",
-                                        );
-                                    }}
-                                    className="mt-5 inline-flex min-h-[46px] items-center justify-center rounded-md border border-current/25 bg-current/10 px-8 py-3 text-[11px] font-medium uppercase tracking-[0.2em] text-inherit/90 transition-colors hover:bg-current/20"
+                            {promo.linkUrl && (
+                                <a
+                                    href={promo.linkUrl}
+                                    className="mt-5 inline-flex min-h-[46px] w-full max-w-[16rem] items-center justify-center rounded-md border border-current/25 bg-current/10 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.18em] text-inherit/90 transition-colors hover:bg-current/20"
                                 >
-                                    {promo.buttonText || "Quiero la mía"}
-                                </button>
+                                    {promo.buttonText || "Reservar con descuento"}
+                                </a>
+                            )}
+                            {promo.hint && (
+                                <p className="mx-auto mt-3 max-w-[18rem] text-[11px] font-light leading-relaxed text-inherit/45">
+                                    {promo.hint}
+                                </p>
                             )}
                             {promo.validityText && (
-                                <p className="mt-3 text-[10px] font-light tracking-wide text-inherit/40">
+                                <p className="mt-3 text-[10px] font-light tracking-wide text-inherit/35">
                                     {promo.validityText}
                                 </p>
                             )}

@@ -390,12 +390,13 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
               data.promo as
                 | {
                     enabled?: boolean
+                    clientRef?: string
                     title?: string
                     subtitle?: string
                     code?: string
                     buttonText?: string
-                    whatsappNumber?: string
-                    whatsappMessage?: string
+                    linkUrl?: string
+                    hint?: string
                     validityText?: string
                   }
                 | undefined

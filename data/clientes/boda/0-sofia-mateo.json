@@ -432,12 +432,13 @@
                 },
                 "promo": {
                     "enabled": true,
+                    "clientRef": "0",
                     "title": "¿Organizás tu propio evento?",
-                    "subtitle": "Nos encargamos de tu invitación digital. Te regalamos un 10% con este código.",
+                    "subtitle": "Te regalamos un 10% en tu invitación digital con Momento Único.",
                     "code": "SOFIMATEO10",
-                    "buttonText": "Quiero la mía",
-                    "whatsappNumber": "543456023759",
-                    "whatsappMessage": "¡Hola! Vi la invitación de Sofía & Mateo hecha con Momento Único y quiero la mía 🤍 Código: SOFIMATEO10",
+                    "buttonText": "Reservar con descuento",
+                    "linkUrl": "/configurador?coupon=SOFIMATEO10&from=inv-0",
+                    "hint": "Ingresá el código al confirmar tu reserva en el configurador.",
                     "validityText": "Válido por 7 días"
                 }
             }
