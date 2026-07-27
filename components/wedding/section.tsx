@@ -386,6 +386,20 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
                 : undefined
             }
             previewRsvpForm={previewRsvpForm}
+            promo={
+              data.promo as
+                | {
+                    enabled?: boolean
+                    title?: string
+                    subtitle?: string
+                    code?: string
+                    buttonText?: string
+                    whatsappNumber?: string
+                    whatsappMessage?: string
+                    validityText?: string
+                  }
+                | undefined
+            }
           />
         )
 
