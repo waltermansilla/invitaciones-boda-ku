@@ -401,9 +401,12 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
                     modal?: {
                       title?: string
                       code?: string
-                      linkUrl?: string
-                      steps?: string[]
+                      benefitNote?: string
+                      modelsLinkUrl?: string
+                      modelsButtonText?: string
+                      reserveLinkUrl?: string
                       reserveButtonText?: string
+                      steps?: string[]
                       saveButtonText?: string
                       shareButtonText?: string
                       saveMessage?: string

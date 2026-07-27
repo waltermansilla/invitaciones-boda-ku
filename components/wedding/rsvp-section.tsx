@@ -169,9 +169,15 @@ interface RSVPSectionProps {
         modal?: {
             title?: string;
             code?: string;
-            linkUrl?: string;
-            steps?: string[];
+            /** Texto bajo el título (ej. cupón activo al explorar modelos). */
+            benefitNote?: string;
+            /** Enlace principal: ver modelos en la landing (ej. /?coupon=…&from=inv-0#muestras). */
+            modelsLinkUrl?: string;
+            modelsButtonText?: string;
+            /** Enlace secundario: reservar directo en el configurador. */
+            reserveLinkUrl?: string;
             reserveButtonText?: string;
+            steps?: string[];
             saveButtonText?: string;
             shareButtonText?: string;
             /** Plantilla WA para guardar. Placeholders: {{code}}, {{link}}, {{validity}} */
@@ -211,15 +217,17 @@ function PromoBenefitModalContent({
 }) {
     const modal = promo.modal;
     const code = modal?.code || "";
-    const linkPath = modal?.linkUrl || "";
-    const fullLink = promoFullLink(linkPath);
+    const modelsPath = modal?.modelsLinkUrl || "";
+    const reservePath = modal?.reserveLinkUrl || "";
+    const shareLinkPath = modelsPath || reservePath;
+    const shareFullLink = promoFullLink(shareLinkPath);
     const validity = modal?.validityText || "";
     const [copied, setCopied] = useState(false);
 
     const openWhatsApp = (messageTemplate: string) => {
         const text = fillPromoMessage(messageTemplate, {
             code,
-            link: fullLink,
+            link: shareFullLink,
             validity,
         });
         window.open(
@@ -234,10 +242,21 @@ function PromoBenefitModalContent({
             <h3 className="mb-1 pr-8 text-lg font-semibold tracking-wide text-primary-foreground">
                 {modal?.title || "Tu beneficio"}
             </h3>
-            {validity && (
-                <p className="mb-5 text-xs font-light text-primary-foreground/60">
-                    {validity}
-                </p>
+            {(validity || modal?.benefitNote) && (
+                <div className="mb-5">
+                    {validity && (
+                        <p className="text-xs font-light text-primary-foreground/60">
+                            {validity}
+                        </p>
+                    )}
+                    {modal?.benefitNote && (
+                        <p
+                            className={`text-sm font-light leading-relaxed text-primary-foreground/75 ${validity ? "mt-2" : ""}`}
+                        >
+                            {modal.benefitNote}
+                        </p>
+                    )}
+                </div>
             )}
 
             {code && (
@@ -288,13 +307,13 @@ function PromoBenefitModalContent({
             )}
 
             <div className="flex flex-col gap-2">
-                {linkPath && (
+                {modelsPath && (
                     <a
-                        href={linkPath}
+                        href={modelsPath}
                         onClick={onClose}
                         className="flex min-h-[48px] w-full items-center justify-center rounded-sm border border-primary-foreground/30 bg-primary-foreground/10 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground transition-all hover:bg-primary-foreground/20"
                     >
-                        {modal?.reserveButtonText || "Reservar ahora"}
+                        {modal?.modelsButtonText || "Ver modelos de invitación"}
                     </a>
                 )}
                 {modal?.saveMessage && (
@@ -314,6 +333,16 @@ function PromoBenefitModalContent({
                     >
                         {modal?.shareButtonText || "Compartir con alguien"}
                     </button>
+                )}
+                {reservePath && (
+                    <a
+                        href={reservePath}
+                        onClick={onClose}
+                        className="mt-1 flex min-h-[40px] w-full items-center justify-center px-5 py-2 text-[10px] font-medium uppercase tracking-[0.14em] text-primary-foreground/55 underline underline-offset-4 transition-colors hover:text-primary-foreground/80"
+                    >
+                        {modal?.reserveButtonText ||
+                            "Ya sé lo que quiero — reservar"}
+                    </a>
                 )}
             </div>
 

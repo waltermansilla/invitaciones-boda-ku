@@ -437,25 +437,28 @@
                         "title": "¿Organizás tu propio evento?",
                         "benefit": "10% off en Momento Único",
                         "validityShort": "Válido 7 días",
-                        "shareHint": "Reservá, guardalo para después o compartilo con alguien que esté organizando.",
+                        "shareHint": "Explorá modelos, guardalo para después o compartilo con alguien que esté organizando.",
                         "buttonText": "¿Cómo funciona?"
                     },
                     "modal": {
                         "title": "Tu beneficio exclusivo",
                         "code": "SOFIMATEO10",
-                        "linkUrl": "/configurador?coupon=SOFIMATEO10&from=inv-0",
+                        "validityText": "Válido por 7 días",
+                        "benefitNote": "Explorá invitaciones reales. Si reservás en ese plazo, tu 10% se aplica al confirmar (código abajo).",
+                        "modelsLinkUrl": "/?coupon=SOFIMATEO10&from=inv-0#muestras",
+                        "modelsButtonText": "Ver modelos de invitación",
+                        "reserveLinkUrl": "/configurador?coupon=SOFIMATEO10&from=inv-0",
+                        "reserveButtonText": "Ya sé lo que quiero — reservar",
                         "steps": [
-                            "Entrá al configurador y armá tu invitación",
-                            "Al confirmar la reserva, ingresá el código",
-                            "El descuento se aplica al total de tu reserva"
+                            "Explorá invitaciones reales en nuestros modelos",
+                            "Elegí el estilo que más te guste",
+                            "Al reservar dentro de 7 días, ingresá el código y se aplica el descuento"
                         ],
-                        "reserveButtonText": "Reservar ahora",
                         "saveButtonText": "Guardar en WhatsApp",
                         "shareButtonText": "Compartir con alguien",
-                        "saveMessage": "Me guardo esto para después 🤍\n\nCódigo: {{code}}\nReservar: {{link}}\n\n{{validity}}. Al final del configurador ingresás el código.",
-                        "shareMessage": "¡Hola! Estuve en una invitación digital muy linda y me acordé de vos.\n\nMomento Único tiene 10% off con el código {{code}}.\nReservá acá: {{link}}\n\n{{validity}}.",
-                        "footerNote": "Podés volver a esta invitación y abrir este beneficio de nuevo antes de que venza.",
-                        "validityText": "Válido por 7 días"
+                        "saveMessage": "Me guardo esto para después 🤍\n\nCódigo: {{code}}\nVer modelos: {{link}}\n\n{{validity}}. Si reservás en ese plazo, el descuento se aplica al confirmar.",
+                        "shareMessage": "¡Hola! Estuve en una invitación digital muy linda y me acordé de vos.\n\nMomento Único tiene 10% off con el código {{code}}.\nMirá invitaciones reales acá: {{link}}\n\n{{validity}}.",
+                        "footerNote": "Podés volver a esta invitación y abrir este beneficio de nuevo antes de que venza."
                     }
                 }
             }
