@@ -156,16 +156,174 @@ interface RSVPSectionProps {
         enabled?: boolean;
         /** Referencia interna (ej. "0"); va en `from=inv-{clientRef}` del enlace al configurador. */
         clientRef?: string;
-        title?: string;
-        subtitle?: string;
-        code?: string;
-        buttonText?: string;
-        /** Enlace al configurador (ej. /configurador?coupon=XXX&from=inv-0). */
-        linkUrl?: string;
-        /** Texto chico bajo el botón (ej. dónde ingresar el cupón). */
-        hint?: string;
-        validityText?: string;
+        /** Gancho compacto en la pantalla de confirmación (sin abrir modal). */
+        teaser?: {
+            title?: string;
+            benefit?: string;
+            validityShort?: string;
+            /** Menciona reservar, guardar o compartir antes de abrir el modal. */
+            shareHint?: string;
+            buttonText?: string;
+        };
+        /** Contenido completo dentro del modal. */
+        modal?: {
+            title?: string;
+            code?: string;
+            linkUrl?: string;
+            steps?: string[];
+            reserveButtonText?: string;
+            saveButtonText?: string;
+            shareButtonText?: string;
+            /** Plantilla WA para guardar. Placeholders: {{code}}, {{link}}, {{validity}} */
+            saveMessage?: string;
+            /** Plantilla WA para compartir con un tercero. */
+            shareMessage?: string;
+            footerNote?: string;
+            validityText?: string;
+        };
     };
+}
+
+function fillPromoMessage(
+    template: string,
+    vars: { code: string; link: string; validity: string },
+): string {
+    return template
+        .replace(/\{\{code\}\}/gi, vars.code)
+        .replace(/\{\{link\}\}/gi, vars.link)
+        .replace(/\{\{validity\}\}/gi, vars.validity);
+}
+
+function promoFullLink(linkPath: string): string {
+    if (typeof window === "undefined") return linkPath;
+    if (linkPath.startsWith("http")) return linkPath;
+    return `${window.location.origin}${linkPath.startsWith("/") ? "" : "/"}${linkPath}`;
+}
+
+type PromoConfig = NonNullable<RSVPSectionProps["promo"]>;
+
+function PromoBenefitModalContent({
+    promo,
+    onClose,
+}: {
+    promo: PromoConfig;
+    onClose: () => void;
+}) {
+    const modal = promo.modal;
+    const code = modal?.code || "";
+    const linkPath = modal?.linkUrl || "";
+    const fullLink = promoFullLink(linkPath);
+    const validity = modal?.validityText || "";
+    const [copied, setCopied] = useState(false);
+
+    const openWhatsApp = (messageTemplate: string) => {
+        const text = fillPromoMessage(messageTemplate, {
+            code,
+            link: fullLink,
+            validity,
+        });
+        window.open(
+            `https://wa.me/?text=${encodeURIComponent(text)}`,
+            "_blank",
+            "noopener,noreferrer",
+        );
+    };
+
+    return (
+        <>
+            <h3 className="mb-1 pr-8 text-lg font-semibold tracking-wide text-primary-foreground">
+                {modal?.title || "Tu beneficio"}
+            </h3>
+            {validity && (
+                <p className="mb-5 text-xs font-light text-primary-foreground/60">
+                    {validity}
+                </p>
+            )}
+
+            {code && (
+                <div className="mb-6 text-center">
+                    <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.18em] text-primary-foreground/50">
+                        Tu código
+                    </p>
+                    <button
+                        type="button"
+                        onClick={async () => {
+                            try {
+                                await navigator.clipboard.writeText(code);
+                                setCopied(true);
+                                window.setTimeout(() => setCopied(false), 2000);
+                            } catch {
+                                /* clipboard blocked */
+                            }
+                        }}
+                        className="inline-block rounded-lg border border-dashed border-primary-foreground/35 bg-primary-foreground/[0.06] px-7 py-3 text-base font-semibold tracking-[0.18em] text-primary-foreground transition-colors hover:bg-primary-foreground/10"
+                    >
+                        {code}
+                    </button>
+                    <p className="mt-1.5 text-[10px] text-primary-foreground/45">
+                        {copied ? "¡Copiado!" : "Tocá para copiar"}
+                    </p>
+                </div>
+            )}
+
+            {modal?.steps && modal.steps.length > 0 && (
+                <div className="mb-6 space-y-2.5 text-left">
+                    <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-primary-foreground/55">
+                        Cómo funciona
+                    </p>
+                    <ol className="space-y-2">
+                        {modal.steps.map((step, i) => (
+                            <li
+                                key={i}
+                                className="flex gap-2.5 text-sm font-light leading-snug text-primary-foreground/80"
+                            >
+                                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-primary-foreground/25 text-[10px] font-medium text-primary-foreground/70">
+                                    {i + 1}
+                                </span>
+                                <span>{step}</span>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+            )}
+
+            <div className="flex flex-col gap-2">
+                {linkPath && (
+                    <a
+                        href={linkPath}
+                        onClick={onClose}
+                        className="flex min-h-[48px] w-full items-center justify-center rounded-sm border border-primary-foreground/30 bg-primary-foreground/10 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground transition-all hover:bg-primary-foreground/20"
+                    >
+                        {modal?.reserveButtonText || "Reservar ahora"}
+                    </a>
+                )}
+                {modal?.saveMessage && (
+                    <button
+                        type="button"
+                        onClick={() => openWhatsApp(modal.saveMessage!)}
+                        className="flex min-h-[48px] w-full items-center justify-center rounded-sm border border-primary-foreground/25 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground/85 transition-all hover:bg-primary-foreground/10"
+                    >
+                        {modal?.saveButtonText || "Guardar en WhatsApp"}
+                    </button>
+                )}
+                {modal?.shareMessage && (
+                    <button
+                        type="button"
+                        onClick={() => openWhatsApp(modal.shareMessage!)}
+                        className="flex min-h-[48px] w-full items-center justify-center rounded-sm border border-primary-foreground/25 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground/85 transition-all hover:bg-primary-foreground/10"
+                    >
+                        {modal?.shareButtonText || "Compartir con alguien"}
+                    </button>
+                )}
+            </div>
+
+            {modal?.footerNote && (
+                <p className="mt-5 text-center text-[11px] font-light leading-relaxed text-primary-foreground/50">
+                    {modal.footerNote}
+                </p>
+            )}
+        </>
+    );
 }
 
 interface GuestForm {
@@ -416,7 +574,6 @@ export default function RSVPSection({
     const isGuestPreview = useGuestPreview();
     const { openGuestPreviewConfirmModal } = useGuestPreviewConfirmModal();
     const { openModal, closeModal } = useModal();
-    const [promoCopied, setPromoCopied] = useState(false);
     const anonymousSubmitLockRef = useRef(false);
     const [invitado, setInvitado] = useState<InvitadoData | null>(null);
     const [guestCount, setGuestCount] = useState(1);
@@ -1436,70 +1593,40 @@ export default function RSVPSection({
                             Editar mi confirmacion
                         </button>
                     )}
-                    {promo?.enabled && (
-                        <div className="mt-10 rounded-2xl border border-current/12 bg-current/[0.04] px-5 py-6 text-center">
-                            {promo.title && (
+                    {promo?.enabled && promo.teaser && (
+                        <div className="mt-10 rounded-2xl border border-current/12 bg-current/[0.04] px-5 py-5 text-center">
+                            {promo.teaser.title && (
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-inherit/75">
-                                    {promo.title}
+                                    {promo.teaser.title}
                                 </p>
                             )}
-                            {promo.subtitle && (
-                                <p className="mx-auto mt-2.5 max-w-[17rem] text-sm font-light leading-relaxed text-inherit/55">
-                                    {promo.subtitle}
+                            {(promo.teaser.benefit ||
+                                promo.teaser.validityShort) && (
+                                <p className="mx-auto mt-2 max-w-[18rem] text-sm font-light leading-relaxed text-inherit/60">
+                                    {[promo.teaser.benefit, promo.teaser.validityShort]
+                                        .filter(Boolean)
+                                        .join(" · ")}
                                 </p>
                             )}
-                            {promo.code && (
-                                <div className="mt-5">
-                                    <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.18em] text-inherit/45">
-                                        Tu código
-                                    </p>
-                                    <button
-                                        type="button"
-                                        onClick={async () => {
-                                            try {
-                                                await navigator.clipboard.writeText(
-                                                    promo.code || "",
-                                                );
-                                                setPromoCopied(true);
-                                                window.setTimeout(
-                                                    () =>
-                                                        setPromoCopied(false),
-                                                    2000,
-                                                );
-                                            } catch {
-                                                /* clipboard blocked */
-                                            }
-                                        }}
-                                        className="inline-block rounded-lg border border-dashed border-current/35 bg-current/[0.06] px-7 py-3 text-base font-semibold tracking-[0.2em] text-inherit/90 transition-colors hover:bg-current/10 active:scale-[0.98]"
-                                        title="Copiar código"
-                                    >
-                                        {promo.code}
-                                    </button>
-                                    <p className="mt-1.5 text-[10px] text-inherit/40">
-                                        {promoCopied
-                                            ? "¡Copiado!"
-                                            : "Tocá para copiar"}
-                                    </p>
-                                </div>
-                            )}
-                            {promo.linkUrl && (
-                                <a
-                                    href={promo.linkUrl}
-                                    className="mt-5 inline-flex min-h-[46px] w-full max-w-[16rem] items-center justify-center rounded-md border border-current/25 bg-current/10 px-6 py-3 text-[11px] font-medium uppercase tracking-[0.18em] text-inherit/90 transition-colors hover:bg-current/20"
-                                >
-                                    {promo.buttonText || "Reservar con descuento"}
-                                </a>
-                            )}
-                            {promo.hint && (
-                                <p className="mx-auto mt-3 max-w-[18rem] text-[11px] font-light leading-relaxed text-inherit/45">
-                                    {promo.hint}
+                            {promo.teaser.shareHint && (
+                                <p className="mx-auto mt-2.5 max-w-[19rem] text-[11px] font-light leading-relaxed text-inherit/45">
+                                    {promo.teaser.shareHint}
                                 </p>
                             )}
-                            {promo.validityText && (
-                                <p className="mt-3 text-[10px] font-light tracking-wide text-inherit/35">
-                                    {promo.validityText}
-                                </p>
-                            )}
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    openModal(
+                                        <PromoBenefitModalContent
+                                            promo={promo}
+                                            onClose={closeModal}
+                                        />,
+                                    )
+                                }
+                                className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-md border border-current/25 bg-current/10 px-7 py-2.5 text-[11px] font-medium uppercase tracking-[0.18em] text-inherit/90 transition-colors hover:bg-current/20"
+                            >
+                                {promo.teaser.buttonText || "¿Cómo funciona?"}
+                            </button>
                         </div>
                     )}
                 </div>

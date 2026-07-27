@@ -391,13 +391,26 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
                 | {
                     enabled?: boolean
                     clientRef?: string
-                    title?: string
-                    subtitle?: string
-                    code?: string
-                    buttonText?: string
-                    linkUrl?: string
-                    hint?: string
-                    validityText?: string
+                    teaser?: {
+                      title?: string
+                      benefit?: string
+                      validityShort?: string
+                      shareHint?: string
+                      buttonText?: string
+                    }
+                    modal?: {
+                      title?: string
+                      code?: string
+                      linkUrl?: string
+                      steps?: string[]
+                      reserveButtonText?: string
+                      saveButtonText?: string
+                      shareButtonText?: string
+                      saveMessage?: string
+                      shareMessage?: string
+                      footerNote?: string
+                      validityText?: string
+                    }
                   }
                 | undefined
             }

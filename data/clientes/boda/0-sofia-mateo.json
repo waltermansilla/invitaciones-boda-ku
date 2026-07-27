@@ -433,13 +433,30 @@
                 "promo": {
                     "enabled": true,
                     "clientRef": "0",
-                    "title": "¿Organizás tu propio evento?",
-                    "subtitle": "Te regalamos un 10% en tu invitación digital con Momento Único.",
-                    "code": "SOFIMATEO10",
-                    "buttonText": "Reservar con descuento",
-                    "linkUrl": "/configurador?coupon=SOFIMATEO10&from=inv-0",
-                    "hint": "Ingresá el código al confirmar tu reserva en el configurador.",
-                    "validityText": "Válido por 7 días"
+                    "teaser": {
+                        "title": "¿Organizás tu propio evento?",
+                        "benefit": "10% off en Momento Único",
+                        "validityShort": "Válido 7 días",
+                        "shareHint": "Reservá, guardalo para después o compartilo con alguien que esté organizando.",
+                        "buttonText": "¿Cómo funciona?"
+                    },
+                    "modal": {
+                        "title": "Tu beneficio exclusivo",
+                        "code": "SOFIMATEO10",
+                        "linkUrl": "/configurador?coupon=SOFIMATEO10&from=inv-0",
+                        "steps": [
+                            "Entrá al configurador y armá tu invitación",
+                            "Al confirmar la reserva, ingresá el código",
+                            "El descuento se aplica al total de tu reserva"
+                        ],
+                        "reserveButtonText": "Reservar ahora",
+                        "saveButtonText": "Guardar en WhatsApp",
+                        "shareButtonText": "Compartir con alguien",
+                        "saveMessage": "Me guardo esto para después 🤍\n\nCódigo: {{code}}\nReservar: {{link}}\n\n{{validity}}. Al final del configurador ingresás el código.",
+                        "shareMessage": "¡Hola! Estuve en una invitación digital muy linda y me acordé de vos.\n\nMomento Único tiene 10% off con el código {{code}}.\nReservá acá: {{link}}\n\n{{validity}}.",
+                        "footerNote": "Podés volver a esta invitación y abrir este beneficio de nuevo antes de que venza.",
+                        "validityText": "Válido por 7 días"
+                    }
                 }
             }
         },
