@@ -1,0 +1,413 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja.",
+    "meta": {
+        "title": "Nuestra Boda - Micaela & Joaquín",
+        "description": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Joaquín",
+            "brideName": "Micaela",
+            "separator": "&"
+        }
+    },
+    "access": {
+        "tokenEnabled": true,
+        "token": "rbslo1",
+        "allowLegacyUntil": ""
+    },
+    "base": {
+        "enabled": true,
+        "token": "zj92i0Pw",
+        "pinEnabled": true,
+        "pin": "353530"
+    },
+    "rsvpPanel": {
+        "enabled": true,
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": false,
+        "limiteInvitados": 200,
+        "panelId": "micaela-joaquin-rblMp1",
+        "fechaEvento": "2026-10-17",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 17 de Octubre.",
+        "theme": {
+            "primaryColor": "#8a9071"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Tarjeta pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Ya pagó",
+            "unpaidButton": "¿Pagó tarjeta?"
+        }
+    },
+    "theme": {
+        "primaryColor": "#8a9071",
+        "backgroundColor": "#Fff",
+        "primaryImage": "/clientes/boda/30-micaela-joaquin/images/bg1.jpeg",
+        "textColor": "#8a9071",
+        "lightBgTextColor": "#8a9071",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#EDF2E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "overlay": {
+        "enabled": true,
+        "phrase": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
+        "buttonText": "Ingresar",
+        "showNames": true,
+        "showPhrase": false,
+        "contentCenterY": 50,
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "50px",
+            "weight": "500",
+            "color": "#8a9071",
+            "lowercase": true,
+            "letterSpacing": "none"
+        },
+        "bgImage": "/clientes/boda/30-micaela-joaquin/images/overlay2.jpeg"
+    },
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": false
+    },
+    "hero": {
+        "coupleImage": "/clientes/boda/30-micaela-joaquin/images/1.jpg",
+        "headline": "¡Nos casamos!",
+        "showNamesOnPhoto": false,
+        "namesDisplay": {
+            "enabled": false,
+            "position": "bottom",
+            "font": "",
+            "logo": ""
+        },
+        "countdownPrefix": "Faltan",
+        "eventDate": "2026-10-17T18:00:00",
+        "countdownLabels": {
+            "days": "Dias",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "none",
+            "shape": "rounded"
+        }
+    },
+    "sections": [
+        {
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value", "button"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "17 de Octubre de 2026"
+            }
+        },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": [
+                    "/clientes/boda/30-micaela-joaquin/images/image1.jpeg"
+                ]
+            }
+        },
+
+        {
+            "// --- UBICACION ---": "",
+            "_comment": "Ubicación y cómo llegar (contratada). Un solo lugar: ceremonia y fiesta.",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "¿Dónde?",
+                "address": "Salón Las Lilas, Concepción del Uruguay",
+                "icon": "pin",
+                "order": ["address", "time"],
+                "datetime": {
+                    "time": "18:00 hs"
+                },
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/wk5Aq8GTggB1Uq8x9",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "// --- NUESTRA HISTORIA ---": "",
+            "_comment": "image vacia = solo texto. bgColor por momento: primary | background (opcional).",
+            "type": "ourStory",
+            "id": "our-story",
+            "bgColor": "background",
+            "blocks": ["title", "moments"],
+            "data": {
+                "aspectRatio": "3/4",
+                "title": "Nuestra historia",
+                "moments": [
+                    {
+                        "image": "/clientes/boda/30-micaela-joaquin/images/3.jpg",
+                        "title": "Nuestros comienzos",
+                        "text": "Esta historia comenzó en 2006, cuando decidimos empezar a caminar juntos, sin imaginar todo lo que la vida nos tenía preparado.",
+                        "bgColor": "background"
+                    },
+                    {
+                        "image": "",
+                        "title": "De la mano",
+                        "text": "Fuimos creciendo de la mano, compartiendo sueños, desafíos y alegrías, mientras nuestro amor se fortalecía con el paso del tiempo.",
+                        "bgColor": "primary"
+                    },
+                    {
+                        "image": "",
+                        "title": "Un nuevo capítulo",
+                        "text": "Hoy, veinte años después, queremos celebrar el camino recorrido y el comienzo de un nuevo capítulo, rodeados de las personas que más queremos.",
+                        "bgColor": "background"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": [
+                    "/clientes/boda/30-micaela-joaquin/images/compromiso.jpeg"
+                ]
+            }
+        },
+
+        {
+            "_comment": "DRESS CODE: Formal de gala. Colores a evitar: blanco, beige y verde salvia.",
+            "type": "dressCode",
+            "id": "dress-code",
+            "bgColor": "background",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Dress code",
+                "subtitle": "Formal de gala",
+                "description": "Sugerimos traje y vestido largo. Te pedimos amablemente evitar estos colores:",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "square",
+                    "colors": ["#FFFFFF", "#E8DFD0", "#8a9071"]
+                }
+            }
+        },
+        {
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
+                "button": {
+                    "text": "Ir al álbum",
+                    "url": "https://photos.app.goo.gl/tq3JqPc7tzbS3XtH6",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "_comment": "FAQ: Acordeón (una abierta a la vez). buttons con whatsapp o url dentro de cada respuesta.",
+            "type": "faq",
+            "id": "faq",
+            "bgColor": "background",
+            "blocks": ["title", "description", "items"],
+            "data": {
+                "icon": "help",
+                "title": "Preguntas frecuentes",
+                "description": "Resolvé las dudas más comunes sobre el evento.",
+                "defaultOpen": 0,
+                "items": [
+                    {
+                        "question": "¿Es el evento al interior o al exterior?",
+                        "answer": "El evento se desarrollará parte al exterior y parte al interior. No se suspende en caso de lluvia."
+                    },
+                    {
+                        "question": "¿Se puede llevar acompañante?",
+                        "answer": "No, la tarjeta es personal y limitada a los invitados mencionados."
+                    },
+                    {
+                        "question": "¿Cómo solicito un taxi?",
+                        "answer": "Elegí uno de los siguientes remises:",
+                        "buttons": [
+                            {
+                                "text": "Remises TAOS",
+                                "whatsapp": "5493442542772",
+                                "variant": "secondary",
+                                "icon": "whatsapp"
+                            },
+                            {
+                                "text": "Remises ACCION",
+                                "whatsapp": "5493442641200",
+                                "variant": "secondary",
+                                "icon": "whatsapp"
+                            },
+                            {
+                                "text": "Remises VOY",
+                                "whatsapp": "5493442322000",
+                                "variant": "secondary",
+                                "icon": "whatsapp"
+                            }
+                        ]
+                    },
+                    {
+                        "question": "¿Hay estacionamiento en el lugar?",
+                        "answer": "Sí, hay estacionamiento en el lugar."
+                    }
+                ]
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos3",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": ["/clientes/boda/30-micaela-joaquin/images/3.jpg"]
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "primary",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 31 de agosto",
+                "guestCountLabel": "Número de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "¿Confirmás tu asistencia?",
+                    "attendanceYes": "¡Confirmo!",
+                    "attendanceNo": "No podré asistir",
+                    "dietary": "¿Alguna limitación en la alimentación?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celíaco",
+                        "Otro"
+                    ],
+                    "extraInputs": [
+                        {
+                            "id": "mensajersvp",
+                            "label": "¿Algún mensaje para los novios?",
+                            "placeholder": "Escribí tu mensaje",
+                            "tituloPanel": "Mensaje",
+                            "a4": "bottom"
+                        }
+                    ],
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "",
+                    "messageTemplate": "Hola Micaela y Joaquín! Confirmo la asistencia a su boda.\n\n{resumen}\n\n¡Gracias! 🫶🏼"
+                }
+            }
+        },
+        {
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "coupleNames"],
+            "data": {
+                "aspectRatio": "libre",
+                "image": "/clientes/boda/30-micaela-joaquin/images/2.jpg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "size": "2xl",
+                    "style": "normal",
+                    "color": "#8a9071",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+        {
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": ""
+                    }
+                ]
+            }
+        }
+    ]
+}

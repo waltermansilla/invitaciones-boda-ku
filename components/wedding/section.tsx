@@ -28,6 +28,7 @@ import ConfirmarWhatsappSection from "./confirmar-whatsapp-section"
 import AdultsOnlySection from "./adults-only-section"
 import ZoomInfoSection from "./zoom-info-section"
 import CaptureCardSection from "./capture-card-section"
+import FaqSection from "./faq-section"
 import { useConfig } from "@/lib/config-context"
 import {
   confirmarComunUsesPanelApi,
@@ -125,7 +126,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
   const continuesBgImage = resolvedBgImage && bgImage && prevBgImage === bgImage
 
   // Show a subtle divider line when this section has the same bgColor as the previous one
-  const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage"]
+  const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage", "ourStory"]
   const skipWrapper = selfStyledTypes.includes(type)
   const effectiveBg = skipWrapper ? null : (bgColor || "background")
   const prevEffective = prevBgColor || null
@@ -451,12 +452,44 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
           />
         )
 
+      case "faq":
+        return (
+          <FaqSection
+            icon={data.icon as string | undefined}
+            title={data.title as string | undefined}
+            description={data.description as string | undefined}
+            items={
+              (data.items as
+                | {
+                    question: string
+                    answer: string
+                    buttons?: {
+                      text: string
+                      url?: string
+                      whatsapp?: string
+                      variant?: "primary" | "secondary" | "outline-light" | "background"
+                      icon?: string
+                    }[]
+                  }[]) || []
+            }
+            defaultOpen={data.defaultOpen as number | null | undefined}
+          />
+        )
+
       case "ourStory":
         return (
           <OurStorySection
             title={data.title as string}
-            moments={data.moments as { image: string; title: string; text: string }[]}
+            moments={
+              data.moments as {
+                image?: string
+                title: string
+                text: string
+                bgColor?: string
+              }[]
+            }
             aspectRatio={data.aspectRatio as string | undefined}
+            sectionBgColor={bgColor}
           />
         )
 

@@ -352,7 +352,7 @@
     "//   data: contenido especifico de la seccion                                ": "",
     "// TIPOS DISPONIBLES:                                                         ": "",
     "//   quote, ourStory, dateInfo, locationInfo, gallery, itinerary,            ": "",
-    "//   dressCode, photos, truths, giftCard, honeymoon, universalInfo,          ": "",
+    "//   dressCode, photos, truths, giftCard, honeymoon, universalInfo, faq,     ": "",
     "//   emotionalQuote,                                                          ": "",
     "//   trivia, playlist, rsvp, confirmarWhatsapp, adultsOnly,                  ": "",
     "//   specialMessage, closingImage                                            ": "",
@@ -385,7 +385,12 @@
             "// OUR STORY - Momentos importantes con fotos                            ": "",
             "// title: titulo de la seccion                                           ": "",
             "// aspectRatio: proporcion de fotos ('3/4', '4/3', '1/1', '16/9', 'libre')": "",
-            "// moments: array de momentos, cada uno con image, title, text           ": "",
+            "// bgColor de la seccion: fondo del titulo y default de cada momento     ": "",
+            "// moments: array de momentos                                            ": "",
+            "//   image: ruta de foto. Si esta vacia '', el momento va solo texto     ": "",
+            "//   title / text: textos                                                ": "",
+            "//   bgColor (opcional por momento): 'primary' | 'background'            ": "",
+            "//     si no se setea, hereda el bgColor de la seccion                   ": "",
             "type": "ourStory",
             "id": "our-story",
             "enabled": true,
@@ -395,19 +400,22 @@
                 "title": "Nuestra historia",
                 "moments": [
                     {
-                        "image": "/clientes/boda/[slug]/momento-1.jpg",
+                        "image": "",
                         "title": "Como nos conocimos",
-                        "text": "Descripcion del momento."
+                        "text": "Descripcion del momento sin foto (image vacia).",
+                        "bgColor": "background"
                     },
                     {
                         "image": "/clientes/boda/[slug]/momento-2.jpg",
                         "title": "Primera cita",
-                        "text": "Descripcion del momento."
+                        "text": "Descripcion del momento.",
+                        "bgColor": "primary"
                     },
                     {
                         "image": "/clientes/boda/[slug]/momento-3.jpg",
                         "title": "La propuesta",
-                        "text": "Descripcion del momento."
+                        "text": "Descripcion del momento.",
+                        "bgColor": "background"
                     }
                 ]
             }
@@ -923,6 +931,72 @@
                         }
                     ]
                 }
+            }
+        },
+        {
+            "// ----------------------------------------------------------------------": "",
+            "// FAQ - Preguntas frecuentes (acordeon, sin modal)                       ": "",
+            "// icon (encabezado):                                                     ": "",
+            "//   help (default) | info | car | phone | pin | whatsapp                 ": "",
+            "// title/description: opcionales                                          ": "",
+            "// defaultOpen: indice abierto al inicio (0 = primera). -1 = todas cerradas": "",
+            "// items: array de preguntas                                              ": "",
+            "//   question / answer: textos                                            ": "",
+            "//   buttons (opcional): botones dentro de la respuesta                   ": "",
+            "//     text: label del boton                                              ": "",
+            "//     whatsapp: numero (abre wa.me) — tiene prioridad sobre url          ": "",
+            "//     url: enlace externo (Maps, app store, etc.)                        ": "",
+            "//     variant: primary | secondary | outline-light (default secondary)   ": "",
+            "//     icon (opcional en cada boton):                                     ": "",
+            "//       whatsapp | phone | car | pin | external | help | info            ": "",
+            "// Solo una pregunta abierta a la vez.                                    ": "",
+            "type": "faq",
+            "id": "faq",
+            "enabled": true,
+            "bgColor": "background",
+            "data": {
+                "icon": "help",
+                "title": "Preguntas frecuentes",
+                "description": "Resolvé las dudas más comunes sobre el evento.",
+                "defaultOpen": 0,
+                "items": [
+                    {
+                        "question": "¿Es el evento al interior o al exterior?",
+                        "answer": "El evento se desarrollará parte al exterior y parte al interior. No se suspende en caso de lluvia."
+                    },
+                    {
+                        "question": "¿Se puede llevar acompañante?",
+                        "answer": "No, la tarjeta es personal y limitada a los invitados mencionados."
+                    },
+                    {
+                        "question": "¿Cómo solicito un taxi?",
+                        "answer": "Podés pedir remis por WhatsApp o descargar la app según el servicio:",
+                        "buttons": [
+                            {
+                                "text": "Remises TAOS",
+                                "whatsapp": "5493442542772",
+                                "variant": "secondary",
+                                "icon": "whatsapp"
+                            },
+                            {
+                                "text": "Remises ACCION",
+                                "whatsapp": "5493442641200",
+                                "variant": "secondary",
+                                "icon": "whatsapp"
+                            },
+                            {
+                                "text": "Remises VOY",
+                                "whatsapp": "5493442322000",
+                                "variant": "secondary",
+                                "icon": "whatsapp"
+                            }
+                        ]
+                    },
+                    {
+                        "question": "¿Hay estacionamiento en el lugar?",
+                        "answer": "Sí, hay estacionamiento en el lugar."
+                    }
+                ]
             }
         },
         {

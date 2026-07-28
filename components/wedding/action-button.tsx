@@ -6,13 +6,15 @@ interface ActionButtonProps {
   text: string
   url: string
   variant: string
+  /** Ícono opcional a la izquierda del texto. */
+  icon?: React.ReactNode
 }
 
-export default function ActionButton({ text, url, variant }: ActionButtonProps) {
+export default function ActionButton({ text, url, variant, icon }: ActionButtonProps) {
   const isMuestra = useIsMuestra()
 
   const base =
-    "inline-flex min-h-[48px] items-center justify-center px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-200"
+    "inline-flex min-h-[48px] items-center justify-center gap-2 px-7 py-3 text-[11px] font-medium tracking-[0.2em] uppercase transition-all duration-200"
 
   let variantClasses: string
   switch (variant) {
@@ -28,6 +30,13 @@ export default function ActionButton({ text, url, variant }: ActionButtonProps) 
       break
   }
 
+  const content = (
+    <>
+      {icon ? <span className="inline-flex shrink-0 opacity-90 [&_svg]:h-4 [&_svg]:w-4">{icon}</span> : null}
+      {text}
+    </>
+  )
+
   if (isMuestra) {
     return (
       <a
@@ -38,7 +47,7 @@ export default function ActionButton({ text, url, variant }: ActionButtonProps) 
         }}
         className={`${base} ${variantClasses}`}
       >
-        {text}
+        {content}
       </a>
     )
   }
@@ -50,7 +59,7 @@ export default function ActionButton({ text, url, variant }: ActionButtonProps) 
       rel="noopener noreferrer"
       className={`${base} ${variantClasses}`}
     >
-      {text}
+      {content}
     </a>
   )
 }

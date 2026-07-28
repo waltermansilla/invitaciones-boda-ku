@@ -381,6 +381,8 @@
         {
             "// ----------------------------------------------------------------------": "",
             "// OUR STORY - Momentos de crecimiento                                   ": "",
+            "// image vacia '' = momento solo texto (sin foto)                        ": "",
+            "// bgColor por momento (opcional): 'primary' | 'background'              ": "",
             "type": "ourStory",
             "id": "my-story",
             "enabled": true,
@@ -390,19 +392,22 @@
                 "title": "Mi historia",
                 "moments": [
                     {
-                        "image": "/clientes/xv/[slug]/momento-1.jpg",
+                        "image": "",
                         "title": "Mis primeros pasos",
-                        "text": "Descripcion."
+                        "text": "Descripcion sin foto.",
+                        "bgColor": "background"
                     },
                     {
                         "image": "/clientes/xv/[slug]/momento-2.jpg",
                         "title": "Creciendo",
-                        "text": "Descripcion."
+                        "text": "Descripcion.",
+                        "bgColor": "primary"
                     },
                     {
                         "image": "/clientes/xv/[slug]/momento-3.jpg",
                         "title": "Hoy, mis 15",
-                        "text": "Descripcion."
+                        "text": "Descripcion.",
+                        "bgColor": "background"
                     }
                 ]
             }
@@ -784,6 +789,42 @@
                         }
                     ]
                 }
+            }
+        },
+        {
+            "// ----------------------------------------------------------------------": "",
+            "// FAQ - Preguntas frecuentes (acordeon, sin modal)                       ": "",
+            "// icon (encabezado): help | info | car | phone | pin | whatsapp          ": "",
+            "// defaultOpen: indice abierto al inicio (0 = primera). -1 = todas cerradas": "",
+            "// items[].buttons: [{ text, whatsapp? | url?, variant?, icon? }]         ": "",
+            "//   icon boton: whatsapp | phone | car | pin | external | help | info    ": "",
+            "type": "faq",
+            "id": "faq",
+            "enabled": true,
+            "bgColor": "background",
+            "data": {
+                "icon": "help",
+                "title": "Preguntas frecuentes",
+                "description": "Resolvé las dudas más comunes sobre el evento.",
+                "defaultOpen": 0,
+                "items": [
+                    {
+                        "question": "¿Hay estacionamiento?",
+                        "answer": "Sí, el salón cuenta con estacionamiento."
+                    },
+                    {
+                        "question": "¿Cómo pido un remis?",
+                        "answer": "Escribinos por WhatsApp a estos números:",
+                        "buttons": [
+                            {
+                                "text": "Pedir remis",
+                                "whatsapp": "5491112345678",
+                                "variant": "secondary",
+                                "icon": "whatsapp"
+                            }
+                        ]
+                    }
+                ]
             }
         },
         {
