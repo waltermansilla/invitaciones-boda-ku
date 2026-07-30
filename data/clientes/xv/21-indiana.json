@@ -356,6 +356,10 @@
                                 {
                                     "label": "Niños (4 a 11 años)",
                                     "value": "$52.000"
+                                },
+                                {
+                                    "label": "Trasnoche (ingreso 00:00hs)",
+                                    "value": "$45.000"
                                 }
                             ]
                         },
@@ -374,7 +378,11 @@
                                 {
                                     "label": "Niños (4 a 11 años)",
                                     "value": "$55.000"
-                                }
+                                },
+                                 {
+                                     "label": "Trasnoche (ingreso 00:00hs)",
+                                     "value": "$45.000"
+                                 }
                             ]
                         }
                     ],
