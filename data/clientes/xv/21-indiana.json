@@ -330,7 +330,7 @@
             "data": {
                 "icon": "heart",
                 "title": "Valor Tarjeta",
-                "description": "Agradecemos que abones la tarjeta antes del 13 de Julio 2026.",
+                "description": "Agradecemos que abones la tarjeta antes del 15 de Octubre 2026.",
                 "button": {
                     "text": "Ver",
                     "url": "#",
@@ -340,31 +340,10 @@
                     "title": "Datos de transferencia",
                     "suggestedValueLabel": "Valor tarjeta",
                     "dateRanges": [
+                        
                         {
-                            "label": "Hasta 13/07/2026",
-                            "helperText": "Pago anticipado",
-                            "suggestedValues": [
-                                {
-                                    "label": "Adultos",
-                                    "value": "$98.000"
-                                },
-                                {
-                                    "label": "Adolescentes",
-                                    "value": "$52.000"
-                                },
-                                {
-                                    "label": "Niños (4 a 11 años)",
-                                    "value": "$47.000"
-                                },
-                                {
-                                    "label": "Trasnoche (ingreso 00:00hs)",
-                                    "value": "$45.000"
-                                }
-                            ]
-                        },
-                        {
-                            "label": "Del 15/07 al 15/10",
-                            "helperText": "Segundo tramo",
+                            "label": "Hasta 15/10/2026",
+                            "helperText": "Plazo actual",
                             "suggestedValues": [
                                 {
                                     "label": "Adultos",
@@ -382,7 +361,7 @@
                         },
                         {
                             "label": "Del 15/10 al 15/01",
-                            "helperText": "Tercer tramo",
+                            "helperText": "Último plazo",
                             "suggestedValues": [
                                 {
                                     "label": "Adultos",
