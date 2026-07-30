@@ -267,6 +267,10 @@ export default function HeroOverlay({
         bgStyles.backgroundColor = bgColor;
     }
 
+    const hasBgImage = Boolean(bgImage?.trim());
+    /** Sin foto de fondo y sin invitado: mismo espacio nombre↔frase y frase↔botón. */
+    const equalPhraseButtonGaps = !hasBgImage && !invitado && showPhrase;
+
     const hasCustomTextPositions = Boolean(
         bridePos ||
         separatorPos ||
@@ -287,19 +291,30 @@ export default function HeroOverlay({
         typeof numPosition !== "number" && !buttonPos && !useAnchoredContentLayout;
     const buttonMarginClass = usesDefaultButtonSpacing
         ? showPhrase && !invitado
-            ? "mt-14"
+            ? equalPhraseButtonGaps
+                ? "mt-8"
+                : "mt-14"
             : invitado
               ? "mt-6"
               : "mt-8"
         : "";
-    const invitadoOverlayGap =
-        invitado ? "gap-6" : showPhrase ? "gap-5" : "gap-8";
+    const invitadoOverlayGap = invitado
+        ? "gap-6"
+        : equalPhraseButtonGaps
+          ? "gap-8"
+          : showPhrase
+            ? "gap-5"
+            : "gap-8";
     const namesBottomLineClass = invitado
         ? useAnchoredContentLayout
             ? "mt-8 mb-0"
             : "mt-8 mb-6"
         : showPhrase
-          ? "mt-8 mb-4"
+          ? equalPhraseButtonGaps
+            ? useAnchoredContentLayout
+                ? "mt-8 mb-0"
+                : "mt-8 mb-8"
+            : "mt-8 mb-4"
           : "my-8";
 
     const namesBlock = showNames ? (

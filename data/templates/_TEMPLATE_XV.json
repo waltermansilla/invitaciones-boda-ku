@@ -254,7 +254,7 @@
     },
     "// HERO - Seccion principal con foto y countdown                             ": "",
     "// aspectRatio (opcional): 'libre' = altura natural; sin valor = 3/4/4/5.   ": "",
-    "// Con 'libre', la 1ª seccion tras el hero aparece sin fade-in al scroll.    ": "",
+    "// La 1ª seccion tras el hero aparece sin fade-in (sin esperar scroll).     ": "",
     "// Ver documentacion completa en template BODA                               ": "",
     "// La estructura es identica                                                 ": "",
     "hero": {

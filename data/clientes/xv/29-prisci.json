@@ -81,7 +81,7 @@
         "buttonText": "Ingresar",
         "nameStyle": {
             "font": "Dancing Script",
-            "size": "70px",
+            "size": "65px",
             "weight": "600",
             "color": "#000",
             "lowercase": true,
@@ -301,6 +301,14 @@
                         {
                             "label": "Alias",
                             "value": "Cinthia1386"
+                        },
+                        {
+                            "label": "Titular",
+                            "value": "Jorgelina Cinthia Madariaga"
+                        },
+                        {
+                            "label": "Banco",
+                            "value": "Mercado Pago"
                         }
                     ],
                     "comprobanteWhatsapp": {
@@ -389,5 +397,25 @@
                 ]
             }
         }
-    ]
+    ],
+    "variants": {
+        "compañeros": {
+            "baseLabel": "General",
+            "label": "Compañeros",
+            "sections": [
+                {
+                    "id": "gift-card",
+                    "data": {
+                        "modal": {
+                            "suggestedValue": "$30.000",
+                            "suggestedValues": [],
+                            "comprobanteWhatsapp": {
+                                "hint": "No olvides enviarnos el comprobante."
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
 }

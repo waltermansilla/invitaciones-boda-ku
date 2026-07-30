@@ -266,7 +266,7 @@
     "// coupleImage: ruta a la foto principal                                     ": "",
     "// aspectRatio (opcional): 'libre' = altura natural de la foto;              ": "",
     "//   sin valor = 3/4 en movil y 4/5 en pantallas sm+ (defecto).             ": "",
-    "//   Con 'libre', la 1ª seccion tras el hero se muestra sin esperar scroll.  ": "",
+    "// La 1ª seccion tras el hero siempre aparece sin fade-in (sin esperar scroll).": "",
     "//   Tambien acepta ratios fijos: '3/4', '4/3', '1/1', '16/9', etc.        ": "",
     "// headline: texto sobre el countdown                                        ": "",
     "// eventDate: fecha ISO (2027-01-01T21:00:00)                                ": "",

@@ -5,7 +5,7 @@ import { useFadeIn } from "@/hooks/use-fade-in"
 interface AnimatedSectionProps {
   children: React.ReactNode
   id?: string
-  /** Sin animación de entrada: visible al montar (p. ej. 1ª sección tras hero libre). */
+  /** Sin animación de entrada: visible al montar (1ª sección tras el hero). */
   initialVisible?: boolean
 }
 
