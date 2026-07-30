@@ -360,8 +360,8 @@
             "id": "closing-image",
             "blocks": ["image", "name"],
             "data": {
-                "aspectRatio": "3/4",
-                "image": "/clientes/xv/29-prisci/images/2.jpeg",
+                "aspectRatio": "libre",
+                "image": "/clientes/xv/29-prisci/images/1.jpeg",
                 "namesDisplay": {
                     "enabled": true,
                     "font": "Dancing Script",

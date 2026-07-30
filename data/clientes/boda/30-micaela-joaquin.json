@@ -7,6 +7,7 @@
         "title": "Nuestra Boda - Micaela & Joaquín",
         "description": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
         "lang": "es",
+        "image": "/clientes/boda/30-micaela-joaquin/images/image1.jpeg",
         "coupleNames": {
             "groomName": "Joaquín",
             "brideName": "Micaela",
@@ -51,10 +52,10 @@
     },
     "theme": {
         "primaryColor": "#8a9071",
-        "backgroundColor": "#Fff",
-        "primaryImage": "/clientes/boda/30-micaela-joaquin/images/bg1.jpeg",
+        "backgroundColor": "#f7f3eb",
+        "primaryImage": "/clientes/boda/30-micaela-joaquin/bg/bg1.jpeg",
         "textColor": "#8a9071",
-        "lightBgTextColor": "#8a9071",
+        "lightBgTextColor": "#7a6148",
         "darkBgTextColor": "#FFFFFF",
         "accentBackground": "#EDF2E8",
         "modalTextColor": "#FFFFFF",
@@ -67,18 +68,19 @@
         "enabled": true,
         "phrase": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
         "buttonText": "Ingresar",
-        "showNames": false,
+        "showNames": true,
         "showPhrase": false,
-        "contentCenterY": 65,
+        "contentCenterY": 50,
         "nameStyle": {
             "font": "Dancing Script",
+            "matchPhraseAndButtonColor": true,
             "size": "50px",
             "weight": "500",
-            "color": "#8a9071",
+            "color": "#7a6148",
             "lowercase": true,
             "letterSpacing": "none"
         },
-        "bgImage": "/clientes/boda/30-micaela-joaquin/images/overlay3.jpeg"
+        "bgImage": "/clientes/boda/30-micaela-joaquin/images/overlay4.jpeg"
     },
     "music": {
         "enabled": false,
@@ -86,7 +88,8 @@
         "autoplay": false
     },
     "hero": {
-        "coupleImage": "/clientes/boda/30-micaela-joaquin/images/1.jpg",
+        "coupleImage": "/clientes/boda/30-micaela-joaquin/images/hero-2.jpeg",
+        "aspectRatio": "3/4",
         "headline": "¡Nos casamos!",
         "showNamesOnPhoto": false,
         "namesDisplay": {
@@ -113,6 +116,7 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/primary.jpeg",
             "blocks": ["text", "author"],
             "data": {
                 "text": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
@@ -133,18 +137,6 @@
         },
 
         {
-            "type": "gallery",
-            "id": "gallery-photos",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "libre",
-                "images": [
-                    "/clientes/boda/30-micaela-joaquin/images/image1.jpeg"
-                ]
-            }
-        },
-
-        {
             "// --- UBICACION ---": "",
             "_comment": "Ubicación y cómo llegar (contratada). Un solo lugar: ceremonia y fiesta.",
             "type": "locationInfo",
@@ -154,7 +146,7 @@
             "blocks": ["title", "address", "button"],
             "data": {
                 "title": "¿Dónde?",
-                "address": "Salón Las Lilas, Concepción del Uruguay",
+                "address": "Salón Las Lilas, Concepción del Uruguay, Argentina",
                 "icon": "pin",
                 "order": ["address", "time"],
                 "datetime": {
@@ -169,34 +161,31 @@
         },
 
         {
-            "// --- NUESTRA HISTORIA ---": "",
-            "_comment": "image vacia = solo texto. bgColor por momento: primary | background (opcional).",
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": [
+                    "/clientes/boda/30-micaela-joaquin/images/image1.jpeg"
+                ]
+            }
+        },
+
+        {
+            "// --- NUESTRA HISTORIA (simple) ---": "",
+            "_comment": "variant simple: titulo + paragraphs (sin numeros ni subtitulos).",
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
-            "blocks": ["title", "moments"],
+            "blocks": ["title", "paragraphs"],
             "data": {
-                "aspectRatio": "3/4",
+                "variant": "simple",
                 "title": "Nuestra historia",
-                "moments": [
-                    {
-                        "image": "/clientes/boda/30-micaela-joaquin/images/3.jpg",
-                        "title": "Nuestros comienzos",
-                        "text": "Esta historia comenzó en 2006, cuando decidimos empezar a caminar juntos, sin imaginar todo lo que la vida nos tenía preparado.",
-                        "bgColor": "background"
-                    },
-                    {
-                        "image": "",
-                        "title": "De la mano",
-                        "text": "Fuimos creciendo de la mano, compartiendo sueños, desafíos y alegrías, mientras nuestro amor se fortalecía con el paso del tiempo.",
-                        "bgColor": "primary"
-                    },
-                    {
-                        "image": "",
-                        "title": "Un nuevo capítulo",
-                        "text": "Hoy, veinte años después, queremos celebrar el camino recorrido y el comienzo de un nuevo capítulo, rodeados de las personas que más queremos.",
-                        "bgColor": "background"
-                    }
+                "paragraphs": [
+                    "Esta historia comenzó en 2006, cuando decidimos empezar a caminar juntos, sin imaginar todo lo que la vida nos tenía preparado.",
+                    "Fuimos creciendo de la mano, compartiendo sueños, desafíos y alegrías, mientras nuestro amor se fortalecía con el paso del tiempo.",
+                    "Hoy, veinte años después, queremos celebrar el camino recorrido y el comienzo de un nuevo capítulo, rodeados de las personas que más queremos."
                 ]
             }
         },
@@ -205,9 +194,10 @@
             "id": "gallery-photos2",
             "blocks": ["slider"],
             "data": {
-                "aspectRatio": "libre",
+                "aspectRatio": "3/4",
                 "images": [
-                    "/clientes/boda/30-micaela-joaquin/images/compromiso.jpeg"
+                    "/clientes/boda/30-micaela-joaquin/images/compromiso.jpeg",
+                    "/clientes/boda/30-micaela-joaquin/images/3.jpg"
                 ]
             }
         },
@@ -217,6 +207,7 @@
             "type": "dressCode",
             "id": "dress-code",
             "bgColor": "background",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/bg1-2.jpeg",
             "blocks": [
                 "title",
                 "subtitle",
@@ -243,7 +234,8 @@
             "type": "photos",
             "id": "shared-photos",
             "enabled": true,
-            "bgColor": "primary",
+            "bgColor": "background",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/bg1-1.jpeg",
             "blocks": ["icon", "title", "description", "button"],
             "data": {
                 "icon": "camera",
@@ -261,13 +253,14 @@
             "_comment": "FAQ: Acordeón (una abierta a la vez). buttons con whatsapp o url dentro de cada respuesta.",
             "type": "faq",
             "id": "faq",
-            "bgColor": "background",
+            "bgColor": "primary",
+
             "blocks": ["title", "description", "items"],
             "data": {
                 "icon": "help",
                 "title": "Preguntas frecuentes",
                 "description": "Resolvé las dudas más comunes sobre el evento.",
-                "defaultOpen": 0,
+                "defaultOpen": -1,
                 "items": [
                     {
                         "question": "¿Es el evento al interior o al exterior?",
@@ -308,23 +301,17 @@
                 ]
             }
         },
-        {
-            "type": "gallery",
-            "id": "gallery-photos3",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "libre",
-                "images": ["/clientes/boda/30-micaela-joaquin/images/3.jpg"]
-            }
-        },
+
         {
             "type": "quote",
             "id": "quote-welcome2",
-            "bgColor": "primary",
+            "bgColor": "background",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/bg1.jpeg",
+
             "blocks": ["text", "author"],
             "data": {
-                "text": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
-                "author": "",
+                "text": "Nuestro regalo más preciado es su presencia y compañía. Lo que más deseamos es compartir esta noche con ustedes, que la disfruten y que se convierta en un hermoso recuerdo para todos.",
+                "author": "Mica & Joco",
                 "decorativeLines": true
             }
         },
@@ -332,6 +319,7 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
+
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
@@ -375,14 +363,14 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "libre",
-                "image": "/clientes/boda/30-micaela-joaquin/images/2.jpg",
+                "image": "/clientes/boda/30-micaela-joaquin/images/4.jpg",
                 "namesDisplay": {
                     "enabled": true,
                     "font": "Dancing Script",
                     "weight": "600",
-                    "size": "2xl",
+                    "size": "3xl",
                     "style": "normal",
-                    "color": "#8a9071",
+                    "color": "#7a6148",
                     "decorativeLines": true,
                     "logo": "",
                     "copyFromHero": false,

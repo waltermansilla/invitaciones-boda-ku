@@ -382,20 +382,18 @@
         },
         {
             "// ----------------------------------------------------------------------": "",
-            "// OUR STORY - Momentos importantes con fotos                            ": "",
-            "// title: titulo de la seccion                                           ": "",
-            "// aspectRatio: proporcion de fotos ('3/4', '4/3', '1/1', '16/9', 'libre')": "",
-            "// bgColor de la seccion: fondo del titulo y default de cada momento     ": "",
-            "// moments: array de momentos                                            ": "",
-            "//   image: ruta de foto. Si esta vacia '', el momento va solo texto     ": "",
-            "//   title / text: textos                                                ": "",
-            "//   bgColor (opcional por momento): 'primary' | 'background'            ": "",
-            "//     si no se setea, hereda el bgColor de la seccion                   ": "",
+            "// OUR STORY - Historia de la pareja                                     ": "",
+            "// variant: 'classic' (default) | 'simple'                               ": "",
+            "// classic: moments[] con image/title/text + bgColor opcional            ": "",
+            "//   image vacia = solo texto                                            ": "",
+            "// simple: paragraphs[] corridos (sin numeros ni subtitulos)             ": "",
+            "// aspectRatio: solo classic ('3/4', '4/3', '1/1', '16/9', 'libre')      ": "",
             "type": "ourStory",
             "id": "our-story",
             "enabled": true,
             "bgColor": "background",
             "data": {
+                "variant": "classic",
                 "aspectRatio": "3/4",
                 "title": "Nuestra historia",
                 "moments": [
@@ -417,6 +415,10 @@
                         "text": "Descripcion del momento.",
                         "bgColor": "background"
                     }
+                ],
+                "paragraphs": [
+                    "Parrafo 1 (solo si variant es simple).",
+                    "Parrafo 2."
                 ]
             }
         },
@@ -950,7 +952,7 @@
             "// icon (encabezado):                                                     ": "",
             "//   help (default) | info | car | phone | pin | whatsapp                 ": "",
             "// title/description: opcionales                                          ": "",
-            "// defaultOpen: indice abierto al inicio (0 = primera). -1 = todas cerradas": "",
+            "// defaultOpen: indice abierto al inicio. -1 = todas cerradas (default)": "",
             "// items: array de preguntas                                              ": "",
             "//   question / answer: textos                                            ": "",
             "//   buttons (opcional): botones dentro de la respuesta                   ": "",
@@ -969,7 +971,7 @@
                 "icon": "help",
                 "title": "Preguntas frecuentes",
                 "description": "Resolvé las dudas más comunes sobre el evento.",
-                "defaultOpen": 0,
+                "defaultOpen": -1,
                 "items": [
                     {
                         "question": "¿Es el evento al interior o al exterior?",

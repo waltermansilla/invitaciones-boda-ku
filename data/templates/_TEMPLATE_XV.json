@@ -380,14 +380,16 @@
         },
         {
             "// ----------------------------------------------------------------------": "",
-            "// OUR STORY - Momentos de crecimiento                                   ": "",
-            "// image vacia '' = momento solo texto (sin foto)                        ": "",
-            "// bgColor por momento (opcional): 'primary' | 'background'              ": "",
+            "// OUR STORY - Historia (classic o simple)                               ": "",
+            "// variant: 'classic' (default) | 'simple'                               ": "",
+            "// classic: moments[] (image vacia = solo texto; bgColor opcional)       ": "",
+            "// simple: paragraphs[] sin numeros ni subtitulos                        ": "",
             "type": "ourStory",
             "id": "my-story",
             "enabled": true,
             "bgColor": "background",
             "data": {
+                "variant": "classic",
                 "aspectRatio": "3/4",
                 "title": "Mi historia",
                 "moments": [
@@ -409,6 +411,10 @@
                         "text": "Descripcion.",
                         "bgColor": "background"
                     }
+                ],
+                "paragraphs": [
+                    "Parrafo 1 (solo si variant es simple).",
+                    "Parrafo 2."
                 ]
             }
         },
@@ -804,7 +810,7 @@
             "// ----------------------------------------------------------------------": "",
             "// FAQ - Preguntas frecuentes (acordeon, sin modal)                       ": "",
             "// icon (encabezado): help | info | car | phone | pin | whatsapp          ": "",
-            "// defaultOpen: indice abierto al inicio (0 = primera). -1 = todas cerradas": "",
+            "// defaultOpen: indice abierto al inicio. -1 = todas cerradas (default)": "",
             "// items[].buttons: [{ text, whatsapp? | url?, variant?, icon? }]         ": "",
             "//   icon boton: whatsapp | phone | car | pin | external | help | info    ": "",
             "type": "faq",
@@ -815,7 +821,7 @@
                 "icon": "help",
                 "title": "Preguntas frecuentes",
                 "description": "Resolvé las dudas más comunes sobre el evento.",
-                "defaultOpen": 0,
+                "defaultOpen": -1,
                 "items": [
                     {
                         "question": "¿Hay estacionamiento?",

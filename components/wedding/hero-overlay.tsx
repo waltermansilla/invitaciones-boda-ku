@@ -134,7 +134,9 @@ export default function HeroOverlay({
         matchPhraseAndButtonColor ? "" : " text-muted-foreground"
     }`;
     const phraseColorStyle: React.CSSProperties | undefined =
-        matchPhraseAndButtonColor && nameColor ? { color: nameColor } : undefined;
+        matchPhraseAndButtonColor && nameColor
+            ? { color: nameColor }
+            : undefined;
 
     /** Separador muy corto: sin tracking (caja más simétrica vs nombres). */
     const separatorTrackingClass =
@@ -288,7 +290,9 @@ export default function HeroOverlay({
         !buttonPos;
 
     const usesDefaultButtonSpacing =
-        typeof numPosition !== "number" && !buttonPos && !useAnchoredContentLayout;
+        typeof numPosition !== "number" &&
+        !buttonPos &&
+        !useAnchoredContentLayout;
     const buttonMarginClass = usesDefaultButtonSpacing
         ? showPhrase && !invitado
             ? equalPhraseButtonGaps
@@ -311,10 +315,10 @@ export default function HeroOverlay({
             : "mt-8 mb-6"
         : showPhrase
           ? equalPhraseButtonGaps
-            ? useAnchoredContentLayout
-                ? "mt-8 mb-0"
-                : "mt-8 mb-8"
-            : "mt-8 mb-4"
+              ? useAnchoredContentLayout
+                  ? "mt-8 mb-0"
+                  : "mt-8 mb-8"
+              : "mt-8 mb-4"
           : "my-8";
 
     const namesBlock = showNames ? (
@@ -345,7 +349,9 @@ export default function HeroOverlay({
                     style={{
                         fontFamily: nameFontFamily,
                         color: nameColor,
-                        textTransform: nameStyle?.lowercase ? "none" : "uppercase",
+                        textTransform: nameStyle?.lowercase
+                            ? "none"
+                            : "uppercase",
                         letterSpacing: nameLetterSpacing,
                         ...nameSizeStyle,
                     }}
@@ -353,16 +359,15 @@ export default function HeroOverlay({
                     {nameSecond}
                 </h1>
             )}
-            <div className={`${namesBottomLineClass} h-px w-12 bg-primary/30`} />
+            <div
+                className={`${namesBottomLineClass} h-px w-12 bg-primary/30`}
+            />
         </div>
     ) : null;
 
     const phraseBlock =
         showPhrase && !invitado ? (
-            <p
-                className={phraseClassName}
-                style={phraseColorStyle}
-            >
+            <p className={phraseClassName} style={phraseColorStyle}>
                 {phrase}
             </p>
         ) : null;

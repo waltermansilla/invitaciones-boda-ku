@@ -1,147 +1,184 @@
-"use client"
+"use client";
 
-import { useSearchParams } from "next/navigation"
-import { Suspense } from "react"
-import AnimatedSection from "./animated-section"
-import QuoteSection from "./quote-section"
-import EventInfoSection from "./event-info-section"
-import DateInfoSection from "./date-info-section"
-import LocationInfoSection from "./location-info-section"
-import GallerySection from "./gallery-section"
-import ItinerarySection from "./itinerary-section"
-import PhotosSection from "./photos-section"
-import GiftCardSection from "./gift-card-section"
-import HoneymoonSection from "./honeymoon-section"
-import UniversalInfoSection from "./universal-info-section"
-import DressCodeSection from "./dress-code-section"
-import EmotionalQuoteSection from "./emotional-quote-section"
-import TriviaSection from "./trivia-section"
-import RSVPSection from "./rsvp-section"
-import ClosingSection from "./closing-section"
-import OurStorySection from "./our-story-section"
-import TruthsSection from "./truths-section"
-import PresentationSection from "./presentation-section"
-import ParentsSection from "./parents-section"
-import PlaylistSection from "./playlist-section"
-import SpecialMessageSection from "./special-message-section"
-import ConfirmarWhatsappSection from "./confirmar-whatsapp-section"
-import AdultsOnlySection from "./adults-only-section"
-import ZoomInfoSection from "./zoom-info-section"
-import CaptureCardSection from "./capture-card-section"
-import FaqSection from "./faq-section"
-import { useConfig } from "@/lib/config-context"
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import AnimatedSection from "./animated-section";
+import QuoteSection from "./quote-section";
+import EventInfoSection from "./event-info-section";
+import DateInfoSection from "./date-info-section";
+import LocationInfoSection from "./location-info-section";
+import GallerySection from "./gallery-section";
+import ItinerarySection from "./itinerary-section";
+import PhotosSection from "./photos-section";
+import GiftCardSection from "./gift-card-section";
+import HoneymoonSection from "./honeymoon-section";
+import UniversalInfoSection from "./universal-info-section";
+import DressCodeSection from "./dress-code-section";
+import EmotionalQuoteSection from "./emotional-quote-section";
+import TriviaSection from "./trivia-section";
+import RSVPSection from "./rsvp-section";
+import ClosingSection from "./closing-section";
+import OurStorySection from "./our-story-section";
+import TruthsSection from "./truths-section";
+import PresentationSection from "./presentation-section";
+import ParentsSection from "./parents-section";
+import PlaylistSection from "./playlist-section";
+import SpecialMessageSection from "./special-message-section";
+import ConfirmarWhatsappSection from "./confirmar-whatsapp-section";
+import AdultsOnlySection from "./adults-only-section";
+import ZoomInfoSection from "./zoom-info-section";
+import CaptureCardSection from "./capture-card-section";
+import FaqSection from "./faq-section";
+import { useConfig } from "@/lib/config-context";
 import {
   confirmarComunUsesPanelApi,
   rsvpFormUsesPanelApi,
-} from "@/lib/panel-confirmacion"
+} from "@/lib/panel-confirmacion";
 
 export interface SectionConfig {
-  type: string
-  id: string
-  blocks: string[]
-  data: Record<string, unknown>
-  bgColor?: string
-  bgImage?: string // imagen de fondo en vez de color
-  textColor?: string
-  enabled?: boolean // true por defecto si no se especifica
+    type: string;
+    id: string;
+    blocks: string[];
+    data: Record<string, unknown>;
+    bgColor?: string;
+    bgImage?: string; // imagen de fondo en vez de color
+    textColor?: string;
+    enabled?: boolean; // true por defecto si no se especifica
 }
 
 interface SectionProps {
-  section: SectionConfig
+    section: SectionConfig;
   coupleNames: {
-    groomName: string
-    brideName: string
-    separator: string
-    nameOrder?: "bride-first" | "groom-first"
-  }
-  prevBgColor?: string
-  prevBgImage?: string
-  revealImmediately?: boolean
+        groomName: string;
+        brideName: string;
+        separator: string;
+        nameOrder?: "bride-first" | "groom-first";
+    };
+    prevBgColor?: string;
+    prevBgImage?: string;
+    revealImmediately?: boolean;
 }
 
 function useCodigoInvitado() {
-  const searchParams = useSearchParams()
-  return searchParams.get("i") || searchParams.get("c") || ""
+    const searchParams = useSearchParams();
+    return searchParams.get("i") || searchParams.get("c") || "";
 }
 
 /** Vista proveedor: ignora confirmación guardada en localStorage y muestra el formulario RSVP. */
 function usePreviewRsvpForm() {
-  const searchParams = useSearchParams()
-  return searchParams.get("rsvpForm") === "1"
+    const searchParams = useSearchParams();
+    return searchParams.get("rsvpForm") === "1";
 }
 
-function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, revealImmediately = false }: SectionProps) {
-  const config = useConfig()
-  const { type, id, data, bgColor, bgImage, textColor, enabled = true } = section
-  const theme = config.theme as Record<string, unknown>
+function SectionContent({
+    section,
+    coupleNames,
+    prevBgColor,
+    prevBgImage,
+    revealImmediately = false,
+}: SectionProps) {
+    const config = useConfig();
+    const {
+        type,
+        id,
+        data,
+        bgColor,
+        bgImage,
+        textColor,
+        enabled = true,
+    } = section;
+    const theme = config.theme as Record<string, unknown>;
   const rsvpPanel = config.rsvpPanel as
     | {
-        enabled?: boolean
-        panelId?: string
-        confirmationMessage?: string
-        confirmacion?: string
-        registrarSinCodigoEnPanel?: boolean
-        colados?: boolean
+              enabled?: boolean;
+              panelId?: string;
+              confirmationMessage?: string;
+              confirmacion?: string;
+              registrarSinCodigoEnPanel?: boolean;
+              colados?: boolean;
         /** Texto singular; en plural se añade "s" a cada palabra (espacios). */
-        coladoLabel?: string
-      }
-    | undefined
-  const codigoInvitado = useCodigoInvitado()
-  const previewRsvpForm = usePreviewRsvpForm()
+              coladoLabel?: string;
+          }
+        | undefined;
+    const codigoInvitado = useCodigoInvitado();
+    const previewRsvpForm = usePreviewRsvpForm();
 
   // Si enabled es false, no renderizar la seccion
-  if (enabled === false) return null
+    if (enabled === false) return null;
 
   // Resolve background image from theme if using keywords
-  let resolvedBgImage = bgImage
+    let resolvedBgImage = bgImage;
   if (bgImage === "backgroundImage") {
-    resolvedBgImage = (theme.backgroundImage as string) || undefined
+        resolvedBgImage = (theme.backgroundImage as string) || undefined;
   } else if (bgImage === "primaryImage") {
-    resolvedBgImage = (theme.primaryImage as string) || undefined
+        resolvedBgImage = (theme.primaryImage as string) || undefined;
   }
 
   // Determine bg + text color from theme
-  const bg = bgColor === "primary" ? "bg-primary" : bgColor === "transparent" ? "bg-transparent" : "bg-background"
+    const bg =
+        bgColor === "primary"
+            ? "bg-primary"
+            : bgColor === "transparent"
+              ? "bg-transparent"
+              : "bg-background";
   const resolveTextColorValue = (value: string): string => {
-    const color = value.trim()
-    if (!color) return color
-    if (color === "foreground") return "hsl(var(--foreground))"
-    if (color === "primary-foreground") return "hsl(var(--primary-foreground))"
-    if (color === "background") return "hsl(var(--background))"
-    if (color === "primary") return "hsl(var(--primary))"
-    return color
-  }
-  let resolvedTextColor: string
+        const color = value.trim();
+        if (!color) return color;
+        if (color === "foreground") return "hsl(var(--foreground))";
+        if (color === "primary-foreground")
+            return "hsl(var(--primary-foreground))";
+        if (color === "background") return "hsl(var(--background))";
+        if (color === "primary") return "hsl(var(--primary))";
+        return color;
+    };
+    let resolvedTextColor: string;
   if (textColor) {
-    resolvedTextColor = resolveTextColorValue(textColor)
+        resolvedTextColor = resolveTextColorValue(textColor);
   } else if (bgColor === "primary") {
-    resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF"
+        resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF";
   } else {
-    resolvedTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
+        resolvedTextColor =
+            (theme.lightBgTextColor as string) ||
+            (theme.primaryColor as string) ||
+            "#6B7F5E";
   }
-  const colors = { bg, resolvedTextColor }
+    const colors = { bg, resolvedTextColor };
 
   // Check if this section continues the same background image as previous
   // Compare using original bgImage keywords (e.g. "backgroundImage") not resolved URLs
-  const continuesBgImage = resolvedBgImage && bgImage && prevBgImage === bgImage
+    const continuesBgImage =
+        resolvedBgImage && bgImage && prevBgImage === bgImage;
 
   // Show a subtle divider line when this section has the same bgColor as the previous one
-  const selfStyledTypes = ["gallery", "closingImage", "presentation", "specialMessage", "ourStory"]
-  const skipWrapper = selfStyledTypes.includes(type)
-  const effectiveBg = skipWrapper ? null : (bgColor || "background")
-  const prevEffective = prevBgColor || null
-  const showDivider = !skipWrapper && effectiveBg && prevEffective && effectiveBg === prevEffective && !resolvedBgImage
+    const selfStyledTypes = [
+        "gallery",
+        "closingImage",
+        "presentation",
+        "specialMessage",
+        "ourStory",
+    ];
+    const skipWrapper = selfStyledTypes.includes(type);
+    const effectiveBg = skipWrapper ? null : bgColor || "background";
+    const prevEffective = prevBgColor || null;
+    const showDivider =
+        !skipWrapper &&
+        effectiveBg &&
+        prevEffective &&
+        effectiveBg === prevEffective &&
+        !resolvedBgImage;
 
   // Background image styles
   // When continuing from previous section, use attachment: local so image scrolls with content
-  const bgImageStyle: React.CSSProperties = resolvedBgImage ? {
+    const bgImageStyle: React.CSSProperties = resolvedBgImage
+        ? {
     backgroundImage: `url(${resolvedBgImage})`,
     backgroundRepeat: "repeat",
     backgroundSize: "100% auto",
     backgroundPosition: "top center",
     // Hide the top of the image by a small amount when continuing, creating seamless flow
     ...(continuesBgImage ? { backgroundAttachment: "local" } : {}),
-  } : {}
+          }
+        : {};
 
   const renderContent = () => {
     switch (type) {
@@ -150,30 +187,46 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
           <QuoteSection
             text={data.text as string}
             author={data.author as string}
-            decorativeLines={data.decorativeLines as boolean | undefined}
+                        decorativeLines={
+                            data.decorativeLines as boolean | undefined
+                        }
             pxFrase={
-              typeof data.pxFrase === "number" ? data.pxFrase : undefined
+                            typeof data.pxFrase === "number"
+                                ? data.pxFrase
+                                : undefined
             }
             pxAuthor={
-              typeof data.pxAuthor === "number" ? data.pxAuthor : undefined
+                            typeof data.pxAuthor === "number"
+                                ? data.pxAuthor
+                                : undefined
             }
           />
-        )
+                );
 
       case "eventInfo":
         return (
           <EventInfoSection
-            date={data.date as { icon: string; title: string; value: string }}
+                        date={
+                            data.date as {
+                                icon: string;
+                                title: string;
+                                value: string;
+                            }
+                        }
             locations={
               data.locations as {
-                enabled: boolean
-                title: string
-                address: string
-                button: { text: string; url: string; variant: "primary" | "secondary" }
+                                enabled: boolean;
+                                title: string;
+                                address: string;
+                                button: {
+                                    text: string;
+                                    url: string;
+                                    variant: "primary" | "secondary";
+                                };
               }[]
             }
           />
-        )
+                );
 
       case "dateInfo":
         return (
@@ -181,7 +234,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             title={data.title as string}
             value={data.value as string}
           />
-        )
+                );
 
       case "locationInfo":
         return (
@@ -190,11 +243,25 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             address={data.address as string}
             icon={data.icon as string | undefined}
             showButton={data.showButton as boolean | undefined}
-            datetime={data.datetime as { date?: string; time?: string } | undefined}
-            order={data.order as ("date" | "time" | "address")[] | undefined}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" | "background" }}
-          />
-        )
+                        datetime={
+                            data.datetime as
+                                | { date?: string; time?: string }
+                                | undefined
+                        }
+                        order={
+                            data.order as
+                                | ("date" | "time" | "address")[]
+                                | undefined
+                        }
+                        button={
+                            data.button as {
+                                text: string;
+                                url: string;
+                                variant: "primary" | "secondary" | "background";
+                            }
+                        }
+                    />
+                );
 
       case "zoomInfo":
         return (
@@ -206,13 +273,13 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             showButton={data.showButton as boolean | undefined}
             button={
               data.button as {
-                text: string
-                url: string
-                variant: "primary" | "secondary" | "background"
-              }
-            }
-          />
-        )
+                                text: string;
+                                url: string;
+                                variant: "primary" | "secondary" | "background";
+                            }
+                        }
+                    />
+                );
 
       case "captureCard":
         return (
@@ -222,7 +289,9 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             topLabel={data.topLabel as string | undefined}
             nameSize={data.nameSize as string | undefined}
             locationTitle={data.locationTitle as string | undefined}
-            locationAddress={data.locationAddress as string | undefined}
+                        locationAddress={
+                            data.locationAddress as string | undefined
+                        }
             eventDay={data.eventDay as string | undefined}
             eventTime={data.eventTime as string | undefined}
             zoomTitle={data.zoomTitle as string | undefined}
@@ -231,33 +300,44 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             colors={
               data.colors as
                 | {
-                    blockBg?: string
-                    blockBorder?: string
-                    dateTimeBg?: string
-                    locationBg?: string
-                    zoomBg?: string
-                    captureBg?: string
-                    cardBg?: string
-                    photoPanelBg?: string
-                    nameTextColor?: string
-                    blockTextColor?: string
+                                      blockBg?: string;
+                                      blockBorder?: string;
+                                      dateTimeBg?: string;
+                                      locationBg?: string;
+                                      zoomBg?: string;
+                                      captureBg?: string;
+                                      cardBg?: string;
+                                      photoPanelBg?: string;
+                                      nameTextColor?: string;
+                                      blockTextColor?: string;
                   }
                 | undefined
             }
           />
-        )
+                );
 
       case "gallery":
-        return <GallerySection images={data.images as string[]} aspectRatio={data.aspectRatio as string | undefined} />
+                return (
+                    <GallerySection
+                        images={data.images as string[]}
+                        aspectRatio={data.aspectRatio as string | undefined}
+                    />
+                );
 
       case "itinerary":
         return (
           <ItinerarySection
             title={data.title as string}
-            events={data.events as { icon: string; name: string; time: string }[]}
+                        events={
+                            data.events as {
+                                icon: string;
+                                name: string;
+                                time: string;
+                            }[]
+                        }
             sectionBgColor={bgColor}
           />
-        )
+                );
 
       case "photos":
         return (
@@ -265,9 +345,15 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             icon={data.icon as string | undefined}
             title={data.title as string}
             description={data.description as string}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" | "background" }}
-          />
-        )
+                        button={
+                            data.button as {
+                                text: string;
+                                url: string;
+                                variant: "primary" | "secondary" | "background";
+                            }
+                        }
+                    />
+                );
 
       case "giftCard":
         return (
@@ -276,31 +362,50 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             title={data.title as string}
             description={data.description as string}
             showButton={data.showButton as boolean | undefined}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" } | undefined}
-            modal={
-              data.modal as {
-                title: string
-                suggestedValueLabel?: string
-                suggestedValue?: string
-                suggestedValues?: { label: string; value: string }[]
-                dateRanges?: {
-                  label: string
-                  helperText?: string
-                  suggestedValue?: string
-                  suggestedValues?: { label: string; value: string }[]
-                }[]
-                description: string
-                transferData: { label: string; value: string }[]
-                comprobanteWhatsapp?: {
-                  number: string
-                  text?: string
-                  message?: string
-                  hint?: string
-                }
-              } | undefined
-            }
-          />
-        )
+                        button={
+                            data.button as
+                                | {
+                                      text: string;
+                                      url: string;
+                                      variant: "primary" | "secondary";
+                                  }
+                                | undefined
+                        }
+                        modal={
+                            data.modal as
+                                | {
+                                      title: string;
+                                      suggestedValueLabel?: string;
+                                      suggestedValue?: string;
+                                      suggestedValues?: {
+                                          label: string;
+                                          value: string;
+                                      }[];
+                                      dateRanges?: {
+                                          label: string;
+                                          helperText?: string;
+                                          suggestedValue?: string;
+                                          suggestedValues?: {
+                                              label: string;
+                                              value: string;
+                                          }[];
+                                      }[];
+                                      description: string;
+                                      transferData: {
+                                          label: string;
+                                          value: string;
+                                      }[];
+                                      comprobanteWhatsapp?: {
+                                          number: string;
+                                          text?: string;
+                                          message?: string;
+                                          hint?: string;
+                                      };
+                                  }
+                                | undefined
+                        }
+                    />
+                );
 
       case "honeymoon":
         return (
@@ -309,12 +414,52 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             title={data.title as string}
             description={data.description as string}
             showButton={data.showButton as boolean | undefined}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary"; action?: "modal" | "url" }}
-            modal={data.modal as { title: string; description: string; bankData: { label: string; value: string }[]; thankYouText?: string } | undefined}
-            modals={data.modals as Array<{ type: "bank" | "address"; title: string; subtitle?: string; description?: string; address?: string; bankData?: { label: string; value: string }[]; thankYouText?: string; button?: { text: string; url: string } }> | undefined}
-            modalMode={data.modalMode as "combined" | "sequential" | undefined}
-          />
-        )
+                        button={
+                            data.button as {
+                                text: string;
+                                url: string;
+                                variant: "primary" | "secondary";
+                                action?: "modal" | "url";
+                            }
+                        }
+                        modal={
+                            data.modal as
+                                | {
+                                      title: string;
+                                      description: string;
+                                      bankData: {
+                                          label: string;
+                                          value: string;
+                                      }[];
+                                      thankYouText?: string;
+                                  }
+                                | undefined
+                        }
+                        modals={
+                            data.modals as
+                                | Array<{
+                                      type: "bank" | "address";
+                                      title: string;
+                                      subtitle?: string;
+                                      description?: string;
+                                      address?: string;
+                                      bankData?: {
+                                          label: string;
+                                          value: string;
+                                      }[];
+                                      thankYouText?: string;
+                                      button?: { text: string; url: string };
+                                  }>
+                                | undefined
+                        }
+                        modalMode={
+                            data.modalMode as
+                                | "combined"
+                                | "sequential"
+                                | undefined
+                        }
+                    />
+                );
 
       case "universalInfo":
         return (
@@ -322,12 +467,34 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             icon={data.icon as string | undefined}
             title={data.title as string | undefined}
             description={data.description as string | undefined}
-            descriptionSize={data.descriptionSize as "normal" | "large" | undefined}
+                        descriptionSize={
+                            data.descriptionSize as
+                                | "normal"
+                                | "large"
+                                | undefined
+                        }
             showButton={data.showButton as boolean | undefined}
-            button={data.button as { text: string; variant?: "primary" | "secondary" } | undefined}
-            modal={data.modal as { title?: string; sections?: { heading: string; text: string }[] } | undefined}
-          />
-        )
+                        button={
+                            data.button as
+                                | {
+                                      text: string;
+                                      variant?: "primary" | "secondary";
+                                  }
+                                | undefined
+                        }
+                        modal={
+                            data.modal as
+                                | {
+                                      title?: string;
+                                      sections?: {
+                                          heading: string;
+                                          text: string;
+                                      }[];
+                                  }
+                                | undefined
+                        }
+                    />
+                );
 
       case "dressCode":
         return (
@@ -337,24 +504,67 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             description={data.description as string | undefined}
             icons={data.icons as string[] | undefined}
             showButton={data.showButton as boolean | undefined}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" } | undefined}
-            modal={data.modal as { title: string; intro?: string; sections: { heading: string; text: string }[] } | undefined}
-            colorSwatches={data.colorSwatches as { enabled: boolean; shape: "circle" | "square"; colors: string[] } | undefined}
-          />
-        )
+                        button={
+                            data.button as
+                                | {
+                                      text: string;
+                                      url: string;
+                                      variant: "primary" | "secondary";
+                                  }
+                                | undefined
+                        }
+                        modal={
+                            data.modal as
+                                | {
+                                      title: string;
+                                      intro?: string;
+                                      sections: {
+                                          heading: string;
+                                          text: string;
+                                      }[];
+                                  }
+                                | undefined
+                        }
+                        colorSwatches={
+                            data.colorSwatches as
+                                | {
+                                      enabled: boolean;
+                                      shape: "circle" | "square";
+                                      colors: string[];
+                                  }
+                                | undefined
+                        }
+                    />
+                );
 
       case "emotionalQuote":
-        return <EmotionalQuoteSection text={data.text as string} />
+                return <EmotionalQuoteSection text={data.text as string} />;
 
       case "trivia":
         return (
           <TriviaSection
             title={data.title as string}
             subtitle={data.subtitle as string}
-            button={data.button as { text: string; variant: "primary" | "secondary" }}
-            modal={data.modal as { questions: { question: string; options: string[]; correctIndex: number; explanation: string }[]; finishTitle: string; finishText: string }}
-          />
-        )
+                        button={
+                            data.button as {
+                                text: string;
+                                variant: "primary" | "secondary";
+                            }
+                        }
+                        modal={
+                            data.modal as {
+                                questions: {
+                                    question: string;
+                                    options: string[];
+                                    correctIndex: number;
+                                    explanation: string;
+                                }[];
+                                finishTitle: string;
+                                finishText: string;
+                            }
+                        }
+                    />
+                );
 
       case "rsvp":
         return (
@@ -365,31 +575,41 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             guestCountOptions={data.guestCountOptions as number[]}
             fields={
               data.fields as {
-                firstName: string
-                lastName: string
-                attendance: string
-                attendanceYes: string
-                attendanceNo: string
-                dietary: string
-                dietaryOptions: string[]
-                songRequestLabel?: string
-                songRequest: string
+                                firstName: string;
+                                lastName: string;
+                                attendance: string;
+                                attendanceYes: string;
+                                attendanceNo: string;
+                                dietary: string;
+                                dietaryOptions: string[];
+                                songRequestLabel?: string;
+                                songRequest: string;
                 extraInputs?: {
-                  id: string
-                  label: string
-                  placeholder?: string
-                  tituloPanel?: string
-                  required?: boolean
-                }[]
-                submitButton: string
-              }
-            }
-            whatsapp={data.whatsapp as { number: string; messageTemplate: string; noAttendanceMessageTemplate?: string } | undefined}
+                                    id: string;
+                                    label: string;
+                                    placeholder?: string;
+                                    tituloPanel?: string;
+                                    required?: boolean;
+                                }[];
+                                submitButton: string;
+                            }
+                        }
+                        whatsapp={
+                            data.whatsapp as
+                                | {
+                                      number: string;
+                                      messageTemplate: string;
+                                      noAttendanceMessageTemplate?: string;
+                                  }
+                                | undefined
+                        }
             panel={
               rsvpFormUsesPanelApi(rsvpPanel) &&
               (Boolean(codigoInvitado) ||
                 (Boolean(rsvpPanel?.panelId) &&
-                  Boolean(rsvpPanel?.registrarSinCodigoEnPanel)))
+                                    Boolean(
+                                        rsvpPanel?.registrarSinCodigoEnPanel,
+                                    )))
                 ? {
                       enabled: true,
                       codigo: codigoInvitado || undefined,
@@ -399,48 +619,51 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
                       ),
                       allowColados: Boolean(rsvpPanel?.colados),
                       coladoLabel:
-                          typeof rsvpPanel?.coladoLabel === "string"
+                                          typeof rsvpPanel?.coladoLabel ===
+                                          "string"
                               ? rsvpPanel.coladoLabel
                               : undefined,
                       confirmationMessage:
-                          rsvpPanel.confirmationMessage || "Gracias por confirmar!",
+                                          rsvpPanel.confirmationMessage ||
+                                          "Gracias por confirmar!",
                   }
                 : undefined
             }
             previewRsvpForm={previewRsvpForm}
+                        hasBgImage={Boolean(resolvedBgImage)}
             promo={
               data.promo as
                 | {
-                    enabled?: boolean
-                    clientRef?: string
+                                      enabled?: boolean;
+                                      clientRef?: string;
                     teaser?: {
-                      title?: string
-                      benefit?: string
-                      validityShort?: string
-                      shareHint?: string
-                      buttonText?: string
-                    }
+                                          title?: string;
+                                          benefit?: string;
+                                          validityShort?: string;
+                                          shareHint?: string;
+                                          buttonText?: string;
+                                      };
                     modal?: {
-                      title?: string
-                      code?: string
-                      benefitNote?: string
-                      modelsLinkUrl?: string
-                      modelsButtonText?: string
-                      reserveLinkUrl?: string
-                      reserveButtonText?: string
-                      steps?: string[]
-                      saveButtonText?: string
-                      shareButtonText?: string
-                      saveMessage?: string
-                      shareMessage?: string
-                      footerNote?: string
-                      validityText?: string
-                    }
+                                          title?: string;
+                                          code?: string;
+                                          benefitNote?: string;
+                                          modelsLinkUrl?: string;
+                                          modelsButtonText?: string;
+                                          reserveLinkUrl?: string;
+                                          reserveButtonText?: string;
+                                          steps?: string[];
+                                          saveButtonText?: string;
+                                          shareButtonText?: string;
+                                          saveMessage?: string;
+                                          shareMessage?: string;
+                                          footerNote?: string;
+                                          validityText?: string;
+                                      };
                   }
                 | undefined
             }
           />
-        )
+                );
 
       case "confirmarWhatsapp":
         return (
@@ -450,9 +673,18 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             buttonText={data.buttonText as string}
             whatsappNumber={data.whatsappNumber as string}
             message={data.message as string}
-            noAsiste={data.noAsiste as { enabled: boolean; buttonText: string; message: string } | undefined}
+                        noAsiste={
+                            data.noAsiste as
+                                | {
+                                      enabled: boolean;
+                                      buttonText: string;
+                                      message: string;
+                                  }
+                                | undefined
+                        }
             panelSync={
-              confirmarComunUsesPanelApi(rsvpPanel) && codigoInvitado
+                            confirmarComunUsesPanelApi(rsvpPanel) &&
+                            codigoInvitado
                 ? {
                     codigo: codigoInvitado,
                     confirmationMessage:
@@ -462,7 +694,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
                 : undefined
             }
           />
-        )
+                );
 
       case "adultsOnly":
         return (
@@ -471,48 +703,64 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             title={data.title as string}
             description={data.description as string}
           />
-        )
+                );
 
-      case "faq":
-        return (
-          <FaqSection
-            icon={data.icon as string | undefined}
-            title={data.title as string | undefined}
-            description={data.description as string | undefined}
-            items={
-              (data.items as
-                | {
-                    question: string
-                    answer: string
-                    buttons?: {
-                      text: string
-                      url?: string
-                      whatsapp?: string
-                      variant?: "primary" | "secondary" | "outline-light" | "background"
-                      icon?: string
-                    }[]
-                  }[]) || []
-            }
-            defaultOpen={data.defaultOpen as number | null | undefined}
-          />
-        )
+            case "faq":
+                return (
+                    <FaqSection
+                        icon={data.icon as string | undefined}
+                        title={data.title as string | undefined}
+                        description={data.description as string | undefined}
+                        items={
+                            (data.items as {
+                                question: string;
+                                answer: string;
+                                buttons?: {
+                                    text: string;
+                                    url?: string;
+                                    whatsapp?: string;
+                                    variant?:
+                                        | "primary"
+                                        | "secondary"
+                                        | "outline-light"
+                                        | "background";
+                                    icon?: string;
+                                }[];
+                            }[]) || []
+                        }
+                        defaultOpen={
+                            data.defaultOpen as number | null | undefined
+                        }
+                    />
+                );
 
       case "ourStory":
         return (
           <OurStorySection
             title={data.title as string}
-            moments={
-              data.moments as {
-                image?: string
-                title: string
-                text: string
-                bgColor?: string
-              }[]
-            }
+                        variant={
+                            data.variant === "simple" ? "simple" : "classic"
+                        }
+                        paragraphs={
+                            Array.isArray(data.paragraphs)
+                                ? (data.paragraphs as string[])
+                                : undefined
+                        }
+                        moments={
+                            data.moments as
+                                | {
+                                      image?: string;
+                                      title: string;
+                                      text: string;
+                                      bgColor?: string;
+                                  }[]
+                                | undefined
+                        }
             aspectRatio={data.aspectRatio as string | undefined}
-            sectionBgColor={bgColor}
+                        sectionBgColor={bgColor}
+                        bgImage={resolvedBgImage}
           />
-        )
+                );
 
       case "truths":
         return (
@@ -520,17 +768,17 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             title={data.title as string}
             questions={
               data.questions as {
-                question: string
-                optionA: string
-                optionB: string
-                correctOption: "A" | "B"
-                revealText: string
+                                question: string;
+                                optionA: string;
+                                optionB: string;
+                                correctOption: "A" | "B";
+                                revealText: string;
               }[]
             }
             finishText={data.finishText as string}
             sectionBgColor={bgColor}
           />
-        )
+                );
 
       case "presentation":
         return (
@@ -540,25 +788,33 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             description={data.description as string}
             aspectRatio={data.aspectRatio as string | undefined}
           />
-        )
+                );
 
       case "parents":
         return (
           <ParentsSection
             title={data.title as string}
             subtitle={data.subtitle as string | undefined}
-            parents={data.parents as { name: string; role: string }[]}
+                        parents={
+                            data.parents as { name: string; role: string }[]
+                        }
           />
-        )
+                );
 
       case "playlist":
         return (
           <PlaylistSection
             title={data.title as string}
             description={data.description as string}
-            button={data.button as { text: string; url: string; variant: "primary" | "secondary" }}
-          />
-        )
+                        button={
+                            data.button as {
+                                text: string;
+                                url: string;
+                                variant: "primary" | "secondary";
+                            }
+                        }
+                    />
+                );
 
       case "specialMessage":
         return (
@@ -566,9 +822,11 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             title={data.title as string}
             text={data.text as string}
             signature={data.signature as string | undefined}
-            decorativeLines={data.decorativeLines as boolean | undefined}
+                        decorativeLines={
+                            data.decorativeLines as boolean | undefined
+                        }
           />
-        )
+                );
 
       case "closingImage":
         return (
@@ -576,31 +834,41 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             image={data.image as string}
             aspectRatio={data.aspectRatio as string | undefined}
             coupleNames={coupleNames}
-            namesDisplay={data.namesDisplay as { 
-              enabled?: boolean
-              font?: string
-              weight?: string
-              size?: string
-              style?: string
-              color?: string
-              decorativeLines?: boolean
-              logo?: string
-              copyFromHero?: boolean 
-            } | undefined}
-          />
-        )
+                        namesDisplay={
+                            data.namesDisplay as
+                                | {
+                                      enabled?: boolean;
+                                      font?: string;
+                                      weight?: string;
+                                      size?: string;
+                                      style?: string;
+                                      color?: string;
+                                      decorativeLines?: boolean;
+                                      logo?: string;
+                                      copyFromHero?: boolean;
+                                  }
+                                | undefined
+                        }
+                    />
+                );
 
       default:
-        return null
+                return null;
     }
-  }
+    };
 
   return (
     <AnimatedSection id={id} initialVisible={revealImmediately}>
       {/* Subtle divider between consecutive sections with same background color */}
       {showDivider && (
         <div className={colors.bg} style={bgImageStyle}>
-          <div className="mx-auto w-16 border-t" style={{ borderColor: colors.resolvedTextColor, opacity: 0.12 }} />
+                    <div
+                        className="mx-auto w-16 border-t"
+                        style={{
+                            borderColor: colors.resolvedTextColor,
+                            opacity: 0.12,
+                        }}
+                    />
         </div>
       )}
       {skipWrapper ? (
@@ -617,7 +885,7 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
         </div>
       )}
     </AnimatedSection>
-  )
+    );
 }
 
 export default function Section(props: SectionProps) {
@@ -625,5 +893,5 @@ export default function Section(props: SectionProps) {
     <Suspense fallback={null}>
       <SectionContent {...props} />
     </Suspense>
-  )
+    );
 }

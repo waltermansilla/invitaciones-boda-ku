@@ -18,7 +18,8 @@ import ActionButton from "./action-button"
  * JSON:
  *   icon: ícono del encabezado (ver SECTION_ICON_MAP). Default: help
  *   title / description: opcionales
- *   defaultOpen: índice abierto al inicio (default 0). null/-1 = todas cerradas
+ *   defaultOpen: índice abierto al inicio. Default: todas cerradas.
+ *     0 = primera abierta, -1/null = todas cerradas
  *   items: array de { question, answer, buttons? }
  *     buttons: [{ text, url? | whatsapp?, variant?, icon? }]
  *       whatsapp: número → https://wa.me/{digits}
@@ -110,14 +111,12 @@ export default function FaqSection({
   title = "Preguntas frecuentes",
   description,
   items,
-  defaultOpen = 0,
+  defaultOpen = null,
 }: FaqSectionProps) {
   const initialOpen =
-    defaultOpen === null || defaultOpen === undefined
-      ? 0
-      : defaultOpen < 0
-        ? null
-        : defaultOpen
+    defaultOpen === null || defaultOpen === undefined || defaultOpen < 0
+      ? null
+      : defaultOpen
 
   const [openIndex, setOpenIndex] = useState<number | null>(
     items.length === 0 ? null : initialOpen,

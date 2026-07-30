@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useEffect, Fragment, useRef, useMemo } from "react";
+import {
+    useState,
+    useEffect,
+    Fragment,
+    useRef,
+    useMemo,
+    type CSSProperties,
+} from "react";
 import { useGuestPreview } from "@/lib/guest-preview";
 import { useGuestPreviewConfirmModal } from "./guest-preview-confirm-modal";
 import {
@@ -34,9 +41,7 @@ function autoConfirmStorageKey(panelId: string): string {
     return `rsvp-auto-confirm:${panelId}`;
 }
 
-function loadAutoConfirmSummary(
-    panelId: string,
-): AutoConfirmSummary | null {
+function loadAutoConfirmSummary(panelId: string): AutoConfirmSummary | null {
     if (typeof window === "undefined") return null;
     try {
         const raw = localStorage.getItem(autoConfirmStorageKey(panelId));
@@ -147,6 +152,8 @@ interface RSVPSectionProps {
     };
     /** Con `?rsvpForm=1`: siempre muestra el formulario (ignora localStorage). */
     previewRsvpForm?: boolean;
+    /** Sección con imagen de fondo: campos un poco más transparentes. */
+    hasBgImage?: boolean;
     /**
      * Cupón promocional discreto en la pantalla de gracias (post-confirmación
      * y al volver a entrar). Por ahora es solo visual/config desde el JSON:
@@ -597,9 +604,22 @@ export default function RSVPSection({
     whatsapp,
     panel,
     previewRsvpForm = false,
+    hasBgImage = false,
     promo,
 }: RSVPSectionProps) {
     const isMuestra = useIsMuestra();
+    /**
+     * Con bg image: un poco más transparente que el default, sin perder legibilidad.
+     */
+    const fieldSurfaceClass = hasBgImage
+        ? "backdrop-blur-[2px]"
+        : "bg-current/10 backdrop-blur-sm";
+    const fieldSurfaceStyle: CSSProperties | undefined = hasBgImage
+        ? {
+              backgroundColor:
+                  "color-mix(in srgb, currentColor 10%, transparent)",
+          }
+        : undefined;
     const isGuestPreview = useGuestPreview();
     const { openGuestPreviewConfirmModal } = useGuestPreviewConfirmModal();
     const { openModal, closeModal } = useModal();
@@ -681,13 +701,21 @@ export default function RSVPSection({
     useEffect(() => {
         if (isGuestPreview) return;
         const showThanks =
-            (alreadyConfirmed && !editing) || submitted || Boolean(autoConfirmSummary);
+            (alreadyConfirmed && !editing) ||
+            submitted ||
+            Boolean(autoConfirmSummary);
         if (!showThanks || typeof window === "undefined") return;
         confirmationSectionRef.current?.scrollIntoView({
             behavior: "smooth",
             block: "center",
         });
-    }, [alreadyConfirmed, autoConfirmSummary, editing, isGuestPreview, submitted]);
+    }, [
+        alreadyConfirmed,
+        autoConfirmSummary,
+        editing,
+        isGuestPreview,
+        submitted,
+    ]);
 
     useEffect(() => {
         if (previewRsvpForm || !isAnonymousPanelFlow || !panel?.panelId) {
@@ -1098,8 +1126,7 @@ export default function RSVPSection({
                     id: invitadoCreado.integrantes?.[idx]?.id,
                     nombre: `${g.firstName} ${g.lastName}`.trim(),
                     asiste: g.attendance === "yes",
-                    restricciones:
-                        g.dietary !== "Ninguno" ? g.dietary : null,
+                    restricciones: g.dietary !== "Ninguno" ? g.dietary : null,
                     es_colado: false,
                 }));
             } else {
@@ -1399,15 +1426,13 @@ export default function RSVPSection({
                                 : {}),
                         }),
                     });
-                    const responseData = await res
-                        .json()
-                        .catch(
-                            () =>
-                                ({}) as {
-                                    error?: string;
-                                    invitado?: InvitadoData;
-                                },
-                        );
+                    const responseData = await res.json().catch(
+                        () =>
+                            ({}) as {
+                                error?: string;
+                                invitado?: InvitadoData;
+                            },
+                    );
                     if (!res.ok) {
                         throw new Error(
                             responseData.error ||
@@ -1551,8 +1576,7 @@ export default function RSVPSection({
                                 </div>
                             ))}
                         </div>
-                    ) : invitado &&
-                      (invitado.integrantes?.length || 0) > 0 ? (
+                    ) : invitado && (invitado.integrantes?.length || 0) > 0 ? (
                         <div className="space-y-2">
                             {invitado.tipo === "persona" && (
                                 <div className="flex items-center justify-between text-sm">
@@ -1632,7 +1656,10 @@ export default function RSVPSection({
                             {(promo.teaser.benefit ||
                                 promo.teaser.validityShort) && (
                                 <p className="mx-auto mt-2 max-w-[18rem] text-sm font-light leading-relaxed text-inherit/60">
-                                    {[promo.teaser.benefit, promo.teaser.validityShort]
+                                    {[
+                                        promo.teaser.benefit,
+                                        promo.teaser.validityShort,
+                                    ]
                                         .filter(Boolean)
                                         .join(" · ")}
                                 </p>
@@ -1704,8 +1731,11 @@ export default function RSVPSection({
                                         Number(e.target.value),
                                     )
                                 }
-                                className="w-full rounded-md border border-current/15 bg-current/10 px-4 py-3 text-sm tracking-wide text-inherit/90 backdrop-blur-sm"
-                                style={{ fontSize: "16px" }}
+                                className={`w-full rounded-md border border-current/15 ${fieldSurfaceClass} px-4 py-3 text-sm tracking-wide text-inherit/90`}
+                                style={{
+                                    fontSize: "16px",
+                                    ...fieldSurfaceStyle,
+                                }}
                             >
                                 {guestCountOptions.map((n) => (
                                     <option
@@ -1771,7 +1801,10 @@ export default function RSVPSection({
                                         )}
                                     </div>
                                 )}
-                                <div className="flex flex-col gap-0 overflow-hidden rounded-md border border-current/15 bg-current/10 backdrop-blur-sm">
+                                <div
+                                    className={`flex flex-col gap-0 overflow-hidden rounded-md border border-current/15 ${fieldSurfaceClass}`}
+                                    style={fieldSurfaceStyle}
+                                >
                                     <input
                                         type="text"
                                         placeholder={
@@ -2004,8 +2037,11 @@ export default function RSVPSection({
                                 placeholder="Ej: Flia Díaz"
                                 required
                                 maxLength={GROUP_NAME_MAX_LENGTH}
-                                className="w-full rounded-md border border-current/15 bg-current/10 px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 backdrop-blur-sm focus:outline-none focus:ring-1 focus:ring-current/20"
-                                style={{ fontSize: "16px" }}
+                                className={`w-full rounded-md border border-current/15 ${fieldSurfaceClass} px-4 py-3 text-sm tracking-wide text-inherit/90 placeholder:text-inherit/40 focus:outline-none focus:ring-1 focus:ring-current/20`}
+                                style={{
+                                    fontSize: "16px",
+                                    ...fieldSurfaceStyle,
+                                }}
                             />
                         </div>
                     )}
