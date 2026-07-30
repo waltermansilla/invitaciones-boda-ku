@@ -621,6 +621,9 @@
             "// EXTRA tramos por fecha (opcional): dateRanges[]                        ": "",
             "//   Cada tramo: { label, helperText?, suggestedValue? o suggestedValues? }": "",
             "//   Ejemplo: [{ label: 'Mayores', value: '$68.000' }, { label: 'Menores', value: '$30.000' }]": "",
+            "// comprobanteWhatsapp (opcional): { number, text?, message?, hint? }     ": "",
+            "//   Boton en el modal para enviar el comprobante por WhatsApp            ": "",
+            "//   hint: texto chico opcional arriba del boton                          ": "",
             "// Ver mas opciones en template BODA                                     ": "",
             "type": "giftCard",
             "id": "gift-card",
@@ -688,7 +691,13 @@
                             "label": "Banco",
                             "value": "Nombre del Banco"
                         }
-                    ]
+                    ],
+                    "comprobanteWhatsapp": {
+                        "number": "5491112345678",
+                        "text": "Enviar comprobante",
+                        "hint": "Cuando transfieras, envianos el comprobante por WhatsApp.",
+                        "message": "Hola! Te envío el comprobante de pago de la tarjeta."
+                    }
                 }
             }
         },

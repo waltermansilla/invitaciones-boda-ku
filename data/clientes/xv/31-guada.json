@@ -1,0 +1,546 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera.",
+    "meta": {
+        "title": "Mis 15 - Guada",
+        "description": "Estás invitado a celebrar los 15 de Guada.",
+        "lang": "es",
+        "quinceaneraName": "Guada",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Guada",
+            "separator": ""
+        }
+    },
+    "_comment_access": "CONTROL DE ACCESO - token por URL ?k=XXXXXX.",
+    "_comment_base": "BASE DE ACCESOS - URL: /base/{token}.",
+    "base": {
+        "enabled": true,
+        "token": "gU4dA9xK",
+        "pinEnabled": true,
+        "pin": "101026"
+    },
+    "access": {
+        "tokenEnabled": true,
+        "token": "Gu4d10",
+        "allowLegacyUntil": ""
+    },
+    "_comment_rsvpPanel": "Extra no contratado → enabled false.",
+    "rsvpPanel": {
+        "enabled": false,
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": false,
+        "limiteInvitados": 150,
+        "panelId": "guada-xv-rblMp1",
+        "fechaEvento": "2026-10-10",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 10 de Octubre.",
+        "theme": {
+            "primaryColor": "#9CA3AF"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Tarjeta pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Ya pagó",
+            "unpaidButton": "¿Pagó tarjeta?"
+        }
+    },
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES - Plateado y blanco   ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "Plateado + blanco. Fotos placeholder de Camila hasta recibir las de Guada.",
+    "theme": {
+        "primaryColor": "#9CA3AF",
+        "backgroundColor": "#FFFFFF",
+        "primaryImage": "/clientes/xv/10-camila/background/bg3.jpg",
+        "textColor": "#3A3A3A",
+        "lightBgTextColor": "#555555",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#E8E8E8",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Hay noches que se quedan para siempre en el corazón.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "60px",
+            "weight": "600",
+            "color": "#555555",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Música no contratada → enabled false. Se deja la config por si se suma después.",
+    "music": {
+        "enabled": false,
+        "src": "/clientes/xv/10-camila/music/rihanna.mp3",
+        "autoplay": false,
+        "startTime": 16
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "hero": {
+        "coupleImage": "/clientes/xv/10-camila/images/1.jpg",
+        "headline": "Mis 15!",
+        "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": true,
+            "lowercase": true,
+            "position": "bottom",
+            "positionX": 29,
+            "positionY": 15,
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "#fff",
+            "decorativeLines": false,
+            "logo": "",
+            "texts": [
+                {
+                    "text": "MIS XV",
+                    "font": "",
+                    "weight": "300",
+                    "size": "sm",
+                    "style": "normal"
+                },
+                {
+                    "text": "Guada",
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "letterSpacing": "none",
+                    "size": "4xl",
+                    "style": "normal"
+                }
+            ]
+        },
+        "countdownPrefix": "",
+        "eventDate": "2026-10-10T19:00:00",
+        "countdownLabels": {
+            "days": "Días",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "sections": [
+        {
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Hay noches que se quedan para siempre en el corazón.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "dateInfo",
+            "id": "date-info",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "10 de Octubre de 2026"
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos-2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/xv/10-camila/images/2.jpg"]
+            }
+        },
+        {
+            "// --- ITINERARIO ---": "",
+            "_comment": "Mismo lugar para todo. Cómo llegar solo en el primer evento.",
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "glass",
+                        "name": "Recepción",
+                        "address": "Reconquista 1033, Esquina, RP20, M5527 Aldea la Primavera, Mendoza",
+                        "time": "19:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/vUjWUyNqn51J3xUZ6?g_st=ac",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "sparkles",
+                        "name": "Entrada",
+                        "time": "21:00 hs"
+                    },
+                    {
+                        "icon": "party",
+                        "name": "Fiesta",
+                        "time": "00:00 hs"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos-3",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/xv/10-camila/images/3.jpg"]
+            }
+        },
+        {
+            "_comment": "DRESS CODE (contratado).",
+            "type": "dressCode",
+            "id": "dress-code",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Dress code",
+                "subtitle": "Elegante sport",
+                "description": "Te pedimos amablemente evitar el color plateado.",
+                "showButton": true,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "square",
+                    "colors": ["#C0C0C0", "#A8A8A8", "#9CA3AF"]
+                },
+                "button": {
+                    "text": "Ver consejo",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Consejo",
+                    "sections": [
+                        {
+                            "heading": "Abrigo",
+                            "text": "Llevar abrigo liviano porque es al aire libre."
+                        },
+                        {
+                            "heading": "Colores a evitar",
+                            "text": "Plateado."
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos-4",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/xv/10-camila/images/4.jpg"]
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Hay noches que se quedan para siempre en el corazón.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "_comment": "PHOTOS: Álbum Drive (contratado).",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Si sacás fotos o videos durante la fiesta, podés subirlos acá para que juntos guardemos los mejores momentos.",
+                "button": {
+                    "text": "Subir fotos",
+                    "url": "https://drive.google.com/drive/folders/1NgJhSgqq1E4vXeGTf3BlvprBg68yeJlZ",
+                    "variant": "background"
+                }
+            }
+        },
+        {
+            "_comment": "PLAYLIST: Spotify colaborativa (contratada).",
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "description", "button"],
+            "data": {
+                "title": "Playlist de la fiesta",
+                "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
+                "button": {
+                    "text": "Agregar canciones",
+                    "url": "https://open.spotify.com/playlist/5t4trqGLJxvdlARFuvLljM?si=P9OFyCNeS0O36of0acg7qQ&utm_source=copy-link&pi=mG90CsaYSQeiR",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos-5",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/xv/10-camila/images/5.jpg"]
+            }
+        },
+        {
+            "_comment": "TRIVIA: No contratada — se deja en el JSON (no borrar). Contenido de Camila pendiente de personalizar.",
+            "type": "trivia",
+            "id": "trivia-game",
+            "blocks": ["title", "subtitle", "button", "modal"],
+            "data": {
+                "title": "¿Cuánto me conocés?",
+                "subtitle": "¿Jugamos un poco?",
+                "button": {
+                    "text": "Iniciar Trivia",
+                    "variant": "primary"
+                },
+                "modal": {
+                    "finishTitle": "Respuestas correctas",
+                    "finishText": "¡Gracias por acompañarme en este pequeño juego! Nos vemos muy pronto para celebrar juntos mis XV.",
+                    "questions": [
+                        {
+                            "question": "¿Cuál es mi color favorito?",
+                            "options": [
+                                "Rosa",
+                                "Rojo",
+                                "Blanco",
+                                "Todos los anteriores"
+                            ],
+                            "correctIndex": 3,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué comida me gusta más?",
+                            "options": [
+                                "Milanesa",
+                                "Pizza",
+                                "Hamburguesa",
+                                "Pasta"
+                            ],
+                            "correctIndex": 0,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué me gusta hacer más?",
+                            "options": [
+                                "Escuchar música",
+                                "Dormir",
+                                "Ver series",
+                                "Salir a pasear"
+                            ],
+                            "correctIndex": 1,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Cuál es mi deporte favorito?",
+                            "options": [
+                                "Vóley",
+                                "Jockey",
+                                "Acrobacia aérea",
+                                "Natación"
+                            ],
+                            "correctIndex": 2,
+                            "explanation": ""
+                        },
+                        {
+                            "question": "¿Qué es más probable que haga en la fiesta?",
+                            "options": [
+                                "Bailar toda la noche",
+                                "Emocionarme mucho",
+                                "Sacarme muchas fotos",
+                                "Todo lo anterior"
+                            ],
+                            "correctIndex": 3,
+                            "explanation": ""
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos-6",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/xv/10-camila/images/6.jpg"]
+            }
+        },
+        {
+            "_comment": "REGALOS / ALIAS (contratado).",
+            "type": "honeymoon",
+            "id": "dream-trip",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Nada es más importante que tu presencia. Si deseas hacerme un regalo, podrás hacerlo a través de este alias:",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Mis datos",
+                    "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para mí.",
+                    "bankData": [
+                        {
+                            "label": "Alias",
+                            "value": "d.guadi"
+                        },
+                        {
+                            "label": "CBU",
+                            "value": "0000003100023920701457"
+                        },
+                        {
+                            "label": "Titular",
+                            "value": "Guadalupe Jazmin Fiuri Delgado"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "rsvp",
+            "id": "rsvp-form",
+            "bgColor": "background",
+            "blocks": ["title", "form"],
+            "data": {
+                "title": "Confirmá tu asistencia",
+                "deadline": "Antes del 30 de septiembre",
+                "guestCountLabel": "Número de personas a confirmar",
+                "guestCountOptions": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                "fields": {
+                    "firstName": "Nombre",
+                    "lastName": "Apellido",
+                    "attendance": "¿Vas a poder venir?",
+                    "attendanceYes": "¡Ahí voy!",
+                    "attendanceNo": "No voy a poder",
+                    "dietary": "¿Algún requerimiento alimentario?",
+                    "dietaryOptions": [
+                        "Ninguno",
+                        "Vegetariano",
+                        "Vegano",
+                        "Celíaco",
+                        "Otro"
+                    ],
+                    "songRequest": "¿Qué canción te gustaría que suene?",
+                    "submitButton": "Confirmar"
+                },
+                "whatsapp": {
+                    "number": "",
+                    "messageTemplate": "Hola Guada! Confirmo asistencia para tus XV:\n\n{resumen}\n\nGracias por la invitación a este momento tan especial! 🫶🏼🤗"
+                }
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-welcome3",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por ser parte de mi vida y acompañarme en una noche que voy a recordar para siempre.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "name"],
+            "data": {
+                "aspectRatio": "4/3",
+                "image": "/clientes/xv/10-camila/images/7.jpg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#555555",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+        {
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": "https://wa.me/3456023759"
+                    }
+                ]
+            }
+        }
+    ]
+}

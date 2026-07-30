@@ -277,7 +277,28 @@ function SectionContent({ section, coupleNames, prevBgColor, prevBgImage, reveal
             description={data.description as string}
             showButton={data.showButton as boolean | undefined}
             button={data.button as { text: string; url: string; variant: "primary" | "secondary" } | undefined}
-            modal={data.modal as { title: string; suggestedValue: string; description: string; transferData: { label: string; value: string }[] } | undefined}
+            modal={
+              data.modal as {
+                title: string
+                suggestedValueLabel?: string
+                suggestedValue?: string
+                suggestedValues?: { label: string; value: string }[]
+                dateRanges?: {
+                  label: string
+                  helperText?: string
+                  suggestedValue?: string
+                  suggestedValues?: { label: string; value: string }[]
+                }[]
+                description: string
+                transferData: { label: string; value: string }[]
+                comprobanteWhatsapp?: {
+                  number: string
+                  text?: string
+                  message?: string
+                  hint?: string
+                }
+              } | undefined
+            }
           />
         )
 

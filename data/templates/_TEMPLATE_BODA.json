@@ -728,6 +728,11 @@
             "//     Muestra botones para elegir el tramo y ver los valores de ese periodo": "",
             "//   description: texto adicional                                        ": "",
             "//   transferData: array de { label, value } con datos bancarios         ": "",
+            "//   comprobanteWhatsapp (opcional): boton para enviar comprobante       ": "",
+            "//     number: WhatsApp (con o sin +). Si esta vacio, no se muestra       ": "",
+            "//     text: label del boton (default: 'Enviar comprobante')             ": "",
+            "//     message: mensaje prearmado al abrir WhatsApp                      ": "",
+            "//     hint: texto chico opcional arriba del boton                       ": "",
             "type": "giftCard",
             "id": "gift-card",
             "enabled": true,
@@ -814,7 +819,13 @@
                             "label": "Banco",
                             "value": "Nombre del Banco"
                         }
-                    ]
+                    ],
+                    "comprobanteWhatsapp": {
+                        "number": "5491112345678",
+                        "text": "Enviar comprobante",
+                        "hint": "Cuando transfieras, envianos el comprobante por WhatsApp.",
+                        "message": "Hola! Te envío el comprobante de pago de la tarjeta."
+                    }
                 }
             }
         },

@@ -67,9 +67,9 @@
         "enabled": true,
         "phrase": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
         "buttonText": "Ingresar",
-        "showNames": true,
+        "showNames": false,
         "showPhrase": false,
-        "contentCenterY": 50,
+        "contentCenterY": 65,
         "nameStyle": {
             "font": "Dancing Script",
             "size": "50px",
@@ -78,7 +78,7 @@
             "lowercase": true,
             "letterSpacing": "none"
         },
-        "bgImage": "/clientes/boda/30-micaela-joaquin/images/overlay2.jpeg"
+        "bgImage": "/clientes/boda/30-micaela-joaquin/images/overlay3.jpeg"
     },
     "music": {
         "enabled": false,

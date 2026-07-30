@@ -1,0 +1,393 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera. El nombre se usa en el overlay, hero, cierre y donde corresponda.",
+    "meta": {
+        "title": "Mis 15 - Prisci",
+        "description": "Estás invitado a celebrar los XV de Prisci.",
+        "lang": "es",
+        "quinceaneraName": "Prisci",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Prisci",
+            "separator": ""
+        }
+    },
+    "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
+    "_comment_base": "BASE DE ACCESOS - Link unico para cliente con accesos a invitacion, panel y variantes. URL: /base/{token}. Solo existe si base.enabled=true y token valido (8 chars).",
+    "base": {
+        "enabled": true,
+        "token": "Aib2maCr",
+        "pinEnabled": true,
+        "pin": "353530"
+    },
+    "access": {
+        "tokenEnabled": true,
+        "token": "Bk5pQ4",
+        "allowLegacyUntil": ""
+    },
+    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. Extra no contratado → enabled false.",
+    "rsvpPanel": {
+        "enabled": false,
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": false,
+        "limiteInvitados": 150,
+        "panelId": "prisci-xv-rmlpp1",
+        "fechaEvento": "2026-10-10",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 10 de Octubre.",
+        "theme": {
+            "primaryColor": "#111"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Tarjeta pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Ya pagó",
+            "unpaidButton": "¿Pagó tarjeta?"
+        }
+    },
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA - Negro y plateado": "",
+    "// ==========================================..": "",
+    "_comment_theme": "primaryColor = negro. backgroundColor = fondo claro. Plateado en accent. Fotos placeholder de Indiana hasta recibir las de Prisci.",
+    "theme": {
+        "primaryColor": "#090909",
+        "backgroundColor": "#F2F2F2",
+        "primaryImage": "/clientes/xv/21-indiana/images/bg1.jpeg",
+        "textColor": "#555555",
+        "lightBgTextColor": "#3a3a3a",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#C0C0C0",
+        "modalTextColor": "#000000",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "_comment_overlay": "Se muestra al entrar con el nombre, frase y boton. enabled = true/false para activar o desactivar.",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Estás invitado a una noche especial.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "70px",
+            "weight": "600",
+            "color": "#000",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "PENDIENTE: cliente paso YouTube https://youtu.be/NG2zyeVRcbs — convertir a MP3 y poner en /public/clientes/xv/29-prisci/music/. Mientras tanto queda placeholder de Indiana.",
+    "music": {
+        "enabled": true,
+        "src": "/clientes/xv/29-prisci/music/the-climb.mp3",
+        "autoplay": true,
+        "startTime": 2
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA                ": "",
+    "// ==========================================.....": "",
+    "_comment_hero": "Foto de la quinceanera, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS).",
+    "hero": {
+        "coupleImage": "/clientes/xv/29-prisci/images/hero.jpeg",
+        "aspectRatio": "libre",
+        "headline": "Mis 15!",
+        "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": false,
+            "position": "",
+            "positionX": 50,
+            "positionY": 50,
+            "font": "",
+            "lowercase": true,
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "#eee",
+            "decorativeLines": false,
+            "logo": "",
+            "texts": [
+                {
+                    "text": "¡Mis XV!",
+                    "font": "",
+                    "letterSpacing": "none",
+                    "weight": "200",
+                    "size": "xl",
+                    "style": "normal"
+                },
+                {
+                    "text": "Prisci",
+                    "font": "Dancing Script",
+                    "letterSpacing": "none",
+                    "weight": "700",
+                    "size": "5xl",
+                    "style": "normal"
+                }
+            ]
+        },
+        "countdownPrefix": "",
+        "eventDate": "2026-10-10T21:00:00",
+        "countdownLabels": {
+            "days": "Días",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id.",
+    "sections": [
+        {
+            "// --- FRASE DE BIENVENIDA ---": "",
+            "_comment": "Fondo primario. text = frase. author = autor (dejar vacio si no aplica).",
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Acompañame a disfrutar esta noche especial... mis 15 años.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "// --- FECHA DEL EVENTO ---": "",
+            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "type": "dateInfo",
+            "id": "date-info",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "10 de Octubre de 2026"
+            }
+        },
+        {
+            "// --- UBICACION: FIESTA ---": "",
+            "_comment": "Ubicación y cómo llegar (contratada).",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "¿Dónde?",
+                "address": "Ibiza Eventos",
+                "showButton": true,
+                "order": ["address", "time"],
+                "datetime": {
+                    "time": "21:00 hs"
+                },
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/AsbfP4pFhvZWozQR7?g_st=ac",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos-5",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/xv/29-prisci/images/2.jpeg"]
+            }
+        },
+
+        {
+            "_comment": "PHOTOS: Álbum Drive (contratado).",
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Si sacás fotos o videos durante la fiesta, podés subirlos acá para que juntos guardemos los mejores momentos.",
+                "button": {
+                    "text": "Subir fotos",
+                    "url": "https://drive.google.com/drive/folders/10g4qqNA0QkJlCJZcg-dCg3QZYkkPmzMK",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "// --- FRASE ---": "",
+            "_comment": "Frase del cliente.",
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Los momentos más felices de la vida se tornan más lindos cuando los compartimos con familiares y amigos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "_comment": "PLAYLIST: Spotify colaborativa (contratada).",
+            "type": "playlist",
+            "id": "playlist-suggestion",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "description", "button"],
+            "data": {
+                "title": "Playlist de la fiesta",
+                "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist!",
+                "button": {
+                    "text": "Agregar canciones",
+                    "url": "https://open.spotify.com/playlist/0mWxAQEdaU7gI42lQlZ8jn?si=y6--eLBaRgu7rfN42Duwtg&utm_source=copy-link&pt=cb23b3b91fa427b8f680f2253a694a9b&pi=yUM4rX72S4KSi",
+                    "variant": "background"
+                }
+            }
+        },
+
+        {
+            "_comment": "VALOR TARJETA (contratado).",
+            "type": "giftCard",
+            "id": "gift-card",
+            "enabled": true,
+            "bgColor": "primary",
+            "data": {
+                "icon": "heart",
+                "title": "Valor Tarjeta",
+                "description": "Agradecemos que confirmes tu asistencia antes del 30 de septiembre.",
+                "button": {
+                    "text": "Ver",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "suggestedValueLabel": "Valor tarjeta",
+                    "suggestedValues": [
+                        {
+                            "label": "Adolescentes y adultos",
+                            "value": "$50.000"
+                        },
+                        {
+                            "label": "Menores de 10 años",
+                            "value": "$30.000"
+                        }
+                    ],
+                    "description": "",
+                    "transferData": [
+                        {
+                            "label": "Alias",
+                            "value": "Cinthia1386"
+                        }
+                    ],
+                    "comprobanteWhatsapp": {
+                        "number": "542954232333",
+                        "text": "Enviar comprobante",
+                        "hint": "No olvides enviarnos el comprobante y decirnos la cantidad de asistentes.",
+                        "message": "Hola! Te envío el comprobante de pago de la tarjeta de los XV de Prisci."
+                    }
+                }
+            }
+        },
+        {
+            "// --- FRASE ---": "",
+            "_comment": "Cierre de frases del cliente.",
+            "type": "quote",
+            "id": "quote-welcome8",
+            "bgColor": "primary",
+            "bgImage": "primaryImage",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "¡Te espero!",
+                "author": "Prisci",
+                "decorativeLines": true
+            }
+        },
+        {
+            "_comment": "CONFIRMAR WHATSAPP: Confirmacion simple por WhatsApp (PLAN BASE, sin formulario). Boton que abre WhatsApp directo con mensaje predefinido. NO incluir en plan Premium (usar rsvp en su lugar).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "background",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "subtitle": "Antes del 30 de Septiembre",
+                "buttonText": "¡Voy!",
+                "whatsappNumber": "542954232333",
+                "message": "Hola Prisci! Confirmo mi asistencia a tus XV. Quiero formar parte de este momento tan especial para vos 🫶🏼🤗",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Hola Prisci! Lamentablemente no podré asistir a tus XV. Gracias por tenerme en cuenta 🫶🏼"
+                }
+            }
+        },
+        {
+            "// --- CIERRE VISUAL ---": "",
+            "_comment": "Imagen a ancho completo con nombre debajo. Placeholder Indiana hasta fotos de Prisci.",
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "name"],
+            "data": {
+                "aspectRatio": "3/4",
+                "image": "/clientes/xv/29-prisci/images/2.jpeg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "700",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#000",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+        {
+            "// --- FOOTER / PIE DE PAGINA ---": "",
+            "_comment": "Fondo oscuro. brandName = nombre de la marca. socialLinks = array de redes.",
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": "https://wa.me/3456023759"
+                    }
+                ]
+            }
+        }
+    ]
+}
