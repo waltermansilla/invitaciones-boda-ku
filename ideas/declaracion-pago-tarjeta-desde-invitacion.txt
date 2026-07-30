@@ -1,0 +1,135 @@
+IDEA: Declaración de pago de tarjeta desde la invitación (auto-marcar en panel)
+==============================================================================
+Fecha de nota: julio 2026
+Contexto: hoy el "pago tarjeta" del panel es 100% manual. El anfitrión toca a mano
+el botón "¿Pagó tarjeta?" por cada invitado. Idea: que el propio invitado declare si
+ya pagó (o piensa hacerlo después) durante el flujo de la invitación, y que el panel
+lo marque solo como "a verificar", para que el anfitrión solo revise a los que declararon.
+Esta nota NO son instrucciones activas — es la idea charlada, con lo definido y lo que falta.
+
+
+¿POR QUÉ HACERLO?
+-----------------
+- Sacarle trabajo manual al anfitrión: en vez de perseguir a cada invitado, solo revisa
+  los que dicen que pagaron.
+- Aprovechar piezas que YA existen (modal tarjeta, modales de confirmación, flag de pago).
+- Que el panel muestre de un vistazo cuántas declaraciones hay pendientes de verificar.
+
+
+PIEZAS QUE YA EXISTEN EN EL CÓDIGO (donde engancha)
+----------------------------------------------------
+- Modal tarjeta = modal de GiftCardSection.
+  Archivo: components/wedding/gift-card-section.tsx (GiftCardModalContent).
+  Ya tiene datos de transferencia + botón "Enviar comprobante por WhatsApp"
+  (modal.comprobanteWhatsapp, ~líneas 270-318).
+- Modal de confirmación de asistencia (antes de confirmar):
+  - rsvp-section.tsx -> openAnonymousReviewModal / handleSubmit
+  - confirmar-whatsapp-section.tsx -> openReviewModal / executeConfirm
+- Estado en panel = booleano pago_tarjeta.
+  - Se escribe hoy a mano vía PUT /api/panel/[panelId]/invitado/[invitadoId] (línea 191).
+  - Columna en base: scripts/001_create_rsvp_tables.sql (pago_tarjeta BOOLEAN DEFAULT FALSE).
+  - Botón/chip en panel: app/panel/[panelId]/page.tsx (~líneas 2076-2089).
+  - Filtro existente "pago_pendiente": app/panel/[panelId]/page.tsx (~líneas 703-707).
+- Precedente de estado guardado en el navegador del invitado:
+  rsvp-section.tsx usa localStorage con clave "rsvp-auto-confirm:<panelId>".
+- Persistir junto a la confirmación: POST /api/rsvp/[codigo] HOY no acepta pago_tarjeta
+  (solo restricciones/mensaje/cancion, ~líneas 79-81). Habría que agregarlo (1 línea).
+
+
+CONCEPTO CENTRAL
+----------------
+Es una DECLARACIÓN del invitado, NO un pago verificado. Por eso:
+  - No pone el chip en verde directo.
+  - Se distinguen dos estados: "declarado por invitado" (🟡) vs "verificado por anfitrión" (🟢).
+  - El anfitrión sigue verificando con el botón manual de siempre (comprobante).
+Una sola fuente de verdad local en el navegador del invitado: pagoLocal.
+  Valores: "pagado" | "despues" | "desconocido". Todos los modales leen/escriben ahí.
+  Guardado en localStorage (como ya se hace con rsvp-auto-confirm), por invitado,
+  para no repetir modales molestos en cada carga.
+
+
+FLUJO DEFINIDO (lo acordado)
+----------------------------
+Los puntos de contacto:
+
+  ① Modal tarjeta (ya existe): datos de transferencia + "Enviar comprobante por WhatsApp".
+     - Puede tener un botón/opción de "Ya pagué" -> pagoLocal = "pagado".
+     - Al tocar "enviar comprobante": se marca en sessionStorage "volví-de-comprobante"
+       y se abre WhatsApp.
+
+  ② Vuelta de WhatsApp (nuevo, best-effort): cuando la pestaña recupera foco
+     (evento visibilitychange/focus) y existe la marca de sessionStorage:
+        Modal: "¿Enviaste el comprobante?"
+          - "Sí, ya pagué"  -> pagoLocal = "pagado" + marca panel 🟡
+          - "Todavía no"     -> no cambia nada
+        Se limpia la marca para no repetir.
+     NOTA: no se puede detectar con 100% certeza que volvió de WhatsApp; asumir que
+     a veces no dispara.
+
+  ③ Confirmar asistencia (regla simplificada):
+     - Si pagoLocal == "pagado"  -> NO aparece ningún modal (no molestar).
+       A lo sumo, una línea pasiva en el resumen: "✓ Nos avisaste que pagaste la tarjeta".
+     - Si pagoLocal != "pagado"  -> modal de ÚLTIMO AVISO: "¿Ya pagaste la tarjeta?"
+       con 2 botones (Ya pagué / Lo haré después) + link "¿Cómo pagar?" que abre el modal tarjeta.
+     => Se DESCARTA la doble confirmación "por las dudas": no aporta certeza (es declaración)
+        y solo suma fricción.
+
+  ④ Panel (nuevo): aviso/badge con la cantidad de "declaraciones a verificar" (los 🟡).
+     - Filtro nuevo para mostrar solo esos.
+     - El anfitrión los verifica con el botón manual (🟡 declarado -> 🟢 verificado).
+     - Cuando quedan en 0, el aviso desaparece.
+
+Diagrama:
+  [Modal tarjeta / vuelta de WhatsApp]
+        -> declara pago  -> pagoLocal = pagado -> marca panel 🟡
+        -> no declara     -> pagoLocal = desconocido
+  [Confirmar asistencia]
+        -> ya declaró pago -> SIN modal (línea pasiva opcional)
+        -> no declaró      -> modal "¿ya pagaste?" (último aviso)
+  [Panel] badge "X declaraciones a verificar" + filtro -> anfitrión verifica
+
+
+DECISIONES YA TOMADAS
+---------------------
+- Modelo de 3 estados en panel: sin_pago / declarado 🟡 / verificado 🟢.
+  (El contador del panel exige esta distinción; si "ya pagué" fuera directo a verde,
+   no habría a quién contar.)
+- NO mostrar modal al confirmar si el invitado ya declaró el pago antes.
+- La verificación real la sigue haciendo el anfitrión (comprobante + botón manual).
+- Todo apoyado en una única fuente de verdad local (pagoLocal) en el navegador del invitado.
+
+
+LO QUE FALTA DEFINIR (antes de codear)
+--------------------------------------
+1) ALCANCE: ¿aplica a los dos flujos o solo a uno?
+     - Flujo con código (?i= / ?c=): el invitado YA existe -> se puede marcar pago cuando sea.
+     - Flujo anónimo (sin código, allowAnonymousToPanel): el invitado NO existe hasta que
+       confirma asistencia (submitAnonymousToPanel lo crea recién ahí). Entonces "ya pagué"
+       antes de confirmar no tiene a quién marcar -> hay que llevar el flag en memoria y
+       mandarlo JUNTO con la confirmación (cambio chico en la API POST /rsvp).
+     PENDIENTE: elegir "los dos flujos" o "solo con código".
+
+2) BASE DE DATOS: ¿cómo guardar el estado?
+     - Opción prolija (recomendada): columna nueva pago_estado en "invitados"
+       (sin_pago / declarado / verificado). pago_tarjeta puede quedar o derivarse.
+     - Opción mínima: reusar pago_tarjeta como booleano (pierde la distinción declarado/verificado).
+     PENDIENTE: confirmar columna pago_estado.
+
+3) LÍNEA PASIVA en el resumen de confirmación cuando ya declaró:
+     ¿la dejamos ("nos avisaste que pagaste") o preferimos que no aparezca NADA al confirmar?
+     PENDIENTE: elegir.
+
+
+IMPACTO TÉCNICO ESTIMADO (para cuando se implemente)
+----------------------------------------------------
+- Front: nuevo estado local pagoLocal + helpers de localStorage/sessionStorage.
+- Modales: enganche en gift-card-section.tsx (declarar pago / marca al enviar comprobante),
+  listener visibilitychange para el modal de vuelta de WhatsApp, y ajuste del modal de
+  confirmación en rsvp-section.tsx y confirmar-whatsapp-section.tsx.
+- API: aceptar pago_tarjeta / pago_estado en POST /api/rsvp/[codigo] y en el PUT del panel.
+- Base: (si va la opción prolija) migración SQL con la columna pago_estado.
+- Panel: badge/contador + filtro nuevo + el botón manual pasa a "verificar".
+
+
+ESTADO: idea acordada en la charla, lista para implementar cuando se definan los 3 puntos
+pendientes (alcance, columna en base, línea pasiva).
