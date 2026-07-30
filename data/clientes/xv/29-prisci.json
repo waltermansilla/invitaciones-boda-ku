@@ -399,7 +399,7 @@
         }
     ],
     "variants": {
-        "compañeros": {
+        "comp": {
             "baseLabel": "General",
             "label": "Compañeros",
             "sections": [
