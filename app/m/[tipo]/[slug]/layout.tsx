@@ -1,5 +1,5 @@
 import { getClientConfig } from "@/lib/get-client-config";
-import { overlayNameStyleFontHref } from "@/lib/overlay-name-font-href";
+import { extraGoogleFontStylesheetHrefs } from "@/lib/section-text-style";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -25,7 +25,7 @@ export default async function MuestraLayout({ children, params }: LayoutProps) {
     // Build Google Fonts URL - encode properly for fonts with spaces
     const encodedFamily = fontFamily.replace(/ /g, "+");
     const fontUrl = `https://fonts.googleapis.com/css2?family=${encodedFamily}:wght@${fontWeights}&display=swap`;
-    const overlayFontUrl = overlayNameStyleFontHref(config, fontFamily);
+    const extraFontHrefs = extraGoogleFontStylesheetHrefs(config, fontFamily);
 
     return (
         <>
@@ -36,9 +36,9 @@ export default async function MuestraLayout({ children, params }: LayoutProps) {
                 crossOrigin="anonymous"
             />
             <link href={fontUrl} rel="stylesheet" />
-            {overlayFontUrl ? (
-                <link href={overlayFontUrl} rel="stylesheet" />
-            ) : null}
+            {extraFontHrefs.map((href) => (
+                <link key={href} href={href} rel="stylesheet" />
+            ))}
             <style
                 dangerouslySetInnerHTML={{
                     __html: `

@@ -313,12 +313,32 @@
     "// SECTIONS - Secciones de contenido                                         ": "",
     "// El ORDEN en el array define el orden visual en la pagina.                 ": "",
     "// Ver documentacion completa de cada tipo en template BODA.                 ": "",
+    "// style (opcional, hermano de type/id/data): tipografia por parte           ": "",
+    "//   Claves = nombre real (title, paragraphs, …). Ver detalle en BODA.       ": "",
+    "//   Campos: font, sizePx, weight, letterSpacing, uppercase, enabled         ": "",
+    "// bgColor: primary|background|transparent (modo texto).                     ": "",
+    "// bgColorTheme: hex/CSS solo del fondo (opcional).                          ": "",
+    "// Secciones que YA aplican style: ourStory, dateInfo.                       ": "",
+    "// spacer: seccion vacia con heightPx + bgColor/bgImage/bgColorTheme         ": "",
+    "//   (igual que BODA; util para padding o continuar un fondo).               ": "",
     "// TIPOS EXCLUSIVOS DE XV:                                                    ": "",
     "//   presentation: foto + nombre + descripcion                               ": "",
     "//   parents: nombre de los padres                                           ": "",
     "// Pie de marca: no va en sections; se muestra siempre al final (landing-1  ": "",
     "//   -> brand), colores del primary del theme de la invitacion.               ": "",
     "sections": [
+        {
+            "// ----------------------------------------------------------------------": "",
+            "// SPACER - Seccion vacia (solo alto + fondo). Ver detalle en BODA.      ": "",
+            "// data.heightPx: alto en px. bgColor / bgColorTheme / bgImage ok.       ": "",
+            "type": "spacer",
+            "id": "spacer-ejemplo",
+            "enabled": false,
+            "bgColor": "background",
+            "data": {
+                "heightPx": 80
+            }
+        },
         {
             "// ----------------------------------------------------------------------": "",
             "// QUOTE - Frase de bienvenida                                           ": "",
@@ -384,10 +404,35 @@
             "// variant: 'classic' (default) | 'simple'                               ": "",
             "// classic: moments[] (image vacia = solo texto; bgColor opcional)       ": "",
             "// simple: paragraphs[] sin numeros ni subtitulos                        ": "",
+            "//   showHearts: true/false (default true) — separadores ♡ entre parrafos ": "",
+            "//                                                                       ": "",
+            "// style (opcional, hermano de type/id/data):                            ": "",
+            "//   Claves = nombre real de la parte (title, paragraphs, …)             ": "",
+            "//   Cada uno: { font, sizePx, weight, letterSpacing, uppercase, enabled }": "",
+            "//   uppercase: false quita mayusculas (ej. cursivas en titulo)          ": "",
+            "//   enabled: false apaga el style (o una parte) sin borrarlo            ": "",
             "type": "ourStory",
             "id": "my-story",
             "enabled": true,
             "bgColor": "background",
+            "style": {
+                "enabled": true,
+                "title": {
+                    "font": "Playfair Display",
+                    "sizePx": 28,
+                    "weight": 500,
+                    "letterSpacing": "0.12em",
+                    "uppercase": false,
+                    "enabled": true
+                },
+                "paragraphs": {
+                    "font": "Josefin Sans",
+                    "sizePx": 15,
+                    "weight": 300,
+                    "letterSpacing": 0.5,
+                    "enabled": true
+                }
+            },
             "data": {
                 "variant": "classic",
                 "aspectRatio": "3/4",
@@ -1000,6 +1045,11 @@
             "// CLOSING IMAGE - Foto de cierre con nombres                            ": "",
             "// aspectRatio: proporcion de la imagen (solo si hay image)              ": "",
             "// image: ruta a la foto. Vacio u omitido = solo nombres (sin foto)      ": "",
+            "// bgColor / bgColorTheme / bgImage: igual que otras secciones           ": "",
+            "//   (self-styled: se aplican al bloque de nombres / fondo de seccion)   ": "",
+            "//   bgColor: modo texto primary|background|transparent                  ": "",
+            "//   bgColorTheme: hex/CSS solo del fondo (opcional)                     ": "",
+            "//   bgImage: ruta o \"backgroundImage\" / \"primaryImage\" del theme        ": "",
             "// namesDisplay:                                                         ": "",
             "//   enabled: true/false                                                 ": "",
             "//   font/weight/size/style/color: estilos                               ": "",
@@ -1011,6 +1061,7 @@
             "type": "closingImage",
             "id": "closing-image",
             "enabled": true,
+            "bgColor": "background",
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/xv/[slug]/cierre.jpg",

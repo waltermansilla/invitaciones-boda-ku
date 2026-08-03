@@ -53,7 +53,8 @@
     "theme": {
         "primaryColor": "#8a9071",
         "backgroundColor": "#f7f3eb",
-        "primaryImage": "/clientes/boda/30-micaela-joaquin/bg/bg1.jpeg",
+        "primaryImage": "/clientes/boda/30-micaela-joaquin/images/hojas-fondo.jpeg",
+        "secondaryImage": "/clientes/boda/30-micaela-joaquin/images/fondo.jpeg",
         "textColor": "#8a9071",
         "lightBgTextColor": "#7a6148",
         "darkBgTextColor": "#FFFFFF",
@@ -70,7 +71,7 @@
         "buttonText": "Ingresar",
         "showNames": true,
         "showPhrase": false,
-        "contentCenterY": 50,
+        "contentCenterY": 45,
         "nameStyle": {
             "font": "Dancing Script",
             "matchPhraseAndButtonColor": true,
@@ -80,7 +81,7 @@
             "lowercase": true,
             "letterSpacing": "none"
         },
-        "bgImage": "/clientes/boda/30-micaela-joaquin/images/overlay4.jpeg"
+        "bgImage": "/clientes/boda/30-micaela-joaquin/images/overlay6.jpeg"
     },
     "music": {
         "enabled": false,
@@ -116,10 +117,11 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/primary.jpeg",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/primary-2.jpeg",
+
             "blocks": ["text", "author"],
             "data": {
-                "text": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
+                "text": "Sos parte importante de nuestra historia, y nos gustaría celebrarla con vos.",
                 "author": "",
                 "decorativeLines": true
             }
@@ -129,7 +131,22 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/images/fondo-2.jpeg",
+
             "blocks": ["title", "value", "button"],
+            "style": {
+                "enabled": false,
+                "value": {
+                    "sizePx": 22,
+                    "weight": 400,
+                    "letterSpacing": 1
+                },
+                "title": {
+                    "sizePx": 25,
+                    "weight": 600,
+                    "letterSpacing": 1
+                }
+            },
             "data": {
                 "title": "¿Cuándo?",
                 "value": "17 de Octubre de 2026"
@@ -143,14 +160,15 @@
             "id": "location-fiesta",
             "enabled": true,
             "bgColor": "background",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/images/salon-fondo-2.jpeg",
             "blocks": ["title", "address", "button"],
             "data": {
                 "title": "¿Dónde?",
-                "address": "Salón Las Lilas, Concepción del Uruguay, Argentina",
+                "address": "Salón Las Lilas, Concepción del Uruguay",
                 "icon": "pin",
                 "order": ["address", "time"],
                 "datetime": {
-                    "time": "18:00 hs"
+                    "time": "18:00 hs (PUNTUAL)"
                 },
                 "button": {
                     "text": "Cómo llegar",
@@ -161,44 +179,14 @@
         },
 
         {
-            "type": "gallery",
-            "id": "gallery-photos",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "libre",
-                "images": [
-                    "/clientes/boda/30-micaela-joaquin/images/image1.jpeg"
-                ]
-            }
-        },
-
-        {
-            "// --- NUESTRA HISTORIA (simple) ---": "",
-            "_comment": "variant simple: titulo + paragraphs (sin numeros ni subtitulos).",
-            "type": "ourStory",
-            "id": "our-story",
+            "type": "spacer",
+            "id": "spacer-entre-galeria",
+            "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "paragraphs"],
+
+            "bgImage": "/clientes/boda/30-micaela-joaquin/images/salon-fondo-2.jpeg",
             "data": {
-                "variant": "simple",
-                "title": "Nuestra historia",
-                "paragraphs": [
-                    "Esta historia comenzó en 2006, cuando decidimos empezar a caminar juntos, sin imaginar todo lo que la vida nos tenía preparado.",
-                    "Fuimos creciendo de la mano, compartiendo sueños, desafíos y alegrías, mientras nuestro amor se fortalecía con el paso del tiempo.",
-                    "Hoy, veinte años después, queremos celebrar el camino recorrido y el comienzo de un nuevo capítulo, rodeados de las personas que más queremos."
-                ]
-            }
-        },
-        {
-            "type": "gallery",
-            "id": "gallery-photos2",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "3/4",
-                "images": [
-                    "/clientes/boda/30-micaela-joaquin/images/compromiso.jpeg",
-                    "/clientes/boda/30-micaela-joaquin/images/3.jpg"
-                ]
+                "heightPx": 190
             }
         },
 
@@ -206,8 +194,8 @@
             "_comment": "DRESS CODE: Formal de gala. Colores a evitar: blanco, beige y verde salvia.",
             "type": "dressCode",
             "id": "dress-code",
-            "bgColor": "background",
-            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/bg1-2.jpeg",
+            "bgColor": "primary",
+            "bgImage": "",
             "blocks": [
                 "title",
                 "subtitle",
@@ -226,26 +214,48 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
-                    "colors": ["#FFFFFF", "#E8DFD0", "#8a9071"]
+                    "colors": [
+                        { "color": "#FFFFFF", "label": "Blanco" },
+                        { "color": "#E8DFD0", "label": "Beige" },
+
+                        { "color": "#7e8c54", "label": "Verde salvia" }
+                    ]
                 }
             }
         },
+
         {
-            "type": "photos",
-            "id": "shared-photos",
-            "enabled": true,
+            "// --- NUESTRA HISTORIA (simple) ---": "",
+            "_comment": "variant simple: titulo + paragraphs (sin numeros ni subtitulos).",
+            "type": "ourStory",
+            "id": "our-story",
             "bgColor": "background",
-            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/bg1-1.jpeg",
-            "blocks": ["icon", "title", "description", "button"],
-            "data": {
-                "icon": "camera",
-                "title": "Compartí tus fotos",
-                "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
-                "button": {
-                    "text": "Ir al álbum",
-                    "url": "https://photos.app.goo.gl/tq3JqPc7tzbS3XtH6",
-                    "variant": "background"
+            "bgImage": "/clientes/boda/30-micaela-joaquin/images/hojas-fondo-2.jpeg",
+            "style": {
+                "title": {
+                    "font": "Dancing Script",
+                    "uppercase": false,
+                    "sizePx": 35,
+                    "weight": 400,
+                    "letterSpacing": 0.5
+                },
+                "paragraphs": {
+                    "font": "Dancing Script",
+                    "sizePx": 21,
+                    "weight": 300,
+                    "letterSpacing": 0.5
                 }
+            },
+            "blocks": ["title", "paragraphs"],
+            "data": {
+                "variant": "simple",
+                "title": "Nuestra historia",
+                "showHearts": false,
+                "paragraphs": [
+                    "Desde que nos conocimos en 2006, hemos aprendido a amarnos en cada una de nuestras versiones para convertir ese primer amor en una vida compartida.",
+                    "Pasaron 20 años, pero seguimos encontrando nuevas razones para elegirnos.",
+                    "Por eso, hoy queremos celebrar el camino recorrido y todo lo que nos queda por vivir."
+                ]
             }
         },
 
@@ -265,6 +275,10 @@
                     {
                         "question": "¿Es el evento al interior o al exterior?",
                         "answer": "El evento se desarrollará parte al exterior y parte al interior. No se suspende en caso de lluvia."
+                    },
+                    {
+                        "question": "¿Es necesario llevar o pagar algo?",
+                        "answer": "No, solamente tu presencia y las ganas de pasar un buen momento. Tampoco será necesario pagar tarjeta."
                     },
                     {
                         "question": "¿Se puede llevar acompañante?",
@@ -303,10 +317,41 @@
         },
 
         {
+            "type": "photos",
+            "id": "shared-photos",
+            "enabled": true,
+            "bgColor": "background",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/images/fondo-ramo-2.jpeg",
+            "blocks": ["icon", "title", "description", "button"],
+            "data": {
+                "icon": "camera",
+                "title": "Compartí tus fotos",
+                "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
+                "button": {
+                    "text": "Subir fotos",
+                    "url": "https://photos.app.goo.gl/tq3JqPc7tzbS3XtH6",
+                    "variant": "primary"
+                }
+            }
+        },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": [
+                    "/clientes/boda/30-micaela-joaquin/images/ramo-corto.jpeg"
+                ]
+            }
+        },
+
+        {
             "type": "quote",
             "id": "quote-welcome2",
             "bgColor": "background",
-            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/bg1.jpeg",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/images/fondo-ramo-2.jpeg",
 
             "blocks": ["text", "author"],
             "data": {
@@ -363,7 +408,7 @@
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "libre",
-                "image": "/clientes/boda/30-micaela-joaquin/images/4.jpg",
+                "image": "/clientes/boda/30-micaela-joaquin/images/final.jpeg",
                 "namesDisplay": {
                     "enabled": true,
                     "font": "Dancing Script",

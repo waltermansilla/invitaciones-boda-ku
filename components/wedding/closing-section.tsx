@@ -1,4 +1,5 @@
 import Image from "next/image"
+import type { CSSProperties } from "react"
 import { useConfig } from "@/lib/config-context"
 import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
 
@@ -41,6 +42,12 @@ interface ClosingSectionProps {
     lowercase?: boolean // true = respeta mayusculas/minusculas, false/undefined = uppercase
     letterSpacing?: string // "none", "normal", "wide" (default)
   }
+  /** Modo de contenido/texto: primary | background | transparent (igual que otras secciones). */
+  sectionBgColor?: string
+  /** Color de fondo real (hex/CSS). Solo pinta el fondo; el texto sigue sectionBgColor. */
+  bgColorTheme?: string
+  /** Imagen de fondo de la sección (detrás de nombres / área sin foto). */
+  bgImage?: string
 }
 
 // Map size names to Tailwind classes
@@ -73,12 +80,46 @@ export default function ClosingSection({
   aspectRatio = "3/4",
   coupleNames,
   namesDisplay,
+  sectionBgColor = "background",
+  bgColorTheme,
+  bgImage,
 }: ClosingSectionProps) {
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
   const hero = config.hero as Record<string, unknown> | undefined
   const overlay = config.overlay as Record<string, unknown> | undefined
-  const defaultTextColor = (theme.lightBgTextColor as string) || (theme.primaryColor as string) || "#6B7F5E"
+  const lightText =
+    (theme.lightBgTextColor as string) ||
+    (theme.primaryColor as string) ||
+    "#6B7F5E"
+  const darkText = (theme.darkBgTextColor as string) || "#FFFFFF"
+  const isPrimaryBg = sectionBgColor === "primary"
+  const defaultTextColor = isPrimaryBg ? darkText : lightText
+
+  const bgPaint =
+    typeof bgColorTheme === "string" && bgColorTheme.trim()
+      ? bgColorTheme.trim()
+      : undefined
+  const hasSectionBgImage = Boolean(bgImage?.trim())
+  const sectionBgClass = hasSectionBgImage || bgPaint
+    ? sectionBgColor === "transparent"
+      ? "bg-transparent"
+      : ""
+    : sectionBgColor === "primary"
+      ? "bg-primary"
+      : sectionBgColor === "transparent"
+        ? "bg-transparent"
+        : "bg-background"
+  const sectionBgStyle: CSSProperties = hasSectionBgImage
+    ? {
+        backgroundImage: `url(${bgImage!.trim()})`,
+        backgroundRepeat: "repeat",
+        backgroundSize: "100% auto",
+        backgroundPosition: "top center",
+      }
+    : bgPaint
+      ? { backgroundColor: bgPaint }
+      : {}
 
   // If copyFromHero is true, get settings from hero.namesDisplay
   const heroNamesDisplay = hero?.namesDisplay as Record<string, unknown> | undefined
@@ -146,10 +187,10 @@ export default function ClosingSection({
   // Get size class - support pixel values like "48px"
   const isPixelSize = namesSize.endsWith("px")
   const sizeClass = isPixelSize ? "" : (sizeMap[namesSize] || sizeMap.lg)
-  const pixelSizeStyle: React.CSSProperties = isPixelSize ? { fontSize: namesSize } : {}
+  const pixelSizeStyle: CSSProperties = isPixelSize ? { fontSize: namesSize } : {}
 
   // Build font family style if custom font specified
-  const namesFontStyle: React.CSSProperties = {
+  const namesFontStyle: CSSProperties = {
     ...(namesFont ? { fontFamily: `'${namesFont}', cursive` } : {}),
     fontWeight: resolvedWeight,
     fontStyle: namesStyle,
@@ -160,7 +201,10 @@ export default function ClosingSection({
   }
 
   return (
-    <section className="bg-background" style={{ color: defaultTextColor }}>
+    <section
+      className={sectionBgClass}
+      style={{ color: defaultTextColor, ...sectionBgStyle }}
+    >
       {/* Load custom font if specified */}
       {namesFont && (
         <>
