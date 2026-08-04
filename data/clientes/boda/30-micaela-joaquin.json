@@ -66,7 +66,7 @@
         }
     },
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
         "buttonText": "Ingresar",
         "showNames": true,
