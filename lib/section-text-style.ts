@@ -5,8 +5,8 @@ import type { ClientConfig } from "@/lib/get-client-config";
  * Tipografía opcional por bloque de texto en una sección.
  * Todo es opcional: si no se setea, se mantiene el look/CSS actual.
  *
- * Campos:
- * - font: nombre exacto de Google Fonts (ej. "Cormorant Garamond")
+ * Campos (en cada parte O a nivel raíz de style para todas las partes):
+ * - font | fontFamily: nombre exacto de Google Fonts (ej. "Indie Flower")
  * - sizePx: tamaño en px
  * - weight: peso (ej. 300, "600")
  * - letterSpacing: número = px; string con unidad (ej. "0.12em");
@@ -15,17 +15,21 @@ import type { ClientConfig } from "@/lib/get-client-config";
  *   true = fuerza mayúsculas. Si no se setea, queda el default del componente.
  * - textTransform: "none" | "uppercase" | "lowercase" | "capitalize"
  *   (si está, tiene prioridad sobre `uppercase`)
+ * - textAlign: "left" | "center" | "right" | "justify" | "start" | "end"
+ *   Si no se setea, queda el align del componente (text-center / text-start / …).
  * - enabled: false = desactiva este bloque de estilo sin borrarlo (default true)
  *
  * En el JSON de cada sección va como hermano de type/id/data:
  *   "style": {
+ *     "font": "Indie Flower",
  *     "enabled": true,
- *     "title": { "font": "...", "sizePx": 28, "uppercase": false, "enabled": true },
- *     "value": { "sizePx": 25, "weight": 400 }
+ *     "title": { "sizePx": 28, "uppercase": false },
+ *     "paragraphs": { "sizePx": 15, "textAlign": "center" }
  *   }
+ * Props a nivel de style (fuera de title/paragraphs/…) aplican a TODAS las partes;
+ * cada parte puede sobreescribir (ej. title.font distinto).
  * También: "style": false desactiva todo el style de la sección.
- * Las claves dentro de `style` son el nombre real de la parte (igual que en
- * blocks/data: title, value, paragraphs, address, …).
+ * Las claves-parte son el nombre real (title, value, paragraphs, …).
  */
 export type SectionTextStyle = {
     font?: string;
@@ -35,12 +39,31 @@ export type SectionTextStyle = {
     /** false = respeta minúsculas del texto (anula uppercase del CSS). */
     uppercase?: boolean;
     textTransform?: "none" | "uppercase" | "lowercase" | "capitalize";
+    /** Alineación; si no se setea, se mantiene el look del componente. */
+    textAlign?: "left" | "center" | "right" | "justify" | "start" | "end";
     /** false = ignora este estilo (útil para apagar sin borrar el JSON). */
     enabled?: boolean;
 };
 
-/** Mapa parte → tipografía, hermano de type/id/data en la sección. */
+/** Mapa parte → tipografía (+ defaults de sección bajo clave interna). */
 export type SectionStyleMap = Record<string, SectionTextStyle>;
+
+/** Clave interna: estilos del root de `style` (aplican a todas las partes). */
+export const SECTION_STYLE_DEFAULTS_KEY = "__defaults";
+
+/** Campos de tipografía que pueden ir a nivel raíz de `style`. */
+const SHARED_STYLE_FIELD_KEYS = new Set([
+    "font",
+    "fontFamily",
+    "sizePx",
+    "weight",
+    "letterSpacing",
+    "uppercase",
+    "textTransform",
+    "textAlign",
+    "lowercase",
+    "enabled",
+]);
 
 const LETTER_SPACING_PRESETS: Record<string, string> = {
     none: "0",
@@ -70,8 +93,11 @@ export function parseSectionTextStyle(raw: unknown): SectionTextStyle | null {
 
     const out: SectionTextStyle = {};
 
+    // font o alias fontFamily
     if (typeof raw.font === "string" && raw.font.trim()) {
         out.font = raw.font.trim();
+    } else if (typeof raw.fontFamily === "string" && raw.fontFamily.trim()) {
+        out.font = raw.fontFamily.trim();
     }
 
     if (typeof raw.sizePx === "number" && Number.isFinite(raw.sizePx) && raw.sizePx > 0) {
@@ -103,6 +129,20 @@ export function parseSectionTextStyle(raw: unknown): SectionTextStyle | null {
         }
     }
 
+    if (typeof raw.textAlign === "string") {
+        const ta = raw.textAlign.trim().toLowerCase();
+        if (
+            ta === "left" ||
+            ta === "center" ||
+            ta === "right" ||
+            ta === "justify" ||
+            ta === "start" ||
+            ta === "end"
+        ) {
+            out.textAlign = ta;
+        }
+    }
+
     // Compat overlay-like: lowercase: true ⇒ no forzar mayúsculas
     if (out.textTransform === undefined && raw.lowercase === true) {
         out.uppercase = false;
@@ -114,11 +154,23 @@ export function parseSectionTextStyle(raw: unknown): SectionTextStyle | null {
         out.weight === undefined &&
         out.letterSpacing === undefined &&
         out.uppercase === undefined &&
-        out.textTransform === undefined
+        out.textTransform === undefined &&
+        out.textAlign === undefined
     ) {
         return null;
     }
     return out;
+}
+
+/** Parte sobreescribe defaults de sección (solo claves definidas en la parte). */
+export function mergeSectionTextStyles(
+    base: SectionTextStyle | null | undefined,
+    override: SectionTextStyle | null | undefined,
+): SectionTextStyle | null {
+    if (!base && !override) return null;
+    if (!base) return override ?? null;
+    if (!override) return base;
+    return { ...base, ...override };
 }
 
 /** CSS inline a partir de SectionTextStyle. No pisa propiedades no definidas. */
@@ -148,6 +200,9 @@ export function sectionTextStyleToCss(
     } else if (style.uppercase === true) {
         css.textTransform = "uppercase";
     }
+    if (style.textAlign) {
+        css.textAlign = style.textAlign;
+    }
     return Object.keys(css).length ? css : undefined;
 }
 
@@ -160,28 +215,49 @@ export function parseSectionStyleMap(raw: unknown): SectionStyleMap | null {
     // "style": { "enabled": false, "title": { … } } → igual, ignora las partes.
     if (raw.enabled === false) return null;
 
+    // Campos sueltos a nivel style → defaults para todas las partes
+    const sharedRaw: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(raw)) {
+        if (!SHARED_STYLE_FIELD_KEYS.has(key)) continue;
+        if (key === "enabled") continue;
+        sharedRaw[key] = value;
+    }
+    const defaults = parseSectionTextStyle(sharedRaw);
+
     const out: SectionStyleMap = {};
+    if (defaults) out[SECTION_STYLE_DEFAULTS_KEY] = defaults;
+
     for (const [part, value] of Object.entries(raw)) {
         if (
             part === "enabled" ||
             part.startsWith("//") ||
-            part.startsWith("_")
+            part.startsWith("_") ||
+            SHARED_STYLE_FIELD_KEYS.has(part)
         ) {
             continue;
         }
+        // Solo objetos anidados son partes (title, paragraphs, …)
+        if (!isRecord(value)) continue;
         const parsed = parseSectionTextStyle(value);
         if (parsed) out[part] = parsed;
     }
+
     return Object.keys(out).length ? out : null;
 }
 
-/** Tipografía de una parte (`title`, `body`, …) dentro de `section.style`. */
+/**
+ * Tipografía de una parte (`title`, `body`, …) dentro de `section.style`.
+ * Incluye defaults definidos a nivel raíz de style (font, textAlign, …).
+ * La parte gana sobre el default si define la misma propiedad.
+ */
 export function getSectionPartTextStyle(
     styleMap: SectionStyleMap | null | undefined,
     part: string,
 ): SectionTextStyle | null {
     if (!styleMap) return null;
-    return styleMap[part] ?? null;
+    const defaults = styleMap[SECTION_STYLE_DEFAULTS_KEY];
+    const own = styleMap[part];
+    return mergeSectionTextStyles(defaults, own);
 }
 
 function normalizeFontName(name: string): string {

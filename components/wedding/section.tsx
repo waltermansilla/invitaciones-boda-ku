@@ -2,7 +2,8 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import AnimatedSection from "./animated-section";
+import { RevealContent } from "./animated-section";
+import { useFadeIn } from "@/hooks/use-fade-in";
 import QuoteSection from "./quote-section";
 import EventInfoSection from "./event-info-section";
 import DateInfoSection from "./date-info-section";
@@ -372,6 +373,9 @@ function SectionContent({
                     <GallerySection
                         images={data.images as string[]}
                         aspectRatio={data.aspectRatio as string | undefined}
+                        sectionBgColor={bgColor}
+                        bgColorTheme={bgPaint}
+                        bgImage={resolvedBgImage}
                     />
                 );
 
@@ -552,7 +556,9 @@ function SectionContent({
           <DressCodeSection
             title={data.title as string}
             subtitle={data.subtitle as string}
-            description={data.description as string | undefined}
+            description={
+              data.description as string | string[] | undefined
+            }
             icons={data.icons as string[] | undefined}
             showButton={data.showButton as boolean | undefined}
                         button={
@@ -930,8 +936,13 @@ function SectionContent({
     }
     };
 
+  const { ref: revealRef, isVisible: isRevealVisible } = useFadeIn(
+    0.15,
+    revealImmediately,
+  );
+
   return (
-    <AnimatedSection id={id} initialVisible={revealImmediately}>
+    <div ref={revealRef} id={id}>
       {/* Subtle divider between consecutive sections with same background color */}
       {showDivider && (
         <div
@@ -952,6 +963,8 @@ function SectionContent({
         </div>
       )}
       {skipWrapper ? (
+        // Self-styled: el fondo vive adentro del componente; no animar el wrapper
+        // (cada uno con fondo animaria mal). Esa seccion anima su contenido interno.
         renderContent()
       ) : (
         <div
@@ -961,11 +974,13 @@ function SectionContent({
             ...bgImageStyle,
           }}
         >
-          {renderContent()}
+          <RevealContent isVisible={isRevealVisible}>
+            {renderContent()}
+          </RevealContent>
         </div>
       )}
-    </AnimatedSection>
-    );
+    </div>
+  );
 }
 
 export default function Section(props: SectionProps) {

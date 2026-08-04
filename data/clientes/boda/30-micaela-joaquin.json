@@ -89,7 +89,7 @@
         "autoplay": false
     },
     "hero": {
-        "coupleImage": "/clientes/boda/30-micaela-joaquin/images/hero-2.jpeg",
+        "coupleImage": "/clientes/boda/30-micaela-joaquin/images/hero.jpg",
         "aspectRatio": "3/4",
         "headline": "¡Nos casamos!",
         "showNamesOnPhoto": false,
@@ -209,7 +209,7 @@
                 "icons": ["gem"],
                 "title": "Dress code",
                 "subtitle": "Formal de gala",
-                "description": "Sugerimos traje y vestido largo. Te pedimos amablemente evitar estos colores:",
+                "description": "Sugerimos traje y vestido largo.\n\nTe pedimos amablemente evitar estos colores:",
                 "showButton": false,
                 "colorSwatches": {
                     "enabled": true,
@@ -217,8 +217,7 @@
                     "colors": [
                         { "color": "#FFFFFF", "label": "Blanco" },
                         { "color": "#E8DFD0", "label": "Beige" },
-
-                        { "color": "#7e8c54", "label": "Verde salvia" }
+                        { "color": "#a3b18a", "label": "Verde salvia" }
                     ]
                 }
             }
@@ -232,18 +231,18 @@
             "bgColor": "background",
             "bgImage": "/clientes/boda/30-micaela-joaquin/images/hojas-fondo-2.jpeg",
             "style": {
+                "fontFamily": "Indie Flower",
                 "title": {
-                    "font": "Dancing Script",
                     "uppercase": false,
-                    "sizePx": 35,
-                    "weight": 400,
+                    "sizePx": 39,
+                    "weight": 500,
                     "letterSpacing": 0.5
                 },
                 "paragraphs": {
-                    "font": "Dancing Script",
+                    "textAlign": "center",
                     "sizePx": 21,
                     "weight": 300,
-                    "letterSpacing": 0.5
+                    "letterSpacing": 0
                 }
             },
             "blocks": ["title", "paragraphs"],
@@ -336,35 +335,9 @@
         },
 
         {
-            "type": "gallery",
-            "id": "gallery-photos",
-            "blocks": ["slider"],
-            "data": {
-                "aspectRatio": "libre",
-                "images": [
-                    "/clientes/boda/30-micaela-joaquin/images/ramo-corto.jpeg"
-                ]
-            }
-        },
-
-        {
-            "type": "quote",
-            "id": "quote-welcome2",
-            "bgColor": "background",
-            "bgImage": "/clientes/boda/30-micaela-joaquin/images/fondo-ramo-2.jpeg",
-
-            "blocks": ["text", "author"],
-            "data": {
-                "text": "Nuestro regalo más preciado es su presencia y compañía. Lo que más deseamos es compartir esta noche con ustedes, que la disfruten y que se convierta en un hermoso recuerdo para todos.",
-                "author": "Mica & Joco",
-                "decorativeLines": true
-            }
-        },
-        {
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-
             "blocks": ["title", "form"],
             "data": {
                 "title": "Confirmá tu asistencia",
@@ -402,13 +375,41 @@
                 }
             }
         },
+
+        {
+            "type": "gallery",
+            "id": "gallery-photos",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/images/fondo-ramo-2.jpeg",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": [
+                    "/clientes/boda/30-micaela-joaquin/images/ramo2.jpeg"
+                ]
+            }
+        },
+
+        {
+            "type": "quote",
+            "id": "quote-welcome2",
+            "bgColor": "primary",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/bg/primary-2.jpeg",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por acompañarnos a convertir este día en un recuerdo inolvidable.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
         {
             "type": "closingImage",
             "id": "closing-image",
+            "bgImage": "/clientes/boda/30-micaela-joaquin/images/fondo-ramo-2.jpeg",
             "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "libre",
-                "image": "/clientes/boda/30-micaela-joaquin/images/final.jpeg",
+                "image": "",
                 "namesDisplay": {
                     "enabled": true,
                     "font": "Dancing Script",

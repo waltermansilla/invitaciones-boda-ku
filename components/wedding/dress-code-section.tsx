@@ -73,7 +73,7 @@ type ColorSwatchItem = string | { color?: string; hex?: string; label?: string }
 interface DressCodeSectionProps {
   title: string
   subtitle: string
-  description?: string
+  description?: string | string[]
   icons?: string[]
   showButton?: boolean
   button?: { text: string; url: string; variant?: "primary" | "secondary" }
@@ -255,7 +255,7 @@ function SwatchMarker({
     )
   }
 
-  // Centro exacto: con 3 colores, línea un poco más corta
+  // Centro exacto: línea recta (más corta con 3 colores)
   const centerH = total === 3 ? 36 : 56
   return (
     <div className="pointer-events-none absolute top-full left-1/2 z-10 flex w-max -translate-x-1/2 flex-col items-center">
@@ -268,11 +268,7 @@ function SwatchMarker({
         aria-hidden
       >
         <path
-          d={
-            total === 3
-              ? "M7 1C6 8 8 14 6 22C5 28 7 33 7 35"
-              : "M7 1C6 12 8 22 6 34C5 42 7 50 7 55"
-          }
+          d={`M7 1L7 ${centerH - 1}`}
           stroke="currentColor"
           strokeWidth="1"
           strokeLinecap="round"
@@ -368,12 +364,38 @@ export default function DressCodeSection({
         {subtitle}
       </p>
 
-      {/* Optional description text */}
-      {description && (
-        <p className="mb-5 max-w-sm text-sm font-light leading-relaxed opacity-80">
-          {description}
-        </p>
-      )}
+      {/* Optional description text — string, \n, o array de párrafos */}
+      {description &&
+        (() => {
+          const paragraphs = Array.isArray(description)
+            ? description.map((p) => String(p).trim()).filter(Boolean)
+            : String(description)
+                .split(/\n\s*\n/)
+                .map((p) => p.trim())
+                .filter(Boolean)
+          if (paragraphs.length === 0) return null
+          // Un solo bloque con saltos simples (\n sin párrafo vacío)
+          if (
+            !Array.isArray(description) &&
+            paragraphs.length === 1 &&
+            String(description).includes("\n")
+          ) {
+            return (
+              <p className="mb-5 max-w-sm whitespace-pre-line text-sm font-light leading-relaxed opacity-80">
+                {String(description).trim()}
+              </p>
+            )
+          }
+          return (
+            <div className="mb-5 max-w-sm space-y-2 text-sm font-light leading-relaxed opacity-80">
+              {paragraphs.map((p, i) => (
+                <p key={i} className="whitespace-pre-line">
+                  {p}
+                </p>
+              ))}
+            </div>
+          )
+        })()}
 
       {/* Color swatches */}
       {colorSwatches?.enabled && swatches.length > 0 && (

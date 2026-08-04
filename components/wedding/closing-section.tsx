@@ -1,7 +1,11 @@
+"use client"
+
 import Image from "next/image"
 import type { CSSProperties } from "react"
 import { useConfig } from "@/lib/config-context"
 import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
+import { useFadeIn } from "@/hooks/use-fade-in"
+import { RevealContent } from "./animated-section"
 
 /**
  * Closing Section - Imagen de cierre con nombres
@@ -121,6 +125,8 @@ export default function ClosingSection({
       ? { backgroundColor: bgPaint }
       : {}
 
+  const { ref, isVisible } = useFadeIn(0.15)
+
   // If copyFromHero is true, get settings from hero.namesDisplay
   const heroNamesDisplay = hero?.namesDisplay as Record<string, unknown> | undefined
   // If copyFromOverlay is true, get settings from overlay.nameStyle
@@ -202,6 +208,7 @@ export default function ClosingSection({
 
   return (
     <section
+      ref={ref}
       className={sectionBgClass}
       style={{ color: defaultTextColor, ...sectionBgStyle }}
     >
@@ -217,6 +224,7 @@ export default function ClosingSection({
         </>
       )}
 
+      <RevealContent isVisible={isVisible}>
       {/* Full-width closing image (opcional: sin image solo se muestra el nombre) */}
       {hasClosingImage &&
         (isFreeAspect ? (
@@ -276,6 +284,7 @@ export default function ClosingSection({
           )}
         </div>
       )}
+      </RevealContent>
     </section>
   )
 }

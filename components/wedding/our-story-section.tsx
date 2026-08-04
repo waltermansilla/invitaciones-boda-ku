@@ -2,6 +2,7 @@
 
 import { Fragment, type CSSProperties } from "react"
 import { useFadeIn } from "@/hooks/use-fade-in"
+import { RevealContent } from "./animated-section"
 import { useConfig } from "@/lib/config-context"
 import {
   sectionTextStyleToCss,
@@ -98,15 +99,16 @@ function StoryMoment({
   return (
     <div
       ref={ref}
-      className={`${bgClass} transition-all duration-700 ease-out ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-      }`}
+      className={bgClass}
       style={{
         color: textColor,
-        transitionDelay: `${index * 150}ms`,
         ...bgStyle,
       }}
     >
+      <RevealContent
+        isVisible={isVisible}
+        style={{ transitionDelay: `${index * 150}ms` }}
+      >
       {showImage ? (
         <div
           className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-0`}
@@ -169,6 +171,7 @@ function StoryMoment({
           </p>
         </div>
       )}
+      </RevealContent>
     </div>
   )
 }
@@ -215,11 +218,10 @@ function SimpleStory({
   return (
     <section
       ref={ref}
-      className={`${bgImage ? "" : bgClass} px-8 py-16 transition-all duration-700 ease-out md:px-10 md:py-20 ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
-      }`}
+      className={`${bgImage ? "" : bgClass} px-8 py-16 md:px-10 md:py-20`}
       style={{ color: textColor, ...bgPaintStyle, ...bgImageStyle }}
     >
+      <RevealContent isVisible={isVisible}>
       <div className="mx-auto max-w-md">
         <div
           className="mx-auto mb-7 w-10 border-t"
@@ -258,6 +260,7 @@ function SimpleStory({
           aria-hidden
         />
       </div>
+      </RevealContent>
     </section>
   )
 }
