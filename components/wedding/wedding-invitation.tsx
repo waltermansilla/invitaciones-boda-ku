@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useConfig, useIsMuestra } from "@/lib/config-context";
-import { useGuestPreview } from "@/lib/guest-preview";
 import ModalProvider from "./modal-provider";
 import HeroOverlay from "./hero-overlay";
 import type { CoupleNamesDisplayOrder } from "@/lib/couple-names-display-order";
@@ -23,7 +22,6 @@ interface InvitadoData {
 function WeddingInvitationContent() {
     const config = useConfig();
     const isMuestra = useIsMuestra();
-    const isGuestPreview = useGuestPreview();
     const searchParams = useSearchParams();
     const codigoInvitado = searchParams.get("i") || searchParams.get("c") || "";
     const skipOverlay =
@@ -99,7 +97,7 @@ function WeddingInvitationContent() {
     // Si el overlay está activo, al recargar siempre arrancamos desde arriba.
     // Si overlay.enabled !== true, no forzamos scroll aquí (trabajo operativo / sin pantalla de ingreso).
     useEffect(() => {
-        if (!overlayWantsFullBleedEntry && !isGuestPreview) return;
+        if (!overlayWantsFullBleedEntry) return;
         if (typeof window === "undefined") return;
 
         const previousScrollRestoration = window.history.scrollRestoration;
@@ -109,16 +107,18 @@ function WeddingInvitationContent() {
         return () => {
             window.history.scrollRestoration = previousScrollRestoration;
         };
-    }, [overlayWantsFullBleedEntry, isGuestPreview]);
+    }, [overlayWantsFullBleedEntry]);
 
-    // Sin overlay de ingreso: el navegador a veces no restaura bien el scroll al recargar
-    // (p. ej. smooth scroll en html + hidratación). Guardamos en pagehide y reaplicamos en reload.
+    // Sin overlay de ingreso: preservar scroll al recargar / HMR / rehidratación.
+    // También en vista previa del panel (?previewInvitado=1) con overlay off.
+    // (smooth scroll en html + remount de React suelen dejar el scroll en 0).
     useEffect(() => {
         if (typeof window === "undefined") return;
         const path = window.location.pathname + window.location.search;
         const key = `mu:inv-scroll:${path}`;
+        const landKey = `mu:inv-land:${path}`;
 
-        if (overlayWantsFullBleedEntry || isGuestPreview) {
+        if (overlayWantsFullBleedEntry) {
             try {
                 sessionStorage.removeItem(key);
             } catch {
@@ -127,51 +127,77 @@ function WeddingInvitationContent() {
             return;
         }
 
-        const nav = performance.getEntriesByType("navigation")[0] as
-            | PerformanceNavigationTiming
-            | undefined;
         const hasMeaningfulHash =
             typeof window.location.hash === "string" &&
             window.location.hash.length > 1;
 
-        if (nav?.type === "reload" && !hasMeaningfulHash) {
+        const scrollInstant = (top: number) => {
+            const html = document.documentElement;
+            const prev = html.style.scrollBehavior;
+            html.style.scrollBehavior = "auto";
             try {
-                const raw = sessionStorage.getItem(key);
-                if (raw != null) {
-                    const y = Number.parseInt(raw, 10);
-                    if (!Number.isNaN(y) && y > 0) {
-                        const scrollInstant = (top: number) => {
-                            const html = document.documentElement;
-                            const prev = html.style.scrollBehavior;
-                            html.style.scrollBehavior = "auto";
-                            try {
-                                window.scrollTo({
-                                    top,
-                                    left: 0,
-                                    behavior: "instant",
-                                });
-                            } catch {
-                                window.scrollTo(0, top);
-                            }
-                            html.style.scrollBehavior = prev;
-                        };
-                        const apply = () => scrollInstant(y);
-                        apply();
-                        requestAnimationFrame(apply);
-                        [50, 200, 500].forEach((ms) => {
-                            window.setTimeout(apply, ms);
-                        });
-                    }
-                }
+                window.scrollTo({
+                    top,
+                    left: 0,
+                    behavior: "instant" as ScrollBehavior,
+                });
             } catch {
-                /* ignore */
+                window.scrollTo(0, top);
             }
-        } else if (nav?.type === "navigate") {
+            html.style.scrollBehavior = prev;
+        };
+
+        // timeOrigin cambia en cada carga de documento, no en HMR/remount de React.
+        const loadId = String(performance.timeOrigin);
+        let isFreshDocumentLoad = false;
+        try {
+            if (sessionStorage.getItem(landKey) !== loadId) {
+                sessionStorage.setItem(landKey, loadId);
+                isFreshDocumentLoad = true;
+            }
+        } catch {
+            isFreshDocumentLoad = true;
+        }
+
+        const nav = performance.getEntriesByType("navigation")[0] as
+            | PerformanceNavigationTiming
+            | undefined;
+        const navType = nav?.type;
+
+        // Entrada fresca por link: arrancar arriba (no reusar scroll de otra sesión).
+        // Reload / back_forward / remount HMR: conservar clave y reaplicar.
+        if (
+            isFreshDocumentLoad &&
+            navType === "navigate" &&
+            !hasMeaningfulHash
+        ) {
             try {
                 sessionStorage.removeItem(key);
             } catch {
                 /* ignore */
             }
+        }
+
+        const tryRestore = () => {
+            if (hasMeaningfulHash) return;
+            try {
+                const raw = sessionStorage.getItem(key);
+                if (raw == null) return;
+                const y = Number.parseInt(raw, 10);
+                if (Number.isNaN(y) || y <= 0) return;
+                scrollInstant(y);
+            } catch {
+                /* ignore */
+            }
+        };
+
+        // Restaurar si hay valor guardado (reload, bf, o remount al editar con overlay off).
+        if (!hasMeaningfulHash) {
+            tryRestore();
+            requestAnimationFrame(tryRestore);
+            [50, 150, 350, 700].forEach((ms) => {
+                window.setTimeout(tryRestore, ms);
+            });
         }
 
         const persist = () => {
@@ -181,14 +207,29 @@ function WeddingInvitationContent() {
                 /* ignore */
             }
         };
+
+        // En scroll (throttled): HMR a veces no dispara pagehide.
+        let persistTimer: number | null = null;
+        const persistThrottled = () => {
+            if (persistTimer != null) return;
+            persistTimer = window.setTimeout(() => {
+                persistTimer = null;
+                persist();
+            }, 120);
+        };
+
         window.addEventListener("pagehide", persist);
         window.addEventListener("beforeunload", persist);
+        window.addEventListener("scroll", persistThrottled, { passive: true });
 
         return () => {
+            if (persistTimer != null) window.clearTimeout(persistTimer);
+            persist();
             window.removeEventListener("pagehide", persist);
             window.removeEventListener("beforeunload", persist);
+            window.removeEventListener("scroll", persistThrottled);
         };
-    }, [overlayWantsFullBleedEntry, isGuestPreview]);
+    }, [overlayWantsFullBleedEntry]);
 
     // Deep link (#section-id): el scroll nativo del navegador corre antes de que existan
     // los nodos client-side; en producción suele fallar. Reintentamos tras hidratar y cuando
@@ -240,19 +281,6 @@ function WeddingInvitationContent() {
             document.body.style.touchAction = previousBodyTouchAction;
         };
     }, [showOverlay]);
-
-    // Vista previa desde el panel: siempre arrancar arriba (sin saltar a confirmación).
-    useEffect(() => {
-        if (!isGuestPreview || typeof window === "undefined") return;
-        window.scrollTo(0, 0);
-    }, [isGuestPreview]);
-
-    useEffect(() => {
-        if (!isGuestPreview || showOverlay || typeof window === "undefined") {
-            return;
-        }
-        window.scrollTo(0, 0);
-    }, [isGuestPreview, showOverlay]);
 
     // Handle overlay dismiss - start music if autoplay is enabled (not in muestra mode)
     const handleOverlayDismiss = () => {

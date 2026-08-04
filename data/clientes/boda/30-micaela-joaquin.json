@@ -66,12 +66,12 @@
         }
     },
     "overlay": {
-        "enabled": true,
+        "enabled": false,
         "phrase": "Celebramos nuestra historia y la mejor manera de hacerlo es junto a ustedes.",
         "buttonText": "Ingresar",
         "showNames": true,
         "showPhrase": false,
-        "contentCenterY": 45,
+        "contentCenterY": 47,
         "nameStyle": {
             "font": "Dancing Script",
             "matchPhraseAndButtonColor": true,
@@ -231,16 +231,15 @@
             "bgColor": "background",
             "bgImage": "/clientes/boda/30-micaela-joaquin/images/hojas-fondo-2.jpeg",
             "style": {
-                "fontFamily": "Indie Flower",
                 "title": {
-                    "uppercase": false,
+                    "enabled": false,
                     "sizePx": 39,
                     "weight": 500,
                     "letterSpacing": 0.5
                 },
                 "paragraphs": {
-                    "textAlign": "center",
-                    "sizePx": 21,
+                    "textAlign": "start",
+                    "sizePx": 16,
                     "weight": 300,
                     "letterSpacing": 0
                 }
@@ -413,8 +412,8 @@
                 "namesDisplay": {
                     "enabled": true,
                     "font": "Dancing Script",
-                    "weight": "600",
-                    "size": "3xl",
+                    "weight": "500",
+                    "size": "50px",
                     "style": "normal",
                     "color": "#7a6148",
                     "decorativeLines": true,
