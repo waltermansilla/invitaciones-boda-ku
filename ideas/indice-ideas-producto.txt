@@ -17,6 +17,10 @@ ARCHIVOS
   ideas/recordatorios-invitados-panel.txt
     Teléfono en panel, recordatorios WA semi-masivos, aviso al anfitrión.
 
+  ideas/declaracion-pago-tarjeta-desde-invitacion.txt
+    Invitado declara pago tarjeta en la invitación; panel marca "a verificar"
+    (idea guardada desde otro chat, jul 2026).
+
   ideas/mesas-croquis-pdf.txt
     Asignación de mesas, croquis editable, PDF por grupos para recepción.
 
