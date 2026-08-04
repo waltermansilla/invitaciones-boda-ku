@@ -1,5 +1,6 @@
 import { getClientConfig } from "@/lib/get-client-config";
-import { overlayNameStyleFontHref } from "@/lib/overlay-name-font-href";
+import { extraGoogleFontStylesheetHrefs } from "@/lib/section-text-style";
+import { resolveThemeBodyFont } from "@/lib/theme-google-font";
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -11,21 +12,12 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
     const config = getClientConfig(tipo, slug);
     const { theme } = config;
 
-    // Handle both old format (theme.font as string) and new format (theme.font.family)
-    const fontFamily =
-        typeof theme.font === "string"
-            ? theme.font
-            : theme.font?.family || "Cormorant Garamond";
-
-    const fontWeights =
-        typeof theme.font === "string"
-            ? "300,400,500,600,700"
-            : theme.font?.weights || "300,400,500,600,700";
-
-    // Build Google Fonts URL - encode properly for fonts with spaces
-    const encodedFamily = fontFamily.replace(/ /g, "+");
-    const fontUrl = `https://fonts.googleapis.com/css2?family=${encodedFamily}:wght@${fontWeights}&display=swap`;
-    const overlayFontUrl = overlayNameStyleFontHref(config, fontFamily);
+    const { configuredFamily, loadGoogleFont, googleFontUrl, cssFontFamily } =
+        resolveThemeBodyFont(theme as { font?: string | { family?: string; weights?: string } });
+    const extraFontHrefs = extraGoogleFontStylesheetHrefs(
+        config,
+        configuredFamily,
+    );
 
     return (
         <>
@@ -35,23 +27,25 @@ export default async function ClientLayout({ children, params }: LayoutProps) {
                 href="https://fonts.gstatic.com"
                 crossOrigin="anonymous"
             />
-            <link href={fontUrl} rel="stylesheet" />
-            {overlayFontUrl ? (
-                <link href={overlayFontUrl} rel="stylesheet" />
+            {loadGoogleFont && googleFontUrl ? (
+                <link href={googleFontUrl} rel="stylesheet" />
             ) : null}
+            {extraFontHrefs.map((href) => (
+                <link key={href} href={href} rel="stylesheet" />
+            ))}
             <style
                 dangerouslySetInnerHTML={{
                     __html: `
         html, body {
           background-color: ${theme.backgroundColor} !important;
-          font-family: '${fontFamily}', ui-sans-serif, system-ui, sans-serif !important;
+          font-family: ${cssFontFamily} !important;
         }
         * {
           font-family: inherit;
         }
         :root {
-          --font-sans: '${fontFamily}', ui-sans-serif, system-ui, sans-serif;
-          --font-serif: '${fontFamily}', ui-sans-serif, system-ui, sans-serif;
+          --font-sans: ${cssFontFamily};
+          --font-serif: ${cssFontFamily};
           --primary: ${theme.primaryColor};
           --primary-foreground: #FFFFFF;
           --background: ${theme.backgroundColor};

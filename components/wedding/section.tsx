@@ -2,7 +2,8 @@
 
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import AnimatedSection from "./animated-section";
+import { RevealContent } from "./animated-section";
+import { useFadeIn } from "@/hooks/use-fade-in";
 import QuoteSection from "./quote-section";
 import EventInfoSection from "./event-info-section";
 import DateInfoSection from "./date-info-section";
@@ -28,6 +29,11 @@ import ConfirmarWhatsappSection from "./confirmar-whatsapp-section";
 import AdultsOnlySection from "./adults-only-section";
 import ZoomInfoSection from "./zoom-info-section";
 import CaptureCardSection from "./capture-card-section";
+import {
+    getSectionPartTextStyle,
+    parseSectionStyleMap,
+    parseSectionTextStyle,
+} from "@/lib/section-text-style";
 import FaqSection from "./faq-section";
 import { useConfig } from "@/lib/config-context";
 import {
@@ -40,10 +46,25 @@ export interface SectionConfig {
     id: string;
     blocks: string[];
     data: Record<string, unknown>;
+    /**
+     * Modo de contenido/texto: 'primary' | 'background' | 'transparent'.
+     * Define contraste del texto (claro u oscuro), no el hex del fondo.
+     */
     bgColor?: string;
+    /**
+     * Color de fondo real (hex/CSS). Opcional.
+     * Si está, pinta el fondo con ese color; el texto sigue el modo de `bgColor`.
+     * Ej: bgColor "background" + bgColorTheme "#E8F0E4"
+     */
+    bgColorTheme?: string;
     bgImage?: string; // imagen de fondo en vez de color
     textColor?: string;
     enabled?: boolean; // true por defecto si no se especifica
+    /**
+     * Tipografía opcional por parte de la sección (hermano de type/id/data).
+     * Ej: { title: { font, sizePx, weight, letterSpacing }, body: { … } }
+     */
+    style?: Record<string, unknown>;
 }
 
 interface SectionProps {
@@ -83,10 +104,13 @@ function SectionContent({
         id,
         data,
         bgColor,
+        bgColorTheme,
         bgImage,
         textColor,
         enabled = true,
+        style: sectionStyleRaw,
     } = section;
+    const sectionStyle = parseSectionStyleMap(sectionStyleRaw);
     const theme = config.theme as Record<string, unknown>;
   const rsvpPanel = config.rsvpPanel as
     | {
@@ -114,13 +138,19 @@ function SectionContent({
         resolvedBgImage = (theme.primaryImage as string) || undefined;
   }
 
-  // Determine bg + text color from theme
+  // bgColor = modo de contenido (texto). bgColorTheme = color de fondo real (opcional).
+    const bgPaint =
+        typeof bgColorTheme === "string" && bgColorTheme.trim()
+            ? bgColorTheme.trim()
+            : undefined;
     const bg =
-        bgColor === "primary"
-            ? "bg-primary"
-            : bgColor === "transparent"
-              ? "bg-transparent"
-              : "bg-background";
+        bgPaint || resolvedBgImage
+            ? ""
+            : bgColor === "primary"
+              ? "bg-primary"
+              : bgColor === "transparent"
+                ? "bg-transparent"
+                : "bg-background";
   const resolveTextColorValue = (value: string): string => {
         const color = value.trim();
         if (!color) return color;
@@ -161,6 +191,7 @@ function SectionContent({
     const effectiveBg = skipWrapper ? null : bgColor || "background";
     const prevEffective = prevBgColor || null;
     const showDivider =
+        type !== "spacer" &&
         !skipWrapper &&
         effectiveBg &&
         prevEffective &&
@@ -178,10 +209,29 @@ function SectionContent({
     // Hide the top of the image by a small amount when continuing, creating seamless flow
     ...(continuesBgImage ? { backgroundAttachment: "local" } : {}),
           }
-        : {};
+        : bgPaint
+          ? { backgroundColor: bgPaint }
+          : {};
 
   const renderContent = () => {
     switch (type) {
+      case "spacer": {
+        const rawHeight = data.heightPx ?? data.height;
+        const parsed =
+          typeof rawHeight === "number"
+            ? rawHeight
+            : typeof rawHeight === "string"
+              ? Number.parseFloat(rawHeight)
+              : NaN;
+        const heightPx = Number.isFinite(parsed) ? Math.max(0, parsed) : 48;
+        return (
+          <div
+            aria-hidden="true"
+            style={{ height: `${heightPx}px`, width: "100%" }}
+          />
+        );
+      }
+
       case "quote":
         return (
           <QuoteSection
@@ -233,6 +283,8 @@ function SectionContent({
           <DateInfoSection
             title={data.title as string}
             value={data.value as string}
+            titleStyle={getSectionPartTextStyle(sectionStyle, "title")}
+            valueStyle={getSectionPartTextStyle(sectionStyle, "value")}
           />
                 );
 
@@ -321,6 +373,9 @@ function SectionContent({
                     <GallerySection
                         images={data.images as string[]}
                         aspectRatio={data.aspectRatio as string | undefined}
+                        sectionBgColor={bgColor}
+                        bgColorTheme={bgPaint}
+                        bgImage={resolvedBgImage}
                     />
                 );
 
@@ -501,7 +556,9 @@ function SectionContent({
           <DressCodeSection
             title={data.title as string}
             subtitle={data.subtitle as string}
-            description={data.description as string | undefined}
+            description={
+              data.description as string | string[] | undefined
+            }
             icons={data.icons as string[] | undefined}
             showButton={data.showButton as boolean | undefined}
                         button={
@@ -530,7 +587,15 @@ function SectionContent({
                                 | {
                                       enabled: boolean;
                                       shape: "circle" | "square";
-                                      colors: string[];
+                                      labels?: string[];
+                                      colors: (
+                                          | string
+                                          | {
+                                                color?: string;
+                                                hex?: string;
+                                                label?: string;
+                                            }
+                                      )[];
                                   }
                                 | undefined
                         }
@@ -758,7 +823,18 @@ function SectionContent({
                         }
             aspectRatio={data.aspectRatio as string | undefined}
                         sectionBgColor={bgColor}
+                        bgColorTheme={bgPaint}
                         bgImage={resolvedBgImage}
+                        titleStyle={
+                            getSectionPartTextStyle(sectionStyle, "title") ??
+                            parseSectionTextStyle(data.titleStyle)
+                        }
+                        bodyStyle={
+                            getSectionPartTextStyle(sectionStyle, "paragraphs") ??
+                            getSectionPartTextStyle(sectionStyle, "body") ??
+                            parseSectionTextStyle(data.bodyStyle)
+                        }
+                        showHearts={data.showHearts !== false}
           />
                 );
 
@@ -849,6 +925,9 @@ function SectionContent({
                                   }
                                 | undefined
                         }
+                        sectionBgColor={bgColor}
+                        bgColorTheme={bgPaint}
+                        bgImage={resolvedBgImage}
                     />
                 );
 
@@ -857,11 +936,23 @@ function SectionContent({
     }
     };
 
+  const { ref: revealRef, isVisible: isRevealVisible } = useFadeIn(
+    0.15,
+    revealImmediately,
+  );
+
   return (
-    <AnimatedSection id={id} initialVisible={revealImmediately}>
+    <div ref={revealRef} id={id}>
       {/* Subtle divider between consecutive sections with same background color */}
       {showDivider && (
-        <div className={colors.bg} style={bgImageStyle}>
+        <div
+          className={colors.bg}
+          style={
+            bgPaint && !resolvedBgImage
+              ? { backgroundColor: bgPaint }
+              : bgImageStyle
+          }
+        >
                     <div
                         className="mx-auto w-16 border-t"
                         style={{
@@ -872,20 +963,24 @@ function SectionContent({
         </div>
       )}
       {skipWrapper ? (
+        // Self-styled: el fondo vive adentro del componente; no animar el wrapper
+        // (cada uno con fondo animaria mal). Esa seccion anima su contenido interno.
         renderContent()
       ) : (
         <div
-          className={resolvedBgImage ? "" : colors.bg}
+          className={resolvedBgImage || bgPaint ? "" : colors.bg}
           style={{ 
             color: colors.resolvedTextColor,
             ...bgImageStyle,
           }}
         >
-          {renderContent()}
+          <RevealContent isVisible={isRevealVisible}>
+            {renderContent()}
+          </RevealContent>
         </div>
       )}
-    </AnimatedSection>
-    );
+    </div>
+  );
 }
 
 export default function Section(props: SectionProps) {
