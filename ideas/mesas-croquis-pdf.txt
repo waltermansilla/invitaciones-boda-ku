@@ -1,0 +1,37 @@
+IDEA: Mesas + croquis editable + PDF por grupos
+===============================================
+Fecha de nota: julio 2026
+Contexto: charla de producto Momento Único.
+Esta nota NO son instrucciones activas — idea para implementar cuando quiera.
+
+
+ESTADO HOY
+----------
+  - No existe sistema de mesas.
+  - Solo campo texto opcional codigo-mesa en RSVP (va a invitado.mensaje).
+
+
+DEFINICIÓN ACORDADA — POR FASES
+-------------------------------
+
+  Fase 1 — Asignación:
+    - Tabla mesas en Supabase (nombre/número, capacidad).
+    - Asignar mesa a cada invitado/integrante desde el panel.
+    - Capacidad en PERSONAS (familia de 4 = 4 lugares, no 1 fila).
+    - Alertas: mesa sobrepasada, invitados sin mesa, no confirmados asignados.
+
+  Fase 2 — Croquis editable:
+    - Lienzo: mesas redondas/rectangulares, drag & drop invitados.
+    - Mobile-friendly.
+
+  Fase 3 — Compartir / invitado (opcional):
+    - Invitado ve "Estás en mesa 7" en su link el día del evento.
+
+  PDF:
+    - Listado por grupos de mesa para recepción/catering.
+    - Reutilizar stack print actual (html2canvas + jspdf).
+
+
+PRIORIDAD SUGERIDA
+------------------
+  Alta valor comercial (feature premium claro).

@@ -1,0 +1,38 @@
+ÍNDICE: Ideas de producto (Momento Único)
+=========================================
+Fecha: julio–agosto 2026
+Carpeta: ideas/
+Todas las notas son ideas futuras, NO instrucciones activas.
+
+
+ARCHIVOS
+--------
+
+  ideas/trivia-ranking-panel.txt
+    Trivia con ranking, primer intento, solo anfitrión, premios en fiesta.
+
+  ideas/edicion-cliente-overrides.txt
+    Cliente edita campos puntuales post-entrega (whitelist, sin redeploy).
+
+  ideas/recordatorios-invitados-panel.txt
+    Teléfono en panel, recordatorios WA semi-masivos, aviso al anfitrión.
+
+  ideas/mesas-croquis-pdf.txt
+    Asignación de mesas, croquis editable, PDF por grupos para recepción.
+
+  ideas/crecimiento-y-promo-confirmacion.txt
+    Referidos, viralidad (A1/A3/D1/D2) + promo teaser/modal en confirmación
+    (prueba visual Sofia y Mateo). Van juntas: promo = funnel de referidos.
+
+  ideas/documentar-criterio-de-trabajo-para-ia.txt
+    (Nota previa) Criterios operativos para armar clientes con IA.
+
+
+ORDEN SUGERIDO DE IMPLEMENTACIÓN
+--------------------------------
+  1. Promo confirmación con estructura (ver crecimiento-y-promo-confirmacion.txt)
+  2. Trivia con persistencia
+  3. Teléfono + recordatorios panel
+  4. Mesas fase 1 + PDF
+  5. Overrides edición cliente
+  6. Mesas croquis + resto crecimiento (stories, post-evento, aniversario)

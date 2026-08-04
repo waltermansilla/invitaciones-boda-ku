@@ -1,0 +1,39 @@
+IDEA: Edición post-entrega por el cliente (overrides acotados)
+==============================================================
+Fecha de nota: julio 2026
+Contexto: charla de producto Momento Único.
+Esta nota NO son instrucciones activas — idea para implementar cuando quiera.
+
+
+PROBLEMA REAL
+-------------
+  - Cambios chicos (ej. una hora) hoy = editar JSON + git push + redeploy.
+
+
+DEFINICIÓN ACORDADA
+-------------------
+  - Campo overrides en Supabase por evento (JSON chico) que la invitación mergea
+    encima del JSON base → cambios al instante, sin redeploy.
+
+  WHITELIST corta de campos de bajo riesgo, habilitada por mí por cliente:
+    · hora de un evento del itinerario
+    · alias / CBU / link de regalos
+    · texto corto (dress code, mensaje bienvenida)
+    · fecha límite de confirmación
+
+  SIEMPRE bloqueado: layout, secciones, colores, fotos hero, tokens.
+
+  Guardarraíles:
+    · límite de caracteres
+    · vista previa antes de publicar
+    · registro de cambios
+
+  Opcional: modo "propuesta" (cliente sugiere, yo apruebo).
+  Switch por cliente "auto-edición ON/OFF" (puede ser parte de plan superior).
+
+  Edición desde: /base/[token] (hub que ya existe).
+
+
+PRIORIDAD SUGERIDA
+------------------
+  Media (muy útil operativamente; requiere cambio de arquitectura).

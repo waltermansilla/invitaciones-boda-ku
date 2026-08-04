@@ -1,0 +1,32 @@
+IDEA: Trivia con ranking en el panel
+=====================================
+Fecha de nota: julio 2026
+Contexto: charla de producto Momento Único.
+Esta nota NO son instrucciones activas — idea para implementar cuando quiera.
+
+
+ESTADO HOY
+----------
+  - Trivia 100% client-side, no persiste nada.
+  - Archivo: components/wedding/trivia-section.tsx
+
+
+DEFINICIÓN ACORDADA
+-------------------
+  - Guardar resultado atado al codigo del invitado (tabla invitados en Supabase).
+  - Solo cuenta el PRIMER intento (validar en servidor, no en el navegador).
+  - Desempate: mayor puntaje; a igualdad, MENOR tiempo de respuesta.
+  - Solo lo ve el ANFITRIÓN en el panel (pestaña "Trivia" con ranking).
+  - Uso: premios en la fiesta, sorteos, etc.
+  - Sin codigo personalizado (?i=): puede jugar pero NO entra al ranking.
+  - Opt-in por cliente en JSON (no en todas las invitaciones).
+
+
+DATOS A GUARDAR (referencia)
+----------------------------
+  - invitado_id / codigo, puntaje, duracion_segundos, fecha_juego.
+
+
+PRIORIDAD SUGERIDA
+------------------
+  Alta (mejor esfuerzo/impacto en la charla).

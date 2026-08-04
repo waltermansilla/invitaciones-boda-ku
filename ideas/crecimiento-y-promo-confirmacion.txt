@@ -1,0 +1,137 @@
+IDEA: Crecimiento / viralidad + promo en confirmación
+=====================================================
+Fecha de nota: julio–agosto 2026
+Contexto: charla de producto Momento Único.
+Esta nota NO son instrucciones activas — ideas para implementar cuando quiera.
+
+Nota: estas dos líneas van juntas porque la promo post-confirmación es la
+materialización concreta del funnel de referidos (A1).
+
+
+================================================================================
+PARTE A — CRECIMIENTO / VIRALIDAD
+================================================================================
+
+Interés declarado:
+  Conseguir ventas nuevas vía invitados, ex-clientes y referidos.
+
+Ideas que más resonaron:
+
+  A1 — Referidos + cupón + sello en invitación:
+    - Sistema de cupones ya existe (925837links/cupones).
+    - Sello al pie ya está pero no convierte solo → hace falta CTA en momento
+      de atención (post-confirmación).
+
+  A3 — Imagen/story para compartir en redes (publicidad orgánica).
+
+  D1 — Agradecimiento post-evento a confirmados (puerta a recompra).
+
+  D2 — Mensaje aniversario al año (reactivación).
+
+Atribución deseada:
+  - from=inv-{N} en links (N = número de cliente, ej. 0 → 0-sofia-mateo.json).
+  - Sin nombres de novios en mensajes promocionales.
+
+
+================================================================================
+PARTE B — PROMO EN PANTALLA DE CONFIRMACIÓN (EN PRUEBA VISUAL)
+================================================================================
+
+Objetivo:
+  - Captar clientes nuevos entre invitados que confirman.
+  - Sin invadir la invitación del anfitrión: teaser compacto + modal con detalle.
+
+
+ESTADO IMPLEMENTADO (SOLO PRUEBA, sin estructura)
+-------------------------------------------------
+  - Cliente: data/clientes/boda/0-sofia-mateo.json → sección rsvp → promo
+  - Componente: components/wedding/rsvp-section.tsx
+    (teaser + PromoBenefitModalContent)
+  - NO incluye aún:
+      · disparador 5º envío
+      · ocultar en preview/muestra
+      · cupón real en DB
+      · autofill configurador
+      · persistencia cupón en landing
+
+
+TEASER (Confirmación enviada / Ya confirmaste)
+----------------------------------------------
+    ¿Organizás tu propio evento?
+    10% off en Momento Único · Válido 7 días
+    Explorá modelos, guardalo para después o compartilo con alguien que esté organizando.
+    [ ¿Cómo funciona? ]
+
+  - Menciona compartir ANTES de abrir el modal.
+  - Código y acciones solo dentro del modal.
+
+
+MODAL (al tocar "¿Cómo funciona?")
+----------------------------------
+  Título: Tu beneficio exclusivo
+  Nota: explorar modelos; si reserva en plazo, 10% al confirmar.
+  Código copiable: SOFIMATEO10 (ejemplo prueba)
+
+  Pasos:
+    1. Explorá invitaciones reales en nuestros modelos
+    2. Elegí el estilo que más te guste
+    3. Al reservar dentro de 7 días, ingresá el código y se aplica el descuento
+
+  Acciones (modelos primero, reservar secundario):
+    [ Ver modelos de invitación ]  → /?coupon=SOFIMATEO10&from=inv-0#muestras
+    [ Guardar en WhatsApp ]          → link a modelos + código + plazo
+    [ Compartir con alguien ]        → mensaje para tercero, link a modelos
+    Ya sé lo que quiero — reservar   → /configurador?coupon=...&from=inv-0
+
+  Pie: podés volver a esta invitación y abrir el beneficio antes de que venza.
+
+  Psicología:
+    - "Ver modelos" baja la guardia vs "Reservar ahora".
+    - Embudo: invitación linda → inspiración → deseo → reserva.
+
+
+CONFIG JSON (referencia Sofia y Mateo)
+--------------------------------------
+  promo.enabled: true
+  promo.clientRef: "0"
+  promo.teaser: { title, benefit, validityShort, shareHint, buttonText }
+  promo.modal: {
+    title, code, validityText, benefitNote,
+    modelsLinkUrl, modelsButtonText,
+    reserveLinkUrl, reserveButtonText,
+    steps[], saveMessage, shareMessage, footerNote
+  }
+  Placeholders WA: {{code}}, {{link}}, {{validity}}
+
+
+ESTRUCTURA PENDIENTE (implementar en local)
+-------------------------------------------
+
+  Disparador:
+    - Marcar invitado enviado al usar "Enviar invitación" en panel.
+    - Contar invitados DISTINTOS enviados (no clicks repetidos).
+    - Al 5º → promo_activa = true.
+    - Nunca mostrar si: previewInvitado, isMuestra (/m/...), previewRsvpForm.
+
+  Persistencia cupón en navegador:
+    - /?coupon=...&from=inv-N → sessionStorage/localStorage
+    - Banner landing: "Tenés 10% activo · válido hasta …"
+    - Links landing → configurador con coupon + from automático.
+
+  Configurador:
+    - Leer ?coupon= de URL o storage → autocompletar y validar.
+    - from=inv-N en analytics / resumen WhatsApp.
+
+  Cupones reales:
+    - Serie en admin (inv-0, inv-28, …).
+    - Vencimiento en /api/coupons/validate.
+
+  Otros flujos:
+    - Mismo teaser+modal en confirmarWhatsapp-section.tsx.
+
+
+NOTAS DE LA CONVERSACIÓN
+------------------------
+  - Capturar mail en confirmación descartado (fricción).
+    Mejor WA "guardar" con mensaje armado.
+  - Prueba visual solo en 0-sofia-mateo.json.

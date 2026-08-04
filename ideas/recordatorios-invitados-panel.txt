@@ -1,0 +1,43 @@
+IDEA: Recordatorios a invitados pendientes
+============================================
+Fecha de nota: julio 2026
+Contexto: charla de producto Momento Único.
+Esta nota NO son instrucciones activas — idea para implementar cuando quiera.
+
+
+ESTADO HOY
+----------
+  - WhatsApp-first, sin email transaccional.
+  - Botón "Enviar invitación" usa wa.me/?text=... SIN número → elige contacto cada vez.
+
+
+DEFINICIÓN ACORDADA (sin API paga de WhatsApp)
+----------------------------------------------
+
+  A) Guardar teléfono del invitado en panel (campo telefono en invitados):
+     - Se carga UNA vez al dar de alta.
+       (No se puede capturar automático al elegir contacto en WA.)
+     - Link recordatorio: wa.me/<numero>?text=... → chat directo.
+     - Flujo "recordar pendientes": tocar uno tras otro, mensaje ya armado (semi-masivo gratis).
+     - Bonus: flag enviado por invitado → ver en panel quién ya recibió invitación.
+
+  B) Aviso automático al ANFITRIÓN X días antes:
+     - "Tenés N pendientes, ¿querés recordarles?"
+     - Por email (Resend) o WA API solo al anfitrión (costo despreciable).
+     - Cron diario que revisa eventos próximos.
+
+
+DESCARTADO POR AHORA
+--------------------
+  - Envío masivo real a todos los pendientes de un click.
+    Requiere WhatsApp Business API (~USD 0.02–0.06/msg + trámite Meta + número dedicado).
+
+
+NOTA
+----
+  - API WhatsApp Business: el costo por mensaje no es el problema; la fricción operativa sí.
+
+
+PRIORIDAD SUGERIDA
+------------------
+  Media-alta (opción A es barata y resuelve el dolor del contacto repetido).
