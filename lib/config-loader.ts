@@ -65,6 +65,14 @@ export interface EventConfig {
      * Si se omite, depende de que la invitación tenga la sección `giftCard` habilitada.
      */
     pagoTarjeta?: boolean
+    /**
+     * Cupones referidos post-confirmación (20% · 1 por invitado).
+     * Solo tiene efecto si `enabled` y el invitado entra con ?i=.
+     * false u omitido = sistema de referidos desactivado.
+     */
+    referidos?: boolean
+    /** Prefijo opcional del cupón (default: nombres del evento). */
+    referidosCodePrefix?: string
   }
   slug?: string
   /** Carpeta bajo data/clientes/ (boda, xv, baby, cumple, …) */

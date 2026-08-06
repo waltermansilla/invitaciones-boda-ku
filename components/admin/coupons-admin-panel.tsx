@@ -19,6 +19,7 @@ import type { CuponRow } from "@/lib/coupons/types"
 import {
   generatePrefixedSeries,
   inferSeriesFromCodes,
+  isCouponExpired,
   normalizeCouponCode,
   COUPON_BATCH_MAX,
 } from "@/lib/coupons/logic"
@@ -49,7 +50,7 @@ type ConfirmState = {
 }
 
 type CreateMode = "unique" | "libre"
-type FilterMode = "all" | "available" | "used"
+type FilterMode = "all" | "available" | "used" | "expired"
 
 const EVENT_LABELS = configuradorEs.eventLabels as Record<string, string>
 
@@ -209,6 +210,8 @@ export function CouponsAdminPanel() {
     {},
   )
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  /** panel_id (o fallback) del cliente/evento en la sección Referidos. */
+  const [activeReferralKey, setActiveReferralKey] = useState<string | null>(null)
   const [filter, setFilter] = useState<FilterMode>("all")
   const [confirm, setConfirm] = useState<ConfirmState | null>(null)
   const [busy, setBusy] = useState(false)
@@ -409,26 +412,147 @@ export function CouponsAdminPanel() {
 
   const activeMeta = categories.find((c) => c.id === activeCategory)
   const isUnlimited = activeMeta?.usageMode === "unlimited"
+  const isReferidosView = activeCategory === "referido"
 
   const inCategory = useMemo(() => {
     if (!activeCategory) return []
+    if (activeCategory === "referido") {
+      if (!activeReferralKey) return []
+      return coupons
+        .filter((c) => {
+          if (c.categoria !== "referido") return false
+          const key =
+            c.panel_id?.trim() ||
+            (() => {
+              const m = String(c.usado_nombre || "").match(/^ref:([^:]+):/)
+              return m?.[1]?.trim() || ""
+            })() ||
+            c.evento_label?.trim() ||
+            "sin-panel"
+          return key === activeReferralKey
+        })
+        .sort((a, b) => {
+          const ta =
+            (a.activado_at && Date.parse(a.activado_at)) ||
+            (a.created_at && Date.parse(a.created_at)) ||
+            0
+          const tb =
+            (b.activado_at && Date.parse(b.activado_at)) ||
+            (b.created_at && Date.parse(b.created_at)) ||
+            0
+          return tb - ta
+        })
+    }
     return coupons.filter((c) => c.categoria === activeCategory)
-  }, [coupons, activeCategory])
+  }, [coupons, activeCategory, activeReferralKey])
 
   const filtered = useMemo(() => {
     if (isUnlimited) return inCategory
+    if (isReferidosView) {
+      if (filter === "available") {
+        return inCategory.filter(
+          (c) => !c.usado && c.activo && !isCouponExpired(c.valido_hasta),
+        )
+      }
+      if (filter === "expired") {
+        return inCategory.filter(
+          (c) => !c.usado && isCouponExpired(c.valido_hasta),
+        )
+      }
+      if (filter === "used") return inCategory.filter((c) => c.usado)
+      return inCategory
+    }
     if (filter === "available") {
       return inCategory.filter((c) => !c.usado && c.activo)
     }
     if (filter === "used") return inCategory.filter((c) => c.usado)
     return inCategory
-  }, [inCategory, filter, isUnlimited])
+  }, [inCategory, filter, isUnlimited, isReferidosView])
 
   const stats = useMemo(() => {
-    const available = inCategory.filter((c) => !c.usado && c.activo).length
+    const available = inCategory.filter(
+      (c) =>
+        !c.usado &&
+        c.activo &&
+        (isReferidosView ? !isCouponExpired(c.valido_hasta) : true),
+    ).length
     const used = inCategory.filter((c) => c.usado).length
-    return { total: inCategory.length, available, used }
-  }, [inCategory])
+    const expired = inCategory.filter(
+      (c) => !c.usado && isCouponExpired(c.valido_hasta),
+    ).length
+    return { total: inCategory.length, available, used, expired }
+  }, [inCategory, isReferidosView])
+
+  const referralGroups = useMemo(() => {
+    type Group = {
+      key: string
+      label: string
+      total: number
+      activos: number
+      vencidos: number
+      usados: number
+      lastActivated: number
+    }
+    const map = new Map<string, Group>()
+    for (const c of coupons) {
+      if (c.categoria !== "referido") continue
+      // Clave estable por panel (cliente); fallback label si falta panel_id
+      const key =
+        c.panel_id?.trim() ||
+        (() => {
+          const m = String(c.usado_nombre || "").match(/^ref:([^:]+):/)
+          return m?.[1]?.trim() || ""
+        })() ||
+        c.evento_label?.trim() ||
+        "sin-panel"
+      const label =
+        c.evento_label?.trim() ||
+        c.panel_id?.trim() ||
+        (() => {
+          const m = String(c.usado_nombre || "").match(/^ref:[^:]+:[^|]+\|(.+)$/)
+          return m?.[1]?.trim() || ""
+        })() ||
+        "Sin cliente"
+      let g = map.get(key)
+      if (!g) {
+        g = {
+          key,
+          label,
+          total: 0,
+          activos: 0,
+          vencidos: 0,
+          usados: 0,
+          lastActivated: 0,
+        }
+        map.set(key, g)
+      } else if (
+        c.evento_label?.trim() &&
+        (g.label === g.key || g.label === "Sin cliente")
+      ) {
+        g.label = c.evento_label.trim()
+      }
+      g.total += 1
+      if (c.usado) g.usados += 1
+      else if (isCouponExpired(c.valido_hasta)) g.vencidos += 1
+      else g.activos += 1
+      const t =
+        (c.activado_at && Date.parse(c.activado_at)) ||
+        (c.created_at && Date.parse(c.created_at)) ||
+        0
+      if (t > g.lastActivated) g.lastActivated = t
+    }
+    // Clientes alfabéticos; a igualdad, el de actividad más reciente
+    return [...map.values()].sort((a, b) => {
+      const byName = a.label.localeCompare(b.label, "es")
+      if (byName !== 0) return byName
+      return b.lastActivated - a.lastActivated
+    })
+  }, [coupons])
+
+  const activeReferralGroup = useMemo(
+    () => referralGroups.find((g) => g.key === activeReferralKey) ?? null,
+    [referralGroups, activeReferralKey],
+  )
 
   const seriesIsActive = useMemo(
     () =>
@@ -498,6 +622,7 @@ export function CouponsAdminPanel() {
       categories.filter(
         (c) =>
           c.usageMode === "single_use" &&
+          c.id !== "referido" &&
           coupons.some((x) => x.categoria === c.id),
       ),
     [categories, coupons],
@@ -840,6 +965,7 @@ export function CouponsAdminPanel() {
                       type="button"
                       onClick={(e) => {
                         setActiveCategory(cat.id)
+                        setActiveReferralKey(null)
                         setFilter("all")
                         e.currentTarget.blur()
                       }}
@@ -994,6 +1120,7 @@ export function CouponsAdminPanel() {
                       type="button"
                       onClick={(e) => {
                         setActiveCategory(cat.id)
+                        setActiveReferralKey(null)
                         setFilter("all")
                         e.currentTarget.blur()
                       }}
@@ -1076,10 +1203,130 @@ export function CouponsAdminPanel() {
             </div>
           </div>
         ) : null}
+
+        {/* Referidos: sección aparte, agrupada por cliente/evento */}
+        {referralGroups.length > 0 ||
+        categories.some((c) => c.id === "referido") ? (
+          <div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9A8168]">
+              Referidos · invitados
+            </p>
+            <p className="mb-2 text-[12px] leading-snug text-[#A89480]">
+              Cupones activados al abrir el modal. El número es cuántos
+              invitados miraron el cupón en cada boda/evento.
+            </p>
+            {referralGroups.length === 0 ? (
+              <div className="rounded-[1.25rem] bg-white px-4 py-6 text-center text-sm text-[#8A735C] ring-1 ring-[#E8DFD2]">
+                Todavía no hay activaciones de referidos
+              </div>
+            ) : (
+              <div className="overflow-hidden rounded-[1.25rem] bg-white ring-1 ring-[#E8DFD2]">
+                {referralGroups.map((g, i) => {
+                  const selected =
+                    isReferidosView && activeReferralKey === g.key
+                  return (
+                    <button
+                      key={g.key}
+                      type="button"
+                      onClick={(e) => {
+                        setActiveCategory("referido")
+                        setActiveReferralKey(g.key)
+                        setFilter("all")
+                        e.currentTarget.blur()
+                      }}
+                      className={`flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left outline-none transition-colors focus:outline-none focus-visible:outline-none ${
+                        i > 0 ? "border-t border-[#EFE7DB]" : ""
+                      } ${
+                        selected
+                          ? "bg-[#2F261F] text-[#FAF7F2]"
+                          : "active:bg-[#F7F1E8]"
+                      }`}
+                    >
+                      <span className="min-w-0">
+                        <span className="block text-[15px] font-semibold">
+                          {g.label}
+                        </span>
+                        <span
+                          className={`mt-0.5 block text-xs tracking-wide ${
+                            selected ? "text-[#C4B09A]" : "text-[#9A8168]"
+                          }`}
+                        >
+                          {g.activos} activos · {g.vencidos} vencidos ·{" "}
+                          {g.usados} usados
+                        </span>
+                      </span>
+                      <span
+                        className={`shrink-0 text-right tabular-nums text-sm font-semibold ${
+                          selected ? "text-white/90" : "text-[#6B5340]"
+                        }`}
+                      >
+                        <span className="block text-lg leading-none">
+                          {g.total}
+                        </span>
+                        <span
+                          className={`text-[10px] font-medium uppercase tracking-[0.1em] ${
+                            selected ? "text-white/45" : "text-[#A89480]"
+                          }`}
+                        >
+                          miraron
+                        </span>
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            )}
+            {!isReferidosView || !activeReferralKey ? (
+              <p className="mt-2 text-center text-[12px] text-[#B5A290]">
+                Tocá un cliente para ver sus cupones (1 por invitado).
+              </p>
+            ) : null}
+          </div>
+        ) : null}
       </div>
 
       {/* Summary card */}
-      {activeMeta && seriesSummary ? (
+      {isReferidosView && activeReferralGroup ? (
+        <section className="relative mt-5 overflow-hidden rounded-[1.5rem] bg-[#2F261F] text-[#FAF7F2] shadow-[0_12px_40px_rgba(47,38,31,0.18)]">
+          <div className="px-5 pb-1 pt-5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#C4B09A]">
+              Referidos
+            </p>
+            <p className="mt-2 text-xl font-semibold leading-snug tracking-tight">
+              {activeReferralGroup.label}
+            </p>
+            <p className="mt-1 text-sm text-[#C4B09A]">
+              {activeReferralGroup.total} invitados abrieron el cupón
+            </p>
+          </div>
+          <div className="mt-4 grid grid-cols-3 gap-px bg-[#3F342C]/80">
+            <div className="bg-[#2F261F] px-4 py-4">
+              <p className="text-[10px] uppercase tracking-[0.12em] text-[#C4B09A]">
+                Activos
+              </p>
+              <p className="mt-1 text-xl font-semibold tabular-nums">
+                {stats.available}
+              </p>
+            </div>
+            <div className="bg-[#2F261F] px-4 py-4">
+              <p className="text-[10px] uppercase tracking-[0.12em] text-[#C4B09A]">
+                Vencidos
+              </p>
+              <p className="mt-1 text-xl font-semibold tabular-nums">
+                {stats.expired}
+              </p>
+            </div>
+            <div className="bg-[#2F261F] px-4 py-4">
+              <p className="text-[10px] uppercase tracking-[0.12em] text-[#C4B09A]">
+                Usados
+              </p>
+              <p className="mt-1 text-xl font-semibold tabular-nums">
+                {stats.used}
+              </p>
+            </div>
+          </div>
+        </section>
+      ) : activeMeta && seriesSummary && !isReferidosView ? (
         <section
           className={`relative mt-5 overflow-hidden rounded-[1.5rem] text-[#FAF7F2] shadow-[0_12px_40px_rgba(47,38,31,0.18)] ${
             seriesIsActive ? "bg-[#2F261F]" : "bg-[#5A5048]"
@@ -1161,7 +1408,7 @@ export function CouponsAdminPanel() {
             </p>
           ) : null}
         </section>
-      ) : activeMeta ? (
+      ) : activeMeta && !isReferidosView ? (
         <section className="mt-5 rounded-[1.5rem] bg-white px-5 py-8 text-center ring-1 ring-[#E8DFD2]">
           <p className="text-sm text-[#8A735C]">Sin cupones en esta serie</p>
         </section>
@@ -1170,12 +1417,18 @@ export function CouponsAdminPanel() {
       {/* Filters */}
       {!isUnlimited && inCategory.length > 0 ? (
         <div className="mt-5 flex rounded-2xl bg-[#EFE7DB] p-1">
-          {(
-            [
-              ["all", "Todos"],
-              ["available", "Disponibles"],
-              ["used", "Usados"],
-            ] as const
+          {(isReferidosView
+            ? ([
+                ["all", "Todos"],
+                ["available", "Activos"],
+                ["expired", "Vencidos"],
+                ["used", "Usados"],
+              ] as const)
+            : ([
+                ["all", "Todos"],
+                ["available", "Disponibles"],
+                ["used", "Usados"],
+              ] as const)
           ).map(([id, label]) => (
             <button
               key={id}
@@ -1207,11 +1460,28 @@ export function CouponsAdminPanel() {
           filtered.map((c) => {
             const used = c.usado
             const sent = Boolean(c.enviado)
-            const usageBits = [
-              eventLabel(c.usado_tipo_evento),
-              c.usado_nombre,
-              formatUsedAt(c.usado_at),
-            ].filter(Boolean)
+            const isReferido = c.categoria === "referido"
+            const expired = isCouponExpired(c.valido_hasta)
+            const usageBits = isReferido
+              ? [
+                  (() => {
+                    const iso = c.activado_at || c.created_at || null
+                    return iso
+                      ? `Activado ${formatUsedAt(iso)}`
+                      : null
+                  })(),
+                  c.valido_hasta
+                    ? expired
+                      ? `Venció ${formatExpires(c.valido_hasta)}`
+                      : `Hasta ${formatExpires(c.valido_hasta)}`
+                    : null,
+                  c.invitado_codigo ? `?i=${c.invitado_codigo}` : null,
+                ].filter(Boolean)
+              : [
+                  eventLabel(c.usado_tipo_evento),
+                  c.usado_nombre,
+                  formatUsedAt(c.usado_at),
+                ].filter(Boolean)
 
             return (
               <li
@@ -1229,7 +1499,19 @@ export function CouponsAdminPanel() {
                     <span className="font-mono text-[15px] font-semibold tracking-wide text-[#2F261F]">
                       {c.codigo}
                     </span>
-                    {!isUnlimited ? (
+                    {isReferido ? (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] ${
+                          used
+                            ? "bg-[#F3E0E0] text-[#8F2F2F]"
+                            : expired
+                              ? "bg-[#F0EBE3] text-[#7A6654]"
+                              : "bg-[#E4F0E6] text-[#1F5C2E]"
+                        }`}
+                      >
+                        {used ? "Usado" : expired ? "Vencido" : "Activo"}
+                      </span>
+                    ) : !isUnlimited ? (
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] ${
                           used
@@ -1310,7 +1592,10 @@ export function CouponsAdminPanel() {
       </ul>
 
       {/* Agregar siguientes — debajo del último */}
-      {!isUnlimited && seriesHint && inCategory.length > 0 ? (
+      {!isUnlimited &&
+      !isReferidosView &&
+      seriesHint &&
+      inCategory.length > 0 ? (
         <div className="mt-3 rounded-[1.25rem] bg-white p-4 ring-1 ring-[#E8DFD2]">
           <p className="text-sm font-semibold text-[#2F261F]">
             Agregar a la secuencia

@@ -27,11 +27,14 @@
     },
     "rsvpPanel": {
         "enabled": true,
+        "referidos": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
         "panelId": "sofia-mateo-rbkwo1",
-        "legacyPanelIds": ["pauli-juanma-rbjwo1"],
+        "legacyPanelIds": [
+            "pauli-juanma-rbjwo1"
+        ],
         "fechaEvento": "2026-10-24",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 24 de Octubre.",
         "theme": {
@@ -117,8 +120,10 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "3.934 días después, ¡nos casamos! Te invitamos a celebrar este momento junto a nosotros.",
                 "author": "",
@@ -130,7 +135,11 @@
             "id": "date-info",
             "bgColor": "background",
             "bgImage": "/clientes/boda/26-juanma-pauli/bg/luces1.jpeg",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "24 de Octubre de 2026"
@@ -139,10 +148,14 @@
         {
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/boda/26-juanma-pauli/images/C.jpg"]
+                "images": [
+                    "/clientes/boda/26-juanma-pauli/images/C.jpg"
+                ]
             }
         },
         {
@@ -150,7 +163,11 @@
             "id": "location-ceremonia",
             "enabled": false,
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Ceremonia religiosa",
                 "address": "Iglesia San José de Piedra Blanca, dpto. Fray Mamerto Esquiú",
@@ -166,7 +183,11 @@
             "id": "location-fiesta",
             "enabled": false,
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Recepción y civil",
                 "address": "Calígula, Club de Vinos, RP1 km10, La Carrera, Catamarca",
@@ -184,8 +205,10 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Itinerario",
                 "events": [
@@ -244,8 +267,12 @@
             "id": "shared-photos",
             "enabled": true,
             "bgColor": "primary",
-
-            "blocks": ["icon", "title", "description", "button"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "icon": "camera",
                 "title": "Compartí tus fotos",
@@ -260,10 +287,14 @@
         {
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "4/3",
-                "images": ["/clientes/boda/26-juanma-pauli/images/E.jpg"]
+                "images": [
+                    "/clientes/boda/26-juanma-pauli/images/E.jpg"
+                ]
             }
         },
         {
@@ -271,21 +302,27 @@
             "id": "quote-welcome2",
             "bgColor": "background",
             "bgImage": "/clientes/boda/26-juanma-pauli/bg/luces3.jpeg",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Somos la suma de cada día compartido. Hoy abrimos un capítulo nuevo.",
                 "author": "",
                 "decorativeLines": true
             }
         },
-
         {
             "type": "playlist",
             "id": "playlist-suggestion",
             "enabled": true,
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["title", "description", "button"],
+            "blocks": [
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "title": "Playlist de la fiesta",
                 "description": "¿Hay un tema que no puede faltar? ¡Agregalo a la playlist de Spotify!",
@@ -296,13 +333,17 @@
                 }
             }
         },
-
         {
             "type": "honeymoon",
             "id": "honeymoon",
             "bgColor": "background",
             "bgImage": "/clientes/boda/26-juanma-pauli/bg/papel.jpeg",
-            "blocks": ["icon", "title", "description", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "modal"
+            ],
             "data": {
                 "icon": "gift",
                 "title": "Regalos",
@@ -338,14 +379,17 @@
                 }
             }
         },
-
         {
             "type": "gallery",
             "id": "gallery-photos3",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/26-juanma-pauli/images/A.jpg"]
+                "images": [
+                    "/clientes/boda/26-juanma-pauli/images/A.jpg"
+                ]
             }
         },
         {
@@ -353,7 +397,10 @@
             "id": "quote-welcome3",
             "bgColor": "background",
             "bgImage": "/clientes/boda/26-juanma-pauli/bg/flores.jpeg",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "El amor es un acto de fe. Creer en el otro, en el tiempo y en lo que viene. Te invitamos a ser parte de este momento.",
                 "author": "Sofia & Mateo",
@@ -364,7 +411,13 @@
             "type": "giftCard",
             "id": "gift-card",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modal"
+            ],
             "data": {
                 "icon": "heart",
                 "title": "Valor tarjeta",
@@ -395,12 +448,21 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 10 de septiembre",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -429,44 +491,16 @@
                 "whatsapp": {
                     "number": "543456023759",
                     "messageTemplate": "Hola Sofía y Mateo! Confirmo la asistencia a su boda.\n\n{resumen}\n\n¡Gracias! 🫶🏼"
-                },
-                "promo": {
-                    "enabled": true,
-                    "clientRef": "0",
-                    "teaser": {
-                        "title": "¿Organizás tu propio evento?",
-                        "benefit": "10% off en Momento Único",
-                        "validityShort": "Válido 7 días",
-                        "shareHint": "Explorá modelos, guardalo para después o compartilo con alguien que esté organizando.",
-                        "buttonText": "¿Cómo funciona?"
-                    },
-                    "modal": {
-                        "title": "Tu beneficio exclusivo",
-                        "code": "SOFIMATEO10",
-                        "validityText": "Válido por 7 días",
-                        "benefitNote": "Explorá invitaciones reales. Si reservás en ese plazo, tu 10% se aplica al confirmar (código abajo).",
-                        "modelsLinkUrl": "/?coupon=SOFIMATEO10&from=inv-0#muestras",
-                        "modelsButtonText": "Ver modelos de invitación",
-                        "reserveLinkUrl": "/configurador?coupon=SOFIMATEO10&from=inv-0",
-                        "reserveButtonText": "Ya sé lo que quiero — reservar",
-                        "steps": [
-                            "Explorá invitaciones reales en nuestros modelos",
-                            "Elegí el estilo que más te guste",
-                            "Al reservar dentro de 7 días, ingresá el código y se aplica el descuento"
-                        ],
-                        "saveButtonText": "Guardar en WhatsApp",
-                        "shareButtonText": "Compartir con alguien",
-                        "saveMessage": "Me guardo esto para después 🤍\n\nCódigo: {{code}}\nVer modelos: {{link}}\n\n{{validity}}. Si reservás en ese plazo, el descuento se aplica al confirmar.",
-                        "shareMessage": "¡Hola! Estuve en una invitación digital muy linda y me acordé de vos.\n\nMomento Único tiene 10% off con el código {{code}}.\nMirá invitaciones reales acá: {{link}}\n\n{{validity}}.",
-                        "footerNote": "Podés volver a esta invitación y abrir este beneficio de nuevo antes de que venza."
-                    }
                 }
             }
         },
         {
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/26-juanma-pauli/images/B.jpg",
@@ -488,7 +522,10 @@
         {
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

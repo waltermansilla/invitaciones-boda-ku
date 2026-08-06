@@ -304,6 +304,15 @@ export async function DELETE(
     return NextResponse.json({ error: "Invitado no encontrado" }, { status: 404 })
   }
 
+  // Código del invitado antes de borrar (para cupones referidos no usados)
+  const { data: invRow } = await supabase
+    .from("invitados")
+    .select("codigo")
+    .eq("id", invitadoId)
+    .maybeSingle()
+  const guestCodigo =
+    typeof invRow?.codigo === "string" ? invRow.codigo.trim() : ""
+
   const { error } = await supabase
     .from("invitados")
     .delete()
@@ -311,6 +320,24 @@ export async function DELETE(
 
   if (error) {
     return NextResponse.json({ error: "Error eliminando invitado" }, { status: 500 })
+  }
+
+  if (guestCodigo) {
+    try {
+      const { deleteUnusedReferralCouponForGuest } = await import(
+        "@/lib/referrals/cleanup"
+      )
+      await deleteUnusedReferralCouponForGuest({
+        panelId,
+        guestCodigo,
+      })
+    } catch (cleanupErr) {
+      console.error(
+        "[panel DELETE] cleanup cupón referido",
+        cleanupErr,
+      )
+      // El invitado ya se borró; no devolvemos error por el cupón
+    }
   }
 
   return NextResponse.json({ success: true })

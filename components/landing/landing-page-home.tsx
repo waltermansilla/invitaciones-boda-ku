@@ -4855,6 +4855,33 @@ export default function LandingPageHome({
 
         const prev = window.history.scrollRestoration;
         window.history.scrollRestoration = "manual";
+
+        // Links externos (ej. cupón referido → /?from=inv-0#muestras): ir a la sección,
+        // no pisar el hash con scroll-to-top.
+        const hashId = window.location.hash.replace(/^#/, "").trim();
+        if (hashId) {
+            const scrollToHash = () => {
+                const el = document.getElementById(hashId);
+                if (!el) return false;
+                el.scrollIntoView({ behavior: "auto", block: "start" });
+                return true;
+            };
+            scrollToHash();
+            requestAnimationFrame(() => {
+                scrollToHash();
+                requestAnimationFrame(scrollToHash);
+            });
+            // La sección de modelos puede montarse / pintar un poco después.
+            const delays = [120, 280, 480, 720];
+            const timers = delays.map((ms) =>
+                window.setTimeout(scrollToHash, ms),
+            );
+            return () => {
+                timers.forEach((tid) => window.clearTimeout(tid));
+                window.history.scrollRestoration = prev;
+            };
+        }
+
         const resetTop = () =>
             window.scrollTo({ top: 0, left: 0, behavior: "auto" });
         resetTop();

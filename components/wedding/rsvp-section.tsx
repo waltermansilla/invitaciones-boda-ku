@@ -15,13 +15,17 @@ import {
     guestPreviewStateLabelFromAttendance,
 } from "@/lib/guest-preview-confirm";
 import { useIsMuestra } from "@/lib/config-context";
-import { Trash2 } from "lucide-react";
+import { Share2, Trash2 } from "lucide-react";
 import { useModal } from "./modal-provider";
 import {
     coladoPlural,
     coladoTitleSingular,
     normalizeColadoSingular,
 } from "@/lib/colado-label";
+import {
+    buildReferralCodePrefix,
+    formatValidityEs,
+} from "@/lib/referrals/prefix";
 
 const GROUP_NAME_MAX_LENGTH = 30;
 
@@ -155,55 +159,78 @@ interface RSVPSectionProps {
     /** Sección con imagen de fondo: campos un poco más transparentes. */
     hasBgImage?: boolean;
     /**
-     * Cupón promocional discreto en la pantalla de gracias (post-confirmación
-     * y al volver a entrar). Por ahora es solo visual/config desde el JSON:
-     * no incluye el disparador por cantidad de envíos ni exclusión de preview.
+     * Opcional. Textos del cupón de referidos.
+     * Si omitís `promo` y `rsvpPanel.referidos=true`, se usan los defaults
+     * del producto (20% OFF). Solo hace falta override si querés cambiar copy.
+     * Se muestra post-confirmación con link personal (?i=), no en muestra/preview.
      */
     promo?: {
         enabled?: boolean;
-        /** Referencia interna (ej. "0"); va en `from=inv-{clientRef}` del enlace al configurador. */
+        /** Referencia interna (ej. "0") → from=inv-{clientRef}. */
         clientRef?: string;
-        /** Gancho compacto en la pantalla de confirmación (sin abrir modal). */
+        /** Override del prefijo (default: nombres novios/XV). */
+        codePrefix?: string;
+        discountPercent?: number;
+        validityDays?: number;
         teaser?: {
             title?: string;
+            /** Subtítulo único bajo el título. */
+            subtitle?: string;
+            /** @deprecated usar subtitle */
             benefit?: string;
-            validityShort?: string;
-            /** Menciona reservar, guardar o compartir antes de abrir el modal. */
-            shareHint?: string;
             buttonText?: string;
         };
-        /** Contenido completo dentro del modal. */
         modal?: {
             title?: string;
+            /** Texto bajo el título, encima del código. */
+            subtitle?: string;
+            /** @deprecated el código real lo genera la API al activar */
             code?: string;
-            /** Texto bajo el título (ej. cupón activo al explorar modelos). */
-            benefitNote?: string;
-            /** Enlace principal: ver modelos en la landing (ej. /?coupon=…&from=inv-0#muestras). */
             modelsLinkUrl?: string;
             modelsButtonText?: string;
-            /** Enlace secundario: reservar directo en el configurador. */
+            shareButtonText?: string;
+            captureHint?: string;
+            /**
+             * Plantilla WA "Regalar cupón".
+             * Placeholders: {{code}}, {{link}}, {{validity}}, {{validityDate}}
+             */
+            shareMessage?: string;
+            /** @deprecated */
+            benefitNote?: string;
             reserveLinkUrl?: string;
             reserveButtonText?: string;
             steps?: string[];
             saveButtonText?: string;
-            shareButtonText?: string;
-            /** Plantilla WA para guardar. Placeholders: {{code}}, {{link}}, {{validity}} */
             saveMessage?: string;
-            /** Plantilla WA para compartir con un tercero. */
-            shareMessage?: string;
             footerNote?: string;
             validityText?: string;
         };
+    };
+    /** Datos para armar/activar el cupón por invitado. */
+    referral?: {
+        /** rsvpPanel.referidos && panel.enabled */
+        enabled: boolean;
+        panelId?: string;
+        brideName?: string;
+        groomName?: string;
+        quinceaneraName?: string;
+        eventLabel?: string;
     };
 }
 
 function fillPromoMessage(
     template: string,
-    vars: { code: string; link: string; validity: string },
+    vars: {
+        code: string;
+        link: string;
+        validity: string;
+        validityDate: string;
+    },
 ): string {
     return template
         .replace(/\{\{code\}\}/gi, vars.code)
         .replace(/\{\{link\}\}/gi, vars.link)
+        .replace(/\{\{validityDate\}\}/gi, vars.validityDate)
         .replace(/\{\{validity\}\}/gi, vars.validity);
 }
 
@@ -214,28 +241,275 @@ function promoFullLink(linkPath: string): string {
 }
 
 type PromoConfig = NonNullable<RSVPSectionProps["promo"]>;
+type ReferralConfig = NonNullable<RSVPSectionProps["referral"]>;
+
+const DEFAULT_SHARE_MESSAGE = `¡Hola! Te regalo un cupón del 20% OFF para tu invitación digital en Momento Único 🤍
+
+Tu código: {{code}}
+
+Cómo usarlo:
+1. Entrá a {{link}}
+2. Elegí el modelo que más te guste
+3. Al reservar, ingresá el cupón y se aplica el descuento
+
+¡Recordá que tenés tiempo hasta el {{validityDate}} para usarlo!`;
+
+/** Textos del cupón cuando `rsvpPanel.referidos=true` y el JSON no define `promo`. */
+const DEFAULT_REFERRAL_PROMO: PromoConfig = {
+    enabled: true,
+    clientRef: "0",
+    discountPercent: 20,
+    validityDays: 30,
+    teaser: {
+        title: "¿Organizás tu propio evento?",
+        subtitle:
+            "Te regalamos un cupón de 20% OFF para tu próxima invitación",
+        buttonText: "Ver cupón",
+    },
+    modal: {
+        title: "Cupón 20% OFF",
+        subtitle:
+            "Ingresá el siguiente código cuando reserves tu invitación:",
+        modelsLinkUrl: "/?from=inv-0#muestras",
+        modelsButtonText: "Ver modelos / reservar",
+        shareButtonText: "Regalar cupón",
+        captureHint: "Guardá una captura de esta pantalla para utilizarlo.",
+        shareMessage: DEFAULT_SHARE_MESSAGE,
+    },
+};
+
+/**
+ * Con referidos activos ya no hace falta `promo` en el JSON.
+ * Si está, se mezclan overrides (textos, % , clientRef, etc.).
+ */
+function resolveReferralPromo(
+    promo: PromoConfig | undefined,
+    referralEnabled: boolean,
+): PromoConfig | undefined {
+    if (promo?.enabled === false) return undefined;
+    if (!referralEnabled && !promo) return undefined;
+    if (!referralEnabled) return promo;
+    const base = DEFAULT_REFERRAL_PROMO;
+    if (!promo) return base;
+    return {
+        ...base,
+        ...promo,
+        enabled: promo.enabled !== false,
+        teaser: { ...base.teaser, ...promo.teaser },
+        modal: { ...base.modal, ...promo.modal },
+    };
+}
+
+const REFERRAL_CACHE_PREFIX = "mu-referral-coupon-v1:";
+
+type CachedReferral = {
+    code: string;
+    validoHasta: string;
+};
+
+function referralCacheKey(panelId: string, guestCodigo: string): string {
+    return `${REFERRAL_CACHE_PREFIX}${panelId.trim()}:${guestCodigo.trim()}`;
+}
+
+function loadCachedReferral(
+    panelId: string,
+    guestCodigo: string,
+): CachedReferral | null {
+    if (typeof window === "undefined") return null;
+    try {
+        const raw = localStorage.getItem(
+            referralCacheKey(panelId, guestCodigo),
+        );
+        if (!raw) return null;
+        const parsed = JSON.parse(raw) as CachedReferral;
+        if (
+            typeof parsed?.code === "string" &&
+            parsed.code &&
+            typeof parsed?.validoHasta === "string" &&
+            parsed.validoHasta
+        ) {
+            return { code: parsed.code, validoHasta: parsed.validoHasta };
+        }
+    } catch {
+        /* ignore */
+    }
+    return null;
+}
+
+function saveCachedReferral(
+    panelId: string,
+    guestCodigo: string,
+    data: CachedReferral,
+) {
+    if (typeof window === "undefined") return;
+    try {
+        localStorage.setItem(
+            referralCacheKey(panelId, guestCodigo),
+            JSON.stringify(data),
+        );
+    } catch {
+        /* private mode / quota */
+    }
+}
 
 function PromoBenefitModalContent({
     promo,
+    referral,
+    guestCodigo,
     onClose,
 }: {
     promo: PromoConfig;
+    referral?: ReferralConfig;
+    guestCodigo?: string;
     onClose: () => void;
 }) {
     const modal = promo.modal;
-    const code = modal?.code || "";
-    const modelsPath = modal?.modelsLinkUrl || "";
-    const reservePath = modal?.reserveLinkUrl || "";
-    const shareLinkPath = modelsPath || reservePath;
-    const shareFullLink = promoFullLink(shareLinkPath);
-    const validity = modal?.validityText || "";
+    const discount = promo.discountPercent ?? 20;
+    const modelsPath =
+        modal?.modelsLinkUrl ||
+        `/?from=inv-${promo.clientRef || "0"}#muestras`;
+    const shareFullLink = promoFullLink(modelsPath);
     const [copied, setCopied] = useState(false);
 
-    const openWhatsApp = (messageTemplate: string) => {
-        const text = fillPromoMessage(messageTemplate, {
+    const initialCache =
+        referral?.enabled && referral.panelId && guestCodigo
+            ? loadCachedReferral(referral.panelId, guestCodigo)
+            : null;
+
+    const [code, setCode] = useState(initialCache?.code || modal?.code || "");
+    const [validoHasta, setValidoHasta] = useState<string | null>(
+        initialCache?.validoHasta || null,
+    );
+  // Si hay caché, no mostramos “Cargando…” (segunda apertura es al instante).
+  const [loading, setLoading] = useState(!initialCache);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        const run = async () => {
+            if (!referral?.enabled || !referral.panelId || !guestCodigo) {
+                setError(
+                    "Este cupón se activa con el link personal de cada invitado.",
+                );
+                setLoading(false);
+                return;
+            }
+
+            const cached = loadCachedReferral(referral.panelId, guestCodigo);
+            if (cached) {
+                if (!cancelled) {
+                    setCode(cached.code);
+                    setValidoHasta(cached.validoHasta);
+                    setError(null);
+                    setLoading(false);
+                }
+                // No revalidamos en segundo plano: el cupón ya está fijado en servidor.
+                return;
+            }
+
+            setLoading(true);
+            setError(null);
+            try {
+                const prefix =
+                    promo.codePrefix ||
+                    buildReferralCodePrefix({
+                        codePrefix: promo.codePrefix,
+                        brideName: referral.brideName,
+                        groomName: referral.groomName,
+                        quinceaneraName: referral.quinceaneraName,
+                    });
+                const res = await fetch("/api/coupons/referral/activate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        panelId: referral.panelId,
+                        guestCodigo,
+                        codePrefix: prefix,
+                        brideName: referral.brideName,
+                        groomName: referral.groomName,
+                        quinceaneraName: referral.quinceaneraName,
+                        eventLabel: referral.eventLabel,
+                        discountPercent: discount,
+                        validityDays: promo.validityDays ?? 30,
+                    }),
+                });
+                let data: {
+                    ok?: boolean;
+                    code?: string;
+                    validoHasta?: string;
+                    error?: string;
+                } = {};
+                try {
+                    data = (await res.json()) as typeof data;
+                } catch {
+                    throw new Error(
+                        res.ok
+                            ? "Respuesta inválida del servidor."
+                            : `Error ${res.status} al activar el cupón. ¿Estás en local con el servidor reiniciado?`,
+                    );
+                }
+                if (!res.ok || !data.ok) {
+                    throw new Error(
+                        data.error ||
+                            `No se pudo activar el cupón (${res.status}).`,
+                    );
+                }
+                if (!cancelled) {
+                    const nextCode = data.code || "";
+                    const nextHasta = data.validoHasta || null;
+                    setCode(nextCode);
+                    setValidoHasta(nextHasta);
+                    if (nextCode && nextHasta) {
+                        saveCachedReferral(referral.panelId, guestCodigo, {
+                            code: nextCode,
+                            validoHasta: nextHasta,
+                        });
+                    }
+                }
+            } catch (e) {
+                if (!cancelled) {
+                    setError(
+                        e instanceof Error
+                            ? e.message
+                            : "No se pudo activar el cupón.",
+                    );
+                }
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+        void run();
+        return () => {
+            cancelled = true;
+        };
+    }, [
+        referral?.enabled,
+        referral?.panelId,
+        referral?.brideName,
+        referral?.groomName,
+        referral?.quinceaneraName,
+        referral?.eventLabel,
+        guestCodigo,
+        promo.codePrefix,
+        promo.validityDays,
+        discount,
+    ]);
+
+    const validityDateLabel = validoHasta
+        ? formatValidityEs(validoHasta)
+        : "";
+    const validityLine = validityDateLabel
+        ? `Válido hasta el ${validityDateLabel}`
+        : modal?.validityText || "";
+
+    const openShareWhatsApp = () => {
+        if (!code) return;
+        const template = modal?.shareMessage || DEFAULT_SHARE_MESSAGE;
+        const text = fillPromoMessage(template, {
             code,
             link: shareFullLink,
-            validity,
+            validity: validityLine,
+            validityDate: validityDateLabel || validityLine,
         });
         window.open(
             `https://wa.me/?text=${encodeURIComponent(text)}`,
@@ -247,30 +521,27 @@ function PromoBenefitModalContent({
     return (
         <>
             <h3 className="mb-1 pr-8 text-lg font-semibold tracking-wide text-primary-foreground">
-                {modal?.title || "Tu beneficio"}
+                {modal?.title || `Cupón ${discount}% OFF`}
             </h3>
-            {(validity || modal?.benefitNote) && (
-                <div className="mb-5">
-                    {validity && (
-                        <p className="text-xs font-light text-primary-foreground/60">
-                            {validity}
-                        </p>
-                    )}
-                    {modal?.benefitNote && (
-                        <p
-                            className={`text-sm font-light leading-relaxed text-primary-foreground/75 ${validity ? "mt-2" : ""}`}
-                        >
-                            {modal.benefitNote}
-                        </p>
-                    )}
-                </div>
+            <p className="mb-5 text-sm font-light leading-relaxed text-primary-foreground/75">
+                {modal?.subtitle ||
+                    "Ingresá el siguiente código cuando reserves tu invitación:"}
+            </p>
+
+            {loading && (
+                <p className="mb-6 text-center text-sm font-light text-primary-foreground/60">
+                    Cargando cupón…
+                </p>
             )}
 
-            {code && (
-                <div className="mb-6 text-center">
-                    <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.18em] text-primary-foreground/50">
-                        Tu código
-                    </p>
+            {!loading && error && (
+                <p className="mb-6 rounded-lg border border-primary-foreground/20 bg-primary-foreground/[0.06] px-4 py-3 text-center text-sm font-light leading-relaxed text-primary-foreground/80">
+                    {error}
+                </p>
+            )}
+
+            {!loading && !error && code && (
+                <div className="mb-3 text-center">
                     <button
                         type="button"
                         onClick={async () => {
@@ -289,75 +560,36 @@ function PromoBenefitModalContent({
                     <p className="mt-1.5 text-[10px] text-primary-foreground/45">
                         {copied ? "¡Copiado!" : "Tocá para copiar"}
                     </p>
-                </div>
-            )}
-
-            {modal?.steps && modal.steps.length > 0 && (
-                <div className="mb-6 space-y-2.5 text-left">
-                    <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-primary-foreground/55">
-                        Cómo funciona
+                    {validityLine && (
+                        <p className="mt-3 text-xs font-medium tracking-wide text-primary-foreground/70">
+                            {validityLine}
+                        </p>
+                    )}
+                    <p className="mt-4 text-sm font-light leading-relaxed text-primary-foreground/80">
+                        {modal?.captureHint ||
+                            "Guardá una captura de esta pantalla para utilizarlo."}
                     </p>
-                    <ol className="space-y-2">
-                        {modal.steps.map((step, i) => (
-                            <li
-                                key={i}
-                                className="flex gap-2.5 text-sm font-light leading-snug text-primary-foreground/80"
-                            >
-                                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-primary-foreground/25 text-[10px] font-medium text-primary-foreground/70">
-                                    {i + 1}
-                                </span>
-                                <span>{step}</span>
-                            </li>
-                        ))}
-                    </ol>
                 </div>
             )}
 
-            <div className="flex flex-col gap-2">
-                {modelsPath && (
-                    <a
-                        href={modelsPath}
-                        onClick={onClose}
-                        className="flex min-h-[48px] w-full items-center justify-center rounded-sm border border-primary-foreground/30 bg-primary-foreground/10 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground transition-all hover:bg-primary-foreground/20"
-                    >
-                        {modal?.modelsButtonText || "Ver modelos de invitación"}
-                    </a>
-                )}
-                {modal?.saveMessage && (
-                    <button
-                        type="button"
-                        onClick={() => openWhatsApp(modal.saveMessage!)}
-                        className="flex min-h-[48px] w-full items-center justify-center rounded-sm border border-primary-foreground/25 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground/85 transition-all hover:bg-primary-foreground/10"
-                    >
-                        {modal?.saveButtonText || "Guardar en WhatsApp"}
-                    </button>
-                )}
-                {modal?.shareMessage && (
-                    <button
-                        type="button"
-                        onClick={() => openWhatsApp(modal.shareMessage!)}
-                        className="flex min-h-[48px] w-full items-center justify-center rounded-sm border border-primary-foreground/25 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground/85 transition-all hover:bg-primary-foreground/10"
-                    >
-                        {modal?.shareButtonText || "Compartir con alguien"}
-                    </button>
-                )}
-                {reservePath && (
-                    <a
-                        href={reservePath}
-                        onClick={onClose}
-                        className="mt-1 flex min-h-[40px] w-full items-center justify-center px-5 py-2 text-[10px] font-medium uppercase tracking-[0.14em] text-primary-foreground/55 underline underline-offset-4 transition-colors hover:text-primary-foreground/80"
-                    >
-                        {modal?.reserveButtonText ||
-                            "Ya sé lo que quiero — reservar"}
-                    </a>
-                )}
+            <div className="mt-6 flex flex-col gap-2">
+                <a
+                    href={modelsPath}
+                    onClick={onClose}
+                    className="flex min-h-[48px] w-full items-center justify-center rounded-sm border border-primary-foreground/30 bg-primary-foreground/10 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground transition-all hover:bg-primary-foreground/20"
+                >
+                    {modal?.modelsButtonText || "Ver modelos / reservar"}
+                </a>
+                <button
+                    type="button"
+                    disabled={!code || loading}
+                    onClick={openShareWhatsApp}
+                    className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-sm border border-primary-foreground/25 px-5 py-3 text-[11px] font-medium uppercase tracking-[0.15em] text-primary-foreground/85 transition-all hover:bg-primary-foreground/10 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                    <Share2 className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} />
+                    {modal?.shareButtonText || "Regalar cupón"}
+                </button>
             </div>
-
-            {modal?.footerNote && (
-                <p className="mt-5 text-center text-[11px] font-light leading-relaxed text-primary-foreground/50">
-                    {modal.footerNote}
-                </p>
-            )}
         </>
     );
 }
@@ -605,8 +837,10 @@ export default function RSVPSection({
     panel,
     previewRsvpForm = false,
     hasBgImage = false,
-    promo,
+    promo: promoProp,
+    referral,
 }: RSVPSectionProps) {
+    const promo = resolveReferralPromo(promoProp, Boolean(referral?.enabled));
     const isMuestra = useIsMuestra();
     /**
      * Con bg image: un poco más transparente que el default, sin perder legibilidad.
@@ -1646,27 +1880,23 @@ export default function RSVPSection({
                             Editar mi confirmacion
                         </button>
                     )}
-                    {promo?.enabled && promo.teaser && (
+                    {promo &&
+                        referral?.enabled &&
+                        panel?.codigo &&
+                        !isMuestra &&
+                        !previewRsvpForm &&
+                        !isGuestPreview && (
                         <div className="mt-10 rounded-2xl border border-current/12 bg-current/[0.04] px-5 py-5 text-center">
                             {promo.teaser.title && (
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-inherit/75">
                                     {promo.teaser.title}
                                 </p>
                             )}
-                            {(promo.teaser.benefit ||
-                                promo.teaser.validityShort) && (
-                                <p className="mx-auto mt-2 max-w-[18rem] text-sm font-light leading-relaxed text-inherit/60">
-                                    {[
-                                        promo.teaser.benefit,
-                                        promo.teaser.validityShort,
-                                    ]
-                                        .filter(Boolean)
-                                        .join(" · ")}
-                                </p>
-                            )}
-                            {promo.teaser.shareHint && (
-                                <p className="mx-auto mt-2.5 max-w-[19rem] text-[11px] font-light leading-relaxed text-inherit/45">
-                                    {promo.teaser.shareHint}
+                            {(promo.teaser.subtitle ||
+                                promo.teaser.benefit) && (
+                                <p className="mx-auto mt-2.5 max-w-[20rem] text-sm font-light leading-relaxed text-inherit/60">
+                                    {promo.teaser.subtitle ||
+                                        promo.teaser.benefit}
                                 </p>
                             )}
                             <button
@@ -1675,13 +1905,15 @@ export default function RSVPSection({
                                     openModal(
                                         <PromoBenefitModalContent
                                             promo={promo}
+                                            referral={referral}
+                                            guestCodigo={panel.codigo}
                                             onClose={closeModal}
                                         />,
                                     )
                                 }
                                 className="mt-4 inline-flex min-h-[44px] items-center justify-center rounded-md border border-current/25 bg-current/10 px-7 py-2.5 text-[11px] font-medium uppercase tracking-[0.18em] text-inherit/90 transition-colors hover:bg-current/20"
                             >
-                                {promo.teaser.buttonText || "¿Cómo funciona?"}
+                                {promo.teaser.buttonText || "Ver cupón"}
                             </button>
                         </div>
                     )}

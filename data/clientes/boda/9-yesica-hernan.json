@@ -25,6 +25,7 @@
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,
+        "referidos": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": true,
         "limiteInvitados": 150,
@@ -131,7 +132,10 @@
             "id": "quote-welcome",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "¡Con mucha alegría te invitamos a festejar nuestra boda!",
                 "author": "",
@@ -144,7 +148,11 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "24 de Octubre 2026"
@@ -155,10 +163,14 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/9-yesica-hernan/images/img-1.PNG"]
+                "images": [
+                    "/clientes/boda/9-yesica-hernan/images/img-1.PNG"
+                ]
             }
         },
         {
@@ -168,7 +180,10 @@
             "enabled": true,
             "bgColor": "background",
             "bgImage": "backgroundImage",
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Horarios",
                 "events": [
@@ -213,7 +228,9 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Vestimenta",
                 "subtitle": "Elegante",
                 "description": "",
@@ -221,7 +238,12 @@
                 "colorSwatches": {
                     "enabled": false,
                     "shape": "square",
-                    "colors": ["#012a4a", "#013a63", "#01497c", "#2a6f97"]
+                    "colors": [
+                        "#012a4a",
+                        "#013a63",
+                        "#01497c",
+                        "#2a6f97"
+                    ]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -240,7 +262,12 @@
             "id": "honeymoon",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["icon", "title", "description", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "modal"
+            ],
             "data": {
                 "icon": "",
                 "title": "Regalos",
@@ -279,7 +306,10 @@
             "id": "our-story",
             "bgColor": "background",
             "bgImage": "",
-            "blocks": ["title", "moments"],
+            "blocks": [
+                "title",
+                "moments"
+            ],
             "data": {
                 "aspectRatio": "1/1",
                 "title": "Nuestra historia",
@@ -309,7 +339,12 @@
             "enabled": true,
             "bgColor": "background",
             "bgImage": "backgroundImage",
-            "blocks": ["icon", "title", "description", "button"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "icon": "camera",
                 "title": "Compartí tus fotos",
@@ -326,10 +361,14 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos2",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "3/4",
-                "images": ["/clientes/boda/9-yesica-hernan/images/img-2.jpeg"]
+                "images": [
+                    "/clientes/boda/9-yesica-hernan/images/img-2.jpeg"
+                ]
             }
         },
         {
@@ -339,7 +378,10 @@
             "id": "quote-welcome2",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "En sus risas encontramos nuestro hogar, y en sus pequeños abrazos… el amor más grande que alguna vez imaginamos.",
                 "author": "",
@@ -352,12 +394,21 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "background",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 31 de Julio",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -396,7 +447,10 @@
             "id": "quote-welcome3",
             "bgColor": "primary",
             "bgImage": "primaryImage",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "Gracias por acompañarnos, por ser parte de nuestra historia y por estar en uno de los días más importantes de nuestras vidas. Tenerlos cerca hace que este momento sea aún más especial.",
                 "author": "",
@@ -408,7 +462,10 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/9-yesica-hernan/images/img-hero.jpeg"
@@ -419,7 +476,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

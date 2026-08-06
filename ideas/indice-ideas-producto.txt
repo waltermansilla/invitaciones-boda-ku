@@ -25,8 +25,8 @@ ARCHIVOS
     Asignación de mesas, croquis editable, PDF por grupos para recepción.
 
   ideas/crecimiento-y-promo-confirmacion.txt
-    Referidos, viralidad (A1/A3/D1/D2) + promo teaser/modal en confirmación
-    (prueba visual Sofia y Mateo). Van juntas: promo = funnel de referidos.
+    Referidos, viralidad + promo post-confirmación con cupón 20%
+    por invitado (panel). Estructura API/SQL/UI en curso (Sofía y Mateo).
 
   ideas/documentar-criterio-de-trabajo-para-ia.txt
     (Nota previa) Criterios operativos para armar clientes con IA.

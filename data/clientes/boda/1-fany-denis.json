@@ -13,7 +13,6 @@
             "separator": "&"
         }
     },
-
     "_comment_access": "CONTROL DE ACCESO DE INVITACION REAL - token por URL ?k=XXXXXX. tokenEnabled=true exige token. token=token corto (6 chars) para operar links reales. allowLegacyUntil (YYYY-MM-DD) permite acceso sin token hasta esa fecha.",
     "access": {
         "tokenEnabled": true,
@@ -26,9 +25,9 @@
         "pinEnabled": true,
         "pin": "623748"
     },
-
     "rsvpPanel": {
         "enabled": true,
+        "referidos": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": true,
         "limiteInvitados": 250,
@@ -52,7 +51,6 @@
             "unpaidButton": "¿Pagó tarjeta?"
         }
     },
-
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
@@ -123,7 +121,10 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "LLEGÓ EL MOMENTO! ESTAMOS MUY FELICES DE PODER COMPARTIR ESTE DÍA TAN ESPECIAL CON VOS.",
                 "author": "",
@@ -136,7 +137,11 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": ["title", "value", "button"],
+            "blocks": [
+                "title",
+                "value",
+                "button"
+            ],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "14 de Noviembre de 2026"
@@ -148,7 +153,10 @@
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["title", "timeline"],
+            "blocks": [
+                "title",
+                "timeline"
+            ],
             "data": {
                 "title": "Te invitamos a estos dos eventos",
                 "events": [
@@ -183,7 +191,10 @@
             "type": "quote",
             "id": "quote-welcome2",
             "bgColor": "primary",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "ALGUNAS HISTORIAS COMIENZAN SIN SABERLO… Y TERMINAN SIENDO PARA TODA LA VIDA.",
                 "author": "",
@@ -195,13 +206,14 @@
             "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
             "type": "gallery",
             "id": "gallery-photos",
-            "blocks": ["slider"],
+            "blocks": [
+                "slider"
+            ],
             "data": {
                 "aspectRatio": "4/3",
                 "images": []
             }
         },
-
         {
             "// --- UBICACION: CEREMONIA RELIGIOSA ---": "",
             "_comment": "Se puede mover, duplicar o eliminar. button.url = link de Google Maps.",
@@ -209,7 +221,11 @@
             "enabled": false,
             "id": "location-discurso",
             "bgColor": "background",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "Ceremonia religiosa",
                 "address": "Parroquia San Cayetano",
@@ -227,7 +243,11 @@
             "enabled": false,
             "id": "location-recepcion",
             "bgColor": "primary",
-            "blocks": ["title", "address", "button"],
+            "blocks": [
+                "title",
+                "address",
+                "button"
+            ],
             "data": {
                 "title": "¡Fiesta!",
                 "address": "Salón San Cayetano",
@@ -238,7 +258,6 @@
                 }
             }
         },
-
         {
             "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
             "type": "dressCode",
@@ -254,7 +273,9 @@
                 "modal"
             ],
             "data": {
-                "icons": ["gem"],
+                "icons": [
+                    "gem"
+                ],
                 "title": "Vestimenta",
                 "subtitle": "",
                 "description": "Por favor, evitar el azul marino",
@@ -262,7 +283,11 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
-                    "colors": ["#ffffff", "#162b4e", "#004f8c"]
+                    "colors": [
+                        "#ffffff",
+                        "#162b4e",
+                        "#004f8c"
+                    ]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -280,14 +305,18 @@
                 }
             }
         },
-
         {
             "_comment": "PHOTOS: Invitar a subir fotos al album compartido.",
             "type": "photos",
             "id": "shared-photos",
             "enabled": true,
             "bgColor": "background",
-            "blocks": ["icon", "title", "description", "button"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button"
+            ],
             "data": {
                 "title": "Compartí tus fotos",
                 "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
@@ -303,7 +332,13 @@
             "type": "giftCard",
             "id": "gift-card",
             "bgColor": "primary",
-            "blocks": ["icon", "title", "description", "button", "modal"],
+            "blocks": [
+                "icon",
+                "title",
+                "description",
+                "button",
+                "modal"
+            ],
             "data": {
                 "icon": "heart",
                 "title": "Valor Tarjeta",
@@ -325,11 +360,17 @@
                             "label": "Menores (5 a 12 años)",
                             "value": "$40.000"
                         },
-                        { "label": "Menores (2 a 4 años)", "value": "$35.000" }
+                        {
+                            "label": "Menores (2 a 4 años)",
+                            "value": "$35.000"
+                        }
                     ],
                     "description": "No olvides enviarnos el comprobante.",
                     "transferData": [
-                        { "label": "Alias", "value": "fanywalter.mp" }
+                        {
+                            "label": "Alias",
+                            "value": "fanywalter.mp"
+                        }
                     ]
                 }
             }
@@ -340,12 +381,21 @@
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "primary",
-            "blocks": ["title", "form"],
+            "blocks": [
+                "title",
+                "form"
+            ],
             "data": {
                 "title": "Confirmá tu asistencia",
                 "deadline": "Antes del 15 de agosto",
                 "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [1, 2, 3, 4, 5],
+                "guestCountOptions": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
@@ -360,7 +410,6 @@
                         "Celiaco",
                         "Otro"
                     ],
-
                     "extraInputs": [
                         {
                             "id": "mensajersvp",
@@ -384,7 +433,10 @@
             "type": "quote",
             "id": "quote-welcome3",
             "bgColor": "background",
-            "blocks": ["text", "author"],
+            "blocks": [
+                "text",
+                "author"
+            ],
             "data": {
                 "text": "UNA NUEVA ETAPA COMIENZA… Y QUEREMOS COMPARTIRLA CON VOS. GRACIAS POR ESTAR",
                 "author": "Fany & Denis",
@@ -396,7 +448,10 @@
             "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": ["image", "coupleNames"],
+            "blocks": [
+                "image",
+                "coupleNames"
+            ],
             "data": {
                 "aspectRatio": "3/4",
                 "image": "/clientes/boda/1-fany-denis/images/final.jpeg"
@@ -407,7 +462,10 @@
             "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": ["socialLinks", "brandName"],
+            "blocks": [
+                "socialLinks",
+                "brandName"
+            ],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

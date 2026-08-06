@@ -26,6 +26,7 @@
     },
     "rsvpPanel": {
         "enabled": true,
+        "referidos": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": true,
         "colados": true,

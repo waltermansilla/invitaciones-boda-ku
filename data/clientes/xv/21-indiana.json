@@ -28,6 +28,7 @@
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,
+        "referidos": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
@@ -340,7 +341,6 @@
                     "title": "Datos de transferencia",
                     "suggestedValueLabel": "Valor tarjeta",
                     "dateRanges": [
-                        
                         {
                             "label": "Hasta 15/10/2026",
                             "helperText": "Plazo actual",
@@ -379,10 +379,10 @@
                                     "label": "Niños (4 a 11 años)",
                                     "value": "$55.000"
                                 },
-                                 {
-                                     "label": "Trasnoche (ingreso 00:00hs)",
-                                     "value": "$45.000"
-                                 }
+                                {
+                                    "label": "Trasnoche (ingreso 00:00hs)",
+                                    "value": "$45.000"
+                                }
                             ]
                         }
                     ],

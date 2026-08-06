@@ -236,7 +236,7 @@ const filterToEstado: Record<string, string> = {
     pendientes: "pendiente",
     no_asiste: "no_asiste",
 };
-const NEW_MARK_MS = 3 * 60 * 1000;
+const NEW_MARK_MS = 20 * 60 * 1000;
 
 // Helper para obtener texto del estado
 const getEstadoTexto = (estado: string, plural: boolean) => {
@@ -672,45 +672,37 @@ export default function PanelPage({
     let itemsToDisplay: Invitado[] = [];
 
     if (filter === "todos") {
-        // Orden:
-        // 1) Nuevos (última confirmación más reciente primero)
-        // 2) Lista estándar por estado (pendiente, no_asiste, confirmado) y alfabético
-        const ordenEstado: Record<string, number> = {
-            pendiente: 0,
-            no_asiste: 1,
-            confirmado: 2,
-        };
+        // Orden: 1) confirmados · 2) no asisten · 3) pendientes (alfabético en cada grupo)
+        // El círculo azul de "nuevo" es solo visual (NEW_MARK_MS), no reordena la lista.
         const collator = new Intl.Collator("es", { sensitivity: "base" });
         const invitadosBase = invitados.map((inv) => ({ ...inv }));
-        const nuevos = invitadosBase
-            .filter((inv) => isNewInvitado(inv))
-            .sort(
-                (a, b) =>
-                    (getLatestConfirmationMs(b) ?? 0) -
-                    (getLatestConfirmationMs(a) ?? 0),
-            );
-        const estandarBase = invitadosBase.filter((inv) => !isNewInvitado(inv));
         const sortByNombre = (a: Invitado, b: Invitado) =>
             collator.compare(a.nombre, b.nombre);
-        const estandarPendientes = estandarBase
-            .filter((inv) => getEstadoOrdenLista(inv) === "pendiente")
-            .sort(sortByNombre);
-        const estandarNoAsisten = estandarBase
-            .filter((inv) => getEstadoOrdenLista(inv) === "no_asiste")
-            .sort(sortByNombre);
-        const estandarConfirmados = estandarBase
+        const confirmados = invitadosBase
             .filter((inv) => getEstadoOrdenLista(inv) === "confirmado")
             .sort(sortByNombre);
-        const estandarOtros = estandarBase
-            .filter((inv) => !(inv.estado in ordenEstado))
+        const noAsisten = invitadosBase
+            .filter((inv) => getEstadoOrdenLista(inv) === "no_asiste")
             .sort(sortByNombre);
-        const estandar = [
-            ...estandarPendientes,
-            ...estandarNoAsisten,
-            ...estandarConfirmados,
-            ...estandarOtros,
+        const pendientes = invitadosBase
+            .filter((inv) => getEstadoOrdenLista(inv) === "pendiente")
+            .sort(sortByNombre);
+        const otros = invitadosBase
+            .filter((inv) => {
+                const e = getEstadoOrdenLista(inv);
+                return (
+                    e !== "confirmado" &&
+                    e !== "no_asiste" &&
+                    e !== "pendiente"
+                );
+            })
+            .sort(sortByNombre);
+        itemsToDisplay = [
+            ...confirmados,
+            ...noAsisten,
+            ...pendientes,
+            ...otros,
         ];
-        itemsToDisplay = [...nuevos, ...estandar];
     } else if (filter === "pago_pendiente") {
         // Mostrar solo los que no pagaron tarjeta
         itemsToDisplay = invitados

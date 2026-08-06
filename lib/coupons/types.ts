@@ -17,6 +17,14 @@ export type CuponRow = {
   enviado_email?: string | null
   enviado_at?: string | null
   created_at?: string
+  /** Cupones referidos: panel del evento. */
+  panel_id?: string | null
+  /** Cupones referidos: código del invitado (?i=). */
+  invitado_codigo?: string | null
+  /** Cupones referidos: "Sofía & Mateo", etc. */
+  evento_label?: string | null
+  /** Primera apertura del modal (activación del cupón referido). */
+  activado_at?: string | null
 }
 
 export type AppliedCouponInfo = {
@@ -76,6 +84,13 @@ export const COUPON_CATEGORY_META: Record<string, CouponCategoryMeta> = {
     description:
       "Un código compartible. Se puede usar las veces que sea hasta la fecha de vencimiento.",
     usageMode: "unlimited",
+  },
+  referido: {
+    id: "referido",
+    label: "Referidos · Panel invitados",
+    description:
+      "20% activados al abrir el cupón desde la invitación (1 por invitado, vence a 30 días). Orden: por activación.",
+    usageMode: "single_use",
   },
   // legacy
   descuento_fijo: {

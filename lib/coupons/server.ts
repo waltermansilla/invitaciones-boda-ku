@@ -259,7 +259,31 @@ export async function listCouponsAdmin() {
     .order("codigo", { ascending: true })
   if (error) throw error
 
-  const coupons = (data ?? []) as CuponRow[]
+  let coupons = (data ?? []) as CuponRow[]
+  // Referidos: sin duplicados y orden de activación (más reciente primero)
+  const { dedupeReferralCouponsForAdmin } = await import(
+    "@/lib/referrals/activate"
+  )
+  coupons = dedupeReferralCouponsForAdmin(coupons)
+  coupons = [...coupons].sort((a, b) => {
+    if (a.categoria === "referido" && b.categoria === "referido") {
+      // Primero por cliente, luego por activación
+      const la = (a.evento_label || a.panel_id || "").toString()
+      const lb = (b.evento_label || b.panel_id || "").toString()
+      const byLabel = la.localeCompare(lb, "es")
+      if (byLabel !== 0) return byLabel
+      const ta =
+        (a.activado_at && Date.parse(a.activado_at)) ||
+        (a.created_at && Date.parse(a.created_at)) ||
+        0
+      const tb =
+        (b.activado_at && Date.parse(b.activado_at)) ||
+        (b.created_at && Date.parse(b.created_at)) ||
+        0
+      if (ta !== tb) return tb - ta
+    }
+    return a.codigo.localeCompare(b.codigo, "es")
+  })
   const categoryIds = [...new Set(coupons.map((c) => c.categoria))]
   const categories = categoryIds.map((id) => {
     const meta = resolveCategoryMeta(id)
@@ -271,8 +295,8 @@ export async function listCouponsAdmin() {
     }
   })
 
-  // Incluir categorías conocidas vacías (p.ej. libre) para poder crear desde el panel
-  for (const id of ["unico", "libre"] as const) {
+  // Incluir categorías conocidas vacías (p.ej. libre / referidos)
+  for (const id of ["unico", "libre", "referido"] as const) {
     if (!categories.some((c) => c.id === id)) {
       const meta = resolveCategoryMeta(id)
       categories.push({

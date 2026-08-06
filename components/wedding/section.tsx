@@ -122,10 +122,30 @@ function SectionContent({
               colados?: boolean;
               /** Texto singular; en plural se añade "s" a cada palabra (espacios). */
               coladoLabel?: string;
+              /**
+               * Sistema de cupones referidos post-confirmación.
+               * Solo true si contrataron panel y quieren este feature.
+               */
+              referidos?: boolean;
+              /** Prefijo opcional del cupón (default: nombres). */
+              referidosCodePrefix?: string;
           }
         | undefined;
     const codigoInvitado = useCodigoInvitado();
     const previewRsvpForm = usePreviewRsvpForm();
+    const quinceaneraName =
+        typeof (config.meta as { quinceaneraName?: string } | undefined)
+            ?.quinceaneraName === "string"
+            ? (config.meta as { quinceaneraName: string }).quinceaneraName
+            : undefined;
+    const eventLabelFromNames = (() => {
+        if (quinceaneraName?.trim()) return quinceaneraName.trim();
+        const a = coupleNames?.brideName?.trim() || "";
+        const b = coupleNames?.groomName?.trim() || "";
+        const sep = coupleNames?.separator?.trim() || "&";
+        if (a && b) return `${a} ${sep} ${b}`;
+        return a || b || undefined;
+    })();
 
     // Si enabled es false, no renderizar la seccion
     if (enabled === false) return null;
@@ -709,31 +729,41 @@ function SectionContent({
                                 | {
                                       enabled?: boolean;
                                       clientRef?: string;
+                                      codePrefix?: string;
+                                      discountPercent?: number;
+                                      validityDays?: number;
                                       teaser?: {
                                           title?: string;
+                                          subtitle?: string;
                                           benefit?: string;
-                                          validityShort?: string;
-                                          shareHint?: string;
                                           buttonText?: string;
                                       };
                                       modal?: {
                                           title?: string;
+                                          subtitle?: string;
                                           code?: string;
-                                          benefitNote?: string;
                                           modelsLinkUrl?: string;
                                           modelsButtonText?: string;
-                                          reserveLinkUrl?: string;
-                                          reserveButtonText?: string;
-                                          steps?: string[];
-                                          saveButtonText?: string;
                                           shareButtonText?: string;
-                                          saveMessage?: string;
                                           shareMessage?: string;
-                                          footerNote?: string;
-                                          validityText?: string;
+                                          captureHint?: string;
                                       };
                                   }
                                 | undefined
+                        }
+                        referral={
+                            Boolean(rsvpPanel?.enabled) &&
+                            rsvpPanel?.referidos === true &&
+                            Boolean(rsvpPanel?.panelId)
+                                ? {
+                                      enabled: true,
+                                      panelId: rsvpPanel.panelId,
+                                      brideName: coupleNames?.brideName,
+                                      groomName: coupleNames?.groomName,
+                                      quinceaneraName,
+                                      eventLabel: eventLabelFromNames,
+                                  }
+                                : { enabled: false }
                         }
                     />
                 );
