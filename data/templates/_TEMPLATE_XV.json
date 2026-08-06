@@ -517,11 +517,7 @@
                     "date": "Sabado 17 de Febrero",
                     "time": "21:00 hs"
                 },
-                "order": [
-                    "date",
-                    "time",
-                    "address"
-                ],
+                "order": ["date", "time", "address"],
                 "button": {
                     "text": "Como llegar",
                     "url": "https://maps.google.com",
@@ -598,11 +594,7 @@
             "enabled": true,
             "bgColor": "background",
             "data": {
-                "icons": [
-                    "dress",
-                    "suit",
-                    "gem"
-                ],
+                "icons": ["dress", "suit", "gem"],
                 "title": "Vestimenta",
                 "subtitle": "Elegante",
                 "description": "",
@@ -942,12 +934,7 @@
                     "questions": [
                         {
                             "question": "Cual es mi comida favorita?",
-                            "options": [
-                                "Pizza",
-                                "Sushi",
-                                "Asado",
-                                "Pasta"
-                            ],
+                            "options": ["Pizza", "Sushi", "Asado", "Pasta"],
                             "correctIndex": 2,
                             "explanation": "Asado siempre!"
                         }
@@ -966,13 +953,7 @@
                 "title": "Confirma tu asistencia",
                 "deadline": "Antes del 1 de septiembre",
                 "guestCountLabel": "Numero de personas",
-                "guestCountOptions": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
+                "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",

@@ -554,11 +554,7 @@
                     "date": "Viernes 16 de Febrero",
                     "time": "11:00 hs"
                 },
-                "order": [
-                    "date",
-                    "time",
-                    "address"
-                ],
+                "order": ["date", "time", "address"],
                 "button": {
                     "text": "Como llegar",
                     "url": "https://maps.google.com",
@@ -580,11 +576,7 @@
                     "date": "Sabado 17 de Febrero",
                     "time": "21:00 hs"
                 },
-                "order": [
-                    "date",
-                    "time",
-                    "address"
-                ],
+                "order": ["date", "time", "address"],
                 "button": {
                     "text": "Como llegar",
                     "url": "https://maps.google.com",
@@ -706,11 +698,7 @@
             "enabled": true,
             "bgColor": "background",
             "data": {
-                "icons": [
-                    "dress",
-                    "suit",
-                    "gem"
-                ],
+                "icons": ["dress", "suit", "gem"],
                 "title": "Vestimenta",
                 "subtitle": "Elegante Sport",
                 "description": "El blanco esta reservado para la novia",
@@ -718,12 +706,7 @@
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "circle",
-                    "colors": [
-                        "#2C3E50",
-                        "#8E44AD",
-                        "#1ABC9C",
-                        "#E74C3C"
-                    ]
+                    "colors": ["#2C3E50", "#8E44AD", "#1ABC9C", "#E74C3C"]
                 },
                 "button": {
                     "text": "Ver consejos",
@@ -1189,13 +1172,7 @@
                 "title": "Confirma tu asistencia",
                 "deadline": "Antes del 1 de septiembre",
                 "guestCountLabel": "Numero de personas",
-                "guestCountOptions": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
+                "guestCountOptions": [1, 2, 3, 4, 5],
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",

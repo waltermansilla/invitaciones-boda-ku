@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import type { CSSProperties } from "react"
-import { useConfig } from "@/lib/config-context"
-import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order"
-import { useFadeIn } from "@/hooks/use-fade-in"
-import { RevealContent } from "./animated-section"
+import Image from "next/image";
+import type { CSSProperties } from "react";
+import { useConfig } from "@/lib/config-context";
+import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order";
+import { useFadeIn } from "@/hooks/use-fade-in";
+import { RevealContent } from "./animated-section";
 
 /**
  * Closing Section - Imagen de cierre con nombres
- * 
+ *
  * Soporta las mismas opciones de namesDisplay que hero-section:
  *   enabled: boolean         -> (OPCIONAL) true por defecto, false para ocultar nombres
  *   font: string             -> (OPCIONAL) Google Font para los nombres
@@ -23,268 +23,290 @@ import { RevealContent } from "./animated-section"
  */
 
 interface ClosingSectionProps {
-  image?: string
-  aspectRatio?: string
-  coupleNames: {
-    groomName: string
-    brideName: string
-    separator: string
-    /** Opcional: "groom-first" muestra novio arriba (mismo criterio que overlay/hero). */
-    nameOrder?: "bride-first" | "groom-first"
-  }
-  namesDisplay?: {
-    enabled?: boolean
-    font?: string
-    weight?: string
-    size?: string
-    style?: string
-    color?: string
-    decorativeLines?: boolean
-    logo?: string
-    copyFromHero?: boolean
-    copyFromOverlay?: boolean
-    lowercase?: boolean // true = respeta mayusculas/minusculas, false/undefined = uppercase
-    letterSpacing?: string // "none", "normal", "wide" (default)
-  }
-  /** Modo de contenido/texto: primary | background | transparent (igual que otras secciones). */
-  sectionBgColor?: string
-  /** Color de fondo real (hex/CSS). Solo pinta el fondo; el texto sigue sectionBgColor. */
-  bgColorTheme?: string
-  /** Imagen de fondo de la sección (detrás de nombres / área sin foto). */
-  bgImage?: string
+    image?: string;
+    aspectRatio?: string;
+    coupleNames: {
+        groomName: string;
+        brideName: string;
+        separator: string;
+        /** Opcional: "groom-first" muestra novio arriba (mismo criterio que overlay/hero). */
+        nameOrder?: "bride-first" | "groom-first";
+    };
+    namesDisplay?: {
+        enabled?: boolean;
+        font?: string;
+        weight?: string;
+        size?: string;
+        style?: string;
+        color?: string;
+        decorativeLines?: boolean;
+        logo?: string;
+        copyFromHero?: boolean;
+        copyFromOverlay?: boolean;
+        lowercase?: boolean; // true = respeta mayusculas/minusculas, false/undefined = uppercase
+        letterSpacing?: string; // "none", "normal", "wide" (default)
+    };
+    /** Modo de contenido/texto: primary | background | transparent (igual que otras secciones). */
+    sectionBgColor?: string;
+    /** Color de fondo real (hex/CSS). Solo pinta el fondo; el texto sigue sectionBgColor. */
+    bgColorTheme?: string;
+    /** Imagen de fondo de la sección (detrás de nombres / área sin foto). */
+    bgImage?: string;
 }
 
 // Map size names to Tailwind classes
 const sizeMap: Record<string, string> = {
-  sm: "text-lg sm:text-xl",
-  base: "text-xl sm:text-2xl",
-  lg: "text-2xl sm:text-3xl md:text-4xl",
-  xl: "text-3xl sm:text-4xl md:text-5xl",
-  "2xl": "text-4xl sm:text-5xl md:text-6xl",
-  "3xl": "text-5xl sm:text-6xl md:text-7xl",
-  "4xl": "text-6xl sm:text-7xl md:text-8xl",
-  "5xl": "text-7xl sm:text-8xl md:text-9xl",
-}
+    sm: "text-lg sm:text-xl",
+    base: "text-xl sm:text-2xl",
+    lg: "text-2xl sm:text-3xl md:text-4xl",
+    xl: "text-3xl sm:text-4xl md:text-5xl",
+    "2xl": "text-4xl sm:text-5xl md:text-6xl",
+    "3xl": "text-5xl sm:text-6xl md:text-7xl",
+    "4xl": "text-6xl sm:text-7xl md:text-8xl",
+    "5xl": "text-7xl sm:text-8xl md:text-9xl",
+};
 
 // Map weight names to CSS values
 const weightMap: Record<string, string> = {
-  thin: "100",
-  extralight: "200",
-  light: "300",
-  normal: "400",
-  medium: "500",
-  semibold: "600",
-  bold: "700",
-  extrabold: "800",
-  black: "900",
-}
+    thin: "100",
+    extralight: "200",
+    light: "300",
+    normal: "400",
+    medium: "500",
+    semibold: "600",
+    bold: "700",
+    extrabold: "800",
+    black: "900",
+};
 
 export default function ClosingSection({
-  image,
-  aspectRatio = "3/4",
-  coupleNames,
-  namesDisplay,
-  sectionBgColor = "background",
-  bgColorTheme,
-  bgImage,
+    image,
+    aspectRatio = "3/4",
+    coupleNames,
+    namesDisplay,
+    sectionBgColor = "background",
+    bgColorTheme,
+    bgImage,
 }: ClosingSectionProps) {
-  const config = useConfig()
-  const theme = config.theme as Record<string, unknown>
-  const hero = config.hero as Record<string, unknown> | undefined
-  const overlay = config.overlay as Record<string, unknown> | undefined
-  const lightText =
-    (theme.lightBgTextColor as string) ||
-    (theme.primaryColor as string) ||
-    "#6B7F5E"
-  const darkText = (theme.darkBgTextColor as string) || "#FFFFFF"
-  const isPrimaryBg = sectionBgColor === "primary"
-  const defaultTextColor = isPrimaryBg ? darkText : lightText
+    const config = useConfig();
+    const theme = config.theme as Record<string, unknown>;
+    const hero = config.hero as Record<string, unknown> | undefined;
+    const overlay = config.overlay as Record<string, unknown> | undefined;
+    const lightText =
+        (theme.lightBgTextColor as string) ||
+        (theme.primaryColor as string) ||
+        "#6B7F5E";
+    const darkText = (theme.darkBgTextColor as string) || "#FFFFFF";
+    const isPrimaryBg = sectionBgColor === "primary";
+    const defaultTextColor = isPrimaryBg ? darkText : lightText;
 
-  const bgPaint =
-    typeof bgColorTheme === "string" && bgColorTheme.trim()
-      ? bgColorTheme.trim()
-      : undefined
-  const hasSectionBgImage = Boolean(bgImage?.trim())
-  const sectionBgClass = hasSectionBgImage || bgPaint
-    ? sectionBgColor === "transparent"
-      ? "bg-transparent"
-      : ""
-    : sectionBgColor === "primary"
-      ? "bg-primary"
-      : sectionBgColor === "transparent"
-        ? "bg-transparent"
-        : "bg-background"
-  const sectionBgStyle: CSSProperties = hasSectionBgImage
-    ? {
-        backgroundImage: `url(${bgImage!.trim()})`,
-        backgroundRepeat: "repeat",
-        backgroundSize: "100% auto",
-        backgroundPosition: "top center",
-      }
-    : bgPaint
-      ? { backgroundColor: bgPaint }
-      : {}
+    const bgPaint =
+        typeof bgColorTheme === "string" && bgColorTheme.trim()
+            ? bgColorTheme.trim()
+            : undefined;
+    const hasSectionBgImage = Boolean(bgImage?.trim());
+    const sectionBgClass =
+        hasSectionBgImage || bgPaint
+            ? sectionBgColor === "transparent"
+                ? "bg-transparent"
+                : ""
+            : sectionBgColor === "primary"
+              ? "bg-primary"
+              : sectionBgColor === "transparent"
+                ? "bg-transparent"
+                : "bg-background";
+    const sectionBgStyle: CSSProperties = hasSectionBgImage
+        ? {
+              backgroundImage: `url(${bgImage!.trim()})`,
+              backgroundRepeat: "repeat",
+              backgroundSize: "100% auto",
+              backgroundPosition: "top center",
+          }
+        : bgPaint
+          ? { backgroundColor: bgPaint }
+          : {};
 
-  const { ref, isVisible } = useFadeIn(0.15)
+    const { ref, isVisible } = useFadeIn(0.15);
 
-  // If copyFromHero is true, get settings from hero.namesDisplay
-  const heroNamesDisplay = hero?.namesDisplay as Record<string, unknown> | undefined
-  // If copyFromOverlay is true, get settings from overlay.nameStyle
-  const overlayNameStyle = overlay?.nameStyle as Record<string, unknown> | undefined
-  
-  const shouldCopyFromHero = namesDisplay?.copyFromHero ?? false
-  const shouldCopyFromOverlay = namesDisplay?.copyFromOverlay ?? false
+    // If copyFromHero is true, get settings from hero.namesDisplay
+    const heroNamesDisplay = hero?.namesDisplay as
+        | Record<string, unknown>
+        | undefined;
+    // If copyFromOverlay is true, get settings from overlay.nameStyle
+    const overlayNameStyle = overlay?.nameStyle as
+        | Record<string, unknown>
+        | undefined;
 
-  const isEnabled = namesDisplay?.enabled ?? true
-  const isFreeAspect = aspectRatio === "libre"
-  
-  // Priority: copyFromOverlay > copyFromHero > namesDisplay defaults
-  let namesFont = namesDisplay?.font
-  let namesWeight = namesDisplay?.weight || "300"
-  let namesSize = namesDisplay?.size || "lg"
-  let namesStyle = namesDisplay?.style || "normal"
-  let namesColor = namesDisplay?.color
-  const namesLogo = namesDisplay?.logo
-  
-  if (shouldCopyFromOverlay && overlayNameStyle) {
-    namesFont = (overlayNameStyle.font as string) || namesFont
-    namesWeight = (overlayNameStyle.weight as string) || namesWeight
-    namesSize = (overlayNameStyle.size as string) || namesSize
-    namesColor = (overlayNameStyle.color as string) || namesColor
-  } else if (shouldCopyFromHero && heroNamesDisplay) {
-    namesFont = (heroNamesDisplay.font as string) || namesFont
-    namesWeight = (heroNamesDisplay.weight as string) || namesWeight
-    namesSize = (heroNamesDisplay.size as string) || namesSize
-    namesStyle = (heroNamesDisplay.style as string) || namesStyle
-  }
-  
-  const showDecorativeLines = namesDisplay?.decorativeLines ?? true
+    const shouldCopyFromHero = namesDisplay?.copyFromHero ?? false;
+    const shouldCopyFromOverlay = namesDisplay?.copyFromOverlay ?? false;
 
-  // Resolve weight value
-  const resolvedWeight = weightMap[namesWeight] || namesWeight
+    const isEnabled = namesDisplay?.enabled ?? true;
+    const isFreeAspect = aspectRatio === "libre";
 
-  // Check lowercase from overlay if copying
-  const shouldLowercase = namesDisplay?.lowercase ?? 
-    (shouldCopyFromOverlay && overlayNameStyle ? (overlayNameStyle.lowercase as boolean) : false)
+    // Priority: copyFromOverlay > copyFromHero > namesDisplay defaults
+    let namesFont = namesDisplay?.font;
+    let namesWeight = namesDisplay?.weight || "300";
+    let namesSize = namesDisplay?.size || "lg";
+    let namesStyle = namesDisplay?.style || "normal";
+    let namesColor = namesDisplay?.color;
+    const namesLogo = namesDisplay?.logo;
 
-  // Letter spacing: "none" = 0, "normal" = 0.1em, "wide" = 0.2em (default)
-  const letterSpacingMap: Record<string, string> = {
-    "none": "0",
-    "normal": "0.1em", 
-    "wide": "0.2em",
-  }
-  let namesLetterSpacing = namesDisplay?.letterSpacing || "wide"
-  if (shouldCopyFromOverlay && overlayNameStyle?.letterSpacing) {
-    namesLetterSpacing = overlayNameStyle.letterSpacing as string
-  } else if (shouldCopyFromHero && heroNamesDisplay?.letterSpacing) {
-    namesLetterSpacing = heroNamesDisplay.letterSpacing as string
-  }
-  const resolvedLetterSpacing = letterSpacingMap[namesLetterSpacing] || "0.2em"
+    if (shouldCopyFromOverlay && overlayNameStyle) {
+        namesFont = (overlayNameStyle.font as string) || namesFont;
+        namesWeight = (overlayNameStyle.weight as string) || namesWeight;
+        namesSize = (overlayNameStyle.size as string) || namesSize;
+        namesColor = (overlayNameStyle.color as string) || namesColor;
+    } else if (shouldCopyFromHero && heroNamesDisplay) {
+        namesFont = (heroNamesDisplay.font as string) || namesFont;
+        namesWeight = (heroNamesDisplay.weight as string) || namesWeight;
+        namesSize = (heroNamesDisplay.size as string) || namesSize;
+        namesStyle = (heroNamesDisplay.style as string) || namesStyle;
+    }
 
-  const hasClosingImage = Boolean(image?.trim())
+    const showDecorativeLines = namesDisplay?.decorativeLines ?? true;
 
-  const { first: closingFirst, second: closingSecond } = coupleNamesDisplayPair(
-    coupleNames.brideName,
-    coupleNames.groomName,
-    coupleNames.nameOrder,
-  )
-  const closingHasSecond = Boolean(closingSecond.trim())
+    // Resolve weight value
+    const resolvedWeight = weightMap[namesWeight] || namesWeight;
 
-  // Get size class - support pixel values like "48px"
-  const isPixelSize = namesSize.endsWith("px")
-  const sizeClass = isPixelSize ? "" : (sizeMap[namesSize] || sizeMap.lg)
-  const pixelSizeStyle: CSSProperties = isPixelSize ? { fontSize: namesSize } : {}
+    // Check lowercase from overlay if copying
+    const shouldLowercase =
+        namesDisplay?.lowercase ??
+        (shouldCopyFromOverlay && overlayNameStyle
+            ? (overlayNameStyle.lowercase as boolean)
+            : false);
 
-  // Build font family style if custom font specified
-  const namesFontStyle: CSSProperties = {
-    ...(namesFont ? { fontFamily: `'${namesFont}', cursive` } : {}),
-    fontWeight: resolvedWeight,
-    fontStyle: namesStyle,
-    color: namesColor || defaultTextColor,
-    textTransform: shouldLowercase ? "none" : "uppercase",
-    letterSpacing: resolvedLetterSpacing,
-    ...pixelSizeStyle,
-  }
+    // Letter spacing: "none" = 0, "normal" = 0.1em, "wide" = 0.2em (default)
+    const letterSpacingMap: Record<string, string> = {
+        none: "0",
+        normal: "0.1em",
+        wide: "0.2em",
+    };
+    let namesLetterSpacing = namesDisplay?.letterSpacing || "wide";
+    if (shouldCopyFromOverlay && overlayNameStyle?.letterSpacing) {
+        namesLetterSpacing = overlayNameStyle.letterSpacing as string;
+    } else if (shouldCopyFromHero && heroNamesDisplay?.letterSpacing) {
+        namesLetterSpacing = heroNamesDisplay.letterSpacing as string;
+    }
+    const resolvedLetterSpacing =
+        letterSpacingMap[namesLetterSpacing] || "0.2em";
 
-  return (
-    <section
-      ref={ref}
-      className={sectionBgClass}
-      style={{ color: defaultTextColor, ...sectionBgStyle }}
-    >
-      {/* Load custom font if specified */}
-      {namesFont && (
-        <>
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          <link 
-            href={`https://fonts.googleapis.com/css2?family=${namesFont.replace(/ /g, "+")}:wght@100;200;300;400;500;600;700;800;900&display=swap`} 
-            rel="stylesheet" 
-          />
-        </>
-      )}
+    const hasClosingImage = Boolean(image?.trim());
 
-      <RevealContent isVisible={isVisible}>
-      {/* Full-width closing image (opcional: sin image solo se muestra el nombre) */}
-      {hasClosingImage &&
-        (isFreeAspect ? (
-          <img
-            src={image!.trim()}
-            alt="Foto de cierre"
-            className="block h-auto w-full"
-          />
-        ) : (
-          <div className="relative w-full" style={{ aspectRatio }}>
-            <Image
-              src={image!.trim()}
-              alt="Foto de cierre"
-              fill
-              className="object-cover"
-            />
-          </div>
-        ))}
+    const { first: closingFirst, second: closingSecond } =
+        coupleNamesDisplayPair(
+            coupleNames.brideName,
+            coupleNames.groomName,
+            coupleNames.nameOrder,
+        );
+    const closingHasSecond = Boolean(closingSecond.trim());
 
-      {/* Names or Logo as elegant close */}
-      {isEnabled && (
-        <div className="flex flex-col items-center px-6 py-14">
-          {showDecorativeLines && (
-            <div className="mb-4 h-px w-10 bg-current/30" />
-          )}
-          
-          {namesLogo ? (
-            // Show logo instead of names
-            <Image
-              src={namesLogo}
-              alt="Logo"
-              width={180}
-              height={90}
-              className="max-h-20 w-auto object-contain sm:max-h-24"
-            />
-          ) : (
-            // Show names as text
-            <div style={namesFontStyle}>
-              <p className={`text-center ${sizeClass}`}>
-                {closingFirst}
-              </p>
-              {coupleNames.separator && closingHasSecond && (
-                <span className="my-1 block text-center text-base font-extralight tracking-[0.3em] opacity-50 md:text-lg">
-                  {coupleNames.separator}
-                </span>
-              )}
-              {closingHasSecond && (
-                <p className={`text-center ${sizeClass}`}>
-                  {closingSecond}
-                </p>
-              )}
-            </div>
-          )}
-          
-          {showDecorativeLines && (
-            <div className="mt-4 h-px w-10 bg-current/30" />
-          )}
-        </div>
-      )}
-      </RevealContent>
-    </section>
-  )
+    // Get size class - support pixel values like "48px"
+    const isPixelSize = namesSize.endsWith("px");
+    const sizeClass = isPixelSize ? "" : sizeMap[namesSize] || sizeMap.lg;
+    const pixelSizeStyle: CSSProperties = isPixelSize
+        ? { fontSize: namesSize }
+        : {};
+
+    // Build font family style if custom font specified
+    const namesFontStyle: CSSProperties = {
+        ...(namesFont ? { fontFamily: `'${namesFont}', cursive` } : {}),
+        fontWeight: resolvedWeight,
+        fontStyle: namesStyle,
+        color: namesColor || defaultTextColor,
+        textTransform: shouldLowercase ? "none" : "uppercase",
+        letterSpacing: resolvedLetterSpacing,
+        ...pixelSizeStyle,
+    };
+
+    return (
+        <section
+            ref={ref}
+            className={sectionBgClass}
+            style={{ color: defaultTextColor, ...sectionBgStyle }}
+        >
+            {/* Load custom font if specified */}
+            {namesFont && (
+                <>
+                    <link
+                        rel="preconnect"
+                        href="https://fonts.googleapis.com"
+                    />
+                    <link
+                        rel="preconnect"
+                        href="https://fonts.gstatic.com"
+                        crossOrigin="anonymous"
+                    />
+                    <link
+                        href={`https://fonts.googleapis.com/css2?family=${namesFont.replace(/ /g, "+")}:wght@100;200;300;400;500;600;700;800;900&display=swap`}
+                        rel="stylesheet"
+                    />
+                </>
+            )}
+
+            <RevealContent isVisible={isVisible}>
+                {/* Full-width closing image (opcional: sin image solo se muestra el nombre) */}
+                {hasClosingImage &&
+                    (isFreeAspect ? (
+                        <img
+                            src={image!.trim()}
+                            alt="Foto de cierre"
+                            className="block h-auto w-full"
+                        />
+                    ) : (
+                        <div
+                            className="relative w-full"
+                            style={{ aspectRatio }}
+                        >
+                            <Image
+                                src={image!.trim()}
+                                alt="Foto de cierre"
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                    ))}
+
+                {/* Names or Logo as elegant close */}
+                {isEnabled && (
+                    <div className="flex flex-col items-center px-6 py-14">
+                        {showDecorativeLines && (
+                            <div className="mb-4 h-px w-10 bg-current/30" />
+                        )}
+
+                        {namesLogo ? (
+                            // Show logo instead of names
+                            <Image
+                                src={namesLogo}
+                                alt="Logo"
+                                width={180}
+                                height={90}
+                                className="max-h-20 w-auto object-contain sm:max-h-24"
+                            />
+                        ) : (
+                            // Show names as text
+                            <div style={namesFontStyle}>
+                                <p className={`text-center ${sizeClass}`}>
+                                    {closingFirst}
+                                </p>
+                                {coupleNames.separator && closingHasSecond && (
+                                    <span className="my-1 block text-center text-base font-extralight tracking-[0.3em] opacity-50 md:text-lg">
+                                        {coupleNames.separator}
+                                    </span>
+                                )}
+                                {closingHasSecond && (
+                                    <p className={`text-center ${sizeClass}`}>
+                                        {closingSecond}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+
+                        {showDecorativeLines && (
+                            <div className="mt-4 h-px w-10 bg-current/30" />
+                        )}
+                    </div>
+                )}
+            </RevealContent>
+        </section>
+    );
 }

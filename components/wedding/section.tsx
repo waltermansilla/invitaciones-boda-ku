@@ -37,8 +37,8 @@ import {
 import FaqSection from "./faq-section";
 import { useConfig } from "@/lib/config-context";
 import {
-  confirmarComunUsesPanelApi,
-  rsvpFormUsesPanelApi,
+    confirmarComunUsesPanelApi,
+    rsvpFormUsesPanelApi,
 } from "@/lib/panel-confirmacion";
 
 export interface SectionConfig {
@@ -69,7 +69,7 @@ export interface SectionConfig {
 
 interface SectionProps {
     section: SectionConfig;
-  coupleNames: {
+    coupleNames: {
         groomName: string;
         brideName: string;
         separator: string;
@@ -112,33 +112,33 @@ function SectionContent({
     } = section;
     const sectionStyle = parseSectionStyleMap(sectionStyleRaw);
     const theme = config.theme as Record<string, unknown>;
-  const rsvpPanel = config.rsvpPanel as
-    | {
+    const rsvpPanel = config.rsvpPanel as
+        | {
               enabled?: boolean;
               panelId?: string;
               confirmationMessage?: string;
               confirmacion?: string;
               registrarSinCodigoEnPanel?: boolean;
               colados?: boolean;
-        /** Texto singular; en plural se añade "s" a cada palabra (espacios). */
+              /** Texto singular; en plural se añade "s" a cada palabra (espacios). */
               coladoLabel?: string;
           }
         | undefined;
     const codigoInvitado = useCodigoInvitado();
     const previewRsvpForm = usePreviewRsvpForm();
 
-  // Si enabled es false, no renderizar la seccion
+    // Si enabled es false, no renderizar la seccion
     if (enabled === false) return null;
 
-  // Resolve background image from theme if using keywords
+    // Resolve background image from theme if using keywords
     let resolvedBgImage = bgImage;
-  if (bgImage === "backgroundImage") {
+    if (bgImage === "backgroundImage") {
         resolvedBgImage = (theme.backgroundImage as string) || undefined;
-  } else if (bgImage === "primaryImage") {
+    } else if (bgImage === "primaryImage") {
         resolvedBgImage = (theme.primaryImage as string) || undefined;
-  }
+    }
 
-  // bgColor = modo de contenido (texto). bgColorTheme = color de fondo real (opcional).
+    // bgColor = modo de contenido (texto). bgColorTheme = color de fondo real (opcional).
     const bgPaint =
         typeof bgColorTheme === "string" && bgColorTheme.trim()
             ? bgColorTheme.trim()
@@ -151,7 +151,7 @@ function SectionContent({
               : bgColor === "transparent"
                 ? "bg-transparent"
                 : "bg-background";
-  const resolveTextColorValue = (value: string): string => {
+    const resolveTextColorValue = (value: string): string => {
         const color = value.trim();
         if (!color) return color;
         if (color === "foreground") return "hsl(var(--foreground))";
@@ -162,24 +162,24 @@ function SectionContent({
         return color;
     };
     let resolvedTextColor: string;
-  if (textColor) {
+    if (textColor) {
         resolvedTextColor = resolveTextColorValue(textColor);
-  } else if (bgColor === "primary") {
+    } else if (bgColor === "primary") {
         resolvedTextColor = (theme.darkBgTextColor as string) || "#FFFFFF";
-  } else {
+    } else {
         resolvedTextColor =
             (theme.lightBgTextColor as string) ||
             (theme.primaryColor as string) ||
             "#6B7F5E";
-  }
+    }
     const colors = { bg, resolvedTextColor };
 
-  // Check if this section continues the same background image as previous
-  // Compare using original bgImage keywords (e.g. "backgroundImage") not resolved URLs
+    // Check if this section continues the same background image as previous
+    // Compare using original bgImage keywords (e.g. "backgroundImage") not resolved URLs
     const continuesBgImage =
         resolvedBgImage && bgImage && prevBgImage === bgImage;
 
-  // Show a subtle divider line when this section has the same bgColor as the previous one
+    // Show a subtle divider line when this section has the same bgColor as the previous one
     const selfStyledTypes = [
         "gallery",
         "closingImage",
@@ -198,64 +198,66 @@ function SectionContent({
         effectiveBg === prevEffective &&
         !resolvedBgImage;
 
-  // Background image styles
-  // When continuing from previous section, use attachment: local so image scrolls with content
+    // Background image styles
+    // When continuing from previous section, use attachment: local so image scrolls with content
     const bgImageStyle: React.CSSProperties = resolvedBgImage
         ? {
-    backgroundImage: `url(${resolvedBgImage})`,
-    backgroundRepeat: "repeat",
-    backgroundSize: "100% auto",
-    backgroundPosition: "top center",
-    // Hide the top of the image by a small amount when continuing, creating seamless flow
-    ...(continuesBgImage ? { backgroundAttachment: "local" } : {}),
+              backgroundImage: `url(${resolvedBgImage})`,
+              backgroundRepeat: "repeat",
+              backgroundSize: "100% auto",
+              backgroundPosition: "top center",
+              // Hide the top of the image by a small amount when continuing, creating seamless flow
+              ...(continuesBgImage ? { backgroundAttachment: "local" } : {}),
           }
         : bgPaint
           ? { backgroundColor: bgPaint }
           : {};
 
-  const renderContent = () => {
-    switch (type) {
-      case "spacer": {
-        const rawHeight = data.heightPx ?? data.height;
-        const parsed =
-          typeof rawHeight === "number"
-            ? rawHeight
-            : typeof rawHeight === "string"
-              ? Number.parseFloat(rawHeight)
-              : NaN;
-        const heightPx = Number.isFinite(parsed) ? Math.max(0, parsed) : 48;
-        return (
-          <div
-            aria-hidden="true"
-            style={{ height: `${heightPx}px`, width: "100%" }}
-          />
-        );
-      }
+    const renderContent = () => {
+        switch (type) {
+            case "spacer": {
+                const rawHeight = data.heightPx ?? data.height;
+                const parsed =
+                    typeof rawHeight === "number"
+                        ? rawHeight
+                        : typeof rawHeight === "string"
+                          ? Number.parseFloat(rawHeight)
+                          : NaN;
+                const heightPx = Number.isFinite(parsed)
+                    ? Math.max(0, parsed)
+                    : 48;
+                return (
+                    <div
+                        aria-hidden="true"
+                        style={{ height: `${heightPx}px`, width: "100%" }}
+                    />
+                );
+            }
 
-      case "quote":
-        return (
-          <QuoteSection
-            text={data.text as string}
-            author={data.author as string}
+            case "quote":
+                return (
+                    <QuoteSection
+                        text={data.text as string}
+                        author={data.author as string}
                         decorativeLines={
                             data.decorativeLines as boolean | undefined
                         }
-            pxFrase={
+                        pxFrase={
                             typeof data.pxFrase === "number"
                                 ? data.pxFrase
                                 : undefined
-            }
-            pxAuthor={
+                        }
+                        pxAuthor={
                             typeof data.pxAuthor === "number"
                                 ? data.pxAuthor
                                 : undefined
-            }
-          />
+                        }
+                    />
                 );
 
-      case "eventInfo":
-        return (
-          <EventInfoSection
+            case "eventInfo":
+                return (
+                    <EventInfoSection
                         date={
                             data.date as {
                                 icon: string;
@@ -263,8 +265,8 @@ function SectionContent({
                                 value: string;
                             }
                         }
-            locations={
-              data.locations as {
+                        locations={
+                            data.locations as {
                                 enabled: boolean;
                                 title: string;
                                 address: string;
@@ -273,28 +275,34 @@ function SectionContent({
                                     url: string;
                                     variant: "primary" | "secondary";
                                 };
-              }[]
-            }
-          />
+                            }[]
+                        }
+                    />
                 );
 
-      case "dateInfo":
-        return (
-          <DateInfoSection
-            title={data.title as string}
-            value={data.value as string}
-            titleStyle={getSectionPartTextStyle(sectionStyle, "title")}
-            valueStyle={getSectionPartTextStyle(sectionStyle, "value")}
-          />
+            case "dateInfo":
+                return (
+                    <DateInfoSection
+                        title={data.title as string}
+                        value={data.value as string}
+                        titleStyle={getSectionPartTextStyle(
+                            sectionStyle,
+                            "title",
+                        )}
+                        valueStyle={getSectionPartTextStyle(
+                            sectionStyle,
+                            "value",
+                        )}
+                    />
                 );
 
-      case "locationInfo":
-        return (
-          <LocationInfoSection
-            title={data.title as string}
-            address={data.address as string}
-            icon={data.icon as string | undefined}
-            showButton={data.showButton as boolean | undefined}
+            case "locationInfo":
+                return (
+                    <LocationInfoSection
+                        title={data.title as string}
+                        address={data.address as string}
+                        icon={data.icon as string | undefined}
+                        showButton={data.showButton as boolean | undefined}
                         datetime={
                             data.datetime as
                                 | { date?: string; time?: string }
@@ -315,91 +323,14 @@ function SectionContent({
                     />
                 );
 
-      case "zoomInfo":
-        return (
-          <ZoomInfoSection
-            title={data.title as string}
-            meetingId={data.meetingId as string}
-            passcode={data.passcode as string}
-            notes={data.notes as string | undefined}
-            showButton={data.showButton as boolean | undefined}
-            button={
-              data.button as {
-                                text: string;
-                                url: string;
-                                variant: "primary" | "secondary" | "background";
-                            }
-                        }
-                    />
-                );
-
-      case "captureCard":
-        return (
-          <CaptureCardSection
-            image={data.image as string}
-            name={data.name as string}
-            topLabel={data.topLabel as string | undefined}
-            nameSize={data.nameSize as string | undefined}
-            locationTitle={data.locationTitle as string | undefined}
-                        locationAddress={
-                            data.locationAddress as string | undefined
-                        }
-            eventDay={data.eventDay as string | undefined}
-            eventTime={data.eventTime as string | undefined}
-            zoomTitle={data.zoomTitle as string | undefined}
-            meetingId={data.meetingId as string | undefined}
-            passcode={data.passcode as string | undefined}
-            colors={
-              data.colors as
-                | {
-                                      blockBg?: string;
-                                      blockBorder?: string;
-                                      dateTimeBg?: string;
-                                      locationBg?: string;
-                                      zoomBg?: string;
-                                      captureBg?: string;
-                                      cardBg?: string;
-                                      photoPanelBg?: string;
-                                      nameTextColor?: string;
-                                      blockTextColor?: string;
-                  }
-                | undefined
-            }
-          />
-                );
-
-      case "gallery":
+            case "zoomInfo":
                 return (
-                    <GallerySection
-                        images={data.images as string[]}
-                        aspectRatio={data.aspectRatio as string | undefined}
-                        sectionBgColor={bgColor}
-                        bgColorTheme={bgPaint}
-                        bgImage={resolvedBgImage}
-                    />
-                );
-
-      case "itinerary":
-        return (
-          <ItinerarySection
-            title={data.title as string}
-                        events={
-                            data.events as {
-                                icon: string;
-                                name: string;
-                                time: string;
-                            }[]
-                        }
-            sectionBgColor={bgColor}
-          />
-                );
-
-      case "photos":
-        return (
-          <PhotosSection
-            icon={data.icon as string | undefined}
-            title={data.title as string}
-            description={data.description as string}
+                    <ZoomInfoSection
+                        title={data.title as string}
+                        meetingId={data.meetingId as string}
+                        passcode={data.passcode as string}
+                        notes={data.notes as string | undefined}
+                        showButton={data.showButton as boolean | undefined}
                         button={
                             data.button as {
                                 text: string;
@@ -410,13 +341,90 @@ function SectionContent({
                     />
                 );
 
-      case "giftCard":
-        return (
-          <GiftCardSection
-            icon={data.icon as string}
-            title={data.title as string}
-            description={data.description as string}
-            showButton={data.showButton as boolean | undefined}
+            case "captureCard":
+                return (
+                    <CaptureCardSection
+                        image={data.image as string}
+                        name={data.name as string}
+                        topLabel={data.topLabel as string | undefined}
+                        nameSize={data.nameSize as string | undefined}
+                        locationTitle={data.locationTitle as string | undefined}
+                        locationAddress={
+                            data.locationAddress as string | undefined
+                        }
+                        eventDay={data.eventDay as string | undefined}
+                        eventTime={data.eventTime as string | undefined}
+                        zoomTitle={data.zoomTitle as string | undefined}
+                        meetingId={data.meetingId as string | undefined}
+                        passcode={data.passcode as string | undefined}
+                        colors={
+                            data.colors as
+                                | {
+                                      blockBg?: string;
+                                      blockBorder?: string;
+                                      dateTimeBg?: string;
+                                      locationBg?: string;
+                                      zoomBg?: string;
+                                      captureBg?: string;
+                                      cardBg?: string;
+                                      photoPanelBg?: string;
+                                      nameTextColor?: string;
+                                      blockTextColor?: string;
+                                  }
+                                | undefined
+                        }
+                    />
+                );
+
+            case "gallery":
+                return (
+                    <GallerySection
+                        images={data.images as string[]}
+                        aspectRatio={data.aspectRatio as string | undefined}
+                        sectionBgColor={bgColor}
+                        bgColorTheme={bgPaint}
+                        bgImage={resolvedBgImage}
+                    />
+                );
+
+            case "itinerary":
+                return (
+                    <ItinerarySection
+                        title={data.title as string}
+                        events={
+                            data.events as {
+                                icon: string;
+                                name: string;
+                                time: string;
+                            }[]
+                        }
+                        sectionBgColor={bgColor}
+                    />
+                );
+
+            case "photos":
+                return (
+                    <PhotosSection
+                        icon={data.icon as string | undefined}
+                        title={data.title as string}
+                        description={data.description as string}
+                        button={
+                            data.button as {
+                                text: string;
+                                url: string;
+                                variant: "primary" | "secondary" | "background";
+                            }
+                        }
+                    />
+                );
+
+            case "giftCard":
+                return (
+                    <GiftCardSection
+                        icon={data.icon as string}
+                        title={data.title as string}
+                        description={data.description as string}
+                        showButton={data.showButton as boolean | undefined}
                         button={
                             data.button as
                                 | {
@@ -462,13 +470,13 @@ function SectionContent({
                     />
                 );
 
-      case "honeymoon":
-        return (
-          <HoneymoonSection
-            icon={data.icon as string | undefined}
-            title={data.title as string}
-            description={data.description as string}
-            showButton={data.showButton as boolean | undefined}
+            case "honeymoon":
+                return (
+                    <HoneymoonSection
+                        icon={data.icon as string | undefined}
+                        title={data.title as string}
+                        description={data.description as string}
+                        showButton={data.showButton as boolean | undefined}
                         button={
                             data.button as {
                                 text: string;
@@ -516,19 +524,19 @@ function SectionContent({
                     />
                 );
 
-      case "universalInfo":
-        return (
-          <UniversalInfoSection
-            icon={data.icon as string | undefined}
-            title={data.title as string | undefined}
-            description={data.description as string | undefined}
+            case "universalInfo":
+                return (
+                    <UniversalInfoSection
+                        icon={data.icon as string | undefined}
+                        title={data.title as string | undefined}
+                        description={data.description as string | undefined}
                         descriptionSize={
                             data.descriptionSize as
                                 | "normal"
                                 | "large"
                                 | undefined
                         }
-            showButton={data.showButton as boolean | undefined}
+                        showButton={data.showButton as boolean | undefined}
                         button={
                             data.button as
                                 | {
@@ -551,16 +559,16 @@ function SectionContent({
                     />
                 );
 
-      case "dressCode":
-        return (
-          <DressCodeSection
-            title={data.title as string}
-            subtitle={data.subtitle as string}
-            description={
-              data.description as string | string[] | undefined
-            }
-            icons={data.icons as string[] | undefined}
-            showButton={data.showButton as boolean | undefined}
+            case "dressCode":
+                return (
+                    <DressCodeSection
+                        title={data.title as string}
+                        subtitle={data.subtitle as string}
+                        description={
+                            data.description as string | string[] | undefined
+                        }
+                        icons={data.icons as string[] | undefined}
+                        showButton={data.showButton as boolean | undefined}
                         button={
                             data.button as
                                 | {
@@ -602,14 +610,14 @@ function SectionContent({
                     />
                 );
 
-      case "emotionalQuote":
+            case "emotionalQuote":
                 return <EmotionalQuoteSection text={data.text as string} />;
 
-      case "trivia":
-        return (
-          <TriviaSection
-            title={data.title as string}
-            subtitle={data.subtitle as string}
+            case "trivia":
+                return (
+                    <TriviaSection
+                        title={data.title as string}
+                        subtitle={data.subtitle as string}
                         button={
                             data.button as {
                                 text: string;
@@ -631,15 +639,15 @@ function SectionContent({
                     />
                 );
 
-      case "rsvp":
-        return (
-          <RSVPSection
-            title={data.title as string}
-            deadline={data.deadline as string}
-            guestCountLabel={data.guestCountLabel as string}
-            guestCountOptions={data.guestCountOptions as number[]}
-            fields={
-              data.fields as {
+            case "rsvp":
+                return (
+                    <RSVPSection
+                        title={data.title as string}
+                        deadline={data.deadline as string}
+                        guestCountLabel={data.guestCountLabel as string}
+                        guestCountOptions={data.guestCountOptions as number[]}
+                        fields={
+                            data.fields as {
                                 firstName: string;
                                 lastName: string;
                                 attendance: string;
@@ -649,7 +657,7 @@ function SectionContent({
                                 dietaryOptions: string[];
                                 songRequestLabel?: string;
                                 songRequest: string;
-                extraInputs?: {
+                                extraInputs?: {
                                     id: string;
                                     label: string;
                                     placeholder?: string;
@@ -668,47 +676,47 @@ function SectionContent({
                                   }
                                 | undefined
                         }
-            panel={
-              rsvpFormUsesPanelApi(rsvpPanel) &&
-              (Boolean(codigoInvitado) ||
-                (Boolean(rsvpPanel?.panelId) &&
+                        panel={
+                            rsvpFormUsesPanelApi(rsvpPanel) &&
+                            (Boolean(codigoInvitado) ||
+                                (Boolean(rsvpPanel?.panelId) &&
                                     Boolean(
                                         rsvpPanel?.registrarSinCodigoEnPanel,
                                     )))
-                ? {
-                      enabled: true,
-                      codigo: codigoInvitado || undefined,
-                      panelId: rsvpPanel?.panelId,
-                      allowAnonymousToPanel: Boolean(
-                        rsvpPanel?.registrarSinCodigoEnPanel,
-                      ),
-                      allowColados: Boolean(rsvpPanel?.colados),
-                      coladoLabel:
+                                ? {
+                                      enabled: true,
+                                      codigo: codigoInvitado || undefined,
+                                      panelId: rsvpPanel?.panelId,
+                                      allowAnonymousToPanel: Boolean(
+                                          rsvpPanel?.registrarSinCodigoEnPanel,
+                                      ),
+                                      allowColados: Boolean(rsvpPanel?.colados),
+                                      coladoLabel:
                                           typeof rsvpPanel?.coladoLabel ===
                                           "string"
-                              ? rsvpPanel.coladoLabel
-                              : undefined,
-                      confirmationMessage:
+                                              ? rsvpPanel.coladoLabel
+                                              : undefined,
+                                      confirmationMessage:
                                           rsvpPanel.confirmationMessage ||
                                           "Gracias por confirmar!",
-                  }
-                : undefined
-            }
-            previewRsvpForm={previewRsvpForm}
+                                  }
+                                : undefined
+                        }
+                        previewRsvpForm={previewRsvpForm}
                         hasBgImage={Boolean(resolvedBgImage)}
-            promo={
-              data.promo as
-                | {
+                        promo={
+                            data.promo as
+                                | {
                                       enabled?: boolean;
                                       clientRef?: string;
-                    teaser?: {
+                                      teaser?: {
                                           title?: string;
                                           benefit?: string;
                                           validityShort?: string;
                                           shareHint?: string;
                                           buttonText?: string;
                                       };
-                    modal?: {
+                                      modal?: {
                                           title?: string;
                                           code?: string;
                                           benefitNote?: string;
@@ -724,20 +732,20 @@ function SectionContent({
                                           footerNote?: string;
                                           validityText?: string;
                                       };
-                  }
-                | undefined
-            }
-          />
+                                  }
+                                | undefined
+                        }
+                    />
                 );
 
-      case "confirmarWhatsapp":
-        return (
-          <ConfirmarWhatsappSection
-            title={data.title as string}
-            subtitle={data.subtitle as string | undefined}
-            buttonText={data.buttonText as string}
-            whatsappNumber={data.whatsappNumber as string}
-            message={data.message as string}
+            case "confirmarWhatsapp":
+                return (
+                    <ConfirmarWhatsappSection
+                        title={data.title as string}
+                        subtitle={data.subtitle as string | undefined}
+                        buttonText={data.buttonText as string}
+                        whatsappNumber={data.whatsappNumber as string}
+                        message={data.message as string}
                         noAsiste={
                             data.noAsiste as
                                 | {
@@ -747,27 +755,27 @@ function SectionContent({
                                   }
                                 | undefined
                         }
-            panelSync={
+                        panelSync={
                             confirmarComunUsesPanelApi(rsvpPanel) &&
                             codigoInvitado
-                ? {
-                    codigo: codigoInvitado,
-                    confirmationMessage:
-                      rsvpPanel?.confirmationMessage ||
-                      "Gracias por confirmar!",
-                  }
-                : undefined
-            }
-          />
+                                ? {
+                                      codigo: codigoInvitado,
+                                      confirmationMessage:
+                                          rsvpPanel?.confirmationMessage ||
+                                          "Gracias por confirmar!",
+                                  }
+                                : undefined
+                        }
+                    />
                 );
 
-      case "adultsOnly":
-        return (
-          <AdultsOnlySection
-            icon={data.icon as string | undefined}
-            title={data.title as string}
-            description={data.description as string}
-          />
+            case "adultsOnly":
+                return (
+                    <AdultsOnlySection
+                        icon={data.icon as string | undefined}
+                        title={data.title as string}
+                        description={data.description as string}
+                    />
                 );
 
             case "faq":
@@ -799,10 +807,10 @@ function SectionContent({
                     />
                 );
 
-      case "ourStory":
-        return (
-          <OurStorySection
-            title={data.title as string}
+            case "ourStory":
+                return (
+                    <OurStorySection
+                        title={data.title as string}
                         variant={
                             data.variant === "simple" ? "simple" : "classic"
                         }
@@ -821,7 +829,7 @@ function SectionContent({
                                   }[]
                                 | undefined
                         }
-            aspectRatio={data.aspectRatio as string | undefined}
+                        aspectRatio={data.aspectRatio as string | undefined}
                         sectionBgColor={bgColor}
                         bgColorTheme={bgPaint}
                         bgImage={resolvedBgImage}
@@ -830,58 +838,61 @@ function SectionContent({
                             parseSectionTextStyle(data.titleStyle)
                         }
                         bodyStyle={
-                            getSectionPartTextStyle(sectionStyle, "paragraphs") ??
+                            getSectionPartTextStyle(
+                                sectionStyle,
+                                "paragraphs",
+                            ) ??
                             getSectionPartTextStyle(sectionStyle, "body") ??
                             parseSectionTextStyle(data.bodyStyle)
                         }
                         showHearts={data.showHearts !== false}
-          />
+                    />
                 );
 
-      case "truths":
-        return (
-          <TruthsSection
-            title={data.title as string}
-            questions={
-              data.questions as {
+            case "truths":
+                return (
+                    <TruthsSection
+                        title={data.title as string}
+                        questions={
+                            data.questions as {
                                 question: string;
                                 optionA: string;
                                 optionB: string;
                                 correctOption: "A" | "B";
                                 revealText: string;
-              }[]
-            }
-            finishText={data.finishText as string}
-            sectionBgColor={bgColor}
-          />
+                            }[]
+                        }
+                        finishText={data.finishText as string}
+                        sectionBgColor={bgColor}
+                    />
                 );
 
-      case "presentation":
-        return (
-          <PresentationSection
-            image={data.image as string}
-            name={data.name as string}
-            description={data.description as string}
-            aspectRatio={data.aspectRatio as string | undefined}
-          />
+            case "presentation":
+                return (
+                    <PresentationSection
+                        image={data.image as string}
+                        name={data.name as string}
+                        description={data.description as string}
+                        aspectRatio={data.aspectRatio as string | undefined}
+                    />
                 );
 
-      case "parents":
-        return (
-          <ParentsSection
-            title={data.title as string}
-            subtitle={data.subtitle as string | undefined}
+            case "parents":
+                return (
+                    <ParentsSection
+                        title={data.title as string}
+                        subtitle={data.subtitle as string | undefined}
                         parents={
                             data.parents as { name: string; role: string }[]
                         }
-          />
+                    />
                 );
 
-      case "playlist":
-        return (
-          <PlaylistSection
-            title={data.title as string}
-            description={data.description as string}
+            case "playlist":
+                return (
+                    <PlaylistSection
+                        title={data.title as string}
+                        description={data.description as string}
                         button={
                             data.button as {
                                 text: string;
@@ -892,24 +903,24 @@ function SectionContent({
                     />
                 );
 
-      case "specialMessage":
-        return (
-          <SpecialMessageSection
-            title={data.title as string}
-            text={data.text as string}
-            signature={data.signature as string | undefined}
+            case "specialMessage":
+                return (
+                    <SpecialMessageSection
+                        title={data.title as string}
+                        text={data.text as string}
+                        signature={data.signature as string | undefined}
                         decorativeLines={
                             data.decorativeLines as boolean | undefined
                         }
-          />
+                    />
                 );
 
-      case "closingImage":
-        return (
-          <ClosingSection
-            image={data.image as string}
-            aspectRatio={data.aspectRatio as string | undefined}
-            coupleNames={coupleNames}
+            case "closingImage":
+                return (
+                    <ClosingSection
+                        image={data.image as string}
+                        aspectRatio={data.aspectRatio as string | undefined}
+                        coupleNames={coupleNames}
                         namesDisplay={
                             data.namesDisplay as
                                 | {
@@ -931,28 +942,28 @@ function SectionContent({
                     />
                 );
 
-      default:
+            default:
                 return null;
-    }
+        }
     };
 
-  const { ref: revealRef, isVisible: isRevealVisible } = useFadeIn(
-    0.15,
-    revealImmediately,
-  );
+    const { ref: revealRef, isVisible: isRevealVisible } = useFadeIn(
+        0.15,
+        revealImmediately,
+    );
 
-  return (
-    <div ref={revealRef} id={id}>
-      {/* Subtle divider between consecutive sections with same background color */}
-      {showDivider && (
-        <div
-          className={colors.bg}
-          style={
-            bgPaint && !resolvedBgImage
-              ? { backgroundColor: bgPaint }
-              : bgImageStyle
-          }
-        >
+    return (
+        <div ref={revealRef} id={id}>
+            {/* Subtle divider between consecutive sections with same background color */}
+            {showDivider && (
+                <div
+                    className={colors.bg}
+                    style={
+                        bgPaint && !resolvedBgImage
+                            ? { backgroundColor: bgPaint }
+                            : bgImageStyle
+                    }
+                >
                     <div
                         className="mx-auto w-16 border-t"
                         style={{
@@ -960,33 +971,33 @@ function SectionContent({
                             opacity: 0.12,
                         }}
                     />
+                </div>
+            )}
+            {skipWrapper ? (
+                // Self-styled: el fondo vive adentro del componente; no animar el wrapper
+                // (cada uno con fondo animaria mal). Esa seccion anima su contenido interno.
+                renderContent()
+            ) : (
+                <div
+                    className={resolvedBgImage || bgPaint ? "" : colors.bg}
+                    style={{
+                        color: colors.resolvedTextColor,
+                        ...bgImageStyle,
+                    }}
+                >
+                    <RevealContent isVisible={isRevealVisible}>
+                        {renderContent()}
+                    </RevealContent>
+                </div>
+            )}
         </div>
-      )}
-      {skipWrapper ? (
-        // Self-styled: el fondo vive adentro del componente; no animar el wrapper
-        // (cada uno con fondo animaria mal). Esa seccion anima su contenido interno.
-        renderContent()
-      ) : (
-        <div
-          className={resolvedBgImage || bgPaint ? "" : colors.bg}
-          style={{ 
-            color: colors.resolvedTextColor,
-            ...bgImageStyle,
-          }}
-        >
-          <RevealContent isVisible={isRevealVisible}>
-            {renderContent()}
-          </RevealContent>
-        </div>
-      )}
-    </div>
-  );
+    );
 }
 
 export default function Section(props: SectionProps) {
-  return (
-    <Suspense fallback={null}>
-      <SectionContent {...props} />
-    </Suspense>
+    return (
+        <Suspense fallback={null}>
+            <SectionContent {...props} />
+        </Suspense>
     );
 }
