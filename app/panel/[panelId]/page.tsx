@@ -2221,9 +2221,12 @@ function InvitadoRow({
                                     onDelete(invitado.id);
                                 }}
                                 className="flex items-center gap-1 rounded-lg bg-red-100 px-3 py-2 text-xs font-medium text-red-600 md:px-2 md:py-1 md:text-[11px]"
+                                title="Eliminar"
                             >
                                 <Trash2 className="h-3 w-3" />
-                                Eliminar
+                                <span className="hidden md:inline">
+                                    Eliminar
+                                </span>
                             </button>
                         )}
                         {hasVariantLists && invitado.tipo !== "integrante" && (
