@@ -236,7 +236,7 @@ const filterToEstado: Record<string, string> = {
     pendientes: "pendiente",
     no_asiste: "no_asiste",
 };
-const NEW_MARK_MS = 20 * 60 * 1000;
+const NEW_MARK_MS = 5 * 60 * 1000;
 
 // Helper para obtener texto del estado
 const getEstadoTexto = (estado: string, plural: boolean) => {
