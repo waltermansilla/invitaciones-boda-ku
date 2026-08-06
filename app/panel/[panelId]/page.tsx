@@ -2169,7 +2169,7 @@ function InvitadoRow({
                                     e.stopPropagation();
                                     onSendInvitation(invitado);
                                 }}
-                                className="flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-medium text-white md:px-1.5 md:py-1 md:text-[11px]"
+                                className="flex flex-auto items-center justify-center gap-1 rounded-lg px-2 py-2 text-xs font-medium text-white md:px-1.5 md:py-1 md:text-[11px]"
                                 style={{ backgroundColor: primaryColor }}
                             >
                                 <Send className="h-3 w-3" />
@@ -2182,7 +2182,7 @@ function InvitadoRow({
                                     e.stopPropagation();
                                     onPreviewGuestInvitation(invitado);
                                 }}
-                                className="flex items-center gap-1 rounded-lg bg-neutral-200 px-2 py-2 text-xs font-medium text-neutral-600 md:px-1.5 md:py-1 md:text-[11px]"
+                                className="flex flex-auto items-center justify-center gap-1 rounded-lg bg-neutral-200 px-2 py-2 text-xs font-medium text-neutral-600 md:px-1.5 md:py-1 md:text-[11px]"
                             >
                                 <Eye className="h-3 w-3" />
                                 Ver
@@ -2194,7 +2194,7 @@ function InvitadoRow({
                                     e.stopPropagation();
                                     onEdit();
                                 }}
-                                className="flex items-center gap-1 rounded-lg bg-neutral-200 px-2 py-2 text-xs font-medium text-neutral-600 md:px-1.5 md:py-1 md:text-[11px]"
+                                className="flex flex-auto items-center justify-center gap-1 rounded-lg bg-neutral-200 px-2 py-2 text-xs font-medium text-neutral-600 md:px-1.5 md:py-1 md:text-[11px]"
                             >
                                 <Edit2 className="h-3 w-3" />
                                 Editar
@@ -2206,7 +2206,7 @@ function InvitadoRow({
                                     e.stopPropagation();
                                     onTogglePago(invitado);
                                 }}
-                                className={`flex items-center gap-1 rounded-lg px-2 py-2 text-xs font-medium md:px-1.5 md:py-1 md:text-[11px] ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}
+                                className={`flex flex-auto items-center justify-center gap-1 rounded-lg px-2 py-2 text-xs font-medium md:px-1.5 md:py-1 md:text-[11px] ${invitado.pago_tarjeta ? "bg-emerald-100 text-emerald-700" : "bg-neutral-200 text-neutral-600"}`}
                             >
                                 <Check className="h-3 w-3" />
                                 {invitado.pago_tarjeta
@@ -2220,7 +2220,7 @@ function InvitadoRow({
                                     e.stopPropagation();
                                     onDelete(invitado.id);
                                 }}
-                                className="flex items-center gap-1 rounded-lg bg-red-100 px-2 py-2 text-xs font-medium text-red-600 md:px-1.5 md:py-1 md:text-[11px]"
+                                className="flex flex-auto items-center justify-center gap-1 rounded-lg bg-red-100 px-2 py-2 text-xs font-medium text-red-600 md:px-1.5 md:py-1 md:text-[11px]"
                                 title="Eliminar"
                             >
                                 <Trash2 className="h-3 w-3" />
@@ -2236,7 +2236,7 @@ function InvitadoRow({
                                     if (canTransfer) onOpenTransfer();
                                 }}
                                 disabled={!canTransfer}
-                                className="flex items-center gap-1 rounded-lg bg-neutral-200 px-2 py-1.5 text-[10px] font-medium text-neutral-700 disabled:cursor-not-allowed disabled:opacity-45 md:px-1.5 md:py-1 md:text-[10px]"
+                                className="flex flex-auto items-center justify-center gap-1 rounded-lg bg-neutral-200 px-2 py-1.5 text-[10px] font-medium text-neutral-700 disabled:cursor-not-allowed disabled:opacity-45 md:px-1.5 md:py-1 md:text-[10px]"
                             >
                                 <ArrowLeftRight className="h-3 w-3 shrink-0" />
                                 <span className="leading-[1] text-left">
