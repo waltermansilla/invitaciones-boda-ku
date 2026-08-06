@@ -355,6 +355,7 @@
                         "Vegetariano",
                         "Vegano",
                         "Celíaco",
+                        "Diabético",
                         "Otro"
                     ],
                     "extraInputs": [
