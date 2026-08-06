@@ -257,6 +257,10 @@ Qué hace cada clave:
   - `false`: si entran sin `?i=`, el RSVP solo sale por WhatsApp.
 - `theme`: colores del panel.
 - `labels`: textos personalizables del panel.
+- `pagoTarjeta` (opcional): controla si el panel muestra el "pago tarjeta" (botón `¿Pagó tarjeta?` en cada invitado + filtro `Pago pendiente`).
+  - Si **no** ponés la clave: depende de la invitación. Si la invitación tiene la sección `giftCard` habilitada, el panel muestra el pago tarjeta; si no la tiene (o está `enabled: false`), no lo muestra.
+  - `true`: siempre visible, sin importar si la invitación tiene o no la sección `giftCard`.
+  - `false`: siempre oculto, sin importar la invitación.
 
 ### Variantes de lista en panel (opcional)
 

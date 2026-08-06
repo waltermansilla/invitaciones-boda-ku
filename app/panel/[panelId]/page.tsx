@@ -160,6 +160,11 @@ interface PanelData {
         deuda?: boolean;
         deudaMonto?: number | null;
         deudaInvitados?: number | null;
+        /**
+         * Si el panel muestra el "pago tarjeta" (botón + filtro). Lo resuelve la API:
+         * `rsvpPanel.pagoTarjeta` manda; si no está, depende de la sección `giftCard`.
+         */
+        pagoTarjeta?: boolean;
         /** Alias/titular/banco: solo desde código (`panel-deuda-datos-cobro`). */
         deudaPago?: {
             alias?: string;
@@ -302,7 +307,6 @@ export default function PanelPage({
     );
     const [showBulkTransferModal, setShowBulkTransferModal] = useState(false);
     const [nowMs, setNowMs] = useState(() => Date.now());
-    const giftCardEnabled = true;
     const [debtModalPhase, setDebtModalPhase] = useState<
         "closed" | "summary" | "detail"
     >("closed");
@@ -342,6 +346,13 @@ export default function PanelPage({
     const theme = data?.panelConfig?.theme;
     const labels = data?.panelConfig?.labels;
     const primaryColor = theme?.primaryColor || "#b8a88a";
+    // Pago tarjeta: lo resuelve la API (rsvpPanel.pagoTarjeta manda; si no, la sección giftCard).
+    const giftCardEnabled = Boolean(data?.panelConfig?.pagoTarjeta);
+    useEffect(() => {
+        if (!giftCardEnabled && filter === "pago_pendiente") {
+            setFilter("todos");
+        }
+    }, [giftCardEnabled, filter]);
     const variantes = data?.panelConfig?.variantes || [];
     const activeVariantConfig =
         variantes.find((v) => v.id === panelVariant) ||
@@ -1086,7 +1097,9 @@ export default function PanelPage({
                             "confirmados",
                             "pendientes",
                             "no_asiste",
-                            "pago_pendiente",
+                            ...(giftCardEnabled
+                                ? (["pago_pendiente"] as const)
+                                : []),
                         ] as const
                     ).map((f) => (
                         <button

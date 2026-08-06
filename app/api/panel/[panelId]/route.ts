@@ -27,6 +27,7 @@ import {
   plazasOcupadasPorInvitados,
 } from "@/lib/panel-plazas"
 import { panelDebtGateFromRsvp } from "@/lib/panel-deuda"
+import { panelPagoTarjetaEnabled } from "@/lib/panel-pago-tarjeta"
 
 type EventoRow = Record<string, unknown> & {
   id?: string
@@ -151,6 +152,10 @@ export async function GET(
       bottom: extraInputsA4Bottom,
     } = extraInputsA4LayoutFromMergedClient(mergedForA4)
     const panelDebtGate = panelDebtGateFromRsvp(config.rsvpPanel)
+    const pagoTarjetaEnabled = panelPagoTarjetaEnabled(
+      config.rsvpPanel?.pagoTarjeta,
+      mergedForA4.sections,
+    )
 
     const confirmacionInvitacion = panelConfirmacionFromConfig(
       config.rsvpPanel?.confirmacion,
@@ -244,6 +249,7 @@ export async function GET(
           deudaMonto: panelDebtGate.deudaMonto,
           deudaInvitados: panelDebtGate.deudaInvitados,
           deudaPago: panelDebtGate.deudaPago,
+          pagoTarjeta: pagoTarjetaEnabled,
         },
       })
     }
@@ -342,6 +348,7 @@ export async function GET(
         deudaMonto: panelDebtGate.deudaMonto,
         deudaInvitados: panelDebtGate.deudaInvitados,
         deudaPago: panelDebtGate.deudaPago,
+        pagoTarjeta: pagoTarjetaEnabled,
       },
     })
   } catch (e) {

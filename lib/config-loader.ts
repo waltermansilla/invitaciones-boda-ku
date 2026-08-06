@@ -59,6 +59,12 @@ export interface EventConfig {
     deuda?: boolean
     deudaMonto?: number
     deudaInvitados?: number
+    /**
+     * Fuerza el "pago tarjeta" del panel (botón + filtro) sin importar la invitación.
+     * true = siempre visible; false = siempre oculto.
+     * Si se omite, depende de que la invitación tenga la sección `giftCard` habilitada.
+     */
+    pagoTarjeta?: boolean
   }
   slug?: string
   /** Carpeta bajo data/clientes/ (boda, xv, baby, cumple, …) */

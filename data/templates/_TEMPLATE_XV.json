@@ -106,6 +106,9 @@
         "deuda": false,
         "deudaMonto": 0,
         "deudaInvitados": 0,
+        "// pagoTarjeta: fuerza el pago tarjeta del panel (boton + filtro).       ": "",
+        "//   true = siempre visible; false = siempre oculto.                     ": "",
+        "//   Si se BORRA esta clave, depende de la seccion giftCard de la invitacion.": "",
         "theme": {
             "primaryColor": "#C4788A"
         },
