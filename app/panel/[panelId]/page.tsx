@@ -2236,13 +2236,11 @@ function InvitadoRow({
                                     if (canTransfer) onOpenTransfer();
                                 }}
                                 disabled={!canTransfer}
-                                className="flex flex-auto items-center justify-center gap-1 rounded-lg bg-neutral-200 px-2 py-1.5 text-[10px] font-medium text-neutral-700 disabled:cursor-not-allowed disabled:opacity-45 md:px-1.5 md:py-1 md:text-[10px]"
+                                className="flex flex-auto items-center justify-center gap-1 rounded-lg bg-neutral-200 px-2 py-2 text-xs font-medium text-neutral-700 disabled:cursor-not-allowed disabled:opacity-45 md:px-1.5 md:py-1 md:text-[11px]"
                             >
                                 <ArrowLeftRight className="h-3 w-3 shrink-0" />
-                                <span className="leading-[1] text-left">
-                                    Cambiar
-                                    <br />
-                                    de lista
+                                <span className="whitespace-nowrap">
+                                    Cambiar de lista
                                 </span>
                             </button>
                         )}
