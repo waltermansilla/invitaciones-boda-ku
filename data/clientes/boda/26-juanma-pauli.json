@@ -29,7 +29,7 @@
         "referidos": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
-        "limiteInvitados": 150,
+        "limiteInvitados": 250,
         "panelId": "juanma-pauli-mqk4rbo1",
         "fechaEvento": "2026-10-24",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 24 de Octubre.",
