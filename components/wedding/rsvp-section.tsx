@@ -161,7 +161,7 @@ interface RSVPSectionProps {
     /**
      * Opcional. Textos del cupón de referidos.
      * Si omitís `promo` y `rsvpPanel.referidos=true`, se usan los defaults
-     * del producto (20% OFF). Solo hace falta override si querés cambiar copy.
+     * del producto (25% OFF). Solo hace falta override si querés cambiar copy.
      * Se muestra post-confirmación con link personal (?i=), no en muestra/preview.
      */
     promo?: {
@@ -243,7 +243,7 @@ function promoFullLink(linkPath: string): string {
 type PromoConfig = NonNullable<RSVPSectionProps["promo"]>;
 type ReferralConfig = NonNullable<RSVPSectionProps["referral"]>;
 
-const DEFAULT_SHARE_MESSAGE = `¡Hola! Te regalo un cupón del 20% OFF para tu invitación digital en Momento Único 🤍
+const DEFAULT_SHARE_MESSAGE = `¡Hola! Te regalo un cupón del 25% OFF para tu invitación digital en Momento Único 🤍
 
 Tu código: {{code}}
 
@@ -258,16 +258,16 @@ Cómo usarlo:
 const DEFAULT_REFERRAL_PROMO: PromoConfig = {
     enabled: true,
     clientRef: "0",
-    discountPercent: 20,
+    discountPercent: 25,
     validityDays: 30,
     teaser: {
         title: "¿Organizás tu propio evento?",
         subtitle:
-            "Te regalamos un cupón de 20% OFF para tu próxima invitación",
+            "Te regalamos un cupón de 25% OFF para tu próxima invitación",
         buttonText: "Ver cupón",
     },
     modal: {
-        title: "Cupón 20% OFF",
+        title: "Cupón 25% OFF",
         subtitle:
             "Ingresá el siguiente código cuando reserves tu invitación:",
         modelsLinkUrl: "/?from=inv-0#muestras",
@@ -364,7 +364,7 @@ function PromoBenefitModalContent({
     onClose: () => void;
 }) {
     const modal = promo.modal;
-    const discount = promo.discountPercent ?? 20;
+    const discount = promo.discountPercent ?? 25;
     const modelsPath =
         modal?.modelsLinkUrl ||
         `/?from=inv-${promo.clientRef || "0"}#muestras`;

@@ -197,6 +197,25 @@ function Sheet({
   )
 }
 
+function DetailRow({
+  label,
+  value,
+}: {
+  label: string
+  value: ReactNode
+}) {
+  return (
+    <div className="flex items-start justify-between gap-3 px-4 py-2.5">
+      <span className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#9A8168]">
+        {label}
+      </span>
+      <span className="min-w-0 break-words text-right text-[13px] font-medium text-[#2F261F]">
+        {value}
+      </span>
+    </div>
+  )
+}
+
 export function CouponsAdminPanel() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -861,6 +880,41 @@ export function CouponsAdminPanel() {
 
   const menuCoupon = rowMenuId
     ? coupons.find((c) => c.id === rowMenuId) ?? null
+    : null
+  const menuCouponMeta = menuCoupon
+    ? categories.find((c) => c.id === menuCoupon.categoria) ?? null
+    : null
+  const menuIsReferido = menuCoupon?.categoria === "referido"
+  const menuExpired = menuCoupon
+    ? isCouponExpired(menuCoupon.valido_hasta)
+    : false
+  const menuStateLabel = menuCoupon
+    ? menuCoupon.usado
+      ? "Usado"
+      : menuExpired && menuIsReferido
+        ? "Vencido"
+        : menuCoupon.activo === false
+          ? "Pausado"
+          : menuIsReferido
+            ? "Activo"
+            : "Disponible"
+    : ""
+  const menuStateClass = menuCoupon
+    ? menuCoupon.usado
+      ? "bg-[#F3E0E0] text-[#8F2F2F]"
+      : menuExpired && menuIsReferido
+        ? "bg-[#F0EBE3] text-[#7A6654]"
+        : menuCoupon.activo === false
+          ? "bg-[#F0EBE3] text-[#7A6654]"
+          : "bg-[#E4F0E6] text-[#1F5C2E]"
+    : ""
+  const menuClienteLabel = menuCoupon
+    ? menuCoupon.evento_label?.trim() ||
+      menuCoupon.panel_id?.trim() ||
+      null
+    : null
+  const menuActivadoIso = menuCoupon
+    ? menuCoupon.activado_at || menuCoupon.created_at || null
     : null
 
   return (
@@ -1724,30 +1778,106 @@ export function CouponsAdminPanel() {
       >
         {menuCoupon ? (
           <div className="space-y-2 pb-4 pt-2">
-            {menuCoupon.enviado && menuCoupon.enviado_email ? (
-              <div className="flex items-center justify-center gap-2.5 rounded-xl bg-[#F0E8DC] px-3 py-2.5">
-                {/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-                  menuCoupon.enviado_email.trim(),
-                ) ? (
-                  <Mail
-                    className="h-3.5 w-3.5 shrink-0 text-[#7A6654]"
-                    strokeWidth={2.25}
-                    aria-hidden
-                  />
+            {/* Detalles del cupón */}
+            <div className="divide-y divide-[#F0E8DC] overflow-hidden rounded-2xl bg-white ring-1 ring-[#E8DFD2]">
+              <div className="flex items-center gap-2.5 px-4 py-3">
+                <span className="font-mono text-[15px] font-semibold tracking-wide text-[#2F261F]">
+                  {menuCoupon.codigo}
+                </span>
+                {!isUnlimited || menuIsReferido ? (
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em] ${menuStateClass}`}
+                  >
+                    {menuStateLabel}
+                  </span>
                 ) : null}
-                <p className="min-w-0 truncate text-[13px] text-[#5A4638]">
-                  {menuCoupon.enviado_email}
-                </p>
               </div>
-            ) : menuCoupon.enviado ? (
-              <div className="flex items-center justify-center gap-2.5 rounded-xl bg-[#F0E8DC] px-3 py-2.5">
-                <Mail
-                  className="h-3.5 w-3.5 shrink-0 text-[#7A6654]"
-                  strokeWidth={2.25}
-                  aria-label="Enviado"
+              <DetailRow
+                label="Descuento"
+                value={`${Number(menuCoupon.descuento_porcentaje) || 0}% OFF`}
+              />
+              {menuCouponMeta ? (
+                <DetailRow
+                  label="Serie"
+                  value={shortCategoryLabel(menuCouponMeta.label)}
                 />
-              </div>
-            ) : null}
+              ) : null}
+              <DetailRow
+                label={menuExpired ? "Venció" : "Vence"}
+                value={formatExpires(menuCoupon.valido_hasta)}
+              />
+              {menuIsReferido ? (
+                <>
+                  {menuActivadoIso ? (
+                    <DetailRow
+                      label="Activado"
+                      value={formatUsedAt(menuActivadoIso)}
+                    />
+                  ) : null}
+                  {menuCoupon.invitado_codigo ? (
+                    <DetailRow
+                      label="Invitado"
+                      value={
+                        <span className="font-mono">
+                          ?i={menuCoupon.invitado_codigo}
+                        </span>
+                      }
+                    />
+                  ) : null}
+                  {menuClienteLabel ? (
+                    <DetailRow label="Cliente" value={menuClienteLabel} />
+                  ) : null}
+                </>
+              ) : null}
+              {!menuIsReferido && menuCoupon.usado ? (
+                <>
+                  {menuCoupon.usado_nombre ? (
+                    <DetailRow
+                      label="Reservado"
+                      value={menuCoupon.usado_nombre}
+                    />
+                  ) : null}
+                  {menuCoupon.usado_tipo_evento ? (
+                    <DetailRow
+                      label="Evento"
+                      value={eventLabel(menuCoupon.usado_tipo_evento)}
+                    />
+                  ) : null}
+                  {menuCoupon.usado_at ? (
+                    <DetailRow
+                      label="Usado"
+                      value={formatUsedAt(menuCoupon.usado_at)}
+                    />
+                  ) : null}
+                </>
+              ) : null}
+              {menuCoupon.enviado ? (
+                <DetailRow
+                  label="Enviado"
+                  value={
+                    <span className="inline-flex items-center justify-end gap-1.5">
+                      <Mail
+                        className="h-3.5 w-3.5 shrink-0 text-[#7A6654]"
+                        strokeWidth={2.25}
+                        aria-hidden
+                      />
+                      <span className="break-words">
+                        {menuCoupon.enviado_email || "Sí"}
+                        {menuCoupon.enviado_at
+                          ? ` · ${formatUsedAt(menuCoupon.enviado_at)}`
+                          : ""}
+                      </span>
+                    </span>
+                  }
+                />
+              ) : null}
+              {menuCoupon.created_at ? (
+                <DetailRow
+                  label="Creado"
+                  value={formatUsedAt(menuCoupon.created_at)}
+                />
+              ) : null}
+            </div>
             {!isUnlimited && !menuCoupon.usado ? (
               <button
                 type="button"

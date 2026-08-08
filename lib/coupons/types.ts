@@ -89,7 +89,7 @@ export const COUPON_CATEGORY_META: Record<string, CouponCategoryMeta> = {
     id: "referido",
     label: "Referidos · Panel invitados",
     description:
-      "20% activados al abrir el cupón desde la invitación (1 por invitado, vence a 30 días). Orden: por activación.",
+      "25% activados al abrir el cupón desde la invitación (1 por invitado, vence a 30 días). Orden: por activación.",
     usageMode: "single_use",
   },
   // legacy

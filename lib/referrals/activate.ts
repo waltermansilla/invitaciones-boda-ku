@@ -13,7 +13,7 @@ import { normalizeCouponCode } from "@/lib/coupons/logic"
 import type { CuponRow } from "@/lib/coupons/types"
 
 export const REFERRAL_CATEGORY = "referido"
-export const REFERRAL_DEFAULT_DISCOUNT = 20
+export const REFERRAL_DEFAULT_DISCOUNT = 25
 export const REFERRAL_DEFAULT_VALIDITY_DAYS = 30
 
 export type ActivateReferralInput = {
