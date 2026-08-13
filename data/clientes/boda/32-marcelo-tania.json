@@ -212,12 +212,12 @@
                     {
                         "icon": "cake",
                         "name": "Torta y mesa dulce",
-                        "time": "21:00 hs"
+                        "time": "22:00 hs"
                     },
                     {
                         "icon": "clock",
                         "name": "Fin de la fiesta",
-                        "time": "22:00 hs"
+                        "time": "00:00 hs"
                     }
                 ]
             }
