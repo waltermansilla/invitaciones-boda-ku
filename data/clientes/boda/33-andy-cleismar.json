@@ -5,7 +5,7 @@
     "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja.",
     "meta": {
         "title": "Nuestra Boda - Andy & Cleismar",
-        "description": "Después de 21 años, damos un paso que representa mucho más que una boda. Nos encantaría celebrarlo con vos.",
+        "description": "Nos casamos. ¡Queremos celebrarlo con vos!",
         "lang": "es",
         "coupleNames": {
             "groomName": "Cleismar",
@@ -24,7 +24,7 @@
     },
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES (Premium). El secreto es la URL /panel/[panelId]. fechaEvento formato YYYY-MM-DD.",
     "rsvpPanel": {
-        "enabled": true,
+        "enabled": false,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
@@ -68,20 +68,16 @@
     "// ==========================================;": "",
     "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
     "// ==========================================...": "",
-    "_comment_overlay": "Se muestra al entrar. bgImage reutiliza la foto del hero.",
+    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
-        "phrase": "Con mucha alegría te invitamos a celebrar nuestra boda.",
+        "phrase": "Después de 21 años, damos un paso que representa mucho más que una boda. Nos encantaría celebrarlo con vos.",
         "buttonText": "Ingresar",
-        "bgImage": "/clientes/boda/33-andy-cleismar/images/hero.jpeg",
-        "showNames": true,
-        "showPhrase": false,
         "nameStyle": {
             "font": "Dancing Script",
-            "matchPhraseAndButtonColor": true,
-            "size": "50px",
-            "weight": "500",
-            "color": "#f4efe6",
+            "size": "60px",
+            "weight": "600",
+            "color": "#000",
             "lowercase": true,
             "letterSpacing": "none"
         }
