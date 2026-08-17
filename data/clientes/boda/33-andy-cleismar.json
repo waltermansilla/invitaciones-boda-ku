@@ -2,38 +2,37 @@
     "// ==========================================": "",
     "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
     "// ==========================================.": "",
-    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja. Los nombres se usan en el overlay, hero, cierre y donde corresponda.",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombres de la pareja.",
     "meta": {
-        "title": "Nuestra Boda - Yesica & Hernán",
-        "description": "Estamos felices de invitarte a celebrar nuestro amor.",
+        "title": "Nuestra Boda - Andy & Cleismar",
+        "description": "Después de 21 años, damos un paso que representa mucho más que una boda. Nos encantaría celebrarlo con vos.",
         "lang": "es",
         "coupleNames": {
-            "groomName": "Hernán",
-            "brideName": "Yesica",
+            "groomName": "Cleismar",
+            "brideName": "Andy",
             "separator": "&"
         }
     },
     "access": {
         "tokenEnabled": true,
-        "token": "Kuy49M",
-        "allowLegacyUntil": "2026-11-08"
+        "token": "an33cl",
+        "allowLegacyUntil": ""
     },
     "base": {
         "enabled": true,
-        "token": "ht73Kr2y"
+        "token": "aNdyC9kz"
     },
-    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
+    "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES (Premium). El secreto es la URL /panel/[panelId]. fechaEvento formato YYYY-MM-DD.",
     "rsvpPanel": {
         "enabled": true,
-        "referidos": true,
         "confirmacion": "formulario",
-        "registrarSinCodigoEnPanel": true,
+        "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
-        "panelId": "yesica-hernan-hu3jsD",
-        "fechaEvento": "2026-10-24",
-        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 24 de Octubre.",
+        "panelId": "andy-cleismar-p7Kx2",
+        "fechaEvento": "2026-11-28",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 28 de Noviembre.",
         "theme": {
-            "primaryColor": "#709775"
+            "primaryColor": "#6b705c"
         },
         "labels": {
             "title": "Panel de Invitados",
@@ -52,61 +51,66 @@
     "// ==========================================,": "",
     "// SECCION 2: COLORES, TIPOGRAFIA Y TEMA    ": "",
     "// ==========================================..": "",
-    "_comment_theme": "primaryColor = verde de secciones con fondo. backgroundColor = fondo crema general. textColor = color del texto general (se usa en el <body>). lightBgTextColor = color de TODOS los textos, iconos y botones en secciones de fondo claro. Por defecto es el color primario. Podes cambiarlo a cualquier hex (ej: '#555555' para gris). darkBgTextColor = color de todos los textos en secciones de fondo oscuro/primario (blanco por defecto). modalTextColor = color del texto en modales. font.family = nombre exacto de Google Fonts. font.weights = pesos separados por coma. Azul q le pase al msj 003049",
+    "_comment_theme": "Paleta: verde oliva (primary), beige (background) y marrones (textos).",
     "theme": {
-        "primaryColor": "#709775",
-        "backgroundColor": "#fff",
-        "primaryImage": "/clientes/boda/9-yesica-hernan/background/primary.PNG",
-        "backgroundImage": "/clientes/boda/9-yesica-hernan/background/background.PNG",
-        "textColor": "#777",
-        "lightBgTextColor": "#c5a059",
+        "primaryColor": "#6b705c",
+        "backgroundColor": "#f4efe6",
+        "textColor": "#5a4a3a",
+        "lightBgTextColor": "#7a6a52",
         "darkBgTextColor": "#FFFFFF",
-        "accentBackground": "#EDF2E8",
+        "accentBackground": "#e9e1d1",
         "modalTextColor": "#FFFFFF",
         "font": {
             "family": "Josefin Sans",
-            "weights": "400,500,600,700"
+            "weights": "300,400,500,600,700"
         }
     },
     "// ==========================================;": "",
     "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
     "// ==========================================...": "",
-    "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
+    "_comment_overlay": "Se muestra al entrar. bgImage reutiliza la foto del hero.",
     "overlay": {
         "enabled": true,
-        "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
+        "phrase": "Con mucha alegría te invitamos a celebrar nuestra boda.",
         "buttonText": "Ingresar",
-        "bgImage": "/clientes/boda/9-yesica-hernan/background/welcome.jpg",
-        "showNames": false,
+        "bgImage": "/clientes/boda/33-andy-cleismar/images/hero.jpeg",
+        "showNames": true,
         "showPhrase": false,
-        "buttonPosition": "59"
+        "nameStyle": {
+            "font": "Dancing Script",
+            "matchPhraseAndButtonColor": true,
+            "size": "50px",
+            "weight": "500",
+            "color": "#f4efe6",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
     },
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
     "// ==========================================....": "",
-    "_comment_music": "Colocar el MP3 en /public/music/ y poner la ruta en src. enabled = true/false. autoplay = si arranca sola.",
+    "_comment_music": "Extras: ninguno. Musica desactivada.",
     "music": {
-        "enabled": true,
-        "src": "/clientes/boda/9-yesica-hernan/music/ladygaga.mp3",
-        "autoplay": true
+        "enabled": false,
+        "src": "",
+        "autoplay": false
     },
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
     "// ==========================================.....": "",
-    "_comment_hero": "Foto de pareja, titulo grande y cuenta regresiva. eventDate controla la cuenta regresiva (formato: AAAA-MM-DDTHH:MM:SS). Imagen en /public/clientes/[tipo]/[slug]/. showNamesOnPhoto = true/false para nombres sobre la foto. countdownPrefix = texto arriba del contador (ej: 'Faltan'). Dejar vacio '' para no mostrar nada.",
+    "_comment_hero": "Foto de pareja + cuenta regresiva. eventDate controla el contador (ceremonia 15:30).",
     "hero": {
-        "coupleImage": "/clientes/boda/9-yesica-hernan/images/img-hero.jpeg",
-        "headline": "Nos casamos!",
+        "coupleImage": "/clientes/boda/33-andy-cleismar/images/hero.jpeg",
+        "headline": "¡Nos casamos!",
         "showNamesOnPhoto": false,
-        "_comment_namesDisplay": "OPCIONAL: Controla como se muestran los nombres en la foto. enabled: true/false. position: 'top' o 'bottom'. font: (opcional) nombre de Google Font para los nombres. logo: (opcional) ruta a imagen de logo en vez de texto. IMPORTANTE: namesDisplay sobreescribe el showNamesOnPhoto (tiene mas prioridad)",
         "namesDisplay": {
             "enabled": false,
             "position": "bottom",
-            "font": "Cinzel",
+            "font": "Dancing Script",
             "logo": ""
         },
         "countdownPrefix": "Faltan",
-        "eventDate": "2026-10-24T19:20:00",
+        "eventDate": "2026-11-28T15:30:00",
         "countdownLabels": {
             "days": "Dias",
             "hours": "Horas",
@@ -114,37 +118,32 @@
             "seconds": "Segundos"
         },
         "countdownStyle": {
-            "background": "primary",
-            "shape": "rounded",
-            "layout": "overlay",
-            "overlayStyle": "floating"
+            "background": "none",
+            "shape": "rounded"
         }
     },
     "// ==========================================+": "",
     "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
     "// ==========================================......": "",
-    "_comment_sections": "El orden de los objetos en este array define el orden visual en la pagina. Para reordenar: mover objetos. Para ocultar: eliminar del array. Para duplicar: copiar y cambiar el id. bgColor = color de fondo de la seccion: 'primary' (verde) o 'background' (crema). El texto se adapta solo. textColor = (OPCIONAL) para forzar un color de texto: 'foreground' (oscuro), 'primary-foreground' (claro), o un hex como '#FF0000'.",
+    "_comment_sections": "Solo las 6 secciones contratadas + frases/cierre de estilo. Ubicacion y como llegar va dentro del itinerario (como Yesica & Hernan).",
     "sections": [
         {
             "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "bgImage": "primaryImage",
             "blocks": [
                 "text",
                 "author"
             ],
             "data": {
-                "text": "¡Con mucha alegría te invitamos a festejar nuestra boda!",
+                "text": "Sos parte importante de nuestra historia, y nos gustaría celebrarla con vos.",
                 "author": "",
                 "decorativeLines": true
             }
         },
         {
-            "// --- FECHA DEL EVENTO ---": "",
-            "_comment": "Seccion independiente. Se puede mover a cualquier posicion.",
+            "// --- FECHA DEL EVENTO (Cuenta regresiva / Cuando) ---": "",
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
@@ -155,57 +154,42 @@
             ],
             "data": {
                 "title": "¿Cuándo?",
-                "value": "24 de Octubre 2026"
+                "value": "28 de Noviembre de 2026"
             }
         },
         {
-            "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
-            "type": "gallery",
-            "id": "gallery-photos",
-            "blocks": [
-                "slider"
-            ],
-            "data": {
-                "aspectRatio": "3/4",
-                "images": [
-                    "/clientes/boda/9-yesica-hernan/images/img-1.PNG"
-                ]
-            }
-        },
-        {
-            "_comment": "ITINERARY: Linea de tiempo con iconos, fechas opcionales y botones opcionales. ICONOS: heart, wine, utensils, music, church, camera, cake, car, glass, party, sparkles, sun, moon, clock, pin, gift, bus, podium, book, salon, civil, mate, fin, sidra, mesaDulce, tortaCasamiento.",
+            "// --- ITINERARIO (con Ubicacion y como llegar) ---": "",
+            "_comment": "El cliente pidio los eventos dentro del itinerario (estilo Yesica & Hernan), con direccion y boton 'Como llegar'.",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "bgImage": "backgroundImage",
             "blocks": [
                 "title",
                 "timeline"
             ],
             "data": {
-                "title": "Horarios",
+                "title": "Itinerario",
                 "events": [
                     {
                         "icon": "church",
                         "name": "Ceremonia religiosa",
-                        "time": "19:20 hs",
-                        "address": "Parroquia Nuestra Sra. de Loreto, Castellanos 56, Ezeiza",
+                        "time": "15:30 hs",
+                        "address": "Basílica Catedral Ntra. Sra. de las Mercedes",
                         "button": {
                             "text": "Cómo llegar",
-                            "url": "https://maps.google.com/maps/place//data=!4m2!3m1!1s0x95bcd03ae16aaaab:0x65e12b9f1d7193b1?entry=s&sa=X&ved=2ahUKEwj8x-Xl0aqTAxUCq5UCHQNPICkQ4kB6BAgUEAA",
+                            "url": "https://maps.app.goo.gl/e1xxagPBs61oF7j87?g_st=iw",
                             "variant": "primary"
                         }
                     },
                     {
                         "icon": "party",
-                        "name": "¡Fiesta!",
-                        "time": "21:30 hs",
-                        "address": "Lorenza Zenavilla 443, Canning",
+                        "name": "Fiesta",
+                        "time": "18:00 hs",
+                        "address": "Quinta la Vizcacha — Agote 524 (entre 513 y 515), Mercedes, Buenos Aires",
                         "button": {
                             "text": "Cómo llegar",
-                            "url": "https://maps.app.goo.gl/8hCUH1WG93P5dDXH6?g_st=ic",
+                            "url": "https://www.google.com/maps/search/?api=1&query=Quinta%20la%20Vizcacha%20Agote%20524%20Mercedes%20Buenos%20Aires",
                             "variant": "primary"
                         }
                     }
@@ -213,11 +197,11 @@
             }
         },
         {
-            "_comment": "DRESS CODE: Vestimenta con iconos, colores y modal opcional. ICONOS: dress (vestido), suit (traje), gem (diamante), crown (corona), sparkles (brillos), star (estrella), heart (corazon). showButton: true/false para mostrar/ocultar boton. colorSwatches: enabled (true/false), shape ('circle' o 'square'), colors (array de hex).",
+            "// --- DRESS CODE ---": "",
+            "_comment": "Formal. Al aire libre con pileta. Colores a evitar: blanco, verde, beige, amarillo manteca.",
             "type": "dressCode",
             "id": "dress-code",
-            "bgColor": "background",
-            "bgImage": "backgroundImage",
+            "bgColor": "primary",
             "blocks": [
                 "title",
                 "subtitle",
@@ -229,168 +213,84 @@
             ],
             "data": {
                 "icons": [
-                    "gem"
+                    "dress",
+                    "suit"
                 ],
-                "title": "Vestimenta",
-                "subtitle": "Elegante",
-                "description": "",
+                "title": "Dress code",
+                "subtitle": "Formal",
+                "description": "El evento es al aire libre y hay pileta: si querés, podés llevar ropa de baño.\n\nTe pedimos amablemente evitar estos colores:",
                 "showButton": false,
                 "colorSwatches": {
-                    "enabled": false,
+                    "enabled": true,
                     "shape": "square",
                     "colors": [
-                        "#012a4a",
-                        "#013a63",
-                        "#01497c",
-                        "#2a6f97"
+                        { "color": "#FFFFFF", "label": "Blanco" },
+                        { "color": "#6b705c", "label": "Verde" },
+                        { "color": "#e8dfd0", "label": "Beige" },
+                        { "color": "#f3e5ab", "label": "Amarillo manteca" }
                     ]
-                },
-                "button": {
-                    "text": "Ver consejos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Consejos de vestimenta",
-                    "sections": []
                 }
             }
         },
         {
-            "_comment": "HONEYMOON: Luna de miel. NO tiene valor sugerido. ICONOS: plane (avion), gift (caja), heart (corazon), star (estrella), sparkles (brillos), moon (luna), handHeart (mano corazon). Usa bankData (no transferData).",
-            "type": "honeymoon",
-            "id": "honeymoon",
-            "bgColor": "primary",
-            "bgImage": "primaryImage",
-            "blocks": [
-                "icon",
-                "title",
-                "description",
-                "modal"
-            ],
-            "data": {
-                "icon": "",
-                "title": "Regalos",
-                "description": "Tu presencia en este día es lo más importante para nosotros. Pero si además querés hacernos un regalo, podés acompañarnos con un aporte para nuestros proyectos futuros",
-                "showButton": true,
-                "button": {
-                    "text": "Ver datos",
-                    "url": "#",
-                    "variant": "secondary"
-                },
-                "modal": {
-                    "title": "Datos bancarios",
-                    "description": "Cualquier aporte nos ayuda mucho y lo recibiremos con mucho cariño.",
-                    "bankData": [
-                        {
-                            "label": "Alias",
-                            "value": "hernandariofalcone"
-                        },
-                        {
-                            "label": "CVU",
-                            "value": "0000003100097882232195"
-                        },
-                        {
-                            "label": "Titular",
-                            "value": "Hernán Darío Falcone"
-                        }
-                    ],
-                    "thankYouText": "¡Gracias de corazón!"
-                }
-            }
-        },
-        {
-            "// --- NUESTRA HISTORIA ---": "",
-            "_comment": "Momentos clave de la pareja. Cada momento: image (en /public/clientes/[tipo]/[slug]/), title, text. Se alternan izq/der en desktop. aspectRatio = proporcion de las fotos: '4/3' (horizontal), '3/4' (vertical), '1/1' (cuadrada). Agregar/quitar momentos.",
+            "// --- NUESTRA HISTORIA (estilo Micaela & Joaquin: simple) ---": "",
+            "_comment": "variant simple: titulo + paragraphs (sin fotos ni subtitulos).",
             "type": "ourStory",
             "id": "our-story",
             "bgColor": "background",
-            "bgImage": "",
+            "style": {
+                "title": {
+                    "enabled": false,
+                    "sizePx": 39,
+                    "weight": 500,
+                    "letterSpacing": 0.5
+                },
+                "paragraphs": {
+                    "textAlign": "start",
+                    "sizePx": 16,
+                    "weight": 300,
+                    "letterSpacing": 0
+                }
+            },
             "blocks": [
                 "title",
-                "moments"
+                "paragraphs"
             ],
             "data": {
-                "aspectRatio": "1/1",
+                "variant": "simple",
                 "title": "Nuestra historia",
-                "moments": [
-                    {
-                        "image": "/clientes/boda/9-yesica-hernan/images/historia-1.jpg",
-                        "title": "Nos elegimos",
-                        "text": "Nos encontramos sin saber que ese momento iba a cambiarlo todo. En una mirada, en algo simple… sentimos que había algo distinto. Y sin entender mucho cómo, empezamos a elegirnos."
-                    },
-                    {
-                        "image": "/clientes/boda/9-yesica-hernan/images/historia-2.jpeg",
-                        "title": "Nuestro mayor regalo",
-                        "text": "No siempre fue fácil, pero nunca dejamos de tomarnos de la mano. Crecimos, aprendimos, nos volvimos a elegir… una y otra vez. Y en medio de ese amor, llegaron Lara e Isabella. Ellas nos enseñaron lo que realmente significa el amor más puro e inocente. Nos regalaron lo más hermoso que tenemos: NUESTRA FAMILIA."
-                    },
-                    {
-                        "image": "/clientes/boda/9-yesica-hernan/images/historia-3.jpeg",
-                        "title": "Nuestro sí",
-                        "text": "Hoy nos miramos, después de todo lo vivido… y sabemos que volveríamos a elegirnos en cada paso. Porque este amor nos transformó, nos hizo más fuertes, más unidos… más nosotros. Y ahora queremos decir “sí”, para seguir caminando juntos, para siempre."
-                    }
+                "showHearts": false,
+                "paragraphs": [
+                    "Hace 21 años comenzó una historia que, aunque no siempre fue perfecta, estuvo llena de amor, aprendizajes, sueños y, sobre todo, de la decisión de seguir eligiéndonos.",
+                    "Éramos muy jóvenes cuando nos conocimos y, con la inocencia y la ilusión de aquellos primeros años, nos prometimos nuestro amor de una manera muy sencilla, pero que para nosotros significaba mucho: un anillo de rama. No necesitábamos grandes cosas para sentir que lo que estábamos viviendo era especial.",
+                    "Juntos fuimos creciendo y aprendiendo. Él estuvo a mi lado mientras yo recorría el camino de mi carrera universitaria, acompañándome en cada etapa, celebrando mis logros y sosteniéndome cuando las cosas se hacían difíciles. Y yo también estuve para él, apoyándolo en sus sueños, en sus proyectos y en cada momento en que necesitó saber que no estaba solo.",
+                    "En el 2013 llegó nuestra primera hija, Sophia, y con ella descubrimos una nueva manera de amar: la de construir un hogar, acompañarnos como padres y enseñarnos mutuamente.",
+                    "Después llegó uno de los capítulos más difíciles: emigrar hacia Argentina, dejando atrás muchas cosas conocidas para buscar nuevas oportunidades y seguir construyendo nuestro futuro. En este camino llegó nuestra segunda hija, Luna, para completar nuestra familia.",
+                    "Hoy estamos en Argentina, lejos de aquel lugar donde comenzó todo, pero llevando con nosotros cada recuerdo, cada dificultad superada, cada sueño cumplido y, sobre todo, el amor que nos trajo hasta aquí.",
+                    "Después de 21 años de noviazgo, de sueños compartidos, de caminos recorridos y de dos maravillosas hijas, hoy damos un paso que representa mucho más que una boda: bendecir nuestro amor ante los ojos de Dios."
                 ]
             }
         },
         {
-            "_comment": "PHOTOS: Invitar a subir fotos al album compartido. ICONOS: 'camera' (camara), 'flash' (flash), 'images' (fotos). Dejar vacio para sin icono.",
-            "type": "photos",
-            "id": "shared-photos",
-            "enabled": true,
-            "bgColor": "background",
-            "bgImage": "backgroundImage",
+            "// --- REGALOS / ALIAS (prefieren efectivo) ---": "",
+            "_comment": "El cliente NO quiere transferencia; prefiere efectivo. Sin datos bancarios ni boton.",
+            "type": "honeymoon",
+            "id": "regalos",
+            "bgColor": "primary",
             "blocks": [
                 "icon",
                 "title",
-                "description",
-                "button"
+                "description"
             ],
             "data": {
-                "icon": "camera",
-                "title": "Compartí tus fotos",
-                "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
-                "button": {
-                    "text": "Ir al álbum",
-                    "url": "https://drive.google.com/drive/folders/1JhRAsVxVJGlBepH2EdWlEgakZFjpTdX4",
-                    "variant": "primary"
-                }
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Tu presencia es el mejor regalo que podemos recibir. Si además querés obsequiarnos algo, preferimos que sea en efectivo el día de la fiesta. ¡Gracias de corazón!",
+                "showButton": false
             }
         },
         {
-            "// --- GALERIA DE FOTOS (slider) ---": "",
-            "_comment": "Slider automatico. Imagenes en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion de las fotos: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada), '16/9' (panoramica). Agregar o quitar fotos del array.",
-            "type": "gallery",
-            "id": "gallery-photos2",
-            "blocks": [
-                "slider"
-            ],
-            "data": {
-                "aspectRatio": "3/4",
-                "images": [
-                    "/clientes/boda/9-yesica-hernan/images/img-2.jpeg"
-                ]
-            }
-        },
-        {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
-            "type": "quote",
-            "id": "quote-welcome2",
-            "bgColor": "primary",
-            "bgImage": "primaryImage",
-            "blocks": [
-                "text",
-                "author"
-            ],
-            "data": {
-                "text": "En sus risas encontramos nuestro hogar, y en sus pequeños abrazos… el amor más grande que alguna vez imaginamos.",
-                "author": "",
-                "decorativeLines": true
-            }
-        },
-        {
-            "// --- FORMULARIO RSVP ---": "",
-            "_comment": "Fondo verde. Formulario de confirmacion. Todos los labels, opciones y textos son editables. dietaryOptions = array de opciones de alimentacion. guestCountOptions = array de numeros.",
+            "// --- FORMULARIO RSVP (Premium) ---": "",
             "type": "rsvp",
             "id": "rsvp-form",
             "bgColor": "background",
@@ -400,7 +300,7 @@
             ],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 31 de Julio",
+                "deadline": "Antes del 11 de Octubre",
                 "guestCountLabel": "Número de personas a confirmar",
                 "guestCountOptions": [
                     1,
@@ -412,8 +312,8 @@
                 "fields": {
                     "firstName": "Nombre",
                     "lastName": "Apellido",
-                    "attendance": "Confirmás tu asistencia?",
-                    "attendanceYes": "Confirmo!",
+                    "attendance": "¿Confirmás tu asistencia?",
+                    "attendanceYes": "¡Confirmo!",
                     "attendanceNo": "No podré asistir",
                     "dietary": "¿Alguna limitación en la alimentación?",
                     "dietaryOptions": [
@@ -435,31 +335,28 @@
                     "submitButton": "Confirmar"
                 },
                 "whatsapp": {
-                    "number": "541166678476",
-                    "messageTemplate": "Hola Yesica & Hernán! 🤗 Confirmo la asistencia a su boda. \n\n{resumen}\n\nGracias por la invitación a ese momento tan especial para ustedes! 🫶🏼"
+                    "number": "",
+                    "messageTemplate": "Hola Andy & Cleismar! Confirmo la asistencia a su boda.\n\n{resumen}\n\n¡Gracias por la invitación a ese momento tan especial! 🫶🏼"
                 }
             }
         },
         {
-            "// --- FRASE DE BIENVENIDA ---": "",
-            "_comment": "Fondo verde. text = frase. author = autor (dejar vacio si no aplica).",
+            "// --- FRASE DE CIERRE ---": "",
             "type": "quote",
-            "id": "quote-welcome3",
+            "id": "quote-closing",
             "bgColor": "primary",
-            "bgImage": "primaryImage",
             "blocks": [
                 "text",
                 "author"
             ],
             "data": {
-                "text": "Gracias por acompañarnos, por ser parte de nuestra historia y por estar en uno de los días más importantes de nuestras vidas. Tenerlos cerca hace que este momento sea aún más especial.",
+                "text": "Gracias por acompañarnos y ser parte de este momento tan importante de nuestras vidas.",
                 "author": "",
                 "decorativeLines": true
             }
         },
         {
-            "// --- CIERRE VISUAL ---": "",
-            "_comment": "Imagen a ancho completo con nombres debajo. Cierre emocional antes del footer. Imagen en /public/clientes/[tipo]/[slug]/. aspectRatio = proporcion: '3/4' (vertical), '4/3' (horizontal), '1/1' (cuadrada).",
+            "// --- CIERRE VISUAL (solo nombres) ---": "",
             "type": "closingImage",
             "id": "closing-image",
             "blocks": [
@@ -467,13 +364,25 @@
                 "coupleNames"
             ],
             "data": {
-                "aspectRatio": "3/4",
-                "image": "/clientes/boda/9-yesica-hernan/images/img-hero.jpeg"
+                "aspectRatio": "libre",
+                "image": "",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "500",
+                    "size": "50px",
+                    "style": "normal",
+                    "color": "#7a6a52",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
             }
         },
         {
             "// --- FOOTER / PIE DE PAGINA ---": "",
-            "_comment": "Fondo verde oscuro. brandName = nombre de la marca. socialLinks = array de redes. Cada red: icon ('instagram' o 'whatsapp'), url (enlace completo). Agregar/quitar/reordenar.",
             "type": "footer",
             "id": "footer-credits",
             "blocks": [
