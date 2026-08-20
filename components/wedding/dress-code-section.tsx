@@ -70,10 +70,15 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 type ColorSwatchItem = string | { color?: string; hex?: string; label?: string }
 
+type DressCodeDescription = string | string[]
+
 interface DressCodeSectionProps {
   title: string
   subtitle: string
-  description?: string | string[]
+  /** Texto antes de las muestras de color. */
+  description?: DressCodeDescription
+  /** Texto después de las muestras de color (ej. pileta, calzado). */
+  descriptionAfterColors?: DressCodeDescription
   icons?: string[]
   showButton?: boolean
   button?: { text: string; url: string; variant?: "primary" | "secondary" }
@@ -90,6 +95,42 @@ interface DressCodeSectionProps {
     labels?: string[]
     colors: ColorSwatchItem[]
   }
+}
+
+function DescriptionBlocks({
+  description,
+  className,
+}: {
+  description: DressCodeDescription
+  className: string
+}) {
+  const paragraphs = Array.isArray(description)
+    ? description.map((p) => String(p).trim()).filter(Boolean)
+    : String(description)
+        .split(/\n\s*\n/)
+        .map((p) => p.trim())
+        .filter(Boolean)
+  if (paragraphs.length === 0) return null
+  if (
+    !Array.isArray(description) &&
+    paragraphs.length === 1 &&
+    String(description).includes("\n")
+  ) {
+    return (
+      <p className={`whitespace-pre-line ${className}`}>
+        {String(description).trim()}
+      </p>
+    )
+  }
+  return (
+    <div className={`space-y-2 ${className}`}>
+      {paragraphs.map((p, i) => (
+        <p key={i} className="whitespace-pre-line">
+          {p}
+        </p>
+      ))}
+    </div>
+  )
 }
 
 function normalizeSwatches(
@@ -285,6 +326,7 @@ export default function DressCodeSection({
   title,
   subtitle,
   description,
+  descriptionAfterColors,
   icons,
   showButton = true,
   button,
@@ -293,7 +335,11 @@ export default function DressCodeSection({
 }: DressCodeSectionProps) {
   const { openModal } = useModal()
   const canOpenModal = Boolean(
-    modal?.title && modal.sections && Array.isArray(modal.sections) && modal.sections.length > 0,
+    modal?.title &&
+      ((modal.sections &&
+        Array.isArray(modal.sections) &&
+        modal.sections.length > 0) ||
+        modal.intro?.trim()),
   )
   const shouldRenderButton = Boolean(showButton && canOpenModal && button?.text)
 
@@ -307,7 +353,9 @@ export default function DressCodeSection({
 
     openModal(
       <>
-        <h3 className="mb-6 text-lg font-semibold tracking-wide uppercase text-primary-foreground">
+        <h3
+          className={`${modal?.intro?.trim() ? "mb-4" : "mb-6"} text-lg font-semibold tracking-wide uppercase text-primary-foreground`}
+        >
           {modal?.title}
         </h3>
         {modal?.intro?.trim() ? (
@@ -315,18 +363,24 @@ export default function DressCodeSection({
             {modal.intro.trim()}
           </p>
         ) : null}
-        <div className="space-y-5">
-          {modal?.sections?.map((section) => (
-            <div key={section.heading} className="text-left">
-              <h4 className="mb-2 text-xs font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
-                {section.heading}
-              </h4>
-              <p className="text-sm font-light leading-relaxed text-primary-foreground/85">
-                {section.text}
-              </p>
-            </div>
-          ))}
-        </div>
+        {modal?.sections && modal.sections.length > 0 ? (
+          <div className="space-y-5">
+            {modal.sections.map((section, idx) => (
+              <div key={`${section.heading}-${idx}`} className="text-left">
+                {section.heading?.trim() ? (
+                  <h4 className="mb-2 text-xs font-medium tracking-[0.15em] uppercase text-primary-foreground/60">
+                    {section.heading}
+                  </h4>
+                ) : null}
+                {section.text?.trim() ? (
+                  <p className="text-sm font-light leading-relaxed text-primary-foreground/85">
+                    {section.text}
+                  </p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        ) : null}
       </>
     )
   }
@@ -365,43 +419,22 @@ export default function DressCodeSection({
       </p>
 
       {/* Optional description text — string, \n, o array de párrafos */}
-      {description &&
-        (() => {
-          const paragraphs = Array.isArray(description)
-            ? description.map((p) => String(p).trim()).filter(Boolean)
-            : String(description)
-                .split(/\n\s*\n/)
-                .map((p) => p.trim())
-                .filter(Boolean)
-          if (paragraphs.length === 0) return null
-          // Un solo bloque con saltos simples (\n sin párrafo vacío)
-          if (
-            !Array.isArray(description) &&
-            paragraphs.length === 1 &&
-            String(description).includes("\n")
-          ) {
-            return (
-              <p className="mb-5 max-w-sm whitespace-pre-line text-sm font-light leading-relaxed opacity-80">
-                {String(description).trim()}
-              </p>
-            )
-          }
-          return (
-            <div className="mb-5 max-w-sm space-y-2 text-sm font-light leading-relaxed opacity-80">
-              {paragraphs.map((p, i) => (
-                <p key={i} className="whitespace-pre-line">
-                  {p}
-                </p>
-              ))}
-            </div>
-          )
-        })()}
+      {description ? (
+        <DescriptionBlocks
+          description={description}
+          className="mb-5 max-w-sm text-sm font-light leading-relaxed opacity-80"
+        />
+      ) : null}
 
       {/* Color swatches */}
       {colorSwatches?.enabled && swatches.length > 0 && (
         <div
           className={`overflow-visible ${
-            hasAnyLabel ? "mb-20 px-10 sm:px-14" : "mb-6"
+            hasAnyLabel
+              ? "mb-20 px-10 sm:px-14"
+              : descriptionAfterColors
+                ? "mb-8"
+                : "mb-6"
           }`}
         >
           <div
@@ -448,6 +481,13 @@ export default function DressCodeSection({
           </div>
         </div>
       )}
+
+      {descriptionAfterColors ? (
+        <DescriptionBlocks
+          description={descriptionAfterColors}
+          className="mb-6 max-w-sm text-sm font-light leading-relaxed opacity-80"
+        />
+      ) : null}
 
       {/* Optional button */}
       {shouldRenderButton && (

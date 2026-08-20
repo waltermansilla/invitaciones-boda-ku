@@ -25,14 +25,14 @@
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES (Premium). El secreto es la URL /panel/[panelId]. fechaEvento formato YYYY-MM-DD.",
     "rsvpPanel": {
         "enabled": false,
-        "confirmacion": "formulario",
+        "confirmacion": "comun",
         "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,
         "panelId": "andy-cleismar-p7Kx2",
         "fechaEvento": "2026-11-28",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 28 de Noviembre.",
         "theme": {
-            "primaryColor": "#6b705c"
+            "primaryColor": "#737c5e"
         },
         "labels": {
             "title": "Panel de Invitados",
@@ -53,12 +53,13 @@
     "// ==========================================..": "",
     "_comment_theme": "Paleta: verde oliva (primary), beige (background) y marrones (textos).",
     "theme": {
-        "primaryColor": "#6b705c",
-        "backgroundColor": "#f4efe6",
-        "textColor": "#5a4a3a",
-        "lightBgTextColor": "#7a6a52",
+        "primaryColor": "#737c5e",
+        "backgroundColor": "#fff",
+        "backgroundImage": "/clientes/boda/9-yesica-hernan/background/background.PNG",
+        "textColor": "#7a6148",
+        "lightBgTextColor": "#7a6148",
         "darkBgTextColor": "#FFFFFF",
-        "accentBackground": "#e9e1d1",
+        "accentBackground": "#fff",
         "modalTextColor": "#FFFFFF",
         "font": {
             "family": "Josefin Sans",
@@ -71,13 +72,13 @@
     "_comment_overlay": "Se muestra al entrar con los nombres, frase y boton. enabled = true/false para activar o desactivar.",
     "overlay": {
         "enabled": true,
-        "phrase": "Después de 21 años, damos un paso que representa mucho más que una boda. Nos encantaría celebrarlo con vos.",
+        "phrase": "Estamos felices de invitarte a celebrar nuestro amor",
         "buttonText": "Ingresar",
         "nameStyle": {
             "font": "Dancing Script",
             "size": "60px",
             "weight": "600",
-            "color": "#000",
+            "color": "#7a6148",
             "lowercase": true,
             "letterSpacing": "none"
         }
@@ -94,16 +95,29 @@
     "// ==========================================-": "",
     "// SECCION 5: HERO / PORTADA                ": "",
     "// ==========================================.....": "",
-    "_comment_hero": "Foto de pareja + cuenta regresiva. eventDate controla el contador (ceremonia 15:30).",
+    "_comment_hero": "Foto de pareja + nombres (Dancing Script, verde primary) arriba + cuenta regresiva.",
     "hero": {
         "coupleImage": "/clientes/boda/33-andy-cleismar/images/hero.jpeg",
+        "aspectRatio": "libre",
         "headline": "¡Nos casamos!",
-        "showNamesOnPhoto": false,
+        "showNamesOnPhoto": true,
         "namesDisplay": {
-            "enabled": false,
-            "position": "bottom",
+            "enabled": true,
+            "position": "top",
+            "positionY": 27,
+
             "font": "Dancing Script",
-            "logo": ""
+            "weight": "600",
+            "size": "60px",
+            "style": "italic",
+            "color": "#fff",
+            "decorativeLines": false,
+            "logo": "",
+            "lowercase": true,
+            "letterSpacing": "none",
+            "mover": {
+                "segundo": { "arriba": 12 }
+            }
         },
         "countdownPrefix": "Faltan",
         "eventDate": "2026-11-28T15:30:00",
@@ -128,10 +142,7 @@
             "type": "quote",
             "id": "quote-welcome",
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
                 "text": "Sos parte importante de nuestra historia, y nos gustaría celebrarla con vos.",
                 "author": "",
@@ -143,29 +154,33 @@
             "type": "dateInfo",
             "id": "date-info",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "value",
-                "button"
-            ],
+            "blocks": ["title", "value", "button"],
             "data": {
                 "title": "¿Cuándo?",
                 "value": "28 de Noviembre de 2026"
             }
         },
         {
+            "// --- RAMO (entre Cuando e itinerario, estilo Yesica & Hernan) ---": "",
+            "type": "gallery",
+            "id": "gallery-ramo",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/boda/9-yesica-hernan/images/img-1.PNG"]
+            }
+        },
+        {
             "// --- ITINERARIO (con Ubicacion y como llegar) ---": "",
-            "_comment": "El cliente pidio los eventos dentro del itinerario (estilo Yesica & Hernan), con direccion y boton 'Como llegar'.",
+            "_comment": "Fondo floral estilo Yesica & Hernan (backgroundImage).",
             "type": "itinerary",
             "id": "itinerary-timeline",
             "enabled": true,
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "timeline"
-            ],
+            "bgImage": "backgroundImage",
+            "blocks": ["title", "timeline"],
             "data": {
-                "title": "Itinerario",
+                "title": "Hora y lugar",
                 "events": [
                     {
                         "icon": "church",
@@ -182,7 +197,7 @@
                         "icon": "party",
                         "name": "Fiesta",
                         "time": "18:00 hs",
-                        "address": "Quinta la Vizcacha — Agote 524 (entre 513 y 515), Mercedes, Buenos Aires",
+                        "address": "Quinta la Vizcacha — Agote 524 (entre 513 y 515)",
                         "button": {
                             "text": "Cómo llegar",
                             "url": "https://www.google.com/maps/search/?api=1&query=Quinta%20la%20Vizcacha%20Agote%20524%20Mercedes%20Buenos%20Aires",
@@ -194,7 +209,7 @@
         },
         {
             "// --- DRESS CODE ---": "",
-            "_comment": "Formal. Al aire libre con pileta. Colores a evitar: blanco, verde, beige, amarillo manteca.",
+            "_comment": "Formal. Colores a evitar; pileta en botón + modal.",
             "type": "dressCode",
             "id": "dress-code",
             "bgColor": "primary",
@@ -208,31 +223,44 @@
                 "modal"
             ],
             "data": {
-                "icons": [
-                    "dress",
-                    "suit"
-                ],
+                "icons": ["gem"],
                 "title": "Dress code",
                 "subtitle": "Formal",
-                "description": "El evento es al aire libre y hay pileta: si querés, podés llevar ropa de baño.\n\nTe pedimos amablemente evitar estos colores:",
-                "showButton": false,
+                "description": "El evento es al aire libre.\n\nTe pedimos amablemente evitar estos colores:",
+                "showButton": true,
                 "colorSwatches": {
                     "enabled": true,
                     "shape": "square",
                     "colors": [
                         { "color": "#FFFFFF", "label": "Blanco" },
-                        { "color": "#6b705c", "label": "Verde" },
                         { "color": "#e8dfd0", "label": "Beige" },
+                        { "color": "#737c5e", "label": "Verde" },
                         { "color": "#f3e5ab", "label": "Amarillo manteca" }
+                    ]
+                },
+                "button": {
+                    "text": "Ver consejo",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Consejo de vestimenta",
+                    "intro": "",
+                    "sections": [
+                        {
+                            "heading": "¡Hay pileta!",
+                            "text": "El salón cuenta con pileta. Si te gusta la idea, podés traer ropa de baño y disfrutarla durante la fiesta."
+                        }
                     ]
                 }
             }
         },
         {
-            "// --- NUESTRA HISTORIA (estilo Micaela & Joaquin: simple) ---": "",
-            "_comment": "variant simple: titulo + paragraphs (sin fotos ni subtitulos).",
+            "// --- NUESTRA HISTORIA (simple) — desactivada; se conserva por si vuelven ---": "",
+            "_comment": "variant simple: titulo + paragraphs (sin fotos ni subtitulos). enabled:false = no se muestra.",
             "type": "ourStory",
-            "id": "our-story",
+            "id": "our-story-simple",
+            "enabled": false,
             "bgColor": "background",
             "style": {
                 "title": {
@@ -248,10 +276,7 @@
                     "letterSpacing": 0
                 }
             },
-            "blocks": [
-                "title",
-                "paragraphs"
-            ],
+            "blocks": ["title", "paragraphs"],
             "data": {
                 "variant": "simple",
                 "title": "Nuestra historia",
@@ -268,97 +293,100 @@
             }
         },
         {
+            "// --- NUESTRA HISTORIA (classic con fotos) ---": "",
+            "_comment": "variant classic (default): moments con image + title + text. Fotos: 1/2/3.jpeg.",
+            "type": "ourStory",
+            "id": "our-story",
+            "enabled": true,
+            "bgColor": "background",
+            "blocks": ["title", "moments"],
+            "data": {
+                "variant": "classic",
+                "aspectRatio": "libre",
+                "title": "Nuestra historia",
+                "decorativeLines": true,
+                "moments": [
+                    {
+                        "image": "/clientes/boda/33-andy-cleismar/images/jovenes.jpeg",
+                        "title": "Donde todo empezó",
+                        "text": "Hace 21 años comenzó una historia que, aunque no siempre fue perfecta, estuvo llena de amor, aprendizajes, sueños y, sobre todo, de la decisión de seguir eligiéndonos.\n\nÉramos muy jóvenes cuando nos conocimos y, con la inocencia y la ilusión de aquellos primeros años, nos prometimos nuestro amor de una manera muy sencilla, pero que para nosotros significaba mucho: un anillo de rama. No necesitábamos grandes cosas para sentir que lo que estábamos viviendo era especial.\n\nJuntos fuimos creciendo y aprendiendo. Él estuvo a mi lado mientras yo recorría el camino de mi carrera universitaria, acompañándome en cada etapa, celebrando mis logros y sosteniéndome cuando las cosas se hacían difíciles. Y yo también estuve para él, apoyándolo en sus sueños, en sus proyectos y en cada momento en que necesitó saber que no estaba solo."
+                    },
+                    {
+                        "image": "/clientes/boda/33-andy-cleismar/images/hijas.jpeg",
+                        "title": "Nuestra familia",
+                        "text": "En el 2013 llegó nuestra primera hija, Sophia, y con ella descubrimos una nueva manera de amar: la de construir un hogar, acompañarnos como padres y enseñarnos mutuamente.\n\nDespués llegó uno de los capítulos más difíciles: emigrar hacia Argentina, dejando atrás muchas cosas conocidas para buscar nuevas oportunidades y seguir construyendo nuestro futuro. En este camino llegó nuestra segunda hija, Luna, para completar nuestra familia."
+                    },
+                    {
+                        "image": "/clientes/boda/33-andy-cleismar/images/si.jpeg",
+                        "title": "Nuestro sí",
+                        "text": "Hoy estamos en Argentina, lejos de aquel lugar donde comenzó todo, pero llevando con nosotros cada recuerdo, cada dificultad superada, cada sueño cumplido y, sobre todo, el amor que nos trajo hasta aquí.\n\nDespués de 21 años de noviazgo, de sueños compartidos, de caminos recorridos y de dos maravillosas hijas, hoy damos un paso que representa mucho más que una boda: bendecir nuestro amor ante los ojos de Dios."
+                    }
+                ]
+            }
+        },
+        {
             "// --- REGALOS / ALIAS (prefieren efectivo) ---": "",
             "_comment": "El cliente NO quiere transferencia; prefiere efectivo. Sin datos bancarios ni boton.",
             "type": "honeymoon",
             "id": "regalos",
             "bgColor": "primary",
-            "blocks": [
-                "icon",
-                "title",
-                "description"
-            ],
+            "blocks": ["icon", "title", "description"],
             "data": {
                 "icon": "gift",
                 "title": "Regalos",
-                "description": "Tu presencia es el mejor regalo que podemos recibir. Si además querés obsequiarnos algo, preferimos que sea en efectivo el día de la fiesta. ¡Gracias de corazón!",
+                "description": "Tu presencia es el mejor regalo que podemos recibir. Si querés obsequiarnos algo, preferimos que sea en efectivo el día de la fiesta. ¡Gracias de corazón!",
                 "showButton": false
             }
         },
         {
-            "// --- FORMULARIO RSVP (Premium) ---": "",
-            "type": "rsvp",
-            "id": "rsvp-form",
+            "// --- CONFIRMACIÓN WHATSAPP (simple) ---": "",
+            "_comment": "Confirmación comun por WhatsApp. Fondo floral (mismo que horarios).",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
             "bgColor": "background",
-            "blocks": [
-                "title",
-                "form"
-            ],
+            "bgImage": "backgroundImage",
+            "blocks": ["title", "button"],
             "data": {
                 "title": "Confirmá tu asistencia",
-                "deadline": "Antes del 11 de Octubre",
-                "guestCountLabel": "Número de personas a confirmar",
-                "guestCountOptions": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
-                "fields": {
-                    "firstName": "Nombre",
-                    "lastName": "Apellido",
-                    "attendance": "¿Confirmás tu asistencia?",
-                    "attendanceYes": "¡Confirmo!",
-                    "attendanceNo": "No podré asistir",
-                    "dietary": "¿Alguna limitación en la alimentación?",
-                    "dietaryOptions": [
-                        "Ninguno",
-                        "Vegetariano",
-                        "Vegano",
-                        "Celíaco",
-                        "Otro"
-                    ],
-                    "extraInputs": [
-                        {
-                            "id": "mensajersvp",
-                            "label": "¿Algún mensaje para los novios?",
-                            "placeholder": "Escribí tu mensaje",
-                            "tituloPanel": "Mensaje",
-                            "a4": "bottom"
-                        }
-                    ],
-                    "submitButton": "Confirmar"
-                },
-                "whatsapp": {
-                    "number": "",
-                    "messageTemplate": "Hola Andy & Cleismar! Confirmo la asistencia a su boda.\n\n{resumen}\n\n¡Gracias por la invitación a ese momento tan especial! 🫶🏼"
+                "subtitle": "Antes del 11 de Octubre",
+                "buttonText": "Confirmar",
+                "whatsappNumber": "5491127438752",
+                "message": "Hola Andy & Cleismar! Confirmo mi asistencia a su boda. ¡Gracias por la invitación a este momento tan especial! 🫶🏼",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No podré asistir",
+                    "message": "Hola Andy & Cleismar! Lamentablemente no podré asistir a su boda. ¡Felicitaciones por la boda!"
                 }
             }
         },
+
         {
             "// --- FRASE DE CIERRE ---": "",
             "type": "quote",
             "id": "quote-closing",
             "bgColor": "primary",
-            "blocks": [
-                "text",
-                "author"
-            ],
+            "blocks": ["text", "author"],
             "data": {
-                "text": "Gracias por acompañarnos y ser parte de este momento tan importante de nuestras vidas.",
+                "text": "Gracias por estar, por querer y por celebrar con nosotros. Los llevamos en el corazón.",
                 "author": "",
                 "decorativeLines": true
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos",
+
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "libre",
+                "images": ["/clientes/boda/33-andy-cleismar/images/hoy.jpeg"]
             }
         },
         {
             "// --- CIERRE VISUAL (solo nombres) ---": "",
             "type": "closingImage",
             "id": "closing-image",
-            "blocks": [
-                "image",
-                "coupleNames"
-            ],
+            "blocks": ["image", "coupleNames"],
             "data": {
                 "aspectRatio": "libre",
                 "image": "",
@@ -368,7 +396,7 @@
                     "weight": "500",
                     "size": "50px",
                     "style": "normal",
-                    "color": "#7a6a52",
+                    "color": "#7a6148",
                     "decorativeLines": true,
                     "logo": "",
                     "copyFromHero": false,
@@ -381,10 +409,7 @@
             "// --- FOOTER / PIE DE PAGINA ---": "",
             "type": "footer",
             "id": "footer-credits",
-            "blocks": [
-                "socialLinks",
-                "brandName"
-            ],
+            "blocks": ["socialLinks", "brandName"],
             "data": {
                 "brandName": "walter invitaciones",
                 "socialLinks": [

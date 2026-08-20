@@ -293,7 +293,11 @@
     "//   color: color del texto                                                  ": "",
     "//   decorativeLines: true/false                                             ": "",
     "//   logo: ruta a imagen (reemplaza texto)                                   ": "",
-    "//   texts: array con estilos individuales por nombre (ver ejemplo)          ": "",
+    "//   texts: array con estilos individuales por nombre (opcional)             ": "",
+    "//   mover: ajustar cada nombre DENTRO del bloque (px, números positivos)    ": "",
+    "//     primero / segundo = orden visual (1º y 2º nombre)                     ": "",
+    "//     arriba | abajo | izquierda | derecha                                  ": "",
+    "//     Ej: \"mover\": { \"segundo\": { \"arriba\": 12 } }  → sube el 2º nombre 12px ": "",
     "//   font/weight/size/style/lowercase/letterSpacing: estilos globales        ": "",
     "hero": {
         "coupleImage": "/clientes/boda/[slug]/hero.jpg",
@@ -307,6 +311,10 @@
             "color": "rgba(255,255,255,0.9)",
             "decorativeLines": false,
             "logo": "",
+            "mover": {
+                "primero": { "arriba": 0, "derecha": 0 },
+                "segundo": { "arriba": 0, "derecha": 0 }
+            },
             "texts": [
                 {
                     "text": "Maria",
@@ -447,6 +455,7 @@
             "// simple: paragraphs[] corridos (sin numeros ni subtitulos)             ": "",
             "//   showHearts: true/false (default true) — separadores ♡ entre parrafos ": "",
             "// aspectRatio: solo classic ('3/4', '4/3', '1/1', '16/9', 'libre')      ": "",
+            "// decorativeLines: true/false — lineas al inicio y final (solo classic) ": "",
             "//                                                                       ": "",
             "// style: ver bloque SECTIONS arriba (raiz + partes). Partes:                ": "",
             "//   title | paragraphs (simple) | body (alias text de moments classic)     ": "",
@@ -478,6 +487,7 @@
                 "variant": "classic",
                 "aspectRatio": "3/4",
                 "title": "Nuestra historia",
+                "decorativeLines": true,
                 "moments": [
                     {
                         "image": "",
@@ -679,8 +689,10 @@
             "// icons: array de iconos a mostrar                                      ": "",
             "//   Opciones: 'dress','suit','gem','crown','sparkles','star','heart'    ": "",
             "// title/subtitle/description: textos                                    ": "",
-            "// description: string, o array de parrafos [\"p1\", \"p2\"]                ": "",
+            "// description: texto ANTES de los colores (string o array de parrafos)  ": "",
             "//   En string: \\n = salto de linea, \\n\\n = punto y aparte               ": "",
+            "// descriptionAfterColors: texto DESPUES de los colores (opcional)       ": "",
+            "//   Mismo formato que description (string o array)                      ": "",
             "// showButton: true/false                                                ": "",
             "// colorSwatches: muestras de colores permitidos                         ": "",
             "//   enabled: true/false                                                 ": "",
@@ -702,6 +714,7 @@
                 "title": "Vestimenta",
                 "subtitle": "Elegante Sport",
                 "description": "El blanco esta reservado para la novia",
+                "descriptionAfterColors": "",
                 "showButton": true,
                 "colorSwatches": {
                     "enabled": true,

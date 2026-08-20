@@ -43,6 +43,8 @@ interface OurStorySectionProps {
   titleStyle?: SectionTextStyle | null
   /** Tipografía opcional de párrafos (simple) / texto de momentos (classic). */
   bodyStyle?: SectionTextStyle | null
+  /** Líneas decorativas al inicio (antes del título) y al final (después de los momentos). Solo classic. */
+  decorativeLines?: boolean
 }
 
 function resolveStoryBg(
@@ -61,6 +63,45 @@ function resolveStoryBg(
 
 function hasImage(image?: string): boolean {
   return Boolean(image && image.trim())
+}
+
+/** Párrafos con poco aire entre sí (\\n\\n en el JSON). */
+function MomentText({
+  text,
+  bodyCss,
+  className = "",
+}: {
+  text: string
+  bodyCss?: CSSProperties
+  className?: string
+}) {
+  const paragraphs = String(text)
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+
+  if (paragraphs.length <= 1) {
+    return (
+      <p
+        className={`whitespace-pre-line text-sm font-light leading-relaxed text-inherit/70 ${className}`.trim()}
+        style={bodyCss}
+      >
+        {paragraphs[0] || text}
+      </p>
+    )
+  }
+
+  return (
+    <div
+      className={`space-y-3 text-sm font-light leading-relaxed text-inherit/70 ${className}`.trim()}
+    >
+      {paragraphs.map((p, i) => (
+        <p key={i} className="whitespace-pre-line" style={bodyCss}>
+          {p}
+        </p>
+      ))}
+    </div>
+  )
 }
 
 function StoryMoment({
@@ -134,7 +175,7 @@ function StoryMoment({
             )}
           </div>
 
-          <div className="flex w-full flex-col justify-center px-8 py-8 md:w-1/2 md:px-10 md:py-10">
+          <div className="flex w-full flex-col justify-center px-8 pt-8 pb-12 md:w-1/2 md:px-10 md:pt-10 md:pb-14">
             <p className="mb-3 text-[10px] font-medium tracking-[0.2em] uppercase text-inherit/50">
               {String(index + 1).padStart(2, "0")}
             </p>
@@ -144,16 +185,11 @@ function StoryMoment({
             >
               {moment.title}
             </h3>
-            <p
-              className="text-sm font-light leading-relaxed text-inherit/70"
-              style={bodyCss}
-            >
-              {moment.text}
-            </p>
+            <MomentText text={moment.text} bodyCss={bodyCss} />
           </div>
         </div>
       ) : (
-        <div className="flex w-full flex-col justify-center px-8 py-8 md:px-10 md:py-10">
+        <div className="flex w-full flex-col justify-center px-8 pt-8 pb-12 md:px-10 md:pt-10 md:pb-14">
           <p className="mb-3 text-[10px] font-medium tracking-[0.2em] uppercase text-inherit/50">
             {String(index + 1).padStart(2, "0")}
           </p>
@@ -163,12 +199,11 @@ function StoryMoment({
           >
             {moment.title}
           </h3>
-          <p
-            className="max-w-xl text-sm font-light leading-relaxed text-inherit/70"
-            style={bodyCss}
-          >
-            {moment.text}
-          </p>
+          <MomentText
+            text={moment.text}
+            bodyCss={bodyCss}
+            className="max-w-xl"
+          />
         </div>
       )}
       </RevealContent>
@@ -277,6 +312,7 @@ export default function OurStorySection({
   titleStyle,
   bodyStyle,
   showHearts = true,
+  decorativeLines = false,
 }: OurStorySectionProps) {
   const config = useConfig()
   const theme = config.theme as Record<string, unknown>
@@ -318,6 +354,12 @@ export default function OurStorySection({
         className={`${titleBgClass} px-6 pb-6 pt-14`}
         style={{ color: titleColor, ...titleBgStyle }}
       >
+        {decorativeLines ? (
+          <div
+            className="mx-auto mb-6 w-12 border-t"
+            style={{ borderColor: "currentColor", opacity: 0.2 }}
+          />
+        ) : null}
         <h2
           className="text-center text-2xl font-semibold tracking-wide uppercase text-inherit md:text-3xl"
           style={titleCss}
@@ -341,6 +383,17 @@ export default function OurStorySection({
           />
         ))}
       </div>
+      {decorativeLines ? (
+        <div
+          className={`${titleBgClass} px-6 pb-14 pt-2`}
+          style={{ color: titleColor, ...titleBgStyle }}
+        >
+          <div
+            className="mx-auto w-12 border-t"
+            style={{ borderColor: "currentColor", opacity: 0.2 }}
+          />
+        </div>
+      ) : null}
     </section>
   )
 }

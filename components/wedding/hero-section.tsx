@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { useConfig } from "@/lib/config-context";
 import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order";
@@ -14,6 +14,14 @@ interface NamesText {
     style?: string;
     letterSpacing?: string; // "none", "normal", "wide"
 }
+
+/** Ajuste fino de un nombre (px). Usá números positivos; podés combinar. */
+type NameMove = {
+    arriba?: number;
+    abajo?: number;
+    izquierda?: number;
+    derecha?: number;
+};
 
 interface HeroSectionProps {
     coupleImage: string;
@@ -38,6 +46,14 @@ interface HeroSectionProps {
         texts?: NamesText[];
         lowercase?: boolean; // true = respeta mayusculas/minusculas, false/undefined = uppercase
         letterSpacing?: string; // "none", "normal", "wide" (default)
+        /**
+         * Mover cada nombre dentro del bloque (después de position / positionY).
+         * Ejemplo: { "segundo": { "arriba": 12 } }
+         */
+        mover?: {
+            primero?: NameMove;
+            segundo?: NameMove;
+        };
     };
     /** Igual que meta.coupleNames.nameOrder: novio arriba si "groom-first". */
     nameOrder?: CoupleNamesDisplayOrder;
@@ -88,6 +104,18 @@ const sizeMap: Record<string, string> = {
 
 // Helper to check if size is pixel value
 const isPixelSize = (size: string) => size.endsWith("px");
+
+function nameMoveToStyle(move?: NameMove): CSSProperties {
+    if (!move) return {};
+    const up = typeof move.arriba === "number" ? move.arriba : 0;
+    const down = typeof move.abajo === "number" ? move.abajo : 0;
+    const right = typeof move.derecha === "number" ? move.derecha : 0;
+    const left = typeof move.izquierda === "number" ? move.izquierda : 0;
+    const x = right - left;
+    const y = down - up;
+    if (x === 0 && y === 0) return {};
+    return { transform: `translate(${x}px, ${y}px)` };
+}
 
 const weightMap: Record<string, string> = {
     thin: "100",
@@ -190,7 +218,7 @@ export default function HeroSection({
     const hasBg = cdBg !== "none";
 
     // Countdown area background
-    const getAreaBgStyle = (): React.CSSProperties => {
+    const getAreaBgStyle = (): CSSProperties => {
         if (!countdownAreaBg)
             return { backgroundColor: backgroundColor, color: textColor };
         if (countdownAreaBg === "primary")
@@ -224,7 +252,7 @@ export default function HeroSection({
     };
 
     // Build countdown ITEM style (individual boxes)
-    const getCountdownItemStyle = (): React.CSSProperties => {
+    const getCountdownItemStyle = (): CSSProperties => {
         if (cdBg === "none") {
             return { border: `1px solid ${primaryColor}20` };
         }
@@ -272,6 +300,7 @@ export default function HeroSection({
         fallbackWeight?: string,
         fallbackSize?: string,
         fallbackStyle?: string,
+        lineKey?: "primero" | "segundo",
     ) => {
         const font = textConfig.font || fallbackFont;
         const weight = textConfig.weight || fallbackWeight || "300";
@@ -285,7 +314,7 @@ export default function HeroSection({
             ? letterSpacingMap[textConfig.letterSpacing] || "0.2em"
             : namesLetterSpacing;
 
-        const textStyle: React.CSSProperties = {
+        const textStyle: CSSProperties = {
             ...(font ? { fontFamily: `'${font}', cursive` } : {}),
             fontWeight: resolvedWeight,
             fontStyle: style,
@@ -293,6 +322,9 @@ export default function HeroSection({
             textTransform: namesDisplay?.lowercase ? "none" : "uppercase",
             letterSpacing: textLetterSpacing,
             ...(usePixelSize ? { fontSize: size } : {}),
+            ...(lineKey
+                ? nameMoveToStyle(namesDisplay?.mover?.[lineKey])
+                : {}),
         };
 
         return (
@@ -307,7 +339,7 @@ export default function HeroSection({
         if (!shouldShowNames) return null;
 
         // Custom positioning with percentages
-        const getPositionStyle = (): React.CSSProperties => {
+        const getPositionStyle = (): CSSProperties => {
             if (useCustomPosition) {
                 return {
                     position: "absolute",
@@ -368,6 +400,7 @@ export default function HeroSection({
                         legacyWeight,
                         legacySize,
                         legacyStyle,
+                        "primero",
                     )}
                     <span
                         className="my-1 text-lg font-extralight tracking-[0.3em] sm:text-xl md:text-2xl"
@@ -381,6 +414,7 @@ export default function HeroSection({
                         legacyWeight,
                         legacySize,
                         legacyStyle,
+                        "segundo",
                     )}
                     {showDecorativeLines && (
                         <div className="mt-3 h-px w-12 bg-white/40" />
@@ -394,7 +428,7 @@ export default function HeroSection({
         const sizeClass = usePixelSizeLegacy
             ? ""
             : sizeMap[legacySize] || sizeMap.lg;
-        const namesFontStyle: React.CSSProperties = {
+        const namesFontStyle: CSSProperties = {
             ...(legacyFont ? { fontFamily: `'${legacyFont}', cursive` } : {}),
             fontWeight: resolvedWeight,
             fontStyle: legacyStyle,
@@ -420,14 +454,24 @@ export default function HeroSection({
                 {showDecorativeLines && (
                     <div className="mb-3 h-px w-12 bg-current opacity-40" />
                 )}
-                <p className={`text-center ${sizeClass}`}>{nameLine1}</p>
+                <p
+                    className={`text-center ${sizeClass}`}
+                    style={nameMoveToStyle(namesDisplay?.mover?.primero)}
+                >
+                    {nameLine1}
+                </p>
                 {separator && hasLine2 && (
                     <span className="my-1 text-lg font-extralight tracking-[0.3em] opacity-60 sm:text-xl md:text-2xl">
                         {separator}
                     </span>
                 )}
                 {hasLine2 && (
-                    <p className={`text-center ${sizeClass}`}>{nameLine2}</p>
+                    <p
+                        className={`text-center ${sizeClass}`}
+                        style={nameMoveToStyle(namesDisplay?.mover?.segundo)}
+                    >
+                        {nameLine2}
+                    </p>
                 )}
                 {showDecorativeLines && (
                     <div className="mt-3 h-px w-12 bg-current opacity-40" />

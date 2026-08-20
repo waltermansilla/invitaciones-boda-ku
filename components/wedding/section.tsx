@@ -587,6 +587,12 @@ function SectionContent({
                         description={
                             data.description as string | string[] | undefined
                         }
+                        descriptionAfterColors={
+                            data.descriptionAfterColors as
+                                | string
+                                | string[]
+                                | undefined
+                        }
                         icons={data.icons as string[] | undefined}
                         showButton={data.showButton as boolean | undefined}
                         button={
@@ -876,6 +882,9 @@ function SectionContent({
                             parseSectionTextStyle(data.bodyStyle)
                         }
                         showHearts={data.showHearts !== false}
+                        decorativeLines={
+                            data.decorativeLines as boolean | undefined
+                        }
                     />
                 );
 
