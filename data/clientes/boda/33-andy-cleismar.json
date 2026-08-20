@@ -81,7 +81,11 @@
             "color": "#7a6148",
             "lowercase": true,
             "letterSpacing": "none"
-        }
+        },
+        "bgImage": "/clientes/boda/33-andy-cleismar/images/overlay.jpeg",
+        "showNames": false,
+        "showPhrase": false,
+        "buttonPosition": "78"
     },
     "// ==========================================:": "",
     "// SECCION 4: MUSICA DE FONDO               ": "",
