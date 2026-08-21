@@ -28,6 +28,7 @@
     "rsvpPanel": {
         "enabled": true,
         "referidos": true,
+        "mesas": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
         "limiteInvitados": 150,

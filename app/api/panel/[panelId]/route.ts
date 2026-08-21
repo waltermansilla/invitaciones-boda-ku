@@ -349,6 +349,7 @@ export async function GET(
         deudaInvitados: panelDebtGate.deudaInvitados,
         deudaPago: panelDebtGate.deudaPago,
         pagoTarjeta: pagoTarjetaEnabled,
+        mesas: Boolean(config.rsvpPanel?.mesas),
       },
     })
   } catch (e) {

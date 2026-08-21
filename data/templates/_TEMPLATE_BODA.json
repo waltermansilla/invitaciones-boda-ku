@@ -107,6 +107,8 @@
         "// pagoTarjeta: fuerza el pago tarjeta del panel (boton + filtro).       ": "",
         "//   true = siempre visible; false = siempre oculto.                     ": "",
         "//   Si se BORRA esta clave, depende de la seccion giftCard de la invitacion.": "",
+        "// mesas: organizacion lista+croquis+PDF por mesa (solo anfitrion).      ": "",
+        "mesas": false,
         "theme": {
             "primaryColor": "#b8a88a"
         },

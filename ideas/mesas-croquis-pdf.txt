@@ -1,37 +1,96 @@
-IDEA: Mesas + croquis editable + PDF por grupos
-===============================================
-Fecha de nota: julio 2026
-Contexto: charla de producto Momento Único.
-Esta nota NO son instrucciones activas — idea para implementar cuando quiera.
+IDEA: Mesas + lista/croquis + PDF por mesa
+==========================================
+Fecha: julio 2026 · actualizado ago 2026
+Estado: IMPLEMENTADO (prototipo Sofía & Mateo · rsvpPanel.mesas: true).
+  SQL: scripts/010_mesas.sql · UI: /panel/[id]/mesas · Guardar batch.
 
 
-ESTADO HOY
-----------
-  - No existe sistema de mesas.
-  - Solo campo texto opcional codigo-mesa en RSVP (va a invitado.mensaje).
+================================================================================
+PARA QUÉ
+================================================================================
+
+  Herramienta de ORGANIZACIÓN del anfitrión (no del invitado).
+  El invitado NO elige mesa. Solo el anfitrión asigna.
 
 
-DEFINICIÓN ACORDADA — POR FASES
--------------------------------
+================================================================================
+QUIÉN LO VE / SWITCH
+================================================================================
 
-  Fase 1 — Asignación:
-    - Tabla mesas en Supabase (nombre/número, capacidad).
-    - Asignar mesa a cada invitado/integrante desde el panel.
-    - Capacidad en PERSONAS (familia de 4 = 4 lugares, no 1 fila).
-    - Alertas: mesa sobrepasada, invitados sin mesa, no confirmados asignados.
-
-  Fase 2 — Croquis editable:
-    - Lienzo: mesas redondas/rectangulares, drag & drop invitados.
-    - Mobile-friendly.
-
-  Fase 3 — Compartir / invitado (opcional):
-    - Invitado ve "Estás en mesa 7" en su link el día del evento.
-
-  PDF:
-    - Listado por grupos de mesa para recepción/catering.
-    - Reutilizar stack print actual (html2canvas + jspdf).
+  - Oficial: rsvpPanel.mesas: true | false.
+  - Requiere panel contratado (rsvpPanel.enabled).
+  - Activo: Sofía & Mateo (0-sofia-mateo.json).
+  - Meta posterior: activable por JSON en más clientes.
 
 
-PRIORIDAD SUGERIDA
-------------------
-  Alta valor comercial (feature premium claro).
+================================================================================
+DOS VISTAS (misma data)
+================================================================================
+
+  1) LISTA
+     - Crear mesas (número / nombre).
+     - Capacidad en PERSONAS.
+     - Asignar invitados = por INTEGRANTE (familia de 4 = 4 lugares).
+     - Ver quién está en cada mesa; mover, quitar, reordenar.
+
+  2) CROQUIS
+     - Mesas redondas ordenadas en el lienzo.
+     - Mini “sillitas” alrededor con el nombre de cada asignado.
+     - Mismos gestos: mover entre mesas, quitar, etc.
+
+  Cambio lista ↔ croquis con un botón/toggle.
+  Gestionar desde CUALQUIERA de las dos (una sola fuente de verdad).
+  Debe ser usable en CELU y en PC.
+
+
+================================================================================
+REGLAS DE ASIGNACIÓN
+================================================================================
+
+  - Unidad = integrante (o persona sola = 1).
+  - Capacidad = cupos de personas, no “filas” de invitado.
+  - Alertas deseables: mesa sobrepasada, confirmados sin mesa,
+    no confirmados asignados (avisar, no necesariamente bloquear).
+
+
+================================================================================
+PDF
+================================================================================
+
+  - Mantener PDF actual de invitados.
+  - Después de la lista de invitados: bloque “Por mesa”
+      Mesa 1: Fulano, Mengano, …
+      Mesa 2: …
+  - Vista lista (no croquis dibujado en v1 del PDF).
+
+
+================================================================================
+GUARDAR
+================================================================================
+
+  - Edición en memoria (sin spam de requests).
+  - Un botón Guardar hace PUT batch a /api/panel/[id]/mesas
+    (reemplaza mesas + asientos del evento).
+
+
+================================================================================
+FUERA DE ALCANCE (por ahora)
+================================================================================
+
+  - Invitado ve “Estás en mesa N” en la invitación.
+  - Drag & drop ultra sofisticado tipo Figma.
+  - Formas de mesa más allá de redondas (rectangulares = después).
+
+
+================================================================================
+PROTOTIPO (Sofía & Mateo)
+================================================================================
+
+  Activo con rsvpPanel.mesas: true.
+  Ruta: /panel/sofia-mateo-rbkwo1/mesas
+  SQL requerido una vez: scripts/010_mesas.sql
+
+
+PRIORIDAD
+---------
+  Alta valor comercial (feature premium claro) una vez validado.

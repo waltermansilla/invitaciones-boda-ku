@@ -10,6 +10,8 @@ import type {
     ExtraInputA4Def,
 } from "@/lib/panel-a4-extras";
 import { resolveExtraValueFromStoredMensaje } from "@/lib/panel-a4-extras";
+import { flattenSeatsFromInvitados, estadoSeatLabel } from "@/lib/mesas/seats";
+import type { MesasPlanPayload } from "@/lib/mesas/types";
 
 function sanitizeDocumentTitle(raw: string): string {
     return raw
@@ -66,6 +68,7 @@ interface PanelData {
         extraInputsA4Bottom?: ExtraInputA4BottomDef[];
         variantes?: PanelVariantConfigLite[];
         activeVariante?: string;
+        mesas?: boolean;
     };
 }
 
@@ -275,6 +278,12 @@ export default function PanelPrintPage({
         : null;
     const { data, error } = useSWR<PanelData>(panelApiUrl, fetcher);
 
+    const mesasApiUrl =
+        panelId && data?.panelConfig?.mesas
+            ? `/api/panel/${panelId}/mesas`
+            : null;
+    const { data: mesasPlan } = useSWR<MesasPlanPayload>(mesasApiUrl, fetcher);
+
     const listaInvitadosPdfTitle = useMemo(() => {
         if (!data?.evento) return sanitizeDocumentTitle("Lista invitados");
         const tipoRaw = String(data.evento.tipo_evento || "boda").toLowerCase();
@@ -442,6 +451,31 @@ export default function PanelPrintPage({
         });
         return bloques.filter((b) => b.entradas.length > 0);
     }, [data]);
+
+    const mesasBloquesPdf = useMemo(() => {
+        if (!data?.panelConfig?.mesas || !mesasPlan?.mesas?.length) return [];
+        const persons = flattenSeatsFromInvitados(data.invitados || []);
+        const byKey = new Map(persons.map((p) => [p.seatKey, p]));
+        const sortedMesas = [...mesasPlan.mesas].sort(
+            (a, b) => a.numero - b.numero,
+        );
+        return sortedMesas.map((mesa) => {
+            const seats = mesasPlan.asientos
+                .filter((a) => a.mesaId === mesa.id)
+                .sort((a, b) => a.orden - b.orden)
+                .map((a) => byKey.get(a.seatKey))
+                .filter(Boolean) as ReturnType<
+                typeof flattenSeatsFromInvitados
+            >;
+            return {
+                mesa,
+                seats,
+                label: mesa.nombre
+                    ? `Mesa ${mesa.numero} · ${mesa.nombre}`
+                    : `Mesa ${mesa.numero}`,
+            };
+        });
+    }, [data, mesasPlan]);
 
     /** Sin restricciones reales el grid usa "-"; esa columna se oculta si todos están vacíos. */
     const mostrarColumnaAlimentos = useMemo(
@@ -747,6 +781,72 @@ export default function PanelPrintPage({
                         </ul>
                     </div>
                 ))}
+
+                {mesasBloquesPdf.length > 0 ? (
+                    <div className="mt-6 print:mt-5 print:break-before-page">
+                        <h2 className="mb-3 border-b border-neutral-400 pb-1.5 text-sm font-semibold tracking-wide text-neutral-900">
+                            Por mesa
+                        </h2>
+                        <div className="space-y-4">
+                            {mesasBloquesPdf.map(({ mesa, seats, label }) => (
+                                <div
+                                    key={mesa.id}
+                                    className="rounded-lg border border-neutral-200 bg-white p-3 print:break-inside-avoid print:rounded-none print:border-neutral-300"
+                                >
+                                    <h3 className="text-xs font-semibold uppercase tracking-wide text-neutral-800">
+                                        {label}
+                                        <span className="ml-2 font-normal normal-case tracking-normal text-neutral-500">
+                                            ({seats.length}
+                                            {mesa.capacidad
+                                                ? ` / ${mesa.capacidad}`
+                                                : ""}
+                                            )
+                                        </span>
+                                    </h3>
+                                    {seats.length === 0 ? (
+                                        <p className="mt-1.5 text-[11px] text-neutral-500">
+                                            Sin asignar
+                                        </p>
+                                    ) : (
+                                        <ul className="mt-2 list-none space-y-1 p-0 text-[11px]">
+                                            {seats.map((s) => (
+                                                <li
+                                                    key={s.seatKey}
+                                                    className="flex flex-wrap items-baseline gap-x-2 border-b border-neutral-100 py-0.5 last:border-0"
+                                                >
+                                                    <span className="font-medium text-neutral-900">
+                                                        {s.nombre}
+                                                    </span>
+                                                    {s.grupo ? (
+                                                        <span className="text-neutral-500">
+                                                            ({s.grupo})
+                                                        </span>
+                                                    ) : null}
+                                                    <span
+                                                        className={
+                                                            s.estado ===
+                                                            "confirmado"
+                                                                ? "text-[#155724]"
+                                                                : s.estado ===
+                                                                    "no_asiste"
+                                                                  ? "text-[#8b6b6b]"
+                                                                  : "text-[#888]"
+                                                        }
+                                                    >
+                                                        ·{" "}
+                                                        {estadoSeatLabel(
+                                                            s.estado,
+                                                        )}
+                                                    </span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ) : null}
             </section>
         </main>
         </PanelPinGate>

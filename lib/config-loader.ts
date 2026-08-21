@@ -73,6 +73,11 @@ export interface EventConfig {
     referidos?: boolean
     /** Prefijo opcional del cupón (default: nombres del evento). */
     referidosCodePrefix?: string
+    /**
+     * Organización de mesas en el panel (lista + croquis + PDF por mesa).
+     * Solo anfitrión; no aparece en la invitación del invitado.
+     */
+    mesas?: boolean
   }
   slug?: string
   /** Carpeta bajo data/clientes/ (boda, xv, baby, cumple, …) */

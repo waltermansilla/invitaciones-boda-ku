@@ -20,6 +20,7 @@ import {
     AlertTriangle,
     Copy,
     Eye,
+    LayoutGrid,
 } from "lucide-react";
 import {
     eventTypeLabelFromFolderTipo,
@@ -165,6 +166,8 @@ interface PanelData {
          * `rsvpPanel.pagoTarjeta` manda; si no está, depende de la sección `giftCard`.
          */
         pagoTarjeta?: boolean;
+        /** Organización de mesas (lista + croquis). */
+        mesas?: boolean;
         /** Alias/titular/banco: solo desde código (`panel-deuda-datos-cobro`). */
         deudaPago?: {
             alias?: string;
@@ -864,7 +867,7 @@ export default function PanelPage({
                         Faltan {diasRestantes} días
                     </p>
                 )}
-                <div className="absolute bottom-3 left-5">
+                <div className="absolute bottom-3 left-5 flex items-center gap-2">
                     <button
                         type="button"
                         onClick={() => {
@@ -891,6 +894,17 @@ export default function PanelPage({
                     >
                         <Download className="h-4 w-4" aria-hidden />
                     </button>
+                    {data.panelConfig?.mesas ? (
+                        <a
+                            href={`/panel/${panelId}/mesas?pv=${encodeURIComponent(panelVariant)}`}
+                            aria-label="Organizar mesas"
+                            title="Organizar mesas"
+                            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/40 bg-white/15 px-3 py-1.5 text-[11px] font-medium text-white backdrop-blur-sm transition-opacity hover:opacity-90"
+                        >
+                            <LayoutGrid className="h-3.5 w-3.5" aria-hidden />
+                            Mesas
+                        </a>
+                    ) : null}
                 </div>
                 <div className="absolute bottom-3 right-5">
                     <button
