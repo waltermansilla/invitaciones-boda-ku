@@ -8,26 +8,51 @@ export type MesaSeatPerson = {
   kind: MesaSeatKind
   nombre: string
   estado: MesaEstadoAsiento
-  /** Nombre del grupo (familia) si aplica. */
   grupo?: string
   invitadoId: string
   integranteId?: string
 }
 
+export type MesaForma = "redonda" | "cuadrada"
+
+/** mesa = sillas; objeto = mueble/espacio gris; pista = pista de baile. */
+export type MesaTipo = "mesa" | "objeto" | "pista"
+
 export type MesaRecord = {
   id: string
   numero: number
   nombre: string
+  /** Sillas (mesa) o escala visual (objeto/pista). 0–15. */
   capacidad: number
   orden: number
-  /** Croquis: 0–100 */
   posX: number
   posY: number
+  forma: MesaForma
+  tipo: MesaTipo
+  /** Grados, 0–360. */
+  rotacion?: number
+  /** Escala de alto (mesa cuadrada). Si falta, usa capacidad. */
+  escalaY?: number
+  /** Cantidad de sillas fijada a mano (cuadrada). */
+  sillasFijas?: number
+  /** Posiciones de sillas relativas al cluster. */
+  chairPts?: { x: number; y: number }[]
+}
+
+export function normalizeMesaForma(raw: unknown): MesaForma {
+  if (raw === "cuadrada" || raw === "rectangular") return "cuadrada"
+  return "redonda"
+}
+
+export function normalizeMesaTipo(raw: unknown): MesaTipo {
+  if (raw === "objeto" || raw === "pista" || raw === "mesa") return raw
+  return "mesa"
 }
 
 export type MesaAsientoRecord = {
   mesaId: string
   seatKey: string
+  /** Índice de silla 0..capacidad-1 */
   orden: number
 }
 

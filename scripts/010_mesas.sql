@@ -10,10 +10,12 @@ CREATE TABLE IF NOT EXISTS public.mesas (
   evento_id UUID NOT NULL REFERENCES public.eventos(id) ON DELETE CASCADE,
   numero INT NOT NULL,
   nombre TEXT NOT NULL DEFAULT '',
-  capacidad INT NOT NULL DEFAULT 15 CHECK (capacidad >= 1 AND capacidad <= 50),
+  capacidad INT NOT NULL DEFAULT 4 CHECK (capacidad >= 0 AND capacidad <= 50),
   orden INT NOT NULL DEFAULT 0,
   pos_x DOUBLE PRECISION NOT NULL DEFAULT 50,
   pos_y DOUBLE PRECISION NOT NULL DEFAULT 50,
+  forma TEXT NOT NULL DEFAULT 'redonda' CHECK (forma IN ('redonda', 'cuadrada')),
+  tipo TEXT NOT NULL DEFAULT 'mesa' CHECK (tipo IN ('mesa', 'objeto', 'pista')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE (evento_id, numero)
 );

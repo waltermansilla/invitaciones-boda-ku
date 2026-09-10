@@ -4,6 +4,8 @@ import type {
   MesaRecord,
   MesasPlanPayload,
 } from "./types"
+import { normalizeMesaForma, normalizeMesaTipo } from "./types"
+import { scaleMaxFor } from "./layout"
 
 type MesaRow = {
   id: string
@@ -13,6 +15,9 @@ type MesaRow = {
   orden: number
   pos_x: number
   pos_y: number
+  forma?: string | null
+  tipo?: string | null
+  extra?: unknown
 }
 
 type AsientoRow = {
@@ -21,9 +26,61 @@ type AsientoRow = {
   orden: number
 }
 
-function clampPos(n: number): number {
-  if (!Number.isFinite(n)) return 50
-  return Math.min(100, Math.max(0, n))
+function clampPos(value: number) {
+  if (!Number.isFinite(value)) return 50
+  return Math.min(100, Math.max(0, value))
+}
+
+function parseExtra(raw: unknown): {
+  rotacion?: number
+  escalaY?: number
+  sillasFijas?: number
+  chairPts?: { x: number; y: number }[]
+  capacidad?: number
+} {
+  if (!raw || typeof raw !== "object") return {}
+  const o = raw as Record<string, unknown>
+  const extra: {
+    rotacion?: number
+    escalaY?: number
+    sillasFijas?: number
+    chairPts?: { x: number; y: number }[]
+    capacidad?: number
+  } = {}
+  if (typeof o.rotacion === "number" && Number.isFinite(o.rotacion)) {
+    extra.rotacion = o.rotacion
+  }
+  if (typeof o.escalaY === "number" && Number.isFinite(o.escalaY)) {
+    extra.escalaY = o.escalaY
+  }
+  if (typeof o.sillasFijas === "number" && Number.isFinite(o.sillasFijas)) {
+    extra.sillasFijas = o.sillasFijas
+  }
+  if (typeof o.capacidad === "number" && Number.isFinite(o.capacidad)) {
+    extra.capacidad = o.capacidad
+  }
+  if (Array.isArray(o.chairPts)) {
+    extra.chairPts = o.chairPts
+      .filter(
+        (p): p is { x: number; y: number } =>
+          Boolean(p) &&
+          typeof p === "object" &&
+          typeof (p as { x: unknown }).x === "number" &&
+          typeof (p as { y: unknown }).y === "number",
+      )
+      .map((p) => ({ x: p.x, y: p.y }))
+  }
+  return extra
+}
+
+function extraPayload(m: MesaRecord) {
+  return {
+    rotacion: m.rotacion ?? 0,
+    capacidad: m.capacidad,
+    escalaY: m.escalaY ?? m.capacidad,
+    sillasFijas: m.sillasFijas ?? null,
+    chairPts: m.chairPts ?? [],
+  }
 }
 
 function normalizeMesaInput(raw: unknown, index: number): MesaRecord | null {
@@ -36,11 +93,17 @@ function normalizeMesaInput(raw: unknown, index: number): MesaRecord | null {
       ? Math.max(1, Math.floor(o.numero))
       : index + 1
   const nombre = typeof o.nombre === "string" ? o.nombre.trim() : ""
+  const forma = normalizeMesaForma(o.forma)
+  const tipo = normalizeMesaTipo(o.tipo)
+  const extra = parseExtra(o.extra ?? o)
+  const max = scaleMaxFor(tipo, forma)
   const capacidadRaw =
     typeof o.capacidad === "number" && Number.isFinite(o.capacidad)
-      ? Math.floor(o.capacidad)
-      : 10
-  const capacidad = Math.min(50, Math.max(1, capacidadRaw))
+      ? o.capacidad
+      : typeof extra.capacidad === "number"
+        ? extra.capacidad
+        : 4
+  const capacidad = Math.min(max, Math.max(0, capacidadRaw))
   const orden =
     typeof o.orden === "number" && Number.isFinite(o.orden)
       ? Math.floor(o.orden)
@@ -59,7 +122,22 @@ function normalizeMesaInput(raw: unknown, index: number): MesaRecord | null {
         ? o.pos_y
         : 50,
   )
-  return { id, numero, nombre, capacidad, orden, posX, posY }
+  return {
+    id,
+    numero,
+    nombre,
+    orden,
+    posX,
+    posY,
+    forma,
+    tipo,
+    ...extra,
+    capacidad,
+    escalaY:
+      typeof extra.escalaY === "number"
+        ? Math.min(max, Math.max(0, extra.escalaY))
+        : extra.escalaY,
+  }
 }
 
 function normalizeAsientoInput(raw: unknown): MesaAsientoRecord | null {
@@ -111,16 +189,45 @@ export function parseMesasPlanBody(body: unknown): MesasPlanPayload | null {
   return { mesas, asientos }
 }
 
+function mesaSelect(withTipo: boolean, withForma: boolean, withExtra = false): string {
+  const cols = ["id", "numero", "nombre", "capacidad", "orden", "pos_x", "pos_y"]
+  if (withForma) cols.push("forma")
+  if (withTipo) cols.push("tipo")
+  if (withExtra) cols.push("extra")
+  return cols.join(", ")
+}
+
 export async function loadMesasPlan(
   eventoId: string,
 ): Promise<MesasPlanPayload> {
   const supabase = createApiClient()
-  const { data: mesasRows, error: mesasErr } = await supabase
+  let mesasQuery = await supabase
     .from("mesas")
-    .select("id, numero, nombre, capacidad, orden, pos_x, pos_y")
+    .select(mesaSelect(true, true, true))
     .eq("evento_id", eventoId)
     .order("orden", { ascending: true })
     .order("numero", { ascending: true })
+
+  if (mesasQuery.error) {
+    const msg = mesasQuery.error.message
+    if (
+      isMissingColumnError(msg, "tipo") ||
+      isMissingColumnError(msg, "forma") ||
+      isMissingColumnError(msg, "extra")
+    ) {
+      const withTipo = !isMissingColumnError(msg, "tipo")
+      const withForma = !isMissingColumnError(msg, "forma")
+      const withExtra = !isMissingColumnError(msg, "extra")
+      mesasQuery = await supabase
+        .from("mesas")
+        .select(mesaSelect(withTipo, withForma, withExtra))
+        .eq("evento_id", eventoId)
+        .order("orden", { ascending: true })
+        .order("numero", { ascending: true })
+    }
+  }
+
+  const { data: mesasRows, error: mesasErr } = mesasQuery
 
   if (mesasErr) {
     if (isMissingTableError(mesasErr.message)) {
@@ -142,15 +249,30 @@ export async function loadMesasPlan(
     throw new Error(asientosErr.message)
   }
 
-  const mesas: MesaRecord[] = ((mesasRows || []) as MesaRow[]).map((r) => ({
-    id: r.id,
-    numero: r.numero,
-    nombre: r.nombre || "",
-    capacidad: r.capacidad,
-    orden: r.orden,
-    posX: clampPos(Number(r.pos_x)),
-    posY: clampPos(Number(r.pos_y)),
-  }))
+  const mesas: MesaRecord[] = ((mesasRows || []) as MesaRow[]).map((r) => {
+    const forma = normalizeMesaForma(r.forma)
+    const tipo = normalizeMesaTipo(r.tipo)
+    const extra = parseExtra(r.extra)
+    const max = scaleMaxFor(tipo, forma)
+    const capRaw =
+      typeof extra.capacidad === "number" ? extra.capacidad : r.capacidad
+    return {
+      id: r.id,
+      numero: r.numero,
+      nombre: r.nombre || "",
+      orden: r.orden,
+      posX: clampPos(Number(r.pos_x)),
+      posY: clampPos(Number(r.pos_y)),
+      forma,
+      tipo,
+      ...extra,
+      capacidad: Math.min(max, Math.max(0, Number(capRaw))),
+      escalaY:
+        typeof extra.escalaY === "number"
+          ? Math.min(max, Math.max(0, extra.escalaY))
+          : extra.escalaY,
+    }
+  })
 
   const asientos: MesaAsientoRecord[] = (
     (asientosRows || []) as AsientoRow[]
@@ -172,10 +294,14 @@ function isMissingTableError(msg: string): boolean {
   )
 }
 
-/**
- * Reemplazo completo del plan: una sola escritura al Guardar.
- * Borra mesas/asientos del evento e inserta el payload.
- */
+function isMissingColumnError(msg: string, col: string): boolean {
+  const m = msg.toLowerCase()
+  return (
+    m.includes(col) &&
+    (m.includes("column") || m.includes("schema cache") || m.includes("does not exist"))
+  )
+}
+
 export async function saveMesasPlan(
   eventoId: string,
   plan: MesasPlanPayload,
@@ -201,18 +327,33 @@ export async function saveMesasPlan(
   if (delMesasErr) throw new Error(delMesasErr.message)
 
   if (plan.mesas.length > 0) {
-    const rows = plan.mesas.map((m) => ({
+    const full = plan.mesas.map((m) => ({
       id: m.id,
       evento_id: eventoId,
       numero: m.numero,
       nombre: m.nombre || "",
-      capacidad: m.capacidad,
+      capacidad: Math.round(m.capacidad),
       orden: m.orden,
       pos_x: m.posX,
       pos_y: m.posY,
+      forma: normalizeMesaForma(m.forma),
+      tipo: normalizeMesaTipo(m.tipo),
+      extra: extraPayload(m),
     }))
-    const { error: insMesasErr } = await supabase.from("mesas").insert(rows)
-    if (insMesasErr) throw new Error(insMesasErr.message)
+    let ins = await supabase.from("mesas").insert(full)
+    if (ins.error && isMissingColumnError(ins.error.message, "extra")) {
+      const noExtra = full.map(({ extra: _e, ...rest }) => rest)
+      ins = await supabase.from("mesas").insert(noExtra)
+    }
+    if (ins.error && isMissingColumnError(ins.error.message, "tipo")) {
+      const noTipo = full.map(({ tipo: _t, ...rest }) => rest)
+      ins = await supabase.from("mesas").insert(noTipo)
+    }
+    if (ins.error && isMissingColumnError(ins.error.message, "forma")) {
+      const noForma = full.map(({ forma: _f, tipo: _t, ...rest }) => rest)
+      ins = await supabase.from("mesas").insert(noForma)
+    }
+    if (ins.error) throw new Error(ins.error.message)
   }
 
   if (plan.asientos.length > 0) {
