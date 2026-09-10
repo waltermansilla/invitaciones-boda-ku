@@ -277,7 +277,7 @@
             "data": {
                 "icon": "heart",
                 "title": "Valor Tarjeta",
-                "description": "Agradecemos que confirmes tu asistencia antes del 31 de Agosto",
+                "description": "Agradecemos que confirmes tu asistencia lo antes posible",
                 "button": {
                     "text": "Ver datos",
                     "url": "#",
@@ -285,8 +285,8 @@
                 },
                 "modal": {
                     "title": "Datos de transferencia",
-                    "suggestedValue": "$80.000",
-                    "description": "Te recomendamos abonar antes de Agosto para mantener el valor indicado. Luego de esa fecha, la tarjeta tendrá un nuevo valor.",
+                    "suggestedValue": "$90.000",
+                    "description": "En el caso de asistir, agradecemos que puedas confirmar tu asistencia y abonar dicho valor lo antes posible. ¡Gracias por acompañarnos!",
                     "transferData": [
                         { "label": "Alias", "value": "belen35." },
                         {
