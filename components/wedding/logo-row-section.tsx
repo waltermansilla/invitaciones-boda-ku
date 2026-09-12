@@ -2,16 +2,19 @@
 
 import { useFadeIn } from "@/hooks/use-fade-in"
 import { RevealContent } from "./animated-section"
+import { LogoByLogoRow } from "./logo-by-logo-row"
 
 type LogoRowSectionProps = {
   title?: string
   headline?: string
+  byText?: string
   logos: string[]
 }
 
 export default function LogoRowSection({
   title,
   headline,
+  byText,
   logos,
 }: LogoRowSectionProps) {
   const { ref, isVisible } = useFadeIn(0.15)
@@ -32,21 +35,12 @@ export default function LogoRowSection({
             {title}
           </p>
         ) : null}
-        <div className="mx-auto flex max-w-md flex-wrap items-center justify-center gap-8 sm:gap-12">
-          {items.map((src) => (
-            <div
-              key={src}
-              className="flex h-16 min-w-[120px] flex-1 items-center justify-center sm:h-20"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={src}
-                alt=""
-                className="max-h-full max-w-[180px] object-contain"
-              />
-            </div>
-          ))}
-        </div>
+        <LogoByLogoRow
+          logos={items}
+          byText={byText}
+          logoWrapClassName="flex h-16 min-w-[100px] flex-1 items-center justify-center sm:h-20"
+          logoImgClassName="max-h-full max-w-[180px] object-contain"
+        />
       </RevealContent>
     </section>
   )

@@ -25,6 +25,7 @@ import {
     Flag,
     CakeSlice,
     Gem,
+    Salad,
 } from "lucide-react";
 import { useConfig, useIsMuestra } from "@/lib/config-context";
 
@@ -81,6 +82,8 @@ const iconMap: Record<
     sidra: Wine, // Sidra (copa similar a vino)
     mesaDulce: CakeSlice, // Mesa dulce
     tortaCasamiento: Cake, // Torta de casamiento
+    salad: Salad, // Refrigerio / merienda saludable
+    refrigerio: Salad,
 };
 
 export default function ItinerarySection({

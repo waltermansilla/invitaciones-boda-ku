@@ -969,6 +969,7 @@ function SectionContent({
                     <LogoRowSection
                         title={data.title as string | undefined}
                         headline={data.headline as string | undefined}
+                        byText={data.byText as string | undefined}
                         logos={(data.logos as string[]) || []}
                     />
                 );

@@ -3,6 +3,7 @@
 import { memo, useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { useConfig } from "@/lib/config-context";
+import { LogoByLogoRow } from "./logo-by-logo-row";
 import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order";
 import type { CoupleNamesDisplayOrder } from "@/lib/couple-names-display-order";
 
@@ -115,26 +116,7 @@ const HeroAfterImageLogos = memo(function HeroAfterImageLogos({
             className={`flex w-full flex-col items-center bg-background px-6 pb-4 ${compactTop ? "pt-2" : "pt-8"}`}
             style={{ color: textColor }}
         >
-            {byText !== "" ? (
-                <p className="mb-6 text-sm font-light tracking-[0.2em] text-inherit/75 md:text-base">
-                    {byText ?? "by"}
-                </p>
-            ) : null}
-            <div className="mx-auto flex max-w-md flex-wrap items-center justify-center gap-8 sm:gap-12">
-                {items.map((src) => (
-                    <div
-                        key={src}
-                        className="flex h-14 min-w-[100px] flex-1 items-center justify-center sm:h-16"
-                    >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={src}
-                            alt=""
-                            className="max-h-full max-w-[160px] object-contain sm:max-w-[180px]"
-                        />
-                    </div>
-                ))}
-            </div>
+            <LogoByLogoRow logos={items} byText={byText} />
         </div>
     );
 });

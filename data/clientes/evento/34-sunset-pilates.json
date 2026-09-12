@@ -37,7 +37,7 @@
         }
     },
     "overlay": {
-        "enabled": true,
+        "enabled": false,
         "phrase": "",
         "buttonText": "Ingresar"
     },
@@ -197,7 +197,7 @@
                 "title": "Dress code",
                 "subtitle": "Tonos:",
                 "description": "",
-                "descriptionAfterColors": "La remera Bodyfit entregada junto con la entrada, se utilizará el día del evento.",
+                "descriptionAfterColors": "La remera Bodyfit será entregada el día del evento.",
                 "showButton": false,
                 "colorSwatches": {
                     "enabled": true,
@@ -218,7 +218,7 @@
                 "title": "Itinerario",
                 "events": [
                     {
-                        "icon": "reception",
+                        "icon": "civil",
                         "name": "Recepción y Acreditación",
                         "address": "El Palenque",
                         "time": "16:00 hs",
@@ -234,7 +234,7 @@
                         "time": "16:40 hs"
                     },
                     {
-                        "icon": "book",
+                        "icon": "heart",
                         "name": "Taller de Nutrición: Belleza desde adentro",
                         "address": "Lic. Camila Olivera",
                         "time": "17:15 hs"
@@ -246,20 +246,21 @@
                         "time": "18:00 hs"
                     },
                     {
-                        "icon": "music",
-                        "name": "Momento de Distensión y Sunset",
-                        "address": "Dj Sofía Gier",
+                        "icon": "salad",
+                        "name": "Refrigerio saludable",
                         "time": "18:45 hs"
                     },
                     {
-                        "icon": "gift",
-                        "name": "Sorteos y Entrega de Premios",
-                        "time": "19:45 hs"
+                        "icon": "music",
+                        "name": "Momento de Distensión y Sunset",
+                        "address": "Dj Sofía Gier",
+                        "time": "19:30 hs"
                     },
+
                     {
                         "icon": "clock",
                         "name": "Cierre del Evento",
-                        "time": "20:30 hs"
+                        "time": "21:00 hs"
                     }
                 ]
             }
@@ -286,7 +287,7 @@
                         },
                         {
                             "heading": "",
-                            "text": "Mini taller de Nutrición junto a la Lic. Camila Olivera",
+                            "text": "Taller de Nutrición, por la Lic. Camila Olivera",
                             "icon": "book"
                         },
                         {
@@ -308,11 +309,6 @@
                             "heading": "",
                             "text": "Sunset + música en vivo con Dj Sofía Gier",
                             "icon": "music"
-                        },
-                        {
-                            "heading": "",
-                            "text": "Sorteos y muchas sorpresas más!",
-                            "icon": "party"
                         }
                     ]
                 }
@@ -392,7 +388,8 @@
             "bgColor": "background",
             "blocks": [],
             "data": {
-                "headline": "Sunset & Pilates by",
+                "headline": "Sunset & Pilates",
+                "byText": "by",
                 "logos": [
                     "/clientes/evento/34-sunset-pilates/images/sponsors/palenque.png",
                     "/clientes/evento/34-sunset-pilates/images/sponsors/bodyfit.png"
