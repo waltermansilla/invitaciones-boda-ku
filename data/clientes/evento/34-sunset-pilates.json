@@ -14,6 +14,11 @@
             "separator": "&"
         }
     },
+    "access": {
+        "tokenEnabled": true,
+        "token": "rna9Lm",
+        "allowLegacyUntil": ""
+    },
     "base": {
         "enabled": true,
         "token": "m3jsmII9"
