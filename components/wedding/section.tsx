@@ -25,6 +25,8 @@ import PresentationSection from "./presentation-section";
 import ParentsSection from "./parents-section";
 import PlaylistSection from "./playlist-section";
 import SpecialMessageSection from "./special-message-section";
+import SponsorsLogosSection from "./sponsors-logos-section";
+import LogoRowSection from "./logo-row-section";
 import ConfirmarWhatsappSection from "./confirmar-whatsapp-section";
 import AdultsOnlySection from "./adults-only-section";
 import ZoomInfoSection from "./zoom-info-section";
@@ -557,6 +559,12 @@ function SectionContent({
                                 | undefined
                         }
                         showButton={data.showButton as boolean | undefined}
+                        inlineListStyle={
+                            data.inlineListStyle as
+                                | "default"
+                                | "featured"
+                                | undefined
+                        }
                         button={
                             data.button as
                                 | {
@@ -572,6 +580,7 @@ function SectionContent({
                                       sections?: {
                                           heading: string;
                                           text: string;
+                                          icon?: string;
                                       }[];
                                   }
                                 | undefined
@@ -942,6 +951,28 @@ function SectionContent({
                     />
                 );
 
+            case "sponsorsLogos":
+                return (
+                    <SponsorsLogosSection
+                        title={data.title as string}
+                        description={data.description as string | undefined}
+                        logos={
+                            (data.logos as
+                                | import("./sponsors-logos-section").SponsorLogoItem[]) ||
+                            []
+                        }
+                    />
+                );
+
+            case "logoRow":
+                return (
+                    <LogoRowSection
+                        title={data.title as string | undefined}
+                        headline={data.headline as string | undefined}
+                        logos={(data.logos as string[]) || []}
+                    />
+                );
+
             case "specialMessage":
                 return (
                     <SpecialMessageSection
@@ -950,6 +981,14 @@ function SectionContent({
                         signature={data.signature as string | undefined}
                         decorativeLines={
                             data.decorativeLines as boolean | undefined
+                        }
+                        image={data.image as string | undefined}
+                        imageAspectRatio={
+                            data.imageAspectRatio as string | undefined
+                        }
+                        sectionBg={
+                            (bgColor as "primary" | "background" | undefined) ||
+                            "primary"
                         }
                     />
                 );

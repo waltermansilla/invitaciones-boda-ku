@@ -1,0 +1,407 @@
+{
+    "// ==========================================": "",
+    "// RESERVA / ADMIN                          ": "",
+    "// ==========================================.": "",
+    "_comment_reserva": "Premium · Corporativo. Contacto: María Belén · mariabelenolivera1@gmail.com · Evento 2026-10-10. Presupuesto ARS 53.500 · Seña 50% ARS 26.750. Detalles ID mtlp8dq4-n7sgvk. Fotos: pendiente Drive (hasta 5).",
+    "meta": {
+        "title": "Sunset & Pilates",
+        "description": "El Palenque by Bodyfit — 10 de Octubre 2026",
+        "ogImage": "/clientes/evento/34-sunset-pilates/images/principales/hero.JPG",
+        "lang": "es",
+        "coupleNames": {
+            "groomName": "Pilates",
+            "brideName": "Sunset",
+            "separator": "&"
+        }
+    },
+    "base": {
+        "enabled": true,
+        "token": "m3jsmII9"
+    },
+    "theme": {
+        "primaryColor": "#cb997e",
+        "backgroundColor": "#FAF8F5",
+        "textColor": "#5C504A",
+        "lightBgTextColor": "#5C504A",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#F8E8EC",
+        "modalTextColor": "#5C504A",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "overlay": {
+        "enabled": true,
+        "phrase": "",
+        "buttonText": "Ingresar"
+    },
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": false
+    },
+    "hero": {
+        "coupleImage": "/clientes/evento/34-sunset-pilates/images/principales/hero.JPG",
+        "headline": "",
+        "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": true,
+            "position": "top",
+            "font": "Josefin Sans",
+            "weight": "300",
+            "size": "2xl",
+            "style": "normal",
+            "color": "rgba(255,255,255,0.95)",
+            "decorativeLines": false,
+            "logo": ""
+        },
+        "countdownPrefix": "",
+        "eventDate": "2026-10-10T16:00:00",
+        "countdownLabels": {
+            "days": "Días",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        },
+        "afterImage": {
+            "byText": "by",
+            "logos": [
+                "/clientes/evento/34-sunset-pilates/images/sponsors/palenque.png",
+                "/clientes/evento/34-sunset-pilates/images/sponsors/bodyfit.png"
+            ]
+        }
+    },
+    "sections": [
+        {
+            "type": "quote",
+            "id": "quote-2",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Un regalo para vos misma.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-3",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Una invitación a salir de la rutina, hacer una pausa y volver a conectar con lo que realmente importa: vos.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-lugar-1",
+            "bgColor": "background",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "1/1",
+                "images": [
+                    "/clientes/evento/34-sunset-pilates/images/principales/lugar1.png"
+                ]
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-4",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "El Palenque y Bodyfit se unen para invitarte a vivir una tarde diferente, donde el movimiento, la respiración, el bienestar y el disfrute se encuentran en un mismo lugar.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+
+        {
+            "type": "dateInfo",
+            "id": "date-info",
+            "bgColor": "background",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "10 de Octubre de 2026"
+            }
+        },
+        {
+            "type": "locationInfo",
+            "id": "location-palenque",
+            "bgColor": "background",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "icon": "pin",
+                "title": "¿Dónde?",
+                "address": "El Palenque — 16:00 hs",
+                "showButton": true,
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/yWeRiJo7pHkevfXN7?g_st=ac",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-lugar-2",
+            "bgColor": "background",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": [
+                    "/clientes/evento/34-sunset-pilates/images/principales/lugar2.jpg"
+                ]
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-5",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "En esta experiencia vas a poder moverte, inspirarte, conocer nuevas personas y formar parte de una comunidad que elige el bienestar de manera consciente.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "dressCode",
+            "id": "dress-code",
+            "bgColor": "primary",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "descriptionAfterColors"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Dress code",
+                "subtitle": "Tonos:",
+                "description": "",
+                "descriptionAfterColors": "La remera Bodyfit entregada junto con la entrada, se utilizará el día del evento.",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "square",
+                    "colors": [
+                        { "color": "#F8E8EC", "label": "Rosa pastel" },
+                        { "color": "#6B4E71", "label": "Uva" }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "itinerary",
+            "id": "itinerary-timeline",
+            "bgColor": "background",
+            "blocks": ["title", "timeline"],
+            "data": {
+                "title": "Itinerario",
+                "events": [
+                    {
+                        "icon": "reception",
+                        "name": "Recepción y Acreditación",
+                        "address": "El Palenque",
+                        "time": "16:00 hs",
+                        "button": {
+                            "text": "Cómo llegar",
+                            "url": "https://maps.app.goo.gl/yWeRiJo7pHkevfXN7?g_st=ac",
+                            "variant": "primary"
+                        }
+                    },
+                    {
+                        "icon": "podium",
+                        "name": "Presentación del Evento / Apertura",
+                        "time": "16:40 hs"
+                    },
+                    {
+                        "icon": "book",
+                        "name": "Taller de Nutrición: Belleza desde adentro",
+                        "address": "Lic. Camila Olivera",
+                        "time": "17:15 hs"
+                    },
+                    {
+                        "icon": "sparkles",
+                        "name": "Clase de Pilates",
+                        "address": "Prof. Yamila Alculumbre",
+                        "time": "18:00 hs"
+                    },
+                    {
+                        "icon": "music",
+                        "name": "Momento de Distensión y Sunset",
+                        "address": "Dj Sofía Gier",
+                        "time": "18:45 hs"
+                    },
+                    {
+                        "icon": "gift",
+                        "name": "Sorteos y Entrega de Premios",
+                        "time": "19:45 hs"
+                    },
+                    {
+                        "icon": "clock",
+                        "name": "Cierre del Evento",
+                        "time": "20:30 hs"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "universalInfo",
+            "id": "experiencia-incluye",
+            "bgColor": "primary",
+            "blocks": ["icon", "title", "description", "modal"],
+            "data": {
+                "icon": "sparkles",
+                "title": "Tu experiencia incluye",
+                "description": "",
+                "descriptionSize": "large",
+                "showButton": false,
+                "inlineListStyle": "featured",
+                "modal": {
+                    "title": "Tu experiencia incluye",
+                    "sections": [
+                        {
+                            "heading": "",
+                            "text": "Remera Bodyfit",
+                            "icon": "shirt"
+                        },
+                        {
+                            "heading": "",
+                            "text": "Mini taller de Nutrición junto a la Lic. Camila Olivera",
+                            "icon": "book"
+                        },
+                        {
+                            "heading": "",
+                            "text": "Una clase de pilates junto a la profesora Yamila Alculumbre",
+                            "icon": "gym"
+                        },
+                        {
+                            "heading": "",
+                            "text": "Merienda saludable",
+                            "icon": "food"
+                        },
+                        {
+                            "heading": "",
+                            "text": "Regalos de marcas asociadas",
+                            "icon": "gift"
+                        },
+                        {
+                            "heading": "",
+                            "text": "Sunset + música en vivo con Dj Sofía Gier",
+                            "icon": "music"
+                        },
+                        {
+                            "heading": "",
+                            "text": "Sorteos y muchas sorpresas más!",
+                            "icon": "party"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-lugar-3",
+            "bgColor": "background",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": [
+                    "/clientes/evento/34-sunset-pilates/images/principales/lugar3.jpg"
+                ]
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-sunset",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Y cuando el sol empiece a bajar, la experiencia continúa: música en vivo de la mano de Dj Sofía Gier, un ambiente pensado para despejarte, disfrutar y cerrar el día con la energía que necesitabas.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "specialMessage",
+            "id": "dj-sofia",
+            "bgColor": "primary",
+            "blocks": ["title", "text"],
+            "data": {
+                "title": "DJ",
+                "text": "Sofía Gier",
+                "signature": "",
+                "decorativeLines": true,
+                "image": "/clientes/evento/34-sunset-pilates/images/principales/dj.jpg",
+                "imageAspectRatio": "3/4"
+            }
+        },
+        {
+            "type": "sponsorsLogos",
+            "id": "sponsors",
+            "bgColor": "background",
+            "blocks": [],
+            "data": {
+                "title": "Sponsors",
+                "description": "Marcas Asociadas.",
+                "logos": [
+                    "/clientes/evento/34-sunset-pilates/images/sponsors/1.jpg",
+                    "/clientes/evento/34-sunset-pilates/images/sponsors/2.jpg",
+                    "/clientes/evento/34-sunset-pilates/images/sponsors/3.png",
+                    {
+                        "src": "/clientes/evento/34-sunset-pilates/images/sponsors/4.jpeg",
+                        "fit": "cover"
+                    }
+                ]
+            }
+        },
+
+        {
+            "type": "quote",
+            "id": "quote-1",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "No es solamente un evento, es una experiencia.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "logoRow",
+            "id": "cierre-logos",
+            "bgColor": "background",
+            "blocks": [],
+            "data": {
+                "headline": "Sunset & Pilates by",
+                "logos": [
+                    "/clientes/evento/34-sunset-pilates/images/sponsors/palenque.png",
+                    "/clientes/evento/34-sunset-pilates/images/sponsors/bodyfit.png"
+                ]
+            }
+        },
+        {
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "momentounico.com.ar",
+                "socialLinks": []
+            }
+        }
+    ]
+}

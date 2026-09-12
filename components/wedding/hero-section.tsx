@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { memo, useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { useConfig } from "@/lib/config-context";
 import { coupleNamesDisplayPair } from "@/lib/couple-names-display-order";
@@ -78,6 +78,11 @@ interface HeroSectionProps {
     };
     /** "libre" = altura natural de la foto; sin valor = 3/4 (sm: 4/5) por defecto. También acepta ratios como "3/4", "4/3", etc. */
     aspectRatio?: string;
+    /** Bloque debajo de la foto y antes del countdown (ej. "by" + logos). */
+    afterImage?: {
+        byText?: string;
+        logos: string[];
+    };
 }
 
 function getTimeRemaining(targetDate: string) {
@@ -88,6 +93,291 @@ function getTimeRemaining(targetDate: string) {
     const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
     const days = Math.floor(total / (1000 * 60 * 60 * 24));
     return { days, hours, minutes, seconds };
+}
+
+type HeroAfterImageProps = {
+    byText?: string;
+    logos: string[];
+    textColor: string;
+    compactTop?: boolean;
+};
+
+const HeroAfterImageLogos = memo(function HeroAfterImageLogos({
+    byText,
+    logos,
+    textColor,
+    compactTop,
+}: HeroAfterImageProps) {
+    const items = logos.filter(Boolean);
+    if (items.length === 0) return null;
+    return (
+        <div
+            className={`flex w-full flex-col items-center bg-background px-6 pb-4 ${compactTop ? "pt-2" : "pt-8"}`}
+            style={{ color: textColor }}
+        >
+            {byText !== "" ? (
+                <p className="mb-6 text-sm font-light tracking-[0.2em] text-inherit/75 md:text-base">
+                    {byText ?? "by"}
+                </p>
+            ) : null}
+            <div className="mx-auto flex max-w-md flex-wrap items-center justify-center gap-8 sm:gap-12">
+                {items.map((src) => (
+                    <div
+                        key={src}
+                        className="flex h-14 min-w-[100px] flex-1 items-center justify-center sm:h-16"
+                    >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={src}
+                            alt=""
+                            className="max-h-full max-w-[160px] object-contain sm:max-w-[180px]"
+                        />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+});
+
+type HeroCountdownRegionProps = {
+    eventDate: string;
+    countdownPrefix?: string;
+    countdownLabels: HeroSectionProps["countdownLabels"];
+    countdownStyle?: HeroSectionProps["countdownStyle"];
+    countdownAreaBg?: HeroSectionProps["countdownAreaBg"];
+    headline: string;
+    textColor: string;
+    primaryColor: string;
+    backgroundColor: string;
+    variant: "overlayFloating" | "overlayCard" | "inline";
+    inlineTopPaddingClass?: string;
+};
+
+function HeroCountdownRegion({
+    eventDate,
+    countdownPrefix,
+    countdownLabels,
+    countdownStyle,
+    countdownAreaBg,
+    headline,
+    textColor,
+    primaryColor,
+    backgroundColor,
+    variant,
+    inlineTopPaddingClass = "pt-10",
+}: HeroCountdownRegionProps) {
+    const [time, setTime] = useState<{
+        days: number;
+        hours: number;
+        minutes: number;
+        seconds: number;
+    } | null>(null);
+
+    useEffect(() => {
+        setTime(getTimeRemaining(eventDate));
+        const interval = setInterval(() => {
+            setTime(getTimeRemaining(eventDate));
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [eventDate]);
+
+    const cdBg = countdownStyle?.background || "none";
+    const cdShape = countdownStyle?.shape || "rounded";
+    const cdOverlayMode =
+        variant === "overlayFloating" || variant === "overlayCard";
+    const hasBg = cdBg !== "none";
+
+    const getAreaBgStyle = (): CSSProperties => {
+        if (!countdownAreaBg)
+            return { backgroundColor: backgroundColor, color: textColor };
+        if (countdownAreaBg === "primary")
+            return { backgroundColor: primaryColor, color: "#fff" };
+        if (countdownAreaBg === "background")
+            return { backgroundColor: backgroundColor, color: textColor };
+        return { backgroundColor: countdownAreaBg, color: textColor };
+    };
+
+    const getShapeClass = () => {
+        switch (cdShape) {
+            case "circle":
+                return "rounded-full";
+            case "square":
+                return "rounded-none";
+            case "pill":
+                return "rounded-full";
+            case "rounded":
+            default:
+                return "rounded-lg";
+        }
+    };
+
+    const getItemSizeClass = () => {
+        if (cdShape === "circle")
+            return "w-[70px] h-[70px] sm:w-[80px] sm:h-[80px]";
+        if (cdShape === "pill") return "px-4 py-3 min-w-[65px]";
+        return "px-3 py-3 min-w-[65px] sm:min-w-[75px]";
+    };
+
+    const getCountdownItemStyle = (): CSSProperties => {
+        if (cdBg === "none") {
+            return { border: `1px solid ${primaryColor}20` };
+        }
+        if (cdBg === "background")
+            return {
+                backgroundColor: backgroundColor,
+                border: `1px solid ${primaryColor}30`,
+            };
+        if (cdBg === "primary")
+            return { backgroundColor: primaryColor, color: "#fff" };
+        if (cdBg === "secondary")
+            return {
+                backgroundColor: `${primaryColor}15`,
+                border: `1px solid ${primaryColor}30`,
+            };
+        return { backgroundColor: cdBg, color: "#fff" };
+    };
+
+    const items = [
+        { value: time?.days ?? 0, label: countdownLabels.days },
+        { value: time?.hours ?? 0, label: countdownLabels.hours },
+        { value: time?.minutes ?? 0, label: countdownLabels.minutes },
+        { value: time?.seconds ?? 0, label: countdownLabels.seconds },
+    ];
+
+    const isPrimaryBg =
+        cdBg === "primary" ||
+        (hasBg &&
+            cdBg !== "background" &&
+            cdBg !== "secondary" &&
+            cdBg !== "none");
+    const shapeClass = getShapeClass();
+    const itemSizeClass = getItemSizeClass();
+    const itemStyle = getCountdownItemStyle();
+    const showClassicStyle =
+        !cdOverlayMode && cdBg === "none" && cdShape === "rounded";
+
+    const countdownItems = (
+        <div
+            className={`flex items-center justify-center ${showClassicStyle ? "gap-2" : "gap-3 sm:gap-4"}`}
+            aria-live="polite"
+        >
+            {items.map((item, i) => (
+                <div key={item.label} className="flex items-center gap-2">
+                    {showClassicStyle ? (
+                        <>
+                            <div className="flex flex-col items-center">
+                                <span
+                                    className="tabular-nums leading-none text-4xl font-extralight sm:text-5xl md:text-6xl text-inherit"
+                                    suppressHydrationWarning
+                                >
+                                    {time
+                                        ? String(item.value).padStart(
+                                              item.label === countdownLabels.days
+                                                  ? 1
+                                                  : 2,
+                                              "0",
+                                          )
+                                        : "--"}
+                                </span>
+                                <span className="mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs opacity-50">
+                                    {item.label}
+                                </span>
+                            </div>
+                            {i < 3 && (
+                                <span className="mt-1 font-light opacity-40 text-4xl md:text-5xl">
+                                    :
+                                </span>
+                            )}
+                        </>
+                    ) : (
+                        <div
+                            className={`flex flex-col items-center justify-center ${itemSizeClass} ${shapeClass}`}
+                            style={itemStyle}
+                        >
+                            <span
+                                className={`tabular-nums leading-none ${
+                                    cdOverlayMode
+                                        ? "text-2xl font-light sm:text-3xl"
+                                        : "text-4xl font-extralight sm:text-5xl md:text-6xl"
+                                } ${isPrimaryBg ? "text-white" : "text-inherit"}`}
+                                suppressHydrationWarning
+                            >
+                                {time
+                                    ? String(item.value).padStart(
+                                          item.label === countdownLabels.days
+                                              ? 1
+                                              : 2,
+                                          "0",
+                                      )
+                                    : "--"}
+                            </span>
+                            <span
+                                className={`mt-1 text-[9px] font-medium tracking-[0.1em] uppercase sm:text-[10px] ${isPrimaryBg ? "text-white/70" : "opacity-50"}`}
+                            >
+                                {item.label}
+                            </span>
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+
+    if (variant === "overlayFloating") {
+        return (
+            <div
+                className="relative z-10 -mt-10 mb-4 flex justify-center"
+                style={{ color: textColor }}
+            >
+                {countdownItems}
+            </div>
+        );
+    }
+
+    if (variant === "overlayCard") {
+        return (
+            <div className="relative z-10 -mt-14 mb-4">
+                <div
+                    className="rounded-2xl px-6 py-5 shadow-lg"
+                    style={{ backgroundColor: backgroundColor }}
+                >
+                    <div
+                        className="flex flex-col items-center"
+                        style={{ color: textColor }}
+                    >
+                        {countdownPrefix ? (
+                            <p className="mb-3 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
+                                {countdownPrefix}
+                            </p>
+                        ) : null}
+                        {countdownItems}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div
+            className={`flex w-full flex-col items-center px-6 pb-10 ${inlineTopPaddingClass}`}
+            style={getAreaBgStyle()}
+        >
+            <h1 className="mb-8 text-center text-3xl font-light tracking-wide uppercase text-inherit md:text-4xl">
+                {headline}
+            </h1>
+            <div
+                className="flex flex-col items-center"
+                style={{ color: textColor }}
+            >
+                {countdownPrefix ? (
+                    <p className="mb-4 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
+                        {countdownPrefix}
+                    </p>
+                ) : null}
+                {countdownItems}
+            </div>
+        </div>
+    );
 }
 
 const sizeMap: Record<string, string> = {
@@ -146,6 +436,7 @@ export default function HeroSection({
     vignette,
     nameOrder,
     aspectRatio,
+    afterImage,
 }: HeroSectionProps) {
     const config = useConfig();
     const theme = config.theme as Record<string, unknown>;
@@ -155,21 +446,6 @@ export default function HeroSection({
         "#6B7F5E";
     const primaryColor = (theme.primaryColor as string) || "#6B7F5E";
     const backgroundColor = (theme.backgroundColor as string) || "#FAF8F5";
-
-    const [time, setTime] = useState<{
-        days: number;
-        hours: number;
-        minutes: number;
-        seconds: number;
-    } | null>(null);
-
-    useEffect(() => {
-        setTime(getTimeRemaining(eventDate));
-        const interval = setInterval(() => {
-            setTime(getTimeRemaining(eventDate));
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [eventDate]);
 
     // Determine if names should show
     const shouldShowNames = namesDisplay?.enabled ?? showNamesOnPhoto;
@@ -208,75 +484,27 @@ export default function HeroSection({
         });
     }
 
-    // Countdown style options
-    const cdBg = countdownStyle?.background || "none";
-    const cdShape = countdownStyle?.shape || "rounded";
+    // Countdown style options (layout only; el timer vive en HeroCountdownRegion)
     const cdLayout = countdownStyle?.layout || "inline";
     const cdOverlayStyle = countdownStyle?.overlayStyle || "card";
     const isOverlayLayout = cdLayout === "overlay";
     const isFloatingOverlay = isOverlayLayout && cdOverlayStyle === "floating";
-    const hasBg = cdBg !== "none";
 
-    // Countdown area background
-    const getAreaBgStyle = (): CSSProperties => {
-        if (!countdownAreaBg)
-            return { backgroundColor: backgroundColor, color: textColor };
-        if (countdownAreaBg === "primary")
-            return { backgroundColor: primaryColor, color: "#fff" };
-        if (countdownAreaBg === "background")
-            return { backgroundColor: backgroundColor, color: textColor };
-        return { backgroundColor: countdownAreaBg, color: textColor };
+    const afterImageLogos = afterImage?.logos ?? [];
+    const showAfterImage = afterImageLogos.filter(Boolean).length > 0;
+
+    const countdownSharedProps = {
+        eventDate,
+        countdownPrefix,
+        countdownLabels,
+        countdownStyle,
+        countdownAreaBg,
+        headline,
+        textColor,
+        primaryColor,
+        backgroundColor,
     };
 
-    // Shape class for individual countdown items
-    const getShapeClass = () => {
-        switch (cdShape) {
-            case "circle":
-                return "rounded-full";
-            case "square":
-                return "rounded-none";
-            case "pill":
-                return "rounded-full";
-            case "rounded":
-            default:
-                return "rounded-lg";
-        }
-    };
-
-    // Size class for individual countdown items
-    const getItemSizeClass = () => {
-        if (cdShape === "circle")
-            return "w-[70px] h-[70px] sm:w-[80px] sm:h-[80px]";
-        if (cdShape === "pill") return "px-4 py-3 min-w-[65px]";
-        return "px-3 py-3 min-w-[65px] sm:min-w-[75px]";
-    };
-
-    // Build countdown ITEM style (individual boxes)
-    const getCountdownItemStyle = (): CSSProperties => {
-        if (cdBg === "none") {
-            return { border: `1px solid ${primaryColor}20` };
-        }
-        if (cdBg === "background")
-            return {
-                backgroundColor: backgroundColor,
-                border: `1px solid ${primaryColor}30`,
-            };
-        if (cdBg === "primary")
-            return { backgroundColor: primaryColor, color: "#fff" };
-        if (cdBg === "secondary")
-            return {
-                backgroundColor: `${primaryColor}15`,
-                border: `1px solid ${primaryColor}30`,
-            };
-        return { backgroundColor: cdBg, color: "#fff" };
-    };
-
-    const items = [
-        { value: time?.days ?? 0, label: countdownLabels.days },
-        { value: time?.hours ?? 0, label: countdownLabels.hours },
-        { value: time?.minutes ?? 0, label: countdownLabels.minutes },
-        { value: time?.seconds ?? 0, label: countdownLabels.seconds },
-    ];
     const vignetteEnabled = Boolean(vignette?.enabled);
     const vignetteOpacity =
         typeof vignette?.opacity === "number"
@@ -480,97 +708,6 @@ export default function HeroSection({
         );
     };
 
-    // Countdown items component (shared between styles)
-    const CountdownItems = ({
-        overlayMode = false,
-    }: {
-        overlayMode?: boolean;
-    }) => {
-        const isPrimaryBg =
-            cdBg === "primary" ||
-            (hasBg &&
-                cdBg !== "background" &&
-                cdBg !== "secondary" &&
-                cdBg !== "none");
-        const shapeClass = getShapeClass();
-        const itemSizeClass = getItemSizeClass();
-        const itemStyle = getCountdownItemStyle();
-
-        // In overlay mode (both card and floating), always show styled items
-        // In inline mode with background "none" and shape "rounded", show classic style
-        const showClassicStyle =
-            !overlayMode && cdBg === "none" && cdShape === "rounded";
-
-        return (
-            <div
-                className={`flex items-center justify-center ${showClassicStyle ? "gap-2" : "gap-3 sm:gap-4"}`}
-                aria-live="polite"
-            >
-                {items.map((item, i) => (
-                    <div key={item.label} className="flex items-center gap-2">
-                        {showClassicStyle ? (
-                            <>
-                                <div className="flex flex-col items-center">
-                                    <span
-                                        className="tabular-nums leading-none text-4xl font-extralight sm:text-5xl md:text-6xl text-inherit"
-                                        suppressHydrationWarning
-                                    >
-                                        {time
-                                            ? String(item.value).padStart(
-                                                  item.label ===
-                                                      countdownLabels.days
-                                                      ? 1
-                                                      : 2,
-                                                  "0",
-                                              )
-                                            : "--"}
-                                    </span>
-                                    <span className="mt-1 text-[10px] font-medium tracking-[0.15em] uppercase sm:text-xs opacity-50">
-                                        {item.label}
-                                    </span>
-                                </div>
-                                {i < 3 && (
-                                    <span className="mt-1 font-light opacity-40 text-4xl md:text-5xl">
-                                        :
-                                    </span>
-                                )}
-                            </>
-                        ) : (
-                            <div
-                                className={`flex flex-col items-center justify-center ${itemSizeClass} ${shapeClass}`}
-                                style={itemStyle}
-                            >
-                                <span
-                                    className={`tabular-nums leading-none ${
-                                        overlayMode
-                                            ? "text-2xl font-light sm:text-3xl"
-                                            : "text-4xl font-extralight sm:text-5xl md:text-6xl"
-                                    } ${isPrimaryBg ? "text-white" : "text-inherit"}`}
-                                    suppressHydrationWarning
-                                >
-                                    {time
-                                        ? String(item.value).padStart(
-                                              item.label ===
-                                                  countdownLabels.days
-                                                  ? 1
-                                                  : 2,
-                                              "0",
-                                          )
-                                        : "--"}
-                                </span>
-                                <span
-                                    className={`mt-1 text-[9px] font-medium tracking-[0.1em] uppercase sm:text-[10px] ${isPrimaryBg ? "text-white/70" : "opacity-50"}`}
-                                >
-                                    {item.label}
-                                </span>
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </div>
-        );
-    };
-
     return (
         <section className="flex flex-col items-center bg-background">
             {fontsToLoad.length > 0 && (
@@ -641,59 +778,40 @@ export default function HeroSection({
                 )}
             </div>
 
-            {/* Countdown - different layouts */}
             {showCountdown && isOverlayLayout ? (
-                isFloatingOverlay ? (
-                    // Floating style - items directly on the transition line, no card wrapper
-                    <div
-                        className="relative z-10 -mt-10 mb-4 flex justify-center"
-                        style={{ color: textColor }}
-                    >
-                        <CountdownItems overlayMode />
-                    </div>
-                ) : (
-                    // Card style - items wrapped in a card
-                    <div className="relative z-10 -mt-14 mb-4">
-                        <div
-                            className="rounded-2xl px-6 py-5 shadow-lg"
-                            style={{ backgroundColor: backgroundColor }}
-                        >
-                            <div
-                                className="flex flex-col items-center"
-                                style={{ color: textColor }}
-                            >
-                                {countdownPrefix && (
-                                    <p className="mb-3 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
-                                        {countdownPrefix}
-                                    </p>
-                                )}
-                                <CountdownItems overlayMode />
-                            </div>
-                        </div>
-                    </div>
-                )
-            ) : showCountdown ? (
-                // Inline style - below hero with headline
-                <div
-                    className="flex w-full flex-col items-center px-6 pt-10 pb-10"
-                    style={getAreaBgStyle()}
-                >
-                    <h1 className="mb-8 text-center text-3xl font-light tracking-wide uppercase text-inherit md:text-4xl">
-                        {headline}
-                    </h1>
-                    <div
-                        className="flex flex-col items-center"
-                        style={{ color: textColor }}
-                    >
-                        {countdownPrefix && (
-                            <p className="mb-4 text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">
-                                {countdownPrefix}
-                            </p>
-                        )}
-                        <CountdownItems />
-                    </div>
-                </div>
+                <HeroCountdownRegion
+                    {...countdownSharedProps}
+                    variant={
+                        isFloatingOverlay ? "overlayFloating" : "overlayCard"
+                    }
+                />
             ) : null}
+
+            {isOverlayLayout ? (
+                <HeroAfterImageLogos
+                    byText={afterImage?.byText}
+                    logos={afterImageLogos}
+                    textColor={textColor}
+                    compactTop={Boolean(showCountdown && isOverlayLayout)}
+                />
+            ) : (
+                <>
+                    <HeroAfterImageLogos
+                        byText={afterImage?.byText}
+                        logos={afterImageLogos}
+                        textColor={textColor}
+                    />
+                    {showCountdown ? (
+                        <HeroCountdownRegion
+                            {...countdownSharedProps}
+                            variant="inline"
+                            inlineTopPaddingClass={
+                                showAfterImage ? "pt-6" : "pt-10"
+                            }
+                        />
+                    ) : null}
+                </>
+            )}
         </section>
     );
 }

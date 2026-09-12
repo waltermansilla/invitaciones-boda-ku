@@ -457,6 +457,11 @@ function WeddingInvitationContent() {
                             | string
                             | undefined
                     }
+                    afterImage={
+                        (hero as Record<string, unknown>).afterImage as
+                            | { byText?: string; logos: string[] }
+                            | undefined
+                    }
                 />
 
                 {/* Dynamic sections: order controlled by array position in JSON */}
