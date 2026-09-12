@@ -37,7 +37,7 @@
         }
     },
     "overlay": {
-        "enabled": false,
+        "enabled": true,
         "phrase": "",
         "buttonText": "Ingresar"
     },
