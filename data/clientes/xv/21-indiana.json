@@ -31,7 +31,7 @@
         "referidos": true,
         "confirmacion": "formulario",
         "registrarSinCodigoEnPanel": false,
-        "limiteInvitados": 150,
+        "limiteInvitados": 250,
         "panelId": "xv-indiana-g6dVRl3t",
         "fechaEvento": "2027-03-06",
         "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 6 de Marzo del 2027.",
