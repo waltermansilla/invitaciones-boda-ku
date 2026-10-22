@@ -22,6 +22,37 @@
         "enabled": true,
         "token": "ht73Kr2y"
     },
+    "_comment_qrCard": "TARJETA QR IMPRIMIBLE - Accede en /boda/yesica-hernan/qr (/{tipo}/{slug}/qr). qrUrl apunta al album de Google Drive para que los invitados suban sus fotos.",
+    "qrCard": {
+        "enabled": true,
+        "_comment_enabled": "true = pagina /qr existe y aparece en la base. false = pagina desactivada (404).",
+        "variant": "classic",
+        "names": {
+            "name1": "Yesica",
+            "name2": "Hernán"
+        },
+        "icon": "camera",
+        "title": "Compartí tus fotos",
+        "description": "Subí tus fotos de la fiesta y ayudanos a guardar los recuerdos de este momento tan especial",
+        "qrUrl": "https://drive.google.com/drive/folders/1JhRAsVxVJGlBepH2EdWlEgakZFjpTdX4",
+        "_comment_qrUrl": "URL del QR. Vacio = usa URL de la invitacion. Con un link externo (ej. Drive) el QR lleva directo ahi.",
+        "qrStyle": {
+            "fgColor": "#3D3D3D",
+            "bgColor": "transparent"
+        },
+        "cardStyle": {
+            "bgColor": "#F8F4EE",
+            "textColor": "#4A4A4A",
+            "accentColor": "#709775",
+            "leafColor": "#9CAF88"
+        },
+        "brand": {
+            "type": "instagram",
+            "text": "Momento Unico Invitaciones",
+            "logoUrl": "",
+            "instagramHandle": "@momentounico_invitaciones"
+        }
+    },
     "_comment_rsvpPanel": "PANEL DE CONFIRMACIONES - enabled activa panel. confirmacion: formulario|comun. registrarSinCodigoEnPanel solo aplica en formulario. limiteInvitados es opcional. panelId define /panel/[panelId]. fechaEvento formato YYYY-MM-DD. confirmationMessage texto post-confirmacion. theme y labels personalizan visual/textos.",
     "rsvpPanel": {
         "enabled": true,

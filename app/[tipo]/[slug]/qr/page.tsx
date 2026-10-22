@@ -40,10 +40,14 @@ export default async function QRPage({ params, searchParams }: PageProps) {
   const couple = meta.coupleNames as { brideName?: string; groomName?: string } | undefined
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://momentounico.com.ar"
-  const invitationUrlBase =
-    (typeof qrRaw?.qrUrl === "string" && qrRaw.qrUrl) || `${baseUrl}/${tipo}/${slug}`
+  const customQrUrl =
+    typeof qrRaw?.qrUrl === "string" && qrRaw.qrUrl.trim() ? qrRaw.qrUrl.trim() : ""
+  const invitationUrlBase = customQrUrl || `${baseUrl}/${tipo}/${slug}`
+  // El token solo tiene sentido en la URL propia de la invitacion. Si hay un
+  // qrUrl personalizado (ej. una carpeta de Drive para subir fotos), el QR
+  // apunta ahi tal cual, sin anexar el token de acceso.
   const invitationUrl =
-    token && /^[A-Za-z0-9]{6}$/.test(token)
+    !customQrUrl && token && /^[A-Za-z0-9]{6}$/.test(token)
       ? `${invitationUrlBase}${invitationUrlBase.includes("?") ? "&" : "?"}t=${token}`
       : invitationUrlBase
 
