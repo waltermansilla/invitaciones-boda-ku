@@ -86,6 +86,10 @@ export interface EventConfig {
     tokenEnabled?: boolean
     token?: string
   }
+  qrCard?: {
+    enabled?: boolean
+    qrUrl?: string
+  }
   variants?: Record<string, unknown>
 }
 

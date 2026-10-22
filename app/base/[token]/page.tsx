@@ -187,6 +187,23 @@ export default async function BaseLinksPage({ params }: PageProps) {
           ]
         : [];
 
+    const qrEnabled = Boolean(
+        config.qrCard && config.qrCard.enabled !== false,
+    );
+    const qrItems =
+        qrEnabled && invitationPath
+            ? [
+                  {
+                      id: "qr-print",
+                      label: "QR para imprimir (Google Drive fotos)",
+                      url: buildUrl(`${invitationPath}/qr`, {
+                          t: invitationToken,
+                      }),
+                      allowSend: false,
+                  },
+              ]
+            : [];
+
     const content = (
         <BaseLinksClient
             title={title}
@@ -196,6 +213,7 @@ export default async function BaseLinksPage({ params }: PageProps) {
             defaultWhatsappMessage={defaultWhatsappMessage}
             invitationItems={invitationItems}
             panelItems={panelItems}
+            qrItems={qrItems}
             showPanelUpsell={!panelEnabled}
             registrarSinCodigoEnPanel={registrarSinCodigoEnPanel}
         />

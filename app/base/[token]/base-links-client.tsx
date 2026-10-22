@@ -80,6 +80,7 @@ export function BaseLinksClient({
     defaultWhatsappMessage,
     invitationItems,
     panelItems,
+    qrItems = [],
     showPanelUpsell = false,
     registrarSinCodigoEnPanel = false,
 }: {
@@ -90,6 +91,8 @@ export function BaseLinksClient({
     defaultWhatsappMessage: string;
     invitationItems: BaseLinkItem[];
     panelItems: BaseLinkItem[];
+    /** Tarjetas QR imprimibles (p. ej. para subir fotos a Drive). */
+    qrItems?: BaseLinkItem[];
     showPanelUpsell?: boolean;
     /** RSVP sin ?i=: VER ignora localStorage; enviar usa el link del invitado. */
     registrarSinCodigoEnPanel?: boolean;
@@ -115,7 +118,10 @@ export function BaseLinksClient({
     const inviteBorder = useMemo(() => `${primaryColor}88`, [primaryColor]);
     const panelBg = "#223A5A";
     const panelBorder = "#5F84B5";
+    const qrBg = "#3A2F4A";
+    const qrBorder = "#7E6AA0";
     const hasPanel = panelItems.length > 0;
+    const hasQr = qrItems.length > 0;
     const inviteSideActionIsSend =
         !hasPanel || registrarSinCodigoEnPanel;
 
@@ -372,6 +378,35 @@ export function BaseLinksClient({
         </button>
     );
 
+    const renderQrItem = (item: BaseLinkItem) => (
+        <button
+            key={item.id}
+            type="button"
+            onClick={() =>
+                window.open(
+                    toAbsolute(item.url),
+                    "_blank",
+                    "noopener,noreferrer",
+                )
+            }
+            className="flex w-full items-center justify-between rounded-xl border p-3 text-left transition-opacity hover:opacity-95"
+            style={{
+                backgroundColor: qrBg,
+                borderColor: qrBorder,
+            }}
+        >
+            <span className="text-sm font-semibold text-white">
+                {item.label}
+            </span>
+            <span className="inline-flex shrink-0 items-center gap-1.5 text-white/90">
+                <span className="text-[12px] font-semibold leading-none tracking-wide">
+                    ABRIR
+                </span>
+                <ChevronRight className="h-4 w-4" />
+            </span>
+        </button>
+    );
+
     return (
         <>
             <main
@@ -480,6 +515,25 @@ export function BaseLinksClient({
                                     )}
                                 </div>
                             </div>
+
+                            {hasQr && (
+                                <div className="rounded-2xl border border-white/20 bg-black/10 p-4 md:p-5">
+                                    <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-white/75">
+                                        QR para imprimir
+                                    </h2>
+                                    <p className="mt-2 text-[13px] leading-snug text-white/70">
+                                        Abrí la tarjeta y guardá o imprimí el QR.
+                                        Tus invitados lo escanean para subir las
+                                        fotos de la fiesta al álbum de Google
+                                        Drive.
+                                    </p>
+                                    <div className="mt-3 space-y-3">
+                                        {qrItems.map((item) =>
+                                            renderQrItem(item),
+                                        )}
+                                    </div>
+                                </div>
+                            )}
 
                             {showPanelUpsell && (
                                 <div className="rounded-2xl border border-white/20 bg-black/10 p-4 md:p-5">
