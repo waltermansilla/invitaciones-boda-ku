@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Copy, Send, X } from "lucide-react";
 import configuradorEs from "@/data/landing/configurador-es.json";
 import FooterSection from "@/components/wedding/footer-section";
@@ -19,6 +19,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { PanelShowcaseContent } from "@/components/panel/panel-showcase-content";
 
 type BaseLinkItem = {
     id: string;
@@ -30,17 +31,15 @@ type BaseLinkItem = {
     allowSend: boolean;
 };
 
-const PANEL_UPSELL_IMAGE = "/landing/media/images/panel.PNG";
-const PANEL_UPSELL_IMAGE_ALT =
-    "Captura del panel de administración de invitados";
 const DESIGNER_WA_NUMBER = "543456023759";
 const PANEL_INCLUDED_GUESTS = 150;
 const PANEL_CURRENCY = "ARS" as const;
 type PanelModalStep = "info" | "activate";
 type PanelCapacityAnswer = "yes" | "more";
-const PANEL_UPSELL_INTRO =
-    "Con WhatsApp recibís las confirmaciones, pero tenés que anotar y ordenar todo a mano. Con el panel, cada invitado confirma y el tablero se actualiza solo.";
 const BASE_WA_MESSAGE_STORAGE_PREFIX = "base-wa-last-message:";
+const BASE_FIRST_SEND_PANEL_NOTICE_PREFIX =
+    "base-first-send-panel-notice-dismissed:";
+type PendingSendMode = "linkOnly" | "withMessage";
 
 function readSavedWaMessage(baseToken: string): string | null {
     if (typeof window === "undefined") return null;
@@ -65,12 +64,30 @@ function saveWaMessage(baseToken: string, message: string) {
     }
 }
 
-const PANEL_UPSELL_POINTS = [
-    "Tablero con confirmaciones en tiempo real: quién viene, pendientes y quienes no asisten.",
-    "Invitaciones con nombres propios y exclusivos.",
-    "Podés ver requerimientos alimentarios (vegetariano, celíaco, etc.) y las canciones que sugieren los invitados, todo ordenado.",
-    "Lista de invitados en vista A4 para guardar o imprimir en PDF.",
-];
+function readFirstSendPanelNoticeDismissed(baseToken: string): boolean {
+    if (typeof window === "undefined") return false;
+    try {
+        return (
+            localStorage.getItem(
+                `${BASE_FIRST_SEND_PANEL_NOTICE_PREFIX}${baseToken}`,
+            ) === "1"
+        );
+    } catch {
+        return false;
+    }
+}
+
+function markFirstSendPanelNoticeDismissed(baseToken: string) {
+    if (typeof window === "undefined") return;
+    try {
+        localStorage.setItem(
+            `${BASE_FIRST_SEND_PANEL_NOTICE_PREFIX}${baseToken}`,
+            "1",
+        );
+    } catch {
+        // quota / modo privado
+    }
+}
 
 export function BaseLinksClient({
     title,
@@ -104,11 +121,20 @@ export function BaseLinksClient({
         useState<PanelGuestTier>(PANEL_INCLUDED_GUESTS);
     const [panelCapacityAnswer, setPanelCapacityAnswer] =
         useState<PanelCapacityAnswer | null>(null);
+    const panelModalScrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (!panelInfoOpen) return;
+        panelModalScrollRef.current?.scrollTo(0, 0);
+    }, [panelInfoOpen, panelModalStep]);
     const [waModalOpen, setWaModalOpen] = useState(false);
     const [waDraft, setWaDraft] = useState("");
     const [pendingSendItem, setPendingSendItem] = useState<BaseLinkItem | null>(
         null,
     );
+    const [firstSendPanelWarnOpen, setFirstSendPanelWarnOpen] = useState(false);
+    const [pendingSendMode, setPendingSendMode] =
+        useState<PendingSendMode | null>(null);
     const [copiedInviteId, setCopiedInviteId] = useState<string | null>(null);
     const copyFeedbackTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
         null,
@@ -122,8 +148,7 @@ export function BaseLinksClient({
     const qrBorder = "#7E6AA0";
     const hasPanel = panelItems.length > 0;
     const hasQr = qrItems.length > 0;
-    const inviteSideActionIsSend =
-        !hasPanel || registrarSinCodigoEnPanel;
+    const inviteSideActionIsSend = !hasPanel || registrarSinCodigoEnPanel;
 
     const toAbsolute = (url: string) => {
         try {
@@ -149,7 +174,10 @@ export function BaseLinksClient({
         );
     };
 
-    const panel150Price = pickPanelTierPrice(PANEL_INCLUDED_GUESTS, PANEL_CURRENCY);
+    const panel150Price = pickPanelTierPrice(
+        PANEL_INCLUDED_GUESTS,
+        PANEL_CURRENCY,
+    );
 
     const closePanelModal = () => {
         setPanelInfoOpen(false);
@@ -171,13 +199,6 @@ export function BaseLinksClient({
         const tierPrice = pickPanelTierPrice(guestCount, PANEL_CURRENCY);
         const diff = tierPrice - panel150Price;
         return `+ ${formatLandingMoney(diff, PANEL_CURRENCY)}`;
-    };
-
-    const isPanelTierEnabled = (guestCount: PanelGuestTier) => {
-        if (guestCount === PANEL_INCLUDED_GUESTS) {
-            return true;
-        }
-        return panelCapacityAnswer === "more";
     };
 
     const isPanelTierSelected = (guestCount: PanelGuestTier) =>
@@ -258,14 +279,16 @@ export function BaseLinksClient({
         setWaDraft("");
     };
 
-    const handleSendLinkOnly = () => {
-        if (!pendingSendItem) return;
-        sendInviteLink(pendingSendItem);
-        closeSendModal();
-    };
+    const shouldWarnBeforeFirstSend = () =>
+        showPanelUpsell && !readFirstSendPanelNoticeDismissed(baseToken);
 
-    const handleSendWithMessage = () => {
+    const executeSendInvite = (mode: PendingSendMode) => {
         if (!pendingSendItem) return;
+        if (mode === "linkOnly") {
+            sendInviteLink(pendingSendItem);
+            closeSendModal();
+            return;
+        }
         const trimmed = waDraft.trim();
         if (!trimmed) {
             sendInviteLink(pendingSendItem);
@@ -275,6 +298,39 @@ export function BaseLinksClient({
         saveWaMessage(baseToken, trimmed);
         sendInviteLink(pendingSendItem, trimmed);
         closeSendModal();
+    };
+
+    const attemptSendInvite = (mode: PendingSendMode) => {
+        if (!pendingSendItem) return;
+        if (shouldWarnBeforeFirstSend()) {
+            setPendingSendMode(mode);
+            setFirstSendPanelWarnOpen(true);
+            return;
+        }
+        executeSendInvite(mode);
+    };
+
+    const handleSendLinkOnly = () => attemptSendInvite("linkOnly");
+
+    const handleSendWithMessage = () => attemptSendInvite("withMessage");
+
+    const closeFirstSendPanelWarn = () => {
+        setFirstSendPanelWarnOpen(false);
+        setPendingSendMode(null);
+    };
+
+    const handleSendAnywayAfterPanelWarn = () => {
+        const mode = pendingSendMode ?? "linkOnly";
+        markFirstSendPanelNoticeDismissed(baseToken);
+        setFirstSendPanelWarnOpen(false);
+        setPendingSendMode(null);
+        executeSendInvite(mode);
+    };
+
+    const handleViewPanelFromFirstSendWarn = () => {
+        setFirstSendPanelWarnOpen(false);
+        setPanelModalStep("info");
+        setPanelInfoOpen(true);
     };
 
     const renderBaseSendButtonHint = () => (
@@ -522,10 +578,10 @@ export function BaseLinksClient({
                                         QR para imprimir
                                     </h2>
                                     <p className="mt-2 text-[13px] leading-snug text-white/70">
-                                        Abrí la tarjeta y guardá o imprimí el QR.
-                                        Tus invitados lo escanean para subir las
-                                        fotos de la fiesta al álbum de Google
-                                        Drive.
+                                        Abrí la tarjeta y guardá o imprimí el
+                                        QR. Tus invitados lo escanean para subir
+                                        las fotos de la fiesta al álbum de
+                                        Google Drive.
                                     </p>
                                     <div className="mt-3 space-y-3">
                                         {qrItems.map((item) =>
@@ -642,6 +698,52 @@ export function BaseLinksClient({
             </Dialog>
 
             <Dialog
+                open={firstSendPanelWarnOpen}
+                onOpenChange={(open) => {
+                    if (!open) closeFirstSendPanelWarn();
+                }}
+            >
+                <DialogContent
+                    className="base-wa-modal border-white/20 shadow-2xl sm:max-w-md [&_[data-slot=dialog-close]]:text-white [&_[data-slot=dialog-close]]:opacity-80"
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                >
+                    <DialogHeader className="gap-4">
+                        <DialogTitle className="text-left text-white">
+                            Antes de enviar la primera invitación
+                        </DialogTitle>
+                        <DialogDescription className="text-left text-sm leading-relaxed text-white/80">
+                            ¿Te interesa el{" "}
+                            <strong className="font-semibold text-white/95">
+                                Panel de invitados
+                            </strong>
+                            ? Activalo antes de enviar. Si mandás ahora y
+                            activás el Panel después, vas a tener que{" "}
+                            <strong className="font-semibold text-white/95">
+                                reenviar
+                            </strong>{" "}
+                            las invitaciones.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="flex-col gap-2 sm:flex-col">
+                        <button
+                            type="button"
+                            onClick={handleViewPanelFromFirstSendWarn}
+                            className="base-modal-primary-btn w-full rounded-xl px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90"
+                        >
+                            ¿Qué es el Panel?
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleSendAnywayAfterPanelWarn}
+                            className="base-modal-secondary-btn w-full rounded-xl border px-4 py-2.5 text-sm font-semibold transition-opacity hover:opacity-90"
+                        >
+                            Enviar igual
+                        </button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog
                 open={panelInfoOpen}
                 onOpenChange={(open) => {
                     if (open) {
@@ -653,7 +755,7 @@ export function BaseLinksClient({
             >
                 <DialogContent
                     showCloseButton={false}
-                    className="base-panel-modal !fixed !top-[max(0.375rem,env(safe-area-inset-top))] !bottom-[max(0.375rem,env(safe-area-inset-bottom))] !left-[1rem] !right-[1rem] !mx-auto !flex !h-auto !max-h-none !w-auto !max-w-none !translate-none flex-col gap-0 overflow-hidden border-white/20 !p-3.5 shadow-2xl"
+                    className="base-panel-modal !fixed !top-[max(0.375rem,env(safe-area-inset-top))] !bottom-[max(0.375rem,env(safe-area-inset-bottom))] !left-[max(0.375rem,env(safe-area-inset-left))] !right-[max(0.375rem,env(safe-area-inset-right))] !mx-auto !flex !h-auto !max-h-none !w-auto !max-w-[min(44rem,calc(100vw-0.75rem))] sm:!max-w-[min(44rem,calc(100vw-1rem))] !translate-none flex-col gap-0 overflow-hidden border-white/20 !p-3.5 shadow-2xl"
                     onOpenAutoFocus={(e) => e.preventDefault()}
                 >
                     <div className="flex min-h-8 shrink-0 items-center pb-4">
@@ -684,32 +786,16 @@ export function BaseLinksClient({
                     </div>
 
                     <div
+                        ref={panelModalScrollRef}
                         data-slot="base-panel-modal-scroll"
                         className="base-panel-modal-scroll min-h-0 flex-1 px-3 pb-1"
                     >
                         {panelModalStep === "info" ? (
-                            <div className="space-y-3">
-                                <p className="text-sm leading-relaxed text-white/80">
-                                    {PANEL_UPSELL_INTRO}
-                                </p>
-
-                                <div className="base-panel-modal-thumb-wrap flex w-full justify-center">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={PANEL_UPSELL_IMAGE}
-                                        alt={PANEL_UPSELL_IMAGE_ALT}
-                                        width={640}
-                                        height={400}
-                                        className="base-panel-modal-thumb block object-contain"
-                                    />
-                                </div>
-
-                                <ul className="list-disc space-y-2 pl-4 pb-2 text-[13px] leading-snug text-white/75">
-                                    {PANEL_UPSELL_POINTS.map((line) => (
-                                        <li key={line}>{line}</li>
-                                    ))}
-                                </ul>
-                            </div>
+                            <PanelShowcaseContent
+                                variant="dark"
+                                mainImagePlain
+                                spacious
+                            />
                         ) : (
                             <div className="space-y-3 pb-2">
                                 <p className="text-sm leading-relaxed text-white/80">
@@ -771,50 +857,48 @@ export function BaseLinksClient({
                                         Necesito más cupo
                                     </button>
                                 </div>
-                                <div className="mt-2 grid grid-cols-1 gap-2">
-                                    {PANEL_GUEST_TIERS.map((guestCount) => {
-                                        const enabled =
-                                            isPanelTierEnabled(guestCount);
-                                        const selected =
-                                            isPanelTierSelected(guestCount);
-                                        return (
-                                            <button
-                                                key={guestCount}
-                                                type="button"
-                                                disabled={!enabled}
-                                                onClick={() => {
-                                                    if (!enabled) return;
-                                                    setPanelGuestCapacity(
-                                                        guestCount,
-                                                    );
-                                                }}
-                                                className="flex items-center justify-between rounded-xl border px-3 py-2.5 text-left transition-opacity disabled:cursor-not-allowed"
-                                                style={{
-                                                    borderColor: selected
-                                                        ? "#5F84B5"
-                                                        : "rgba(255,255,255,0.2)",
-                                                    backgroundColor: selected
-                                                        ? "rgba(95, 132, 181, 0.35)"
-                                                        : "rgba(0,0,0,0.15)",
-                                                    color: "#fff",
-                                                    opacity: enabled ? 1 : 0.4,
-                                                }}
-                                            >
-                                                <span className="text-sm font-semibold">
-                                                    {configuradorEs.panelUi.hastaPreset.replace(
-                                                        /\{\{n\}\}/g,
-                                                        String(guestCount),
-                                                    )}
-                                                </span>
-                                                <span className="text-sm font-semibold tabular-nums">
-                                                    {panelTierPriceLabel(
-                                                        guestCount,
-                                                    )}
-                                                </span>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
+                                {panelCapacityAnswer === "more" ? (
+                                    <div className="mt-2 grid grid-cols-1 gap-2">
+                                        {PANEL_GUEST_TIERS.map((guestCount) => {
+                                            const selected =
+                                                isPanelTierSelected(guestCount);
+                                            return (
+                                                <button
+                                                    key={guestCount}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setPanelGuestCapacity(
+                                                            guestCount,
+                                                        );
+                                                    }}
+                                                    className="flex items-center justify-between rounded-xl border px-3 py-2.5 text-left transition-opacity"
+                                                    style={{
+                                                        borderColor: selected
+                                                            ? "#5F84B5"
+                                                            : "rgba(255,255,255,0.2)",
+                                                        backgroundColor:
+                                                            selected
+                                                                ? "rgba(95, 132, 181, 0.35)"
+                                                                : "rgba(0,0,0,0.15)",
+                                                        color: "#fff",
+                                                    }}
+                                                >
+                                                    <span className="text-sm font-semibold">
+                                                        {configuradorEs.panelUi.hastaPreset.replace(
+                                                            /\{\{n\}\}/g,
+                                                            String(guestCount),
+                                                        )}
+                                                    </span>
+                                                    <span className="text-sm font-semibold tabular-nums">
+                                                        {panelTierPriceLabel(
+                                                            guestCount,
+                                                        )}
+                                                    </span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                ) : null}
                             </div>
                         )}
                     </div>

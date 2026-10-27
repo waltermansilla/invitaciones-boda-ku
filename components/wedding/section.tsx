@@ -14,6 +14,7 @@ import PhotosSection from "./photos-section";
 import GiftCardSection from "./gift-card-section";
 import HoneymoonSection from "./honeymoon-section";
 import UniversalInfoSection from "./universal-info-section";
+import BeveragePreferenceSection from "./beverage-preference-section";
 import DressCodeSection from "./dress-code-section";
 import EmotionalQuoteSection from "./emotional-quote-section";
 import TriviaSection from "./trivia-section";
@@ -542,6 +543,34 @@ function SectionContent({
                                 | "combined"
                                 | "sequential"
                                 | undefined
+                        }
+                    />
+                );
+
+            case "beveragePreference":
+                return (
+                    <BeveragePreferenceSection
+                        sectionId={id}
+                        icon={data.icon as string | undefined}
+                        title={data.title as string | undefined}
+                        description={data.description as string | undefined}
+                        descriptionSize={
+                            data.descriptionSize as
+                                | "normal"
+                                | "large"
+                                | undefined
+                        }
+                        options={data.options as string[] | undefined}
+                        neutralOption={
+                            data.neutralOption as string | undefined
+                        }
+                        optionIcons={
+                            data.optionIcons as string[] | undefined
+                        }
+                        optionHeightPx={
+                            typeof data.optionHeightPx === "number"
+                                ? data.optionHeightPx
+                                : undefined
                         }
                     />
                 );

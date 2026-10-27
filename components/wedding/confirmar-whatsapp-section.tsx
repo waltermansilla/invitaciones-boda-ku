@@ -7,6 +7,10 @@ import { useGuestPreview } from "@/lib/guest-preview"
 import { useGuestPreviewConfirmModal } from "./guest-preview-confirm-modal"
 import { guestPreviewIsFamilia } from "@/lib/guest-preview-confirm"
 import { useModal } from "./modal-provider"
+import {
+  appendBeverageLineToMessage,
+  useBeveragePreferenceRequired,
+} from "@/lib/beverage-preference-context"
 
 /** Datos mínimos del invitado (panel + link con ?c=) para mostrar nombre en la sección. */
 interface InvitadoPanelShort {

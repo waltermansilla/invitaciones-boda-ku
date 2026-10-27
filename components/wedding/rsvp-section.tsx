@@ -15,6 +15,10 @@ import {
     guestPreviewStateLabelFromAttendance,
 } from "@/lib/guest-preview-confirm";
 import { useIsMuestra } from "@/lib/config-context";
+import {
+    appendBeverageLineToMessage,
+    useBeveragePreferenceRequired,
+} from "@/lib/beverage-preference-context";
 import { Share2, Trash2 } from "lucide-react";
 import { useModal } from "./modal-provider";
 import {

@@ -1,0 +1,399 @@
+{
+    "// ==========================================": "",
+    "// SECCION 1: DATOS GENERALES DEL SITIO     ": "",
+    "// ==========================================.": "",
+    "_comment_reserva": "Premium · XV · Estilo Camila. Contacto: Thiara · 51289102@iupm.org · Evento 2026-12-12. Presupuesto ARS 49.000 · Seña 50% ARS 24.500. Detalles ID mva34yjk-oa8udf. Fotos: 1.jpeg–5.jpeg en public/clientes/xv/35-thiara/images/.",
+    "_comment_meta": "Titulo de la pestana del navegador, descripcion SEO, idioma y nombre de la quinceanera.",
+    "meta": {
+        "title": "Mis 15 - Thiara",
+        "description": "Estás invitado a celebrar los XV de Thiara.",
+        "lang": "es",
+        "quinceaneraName": "Thiara",
+        "coupleNames": {
+            "groomName": "",
+            "brideName": "Thiara",
+            "separator": ""
+        }
+    },
+    "_comment_access": "CONTROL DE ACCESO - token por URL ?k=XXXXXX.",
+    "_comment_base": "BASE DE ACCESOS - URL: /base/{token}.",
+    "base": {
+        "enabled": true,
+        "token": "Th35Xy7K"
+    },
+    "access": {
+        "tokenEnabled": true,
+        "token": "Ti4Ra6",
+        "allowLegacyUntil": ""
+    },
+    "_comment_rsvpPanel": "Panel de invitados no contratado en extras → enabled false.",
+    "rsvpPanel": {
+        "enabled": false,
+        "confirmacion": "formulario",
+        "registrarSinCodigoEnPanel": false,
+        "limiteInvitados": 150,
+        "panelId": "",
+        "fechaEvento": "2026-12-12",
+        "confirmationMessage": "¡Gracias por confirmar! Nos vemos el 12 de Diciembre.",
+        "theme": {
+            "primaryColor": "#9A9A9A"
+        },
+        "labels": {
+            "title": "Panel de Invitados",
+            "totalLabel": "Total invitados",
+            "confirmedLabel": "Confirmados",
+            "pendingLabel": "Pendientes",
+            "declinedLabel": "No asisten",
+            "paymentPending": "Pendiente",
+            "addGuest": "Agregar Invitado",
+            "copyLink": "Copiar link",
+            "manualConfirm": "Confirmación manual",
+            "paidButton": "Confirmado",
+            "unpaidButton": "Pendiente"
+        }
+    },
+    "_comment_beveragePreference": "enabled + sectionId vinculan la sección beveragePreference con confirmarWhatsapp/rsvp. El texto en WhatsApp va en section.data.whatsappLabel.",
+    "beveragePreference": {
+        "enabled": true,
+        "sectionId": "preferencia-bebidas"
+    },
+    "// ==========================================,": "",
+    "// SECCION 2: COLORES - Plata y dorado      ": "",
+    "// ==========================================..": "",
+    "_comment_theme": "Estilo Camila (Josefin + Dancing Script). Plata en primary; dorado en acentos. Sin imagen de fondo en secciones (solo color).",
+    "theme": {
+        "primaryColor": "#9A9A9A",
+        "backgroundColor": "#F5F5F5",
+        "primaryImage": "",
+        "textColor": "#4A4A4A",
+        "lightBgTextColor": "#555555",
+        "darkBgTextColor": "#FFFFFF",
+        "accentBackground": "#BF930D",
+        "modalTextColor": "#FFFFFF",
+        "font": {
+            "family": "Josefin Sans",
+            "weights": "100,200,300,400,500,600,700"
+        }
+    },
+    "// ==========================================;": "",
+    "// SECCION 3: PANTALLA DE BIENVENIDA        ": "",
+    "// ==========================================...": "",
+    "overlay": {
+        "enabled": true,
+        "phrase": "Una noche especial está por comenzar.",
+        "buttonText": "Ingresar",
+        "nameStyle": {
+            "font": "Dancing Script",
+            "size": "60px",
+            "weight": "600",
+            "color": "#BF930D",
+            "lowercase": true,
+            "letterSpacing": "none"
+        }
+    },
+    "// ==========================================:": "",
+    "// SECCION 4: MUSICA DE FONDO               ": "",
+    "// ==========================================....": "",
+    "_comment_music": "Pendiente: MP3 en /public/clientes/xv/35-thiara/music/ y enabled true cuando Thiara elija tema.",
+    "music": {
+        "enabled": false,
+        "src": "",
+        "autoplay": true,
+        "startTime": 0
+    },
+    "// ==========================================-": "",
+    "// SECCION 5: HERO / PORTADA + COUNTDOWN    ": "",
+    "// ==========================================.....": "",
+    "hero": {
+        "coupleImage": "/clientes/xv/35-thiara/images/1.jpeg",
+        "aspectRatio": "2/3",
+        "headline": "Mis 15!",
+        "showNamesOnPhoto": true,
+        "namesDisplay": {
+            "enabled": true,
+            "lowercase": true,
+            "position": "bottom",
+            "positionX": 50,
+            "positionY": 15,
+            "font": "",
+            "weight": "300",
+            "size": "lg",
+            "style": "normal",
+            "color": "#fff",
+            "decorativeLines": false,
+            "logo": "",
+            "texts": [
+                {
+                    "text": "MIS XV",
+                    "font": "",
+                    "weight": "300",
+                    "size": "sm",
+                    "style": "normal"
+                },
+                {
+                    "text": "Thiara",
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "letterSpacing": "none",
+                    "size": "4xl",
+                    "style": "normal"
+                }
+            ]
+        },
+        "countdownPrefix": "",
+        "eventDate": "2026-12-12T21:00:00",
+        "countdownLabels": {
+            "days": "Días",
+            "hours": "Horas",
+            "minutes": "Minutos",
+            "seconds": "Segundos"
+        },
+        "countdownStyle": {
+            "background": "primary",
+            "shape": "rounded",
+            "layout": "overlay",
+            "overlayStyle": "floating"
+        }
+    },
+    "// ==========================================+": "",
+    "// SECCION 6: SECCIONES DE LA INVITACION    ": "",
+    "// ==========================================......": "",
+    "_comment_sections": "Contratado: ubicación, countdown (hero), dress code, regalos/alias, preferencia bebidas (sección beveragePreference) + confirmación simple WhatsApp.",
+    "sections": [
+        {
+            "type": "quote",
+            "id": "quote-welcome",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Hoy empiezo a escribir un nuevo capítulo de mi vida y quiero que seas parte de él.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "dateInfo",
+            "id": "date-info",
+            "blocks": ["title", "value"],
+            "data": {
+                "title": "¿Cuándo?",
+                "value": "Sábado 12 de Diciembre"
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos-1",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/xv/35-thiara/images/4.jpeg"]
+            }
+        },
+        {
+            "_comment": "UBICACIÓN Y CÓMO LLEGAR (contratado).",
+            "type": "locationInfo",
+            "id": "location-fiesta",
+            "blocks": ["title", "address", "button"],
+            "data": {
+                "title": "¿Dónde?",
+                "address": "Polideportivo Comunicaciones, Calle Córdoba",
+                "showButton": true,
+                "order": ["address", "time"],
+                "datetime": {
+                    "time": "21:00 hs"
+                },
+                "button": {
+                    "text": "Cómo llegar",
+                    "url": "https://maps.app.goo.gl/6GzLrj1s4H54aK5V9?g_st=aw",
+                    "variant": "primary"
+                }
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos-2",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "4/3",
+                "images": ["/clientes/xv/35-thiara/images/3.jpeg"]
+            }
+        },
+        {
+            "_comment": "DRESS CODE (contratado). Plata y dorado reservados para la quinceañera.",
+            "type": "dressCode",
+            "id": "dress-code",
+            "enabled": true,
+            "bgColor": "primary",
+            "blocks": [
+                "title",
+                "subtitle",
+                "icons",
+                "description",
+                "colorSwatches",
+                "button",
+                "modal"
+            ],
+            "data": {
+                "icons": ["gem"],
+                "title": "Dress code",
+                "subtitle": "",
+                "description": "Quiero que vengan bellos y bellas.\n\nLos siguientes colores quedan reservados para la quinceañera:",
+                "showButton": false,
+                "colorSwatches": {
+                    "enabled": true,
+                    "shape": "square",
+                    "colors": [
+                        { "color": "#C0C0C0", "label": "Plata" },
+                        { "color": "#d9ad26", "label": "Dorado" }
+                    ]
+                }
+            }
+        },
+
+        {
+            "_comment": "REGALOS / ALIAS (contratado).",
+            "type": "honeymoon",
+            "id": "regalos-alias",
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description", "button", "modal"],
+            "data": {
+                "icon": "gift",
+                "title": "Regalos",
+                "description": "Nada es más importante que tu presencia. Si deseás hacerme un regalo, podés hacerlo en el evento o a través de mi alias.",
+                "button": {
+                    "text": "Ver alias",
+                    "url": "#",
+                    "variant": "secondary"
+                },
+                "modal": {
+                    "title": "Datos de transferencia",
+                    "description": "Gracias por tu cariño y por ser parte de esta noche tan importante para mí.",
+                    "bankData": [
+                        {
+                            "label": "Alias",
+                            "value": "thiara85"
+                        },
+                        {
+                            "label": "Titular",
+                            "value": "Thiara Marlene Ávalos"
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "type": "quote",
+            "id": "quote-mid",
+            "bgColor": "primary",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "El futuro pertenece a quienes creen en la belleza de sus sueños.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "gallery",
+            "id": "gallery-photos-3",
+            "blocks": ["slider"],
+            "data": {
+                "aspectRatio": "3/4",
+                "images": ["/clientes/xv/35-thiara/images/2.jpeg"]
+            }
+        },
+
+        {
+            "_comment": "PREFERENCIA DE BEBIDAS (contratado). type beveragePreference + beveragePreference en raíz del JSON.",
+            "type": "beveragePreference",
+            "id": "preferencia-bebidas",
+            "bgColor": "background",
+            "blocks": ["icon", "title", "description", "options"],
+            "data": {
+                "icon": "drink",
+                "title": "Preferencia de bebidas",
+                "whatsappLabel": "Preferencia de bebida",
+                "description": "Elegí tu opción favorita para la barra.",
+                "options": [
+                    "Fernet",
+                    "Cerveza",
+                    "Whisky",
+                    "Vodka",
+                    "Tragos especiales"
+                ],
+                "neutralOption": "Me da lo mismo",
+                "optionHeightPx": 64
+            }
+        },
+        {
+            "_comment": "Confirmación simple (sí/no). Bebida obligatoria solo al confirmar que SÍ asiste. TODO: whatsappNumber real.",
+            "type": "confirmarWhatsapp",
+            "id": "confirmar-whatsapp",
+            "bgColor": "primary",
+            "blocks": ["title", "button"],
+            "data": {
+                "title": "Confirmar asistencia",
+                "subtitle": "Antes del 15 de Noviembre de 2026",
+                "buttonText": "¡Voy!",
+                "whatsappNumber": "5493773455945",
+                "message": "Hola Thiara! Confirmo mi asistencia a tus XV.",
+                "noAsiste": {
+                    "enabled": true,
+                    "buttonText": "No voy a poder",
+                    "message": "Hola Thiara! Lamentablemente no podré asistir a tus XV. Gracias por tenerme en cuenta."
+                }
+            }
+        },
+        {
+            "type": "quote",
+            "id": "quote-closing",
+            "bgColor": "background",
+            "blocks": ["text", "author"],
+            "data": {
+                "text": "Gracias por ser parte de mi vida y acompañarme en una noche que voy a recordar para siempre.",
+                "author": "",
+                "decorativeLines": true
+            }
+        },
+        {
+            "type": "closingImage",
+            "id": "closing-image",
+            "blocks": ["image", "name"],
+            "data": {
+                "aspectRatio": "4/3",
+                "image": "/clientes/xv/35-thiara/images/5.jpeg",
+                "namesDisplay": {
+                    "enabled": true,
+                    "font": "Dancing Script",
+                    "weight": "600",
+                    "size": "3xl",
+                    "style": "normal",
+                    "color": "#BF930D",
+                    "decorativeLines": true,
+                    "logo": "",
+                    "copyFromHero": false,
+                    "lowercase": true,
+                    "letterSpacing": "none"
+                }
+            }
+        },
+        {
+            "type": "footer",
+            "id": "footer-credits",
+            "blocks": ["socialLinks", "brandName"],
+            "data": {
+                "brandName": "walter invitaciones",
+                "socialLinks": [
+                    {
+                        "icon": "instagram",
+                        "url": "#"
+                    },
+                    {
+                        "icon": "whatsapp",
+                        "url": "https://wa.me/3456023759"
+                    }
+                ]
+            }
+        }
+    ]
+}

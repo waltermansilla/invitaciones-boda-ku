@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useConfig, useIsMuestra } from "@/lib/config-context";
 import ModalProvider from "./modal-provider";
+import { BeveragePreferenceProvider } from "@/lib/beverage-preference-context";
 import HeroOverlay from "./hero-overlay";
 import type { CoupleNamesDisplayOrder } from "@/lib/couple-names-display-order";
 import HeroSection from "./hero-section";
@@ -291,6 +292,7 @@ function WeddingInvitationContent() {
     };
 
     return (
+        <BeveragePreferenceProvider>
         <ModalProvider>
             {/* Fullscreen entry overlay - OUTSIDE main so it's always visible */}
             {showOverlay && (
@@ -612,6 +614,7 @@ function WeddingInvitationContent() {
                 )}
             </main>
         </ModalProvider>
+        </BeveragePreferenceProvider>
     );
 }
 

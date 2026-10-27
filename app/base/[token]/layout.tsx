@@ -85,12 +85,12 @@ export default async function BaseTokenLayout({
               flex-direction: column !important;
               grid-template-columns: unset !important;
               grid-template-rows: unset !important;
-              left: 1rem !important;
-              right: 1rem !important;
+              left: max(0.375rem, env(safe-area-inset-left)) !important;
+              right: max(0.375rem, env(safe-area-inset-right)) !important;
               top: max(0.375rem, env(safe-area-inset-top)) !important;
               bottom: max(0.375rem, env(safe-area-inset-bottom)) !important;
               width: auto !important;
-              max-width: min(28rem, calc(100% - 2rem)) !important;
+              max-width: min(44rem, calc(100vw - 0.75rem)) !important;
               margin-left: auto !important;
               margin-right: auto !important;
               height: auto !important;

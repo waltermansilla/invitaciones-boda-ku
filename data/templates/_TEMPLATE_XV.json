@@ -126,6 +126,20 @@
             "unpaidButton": "¿Pagó tarjeta?"
         }
     },
+    "// BEVERAGE PREFERENCE - Preferencia de bebidas (opcional, reutilizable)     ": "",
+    "// 1) Seccion sections[]: type 'beveragePreference' (enabled != false)       ": "",
+    "// 2) Raiz: enabled true + sectionId = mismo id que la seccion               ": "",
+    "// 3) section.data.whatsappLabel → linea en WhatsApp/panel al confirmar SI   ": "",
+    "//    (ej: 'Preferencia de bebida: Fernet'). Se agrega sola; no va en message  ": "",
+    "//    de confirmarWhatsapp/rsvp. Orden: seccion bebidas ANTES de confirmar.  ": "",
+    "// 4) confirmarWhatsapp o rsvp: si confirman sin elegir → scroll + no envia   ": "",
+    "// 5) Si marcan NO asisten: no pide bebida ni agrega linea                    ": "",
+    "// 6) No usa localStorage (solo mientras tienen la pagina abierta).             ": "",
+    "// 7) Panel: valor elegido en invitado.restricciones (comun o RSVP+codigo)    ": "",
+    "beveragePreference": {
+        "enabled": false,
+        "sectionId": "preferencia-bebidas"
+    },
     "// THEME - Colores y tipografia                                              ": "",
     "// primaryColor: color principal (botones, fondos destacados)                ": "",
     "// backgroundColor: fondo general claro                                      ": "",
@@ -822,6 +836,38 @@
         },
         {
             "// ----------------------------------------------------------------------": "",
+            "// BEVERAGE PREFERENCE - Elegir trago (lista seleccionable)              ": "",
+            "// Raiz beveragePreference.enabled=true y sectionId = este id.           ": "",
+            "// whatsappLabel: etiqueta en WA/panel (NO confundir con title).           ": "",
+            "// options: tragos. neutralOption: siempre se suma al final (def.        ": "",
+            "//   'Me da lo mismo'); cuenta como eleccion valida.                       ": "",
+            "// optionIcons: opcional, drink|sparkles|info por fila                    ": "",
+            "// optionHeightPx: alto minimo px por fila (0 = padding default)          ": "",
+            "type": "beveragePreference",
+            "id": "preferencia-bebidas",
+            "enabled": true,
+            "bgColor": "background",
+            "data": {
+                "icon": "drink",
+                "title": "Preferencia de bebidas",
+                "whatsappLabel": "Preferencia de bebida",
+                "description": "Elegi tu opcion para la barra. Luego confirma asistencia abajo.",
+                "descriptionSize": "normal",
+                "options": [
+                    "Fernet",
+                    "Cerveza",
+                    "Whisky",
+                    "Vodka",
+                    "Tragos especiales",
+                    "Otros"
+                ],
+                "neutralOption": "Me da lo mismo",
+                "optionIcons": [],
+                "optionHeightPx": 0
+            }
+        },
+        {
+            "// ----------------------------------------------------------------------": "",
             "// UNIVERSAL INFO - Seccion flexible con modal                           ": "",
             "// icon:                                                                 ": "",
             "//   car      -> Estacionamiento / auto                                  ": "",
@@ -947,6 +993,8 @@
         {
             "// ----------------------------------------------------------------------": "",
             "// RSVP - Formulario de confirmacion                                     ": "",
+            "// Con beveragePreference activo: bebida en seccion aparte (no uses dietary  ": "",
+            "// para tragos). Linea WA = section.data.whatsappLabel + eleccion.          ": "",
             "type": "rsvp",
             "id": "rsvp-form",
             "enabled": true,
@@ -1005,6 +1053,8 @@
             "// CONFIRMAR WHATSAPP - Confirmacion simple (plan base)                  ": "",
             "// Al tocar el boton: modal (estado si/no) → Confirmar → WhatsApp       ": "",
             "// Con confirmacion 'comun' + ?c=: registra en panel y luego abre WA      ": "",
+            "// Si beveragePreference esta activo: al SI exige trago en seccion previa;  ": "",
+            "// agrega data.whatsappLabel de esa seccion al mensaje (no editar aca).   ": "",
             "type": "confirmarWhatsapp",
             "id": "confirmar-whatsapp",
             "enabled": true,
